@@ -7,7 +7,7 @@ Current technical defaults for Breeze On application work.
 | Layer | Standard |
 | --- | --- |
 | UI | Blazor Web App, Interactive Server (global interactivity) |
-| Runtime | ASP.NET Core / C# / .NET 9 |
+| Runtime | ASP.NET Core / C# / .NET 10 |
 | Auth (ADM today) | ASP.NET Core Identity |
 | Database | Azure SQL / SQL Server (T-SQL); see [database.md](database.md) |
 

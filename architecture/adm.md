@@ -27,7 +27,7 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | Area | State |
 | --- | --- |
 | UI framework | Blazor Web App, Interactive Server (global interactivity) |
-| Runtime | ASP.NET Core / C# / .NET 9 (App Service stack: .NET 10) |
+| Runtime | ASP.NET Core / C# / .NET 10 (App Service stack: `DOTNETCORE|10.0`) |
 | Auth | ASP.NET Core Identity on Azure SQL (`AspNet*` tables) |
 | Surfaces | Home (cards), Dashboard (authorized), left navigation, Identity account pages |
 | Data access | EF Core + SQL Server provider |
@@ -40,7 +40,7 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | Resource group | `RG-BREEZEON-DEV` |
 | Azure SQL server | `sql-breezeon-dev.database.windows.net` |
 | Azure SQL database | `BreezeOnDV` |
-| App Service | `breezeon-system-admin-adm-dv` (Linux, Free F1) |
+| App Service | `breezeon-system-admin-adm-dv` (Linux, Free F1, stack .NET 10) |
 | App Service plan | `asp-breezeon-dev` |
 | Hostname | `breezeon-system-admin-adm-dv-e4gwcgd7aqdegvgx.canadaeast-01.azurewebsites.net` |
 | Managed Identity | System-assigned; principal `0100ae8a-b5c1-4c4f-84e9-517db2e5815e` |
