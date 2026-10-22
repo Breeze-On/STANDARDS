@@ -22,4 +22,4 @@ Current technical defaults for Breeze On application work.
 
 ## Documentation
 
-Engineering changes that affect how others run or understand the app must update that repo’s README / README_AI per [documentation standards](documentation.md).
+Engineering changes that affect how others run or understand the app must update that repo’s README / README_AI per [documentation standards](documentation.md). Cross-cutting or new implemented systems must update STANDARDS `architecture/` in the same change set when applicable.

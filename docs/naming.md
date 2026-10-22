@@ -14,7 +14,7 @@ Current conventions across the organization.
 
 - Org-owned repos under `Breeze-On/…`.
 - Established repos:
-  - `STANDARDS` — organization standards
+  - `STANDARDS` — organization standards (`docs/`) and current architecture (`architecture/`)
   - `.github` — org profile README
   - `SYSTEM-ADMIN-ADM` — ADM application
 
