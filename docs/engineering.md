@@ -23,7 +23,9 @@ Current technical defaults for Breeze On application work.
 
 ## Database
 
-Relational column and SQL script conventions: [database.md](database.md).
+Relational column, nullability, SQL script, and per-app DB model conventions: [database.md](database.md).
+
+Applications that own schema must keep `sql/current_model/` and `docs/db-model.md` current in the same change set as schema changes.
 
 ## Documentation
 

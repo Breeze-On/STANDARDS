@@ -32,6 +32,7 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | Surfaces | Home (cards), Dashboard (authorized), left navigation, Identity account pages |
 | Data access | EF Core + SQL Server provider |
 | SQL scripts | `sql/current_model/` (T-SQL): schema `SYSADM`, table `SYSADM.ADMApplications` |
+| DB model doc | [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM/blob/main/docs/db-model.md) |
 
 ## DV environment (current)
 

@@ -60,7 +60,7 @@ Do not mix speculative design into either tree. If it is not real yet, it does n
 | [Documentation](docs/documentation.md) | Current-reality rules; README / README_AI; update duty |
 | [Naming](docs/naming.md) | Org, repos, projects, display names |
 | [Engineering](docs/engineering.md) | Stack and repo shape in use |
-| [Database](docs/database.md) | NVARCHAR lengths; sql/current_model vs migration_scripts |
+| [Database](docs/database.md) | NVARCHAR lengths; NOT NULL rules; sql/current_model; per-app `docs/db-model.md` |
 | [UI components](docs/ui-components.md) | Shared UI conventions in use |
 
 ### Architecture (`architecture/`)

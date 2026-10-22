@@ -66,6 +66,7 @@ Before planning or implementing in a Breeze On repo:
 2. Read other `docs/*` and `architecture/*` files relevant to the task.
 3. Read that product repo’s `README_AI.md` for **local** scope only.
 4. If you introduce a lasting convention or a new implemented system, document it here (`docs/` or `architecture/`) as current state — do not invent a one-off undocumented rule.
+5. For database work: follow [`docs/database.md`](docs/database.md). Product apps that own schema must update `sql/current_model/` and `docs/db-model.md` together.
 
 ## Product README_AI expectations
 
