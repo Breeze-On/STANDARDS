@@ -1,0 +1,32 @@
+# Naming standards
+
+Current conventions across the organization.
+
+## Organization
+
+| Use | Form |
+| --- | --- |
+| Display name | **Breeze On** |
+| GitHub org login | `Breeze-On` |
+| Code / namespaces | `BreezeOn` (no space, no hyphen) |
+
+## Repositories
+
+- Org-owned repos under `Breeze-On/…`.
+- Established repos:
+  - `STANDARDS` — organization standards
+  - `.github` — org profile README
+  - `SYSTEM-ADMIN-ADM` — ADM application
+
+## Applications (code)
+
+| Application | Repo | Project / namespace |
+| --- | --- | --- |
+| ADM | `SYSTEM-ADMIN-ADM` | `BreezeOn.Adm` |
+
+## Documentation files
+
+- `README.md` — humans
+- `README_AI.md` — agents
+
+Prefer clear, stable names. Do not rename established public identifiers without an explicit org decision.
