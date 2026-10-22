@@ -22,7 +22,7 @@ Multi-repo: one repository per application or shared concern. Unrelated products
 | --- | --- |
 | [Breeze-On/STANDARDS](https://github.com/Breeze-On/STANDARDS) | Org standards (`docs/`) and current architecture (`architecture/`) |
 | [Breeze-On/.github](https://github.com/Breeze-On/.github) | Organization profile README (`profile/README.md`) |
-| [Breeze-On/SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | ADM — administration application |
+| [Breeze-On/SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | ADM — administration application (DV hosted on Azure App Service + Azure SQL) |
 
 ## Governance
 

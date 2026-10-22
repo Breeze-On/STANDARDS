@@ -9,6 +9,7 @@ Current technical defaults for Breeze On application work.
 | UI | Blazor Web App, Interactive Server (global interactivity) |
 | Runtime | ASP.NET Core / C# / .NET 9 |
 | Auth (ADM today) | ASP.NET Core Identity |
+| Database | Azure SQL / SQL Server (T-SQL); see [database.md](database.md) |
 
 ## Repository model
 
@@ -19,6 +20,10 @@ Current technical defaults for Breeze On application work.
 
 - Solution + `src/<Project>` layout as used in ADM.
 - Ignore local databases and secrets; never commit credentials.
+
+## Database
+
+Relational column and SQL script conventions: [database.md](database.md).
 
 ## Documentation
 

@@ -36,6 +36,7 @@ STANDARDS/
 │  ├─ documentation.md
 │  ├─ naming.md
 │  ├─ engineering.md
+│  ├─ database.md
 │  └─ ui-components.md
 └─ architecture/         # currently implemented systems only
    ├─ ecosystem.md
