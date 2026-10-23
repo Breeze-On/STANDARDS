@@ -17,12 +17,14 @@ Current conventions across the organization.
   - `STANDARDS` — organization standards (`docs/`) and current architecture (`architecture/`)
   - `.github` — org profile README
   - `SYSTEM-ADMIN-ADM` — ADM application
+  - `SYSTEM-SHARED-UI` — shared Blazor UI library (`BreezeOn.UI`)
 
 ## Applications (code)
 
-| Application | Repo | Project / namespace |
+| Application / library | Repo | Project / namespace |
 | --- | --- | --- |
 | ADM | `SYSTEM-ADMIN-ADM` | `BreezeOn.Adm` |
+| Shared UI | `SYSTEM-SHARED-UI` | `BreezeOn.UI` |
 
 ## Documentation files
 

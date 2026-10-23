@@ -7,6 +7,7 @@ Current technical defaults for Breeze On application work.
 | Layer | Standard |
 | --- | --- |
 | UI | Blazor Web App, Interactive Server (global interactivity) |
+| Shared UI | `BreezeOn.UI` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI); see [ui-components.md](ui-components.md) |
 | Runtime | ASP.NET Core / C# / .NET 10 |
 | Auth (ADM today) | ASP.NET Core Identity |
 | Database | Azure SQL / SQL Server (T-SQL); see [database.md](database.md) |
@@ -20,6 +21,7 @@ Current technical defaults for Breeze On application work.
 
 - Solution + `src/<Project>` layout as used in ADM.
 - Ignore local databases and secrets; never commit credentials.
+- **Database sandbox:** SQL Server in Docker for routine local runs (no Azure SQL / Entra tokens). Follow [local-database.md](local-database.md); copy [`templates/local-sql/`](../templates/local-sql/) into each app repo.
 
 ## Database
 
