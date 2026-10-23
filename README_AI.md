@@ -37,7 +37,10 @@ STANDARDS/
 │  ├─ naming.md
 │  ├─ engineering.md
 │  ├─ database.md
+│  ├─ local-database.md
 │  └─ ui-components.md
+├─ templates/
+│  └─ local-sql/         # Docker SQL sandbox starter for app repos
 └─ architecture/         # currently implemented systems only
    ├─ ecosystem.md
    ├─ adm.md
@@ -47,6 +50,7 @@ STANDARDS/
 | Path | Purpose |
 | --- | --- |
 | `docs/` | Standards, conventions, rules, practices, naming, documentation requirements, engineering decisions, UI patterns, governance |
+| `templates/` | Copy-paste starters for apps (e.g. local SQL Docker) |
 | `architecture/` | Currently implemented systems, platform structure, application responsibilities, security architecture |
 
 If you add or remove files under `docs/` or `architecture/`, update **this** `README_AI.md` and the root `README.md` in the same change set.
@@ -67,6 +71,7 @@ Before planning or implementing in a Breeze On repo:
 3. Read that product repo’s `README_AI.md` for **local** scope only.
 4. If you introduce a lasting convention or a new implemented system, document it here (`docs/` or `architecture/`) as current state — do not invent a one-off undocumented rule.
 5. For database work: follow [`docs/database.md`](docs/database.md). Product apps that own schema must update `sql/current_model/` and `docs/db-model.md` together.
+6. For local database work: follow [`docs/local-database.md`](docs/local-database.md); do not point Development at Azure SQL by default.
 
 ## Product README_AI expectations
 

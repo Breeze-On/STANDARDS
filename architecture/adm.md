@@ -28,11 +28,23 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | --- | --- |
 | UI framework | Blazor Web App, Interactive Server (global interactivity) |
 | Runtime | ASP.NET Core / C# / .NET 10 (App Service stack: `DOTNETCORE|10.0`) |
-| Auth | ASP.NET Core Identity on Azure SQL (`AspNet*` tables) |
+| Auth | ASP.NET Core Identity (`AspNet*` tables via EF migrations) |
 | Surfaces | Home (cards), Dashboard (authorized), left navigation, Identity account pages |
 | Data access | EF Core + SQL Server provider |
 | SQL scripts | `sql/current_model/` (T-SQL): schema `SYSADM`, table `SYSADM.ADMApplications` |
 | DB model doc | [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM/blob/main/docs/db-model.md) |
+| Local database | SQL Server Docker (`BreezeOnLocal`); see [local-database.md](../docs/local-database.md) |
+
+## Local development (current)
+
+| Resource | Value |
+| --- | --- |
+| Engine | SQL Server 2022 container (`docker-compose.yml` in ADM repo) |
+| Physical database | `BreezeOnLocal` |
+| Auth | SQL `sa` (password via `.env` / `LocalSql:SaPassword` or `MSSQL_SA_PASSWORD`) |
+| Init | `scripts/local-db-init.ps1` applies `sql/current_model/` |
+
+Routine local runs do **not** use Azure SQL. Org pattern: [local-database.md](../docs/local-database.md).
 
 ## DV environment (current)
 

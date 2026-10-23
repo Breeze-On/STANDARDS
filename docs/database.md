@@ -8,6 +8,10 @@ Current conventions for relational databases in Breeze On applications.
 - Application `sql/current_model` scripts are authored in **T-SQL** for Azure SQL Database / SQL Server.
 - Do not introduce a second relational engine for the same application without an explicit org decision and STANDARDS update.
 
+## Local development
+
+Routine local work uses a **SQL Server Docker sandbox** (not Azure SQL). Pattern, templates, and init expectations: [local-database.md](local-database.md). Starter files: [`templates/local-sql/`](../templates/local-sql/).
+
 ## String columns (NVARCHAR)
 
 - Use **NVARCHAR** for variable-length Unicode strings on all standard business columns.

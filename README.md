@@ -34,7 +34,10 @@ STANDARDS/
 │  ├─ naming.md
 │  ├─ engineering.md
 │  ├─ database.md
+│  ├─ local-database.md
 │  └─ ui-components.md
+├─ templates/
+│  └─ local-sql/             # Docker SQL sandbox starter (copy into app repos)
 └─ architecture/             # Currently implemented systems only
    ├─ ecosystem.md
    ├─ adm.md
@@ -61,7 +64,14 @@ Do not mix speculative design into either tree. If it is not real yet, it does n
 | [Naming](docs/naming.md) | Org, repos, projects, display names |
 | [Engineering](docs/engineering.md) | Stack and repo shape in use |
 | [Database](docs/database.md) | NVARCHAR lengths; NOT NULL rules; sql/current_model; per-app `docs/db-model.md` |
+| [Local database](docs/local-database.md) | SQL Server Docker sandbox for local development |
 | [UI components](docs/ui-components.md) | Shared UI conventions in use |
+
+### Templates
+
+| Path | Covers |
+| --- | --- |
+| [templates/local-sql/](templates/local-sql/) | Starter `docker-compose.yml` and `.env.example` for local SQL Server |
 
 ### Architecture (`architecture/`)
 
