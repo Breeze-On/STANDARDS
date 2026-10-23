@@ -2,7 +2,7 @@
 
 Standard for running a **local SQL Server** in Docker so Breeze On applications can develop and test without consuming Azure SQL or Entra tokens.
 
-Hosted environments (DV / PP / PR) remain **Azure SQL** with Managed Identity (or Entra Default for operators). Local password authentication is **local only** — never use SQL `sa` passwords against Azure SQL.
+Hosted environments (DV / PP / PR) remain **Azure SQL** with Managed Identity (or Entra Default for operators). Local password authentication is **local only** — never use SQL `sa` passwords against Azure SQL. Environment definitions: [environments.md](environments.md). Decision context: [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.md).
 
 ## Purpose
 

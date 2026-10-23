@@ -6,15 +6,15 @@ Current technical defaults for Breeze On application work.
 
 | Layer | Standard |
 | --- | --- |
-| UI | Blazor Web App, Interactive Server (global interactivity) |
-| Shared UI | `BreezeOn.UI` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI); see [ui-components.md](ui-components.md) |
+| UI | Blazor Web App, Interactive Server (global interactivity); [ADR-002](../decisions/ADR-002-blazor-interactive-server.md) |
+| Shared UI | `BreezeOn.UI` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI); see [ui-components.md](ui-components.md); [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 | Runtime | ASP.NET Core / C# / .NET 10 |
 | Auth (ADM today) | ASP.NET Core Identity |
-| Database | Azure SQL / SQL Server (T-SQL); see [database.md](database.md) |
+| Database | Azure SQL / SQL Server (T-SQL) + local Docker; see [database.md](database.md), [local-database.md](local-database.md); [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.md) |
 
 ## Repository model
 
-- **Multi-repo:** one repository per application or shared concern (e.g. STANDARDS, ADM).
+- **Multi-repo:** one repository per application or shared concern (e.g. STANDARDS, ADM). See [ADR-001](../decisions/ADR-001-multi-repository-model.md).
 - Do not merge unrelated products into a single app repo.
 
 ## Local development
@@ -29,6 +29,12 @@ Relational column, nullability, SQL script, and per-app DB model conventions: [d
 
 Applications that own schema must keep `sql/current_model/` and `docs/db-model.md` current in the same change set as schema changes.
 
+## Application shape and environments
+
+- What a Breeze On application repository includes: [application-model.md](application-model.md).
+- Environment names (Local, DV) and hosted seed labels: [environments.md](environments.md).
+- Significant architectural decisions: [adr.md](adr.md) and [`decisions/`](../decisions/).
+
 ## Documentation
 
-Engineering changes that affect how others run or understand the app must update that repo’s README / README_AI per [documentation standards](documentation.md). Cross-cutting or new implemented systems must update STANDARDS `architecture/` in the same change set when applicable.
+Engineering changes that affect how others run or understand the app must update that repo’s README / README_AI per [documentation standards](documentation.md). Cross-cutting or new implemented systems must update STANDARDS `architecture/` in the same change set when applicable. Architectural decision changes must update or supersede ADRs in the same change set.

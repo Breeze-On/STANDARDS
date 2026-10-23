@@ -11,6 +11,7 @@ Shared UI conventions for Breeze On applications.
 | Approach | Option B+: BreezeOn public API on top of Fluent UI Blazor (Fluent is internal) |
 | Registration | `services.AddBreezeOnUI()` |
 | Host requirements | Render `BoThemeProvider` and `BoProviders` in the app layout |
+| Decision record | [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 
 Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not reference `Microsoft.FluentUI.AspNetCore.Components` types from product pages.
 

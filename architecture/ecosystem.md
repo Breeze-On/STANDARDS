@@ -27,4 +27,6 @@ Multi-repo: one repository per application or shared concern. Unrelated products
 
 ## Governance
 
-STANDARDS is the single source of truth for conventions and for documenting systems that exist. Product repos link to STANDARDS; they do not redefine org-wide rules.
+STANDARDS is the single source of truth for conventions, for documenting systems that exist, and for Architecture Decision Records (`decisions/`). Product repos link to STANDARDS; they do not redefine org-wide rules.
+
+Related: [application-model.md](../docs/application-model.md), [environments.md](../docs/environments.md), [adr.md](../docs/adr.md), [ADR-001 multi-repository](../decisions/ADR-001-multi-repository-model.md).
