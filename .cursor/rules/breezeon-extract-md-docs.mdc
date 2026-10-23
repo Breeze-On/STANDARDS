@@ -1,0 +1,14 @@
+---
+description: >-
+  Breeze-On only — extract all .md documentation for external review into one
+  Downloads Markdown file (not a zip).
+alwaysApply: true
+---
+
+# Breeze-On — extract Markdown docs for external review
+
+**Scope:** Breeze-On / BreezeOn only.
+
+When the user asks to extract/export all `.md` documentation for external review (e.g. Copilot), follow the procedure in [`docs/documentation.md`](../../docs/documentation.md) § **External review export (agents)**.
+
+Summary: one consolidated `.md` in Downloads; wrap each file with Repository / File name / Path / Full GitHub-style path; sources STANDARDS, SYSTEM-ADMIN-ADM, SYSTEM-SHARED-UI, `.github`; no zip; no GitHub push.
