@@ -1,4 +1,4 @@
-# UI component standards
+﻿# UI component standards
 
 Shared UI conventions for Breeze On applications.
 
@@ -19,9 +19,14 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 
 | Component | Purpose |
 | --- | --- |
-| Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography) |
+| Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens) |
 | `BoProviders` | Hosts Fluent providers (dialogs, tooltips, etc.) without exposing Fluent |
-| `BoCard` | Card surface with optional title and footer |
+| `BoAppShell` | Option B app chrome: full-height nav + header/body column |
+| `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None |
+| `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail; bottom collapse control |
+| `BoAppHeader` | Top header card; `AppTitle` (bold) + `Subtitle` (regular, smaller) |
+| `BoAppBody` | Scrollable body region content host |
+| `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` |
 | `BoStack` | Vertical or horizontal stack layout |
 | `BoPageHeader` | Page title and description |
 | `BoTextField` | Text input |
@@ -32,9 +37,26 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 | `BoDialogService` | Message / confirmation dialogs (Fluent-backed facade) |
 | `BoTooltip` | Tooltip |
 
+### Shell tokens (current)
+
+| Token name | CSS variable | Where used |
+| --- | --- | --- |
+| `background` | `--bo-color-background` | Page/canvas behind floating shell cards |
+| `card-container-background` | `--bo-color-card-container-background` | Shell and content card fill |
+| `card-container-border` | `--bo-color-card-container-border` | Light card borders (`#EEEEF0`) |
+| `card-container-shadow` | `--bo-shadow-card-container` | Card elevation |
+| `shell-margin` | `--bo-space-shell-margin` | Slim margins on shell cards; **nav right margin is 0** (gap from main column left margin) |
+| `content-card-margin` | `--bo-space-content-card-margin` | Slightly larger margins for in-body content cards |
+
+`BoAppShell` is required for apps using this library (Option B). Left-nav hover/selected styles are **nav-only**. Per-app: `NavBackgroundColor`, `NavSelectedTabColor`, link labels/icons. Minimize label/icon are **fixed**.
+
+### Typography (hard standard)
+
+Default UI font for Breeze On applications using `BreezeOn.UI` is **Calibri** (`BoThemeOptions.FontFamily` / `--bo-font-family`, with Segoe UI / system-ui as fallbacks only). Do not change the default typeface without an explicit org decision and STANDARDS update.
+
 ### Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Shell demo: `/shell`.
 
 ## When new shared components are introduced
 
