@@ -1,14 +1,16 @@
 # Breeze On — local SQL Server sandbox
 # Copy to application repo root. See STANDARDS docs/local-database.md
 # Requires a gitignored .env with MSSQL_SA_PASSWORD (see .env.example).
+# Prefer env_file so `$` in the password is not re-interpolated by Compose.
 
 services:
   sql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: breezeon-sql-local
+    env_file:
+      - .env
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "${MSSQL_SA_PASSWORD}"
     ports:
       - "1433:1433"
     volumes:

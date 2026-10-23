@@ -43,6 +43,7 @@ Each application repository that owns database objects maintains SQL under:
 ```text
 sql/
   current_model/          # Source of truth for the current schema (executable T-SQL)
+  seed/                   # Required local-only sample data for local-ready testing (not for hosted envs by default)
   migration_scripts/      # Temporary deltas; clean up after applied
 docs/
   db-model.md             # Human/agent-readable current DB model (required when the app owns SQL objects)
@@ -56,6 +57,17 @@ docs/
 - Include schema-creation scripts as needed (e.g. `00_schema_*.sql`).
 - Use Transact-SQL idioms appropriate for Azure SQL (`IF OBJECT_ID` / `sys.schemas`, `IDENTITY`, `GO` batches as needed).
 - Nullability must follow the rules above.
+
+### `sql/seed/` (required for apps with owned business schema)
+
+Every application that owns business tables must keep a **local-ready** seed so developers and agents can exercise the app without Azure SQL or empty tables.
+
+- Sample/fake data for **local Docker SQL** only.
+- Not the schema source of truth; keep scripts **idempotent** when practical.
+- Do **not** apply to hosted DV / PP / PR by default.
+- **Keep in sync:** when `sql/current_model/` or `docs/db-model.md` changes, update `sql/seed/` in the **same change set** so local testing still works.
+- Ship a seed script (e.g. `scripts/local-db-seed.ps1`) and document it in the app README / README_AI.
+- Local sandbox workflow: [local-database.md](local-database.md).
 
 ### `sql/migration_scripts/`
 

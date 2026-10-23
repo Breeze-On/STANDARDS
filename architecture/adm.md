@@ -43,8 +43,9 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | Physical database | `BreezeOnLocal` |
 | Auth | SQL `sa` (password via `.env` / `LocalSql:SaPassword` or `MSSQL_SA_PASSWORD`) |
 | Init | `scripts/local-db-init.ps1` applies `sql/current_model/` |
+| Seed | `scripts/local-db-seed.ps1` applies `sql/seed/` (required local fake data; keep in sync with schema) |
 
-Routine local runs do **not** use Azure SQL. Org pattern: [local-database.md](../docs/local-database.md).
+Routine local runs do **not** use Azure SQL. Org pattern: [local-database.md](../docs/local-database.md). Human runbook and agent steps: ADM [`README.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM/blob/main/README.md) / [`README_AI.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM/blob/main/README_AI.md).
 
 ## DV environment (current)
 
