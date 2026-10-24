@@ -1,4 +1,4 @@
-﻿# UI component standards
+# UI component standards
 
 Shared UI conventions for Breeze On applications.
 
@@ -20,7 +20,7 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 | Component | Purpose |
 | --- | --- |
 | Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens) |
-| `BoProviders` | Hosts Fluent providers (dialogs, tooltips, etc.) without exposing Fluent |
+| `BoProviders` | Hosts Fluent providers without exposing Fluent |
 | `BoAppShell` | Option B app chrome: full-height nav + header/body column |
 | `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None |
 | `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail; bottom collapse control |
@@ -30,12 +30,7 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 | `BoStack` | Vertical or horizontal stack layout |
 | `BoPageHeader` | Page title and description |
 | `BoTextField` | Text input |
-| `BoSelect` | Drop-down list (DDL) |
-| `BoCheckbox` | Checkbox |
 | `BoButton` | Button (primary / secondary / stealth) |
-| `BoDialog` | Declarative panel dialog |
-| `BoDialogService` | Message / confirmation dialogs (Fluent-backed facade) |
-| `BoTooltip` | Tooltip |
 
 ### Shell tokens (current)
 
@@ -56,7 +51,7 @@ Default UI font for Breeze On applications using `BreezeOn.UI` is **Calibri** (`
 
 ### Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Shell demo: `/shell`.
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (empty landing), Theme, Text Field.
 
 ## When new shared components are introduced
 
