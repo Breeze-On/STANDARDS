@@ -1,4 +1,4 @@
-﻿# UI component standards
+# UI component standards
 
 Shared UI conventions for Breeze On applications.
 
@@ -20,28 +20,56 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 | Component | Purpose |
 | --- | --- |
 | Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens) |
-| `BoProviders` | Hosts Fluent providers without exposing Fluent |
-| `BoAppShell` | Option B app chrome: full-height nav + header/body column |
+| `BoProviders` | Hosts Fluent providers and `BoMessageDialogHost` without exposing Fluent |
+| `BoAppShell` | Option B app chrome: full-height nav + header / body / footer column |
 | `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None |
 | `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail; bottom collapse control; prefer `IconContent` with `BoIcon` |
 | `BoIcon` | Public icon API (`Name`, `BoIconVariant`, `Size`); resolves Fluent System Icons internally |
-| `BoAppHeader` | Top header card; `AppTitle` (bold) + `Subtitle` (regular, smaller) |
-| `BoAppBody` | Scrollable body region content host |
+| `BoAppHeader` | Top header card; `AppTitle` + `  -  ` + `Subtitle` inline; optional `TabsContent` |
+| `BoTabs` / `BoTab` | Optional page-section tabs under the header title row |
+| `BoTabPanels` / `BoTabPanel` | Keep-alive body sections keyed to tabs (`SelectedTab`) |
+| `BoAppBody` | Scrollable body region content host (scrolls inside body card) |
+| `BoAppFooter` | **Hard standard** bottom footer card (required with `BoAppShell`; shorter inside padding) |
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` |
 | `BoStack` | Vertical or horizontal stack layout |
 | `BoPageHeader` | Page title and description |
 | `BoTextField` | Text input |
-| `BoButton` | Button (primary / secondary / stealth) |
+| `BoButton` | Pill button (primary / secondary / stealth); shorter+wider padding; shadow + hover lift; optional icon |
+| `BoDialogService` | Message dialog facade (`ShowMessageAsync`) |
+
+### Header tabs (optional page sections)
+
+Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTabs` / `BoTab` and body `BoTabPanels` / `BoTabPanel`. Tabs are page sections, not left-nav routes.
+
+| Concern | Standard |
+| --- | --- |
+| Width | Dynamic / content-hug; label nowrap |
+| Content | Icon (`BoIcon`) + label; vertically center-aligned |
+| Default colors | Black text/icon; transparent background |
+| Hover | Tertiary (`#F0F8F2`) + lift |
+| Selected | Secondary (`#C5E0CE`) + black text/icon |
+| Vertical separator | Border-token rule centered in the gap between tabs (16px gap) |
+| Horizontal divider | 96% of width inside header padding |
+| Inside padding | Tab hit: 4px vertical / 8px horizontal |
+| Outside spacing | 16px gap between tabs; inside header padding |
+| Switch behavior | All panels load together and stay mounted; hide inactive with CSS (no remount/reload) |
+| `SelectedTab` | Bindable in-memory key (`@bind-SelectedTab`); defaults to first tab; persists across switches |
+
+Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Header tabs standard).
+
+### App shell footer (hard standard)
+
+Every application that uses `BoAppShell` **must** include the fixed bottom footer shell region (`BoAppFooter` / `FooterContent`). Do not ship apps with header/body only. Footer chrome matches the floating card family; body content scrolls inside the body card above it.
 
 ### Left navigation standard (locked)
 
 `BoAppShell` is required for apps using this library (Option B). The **left navigation bar is a platform standard**. Product apps compose pages inside it; they do not redesign nav chrome.
 
-**Required structure (top → bottom):** brand logos (expanded + minimized) → horizontal divider → nav pages with Fluent icons via `BoIcon` → fixed collapse control.
+**Required structure (top to bottom):** brand logos (expanded + minimized) -> horizontal divider -> nav pages with Fluent icons via `BoIcon` -> fixed collapse control.
 
-**Fixed (not per-app):** Fluent icons through `BoIcon` for page items; logo divider; page hover (lift) and selected fill; collapse control (green icon-only hit; `PanelRightExpand` when expanded, `PanelLeftExpand` when collapsed). Hover/selected patterns are **left-nav only**.
+**Fixed (not per-app):** Fluent icons through `BoIcon` for page items; logo divider; page hover (lift) and selected fill using **primary**; collapse control (primary icon-only hit; `PanelRightExpand` when expanded, `PanelLeftExpand` when collapsed). Hover/selected patterns are **left-nav only**.
 
-**Per-application customization:** logo image URLs (`LogoExpandedSrc` / `LogoMinimizedSrc`); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; optional `NavBackgroundColor` / `NavSelectedTabColor`.
+**Per-application customization:** logo image URLs (`LogoExpandedSrc` / `LogoMinimizedSrc`); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; optional `PrimaryColor` / `TertiaryColor`.
 
 Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Left navigation standard).
 
@@ -51,10 +79,14 @@ Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYS
 | --- | --- | --- |
 | `background` | `--bo-color-background` | Page/canvas behind floating shell cards |
 | `card-container-background` | `--bo-color-card-container-background` | Shell and content card fill |
-| `card-container-border` | `--bo-color-card-container-border` | Light card borders (`#EEEEF0`) |
+| `card-container-border` | `--bo-color-card-container-border` | Light card borders |
 | `card-container-shadow` | `--bo-shadow-card-container` | Card elevation |
 | `shell-margin` | `--bo-space-shell-margin` | Slim margins on shell cards; **nav right margin is 0** (gap from main column left margin) |
 | `content-card-margin` | `--bo-space-content-card-margin` | Slightly larger margins for in-body content cards |
+| `primary` | `--bo-color-primary` | Accent (`#1F6B3A`): selected nav, primary buttons |
+| `primary-hover` | `--bo-color-primary-hover` | Primary button hover |
+| `secondary` | `--bo-color-secondary` | Selected header tab (`#C5E0CE`) |
+| `tertiary` | `--bo-color-tertiary` | Soft surface (`#F0F8F2`): nav panel, secondary buttons, tab hover |
 
 ### Typography (hard standard)
 
@@ -62,7 +94,7 @@ Default UI font for Breeze On applications using `BreezeOn.UI` is **Calibri** (`
 
 ### Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (empty landing), Theme, Text Field.
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (empty landing), Theme, Components (`/text-field` with Text Field / Drop-Down List / Date Field header tabs).
 
 ## When new shared components are introduced
 
