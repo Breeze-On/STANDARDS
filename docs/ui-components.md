@@ -1,4 +1,4 @@
-# UI component standards
+﻿# UI component standards
 
 Shared UI conventions for Breeze On applications.
 
@@ -33,6 +33,18 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 | `BoTextField` | Text input |
 | `BoButton` | Button (primary / secondary / stealth) |
 
+### Left navigation standard (locked)
+
+`BoAppShell` is required for apps using this library (Option B). The **left navigation bar is a platform standard**. Product apps compose pages inside it; they do not redesign nav chrome.
+
+**Required structure (top → bottom):** brand logos (expanded + minimized) → horizontal divider → nav pages with Fluent icons via `BoIcon` → fixed collapse control.
+
+**Fixed (not per-app):** Fluent icons through `BoIcon` for page items; logo divider; page hover (lift) and selected fill; collapse control (green icon-only hit; `PanelRightExpand` when expanded, `PanelLeftExpand` when collapsed). Hover/selected patterns are **left-nav only**.
+
+**Per-application customization:** logo image URLs (`LogoExpandedSrc` / `LogoMinimizedSrc`); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; optional `NavBackgroundColor` / `NavSelectedTabColor`.
+
+Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Left navigation standard).
+
 ### Shell tokens (current)
 
 | Token name | CSS variable | Where used |
@@ -43,8 +55,6 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 | `card-container-shadow` | `--bo-shadow-card-container` | Card elevation |
 | `shell-margin` | `--bo-space-shell-margin` | Slim margins on shell cards; **nav right margin is 0** (gap from main column left margin) |
 | `content-card-margin` | `--bo-space-content-card-margin` | Slightly larger margins for in-body content cards |
-
-`BoAppShell` is required for apps using this library (Option B). Left-nav hover/selected styles are **nav-only**. Per-app: `NavBackgroundColor`, `NavSelectedTabColor`, link labels/icons. Minimize label/icon are **fixed**.
 
 ### Typography (hard standard)
 
