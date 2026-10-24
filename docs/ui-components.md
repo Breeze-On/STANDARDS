@@ -23,7 +23,8 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 | `BoProviders` | Hosts Fluent providers without exposing Fluent |
 | `BoAppShell` | Option B app chrome: full-height nav + header/body column |
 | `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None |
-| `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail; bottom collapse control |
+| `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail; bottom collapse control; prefer `IconContent` with `BoIcon` |
+| `BoIcon` | Public icon API (`Name`, `BoIconVariant`, `Size`); resolves Fluent System Icons internally |
 | `BoAppHeader` | Top header card; `AppTitle` (bold) + `Subtitle` (regular, smaller) |
 | `BoAppBody` | Scrollable body region content host |
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` |
