@@ -31,11 +31,34 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 | `BoAppBody` | Scrollable body region content host (scrolls inside body card) |
 | `BoAppFooter` | **Hard standard** bottom footer card (required with `BoAppShell`; shorter inside padding) |
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` |
+| `BoSectionMain` | **Main Section** — borderless content block with optional header; see [Main Section](#main-section-bosectionmain) |
 | `BoStack` | Vertical or horizontal stack layout |
 | `BoPageHeader` | Page title and description |
 | `BoTextField` | Text input |
 | `BoButton` | Pill button (primary / secondary / stealth); shorter+wider padding; shadow + hover lift; optional icon |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`) |
+
+
+
+
+### Main Section (`BoSectionMain`)
+
+**Main Section** is a borderless content block (same role as a card for grouping page content, but **no** border, **no** shadow, and **no** inside padding). Header is **optional**.
+
+#### Optional header
+
+When a header is present:
+
+| Concern | Standard |
+| --- | --- |
+| Label | Bold, **16px**, black (`#000000`); top-left aligned |
+| Icon | Optional; to the **left** of the label; vertically center-aligned with the label |
+| Rule | Grey horizontal line **directly under** the header text/icon row; almost no gap (≈2px) between text and rule |
+| API | `Title` and/or `TitleContent`; optional `IconContent` |
+
+Implementation: [SYSTEM-SHARED-UI `BoSectionMain`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/src/BreezeOn.UI/Layout/BoSectionMain.razor). Product apps use `BoSectionMain` for Main Sections — do not reimplement this chrome in page CSS.
+
+`BoSectionSub` (Sub Section) is **not** shipped yet.
 
 ### Header tabs (optional page sections)
 
@@ -98,7 +121,7 @@ Nav page URLs **must match the page name** (lowercase, hyphenated if multi-word)
 
 ### Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (README-style overview), Components (`/components` with Text Field / Drop-Down List / Date Field header tabs), Theme. Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name.
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (README-style overview), Components (`/components` with Text Field / Drop-Down List / Date Field header tabs), Theme (Primary Color Main Section). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name.
 
 ## When new shared components are introduced
 
