@@ -46,8 +46,8 @@ Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTab
 | Width | Dynamic / content-hug; label nowrap |
 | Content | Icon (`BoIcon`) + label; vertically center-aligned |
 | Default colors | Black text/icon; transparent background |
-| Hover | Tertiary (`#F0F8F2`) + lift |
-| Selected | Secondary (`#C5E0CE`) + black text/icon |
+| Hover (unselected) | Tertiary fill + full rounded pill + lift; selected has no hover |
+| Selected | Tertiary fill + full rounded pill; no hover |
 | Vertical separator | Border-token rule centered in the gap between tabs (16px gap) |
 | Horizontal divider | 96% of width inside header padding |
 | Inside padding | Tab hit: 4px vertical / 8px horizontal |
@@ -67,7 +67,7 @@ Every application that uses `BoAppShell` **must** include the fixed bottom foote
 
 **Required structure (top to bottom):** brand logos (expanded + minimized) -> horizontal divider -> nav pages with Fluent icons via `BoIcon` -> fixed collapse control.
 
-**Fixed (not per-app):** Fluent icons through `BoIcon` for page items; logo divider; page hover (lift) and selected fill using **primary**; collapse control (primary icon-only hit; `PanelRightExpand` when expanded, `PanelLeftExpand` when collapsed). Hover/selected patterns are **left-nav only**.
+**Fixed (not per-app):** Fluent icons through `BoIcon` for page items; logo divider; page hover (lift); selected fill using **tertiary** with **black bold** text/icon; unselected **white** text/icon on **primary** nav panel; collapse control (transparent background, **white** icon, hover like unselected nav; `PanelRightExpand` when expanded, `PanelLeftExpand` when collapsed). Hover/selected patterns are **left-nav only**.
 
 **Per-application customization:** logo image URLs (`LogoExpandedSrc` / `LogoMinimizedSrc`); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; optional `PrimaryColor` / `TertiaryColor`.
 
@@ -83,18 +83,22 @@ Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYS
 | `card-container-shadow` | `--bo-shadow-card-container` | Card elevation |
 | `shell-margin` | `--bo-space-shell-margin` | Slim margins on shell cards; **nav right margin is 0** (gap from main column left margin) |
 | `content-card-margin` | `--bo-space-content-card-margin` | Slightly larger margins for in-body content cards |
-| `primary` | `--bo-color-primary` | Accent (`#1F6B3A`): selected nav, primary buttons |
+| `primary` | `--bo-color-primary` | Accent (`#224D3A`): nav panel fill, primary buttons |
 | `primary-hover` | `--bo-color-primary-hover` | Primary button hover |
-| `secondary` | `--bo-color-secondary` | Selected header tab (`#C5E0CE`) |
-| `tertiary` | `--bo-color-tertiary` | Soft surface (`#F0F8F2`): nav panel, secondary buttons, tab hover |
+| `secondary` | `--bo-color-secondary` | Selected header tab rounded bottom border (`#7CF76C`) |
+| `tertiary` | `--bo-color-tertiary` | Soft surface (`#D8F3DC`): selected nav, secondary buttons, header tab selected/hover |
 
 ### Typography (hard standard)
 
 Default UI font for Breeze On applications using `BreezeOn.UI` is **Calibri** (`BoThemeOptions.FontFamily` / `--bo-font-family`, with Segoe UI / system-ui as fallbacks only). Do not change the default typeface without an explicit org decision and STANDARDS update.
 
+### Route / URL (hard standard)
+
+Nav page URLs **must match the page name** (lowercase, hyphenated if multi-word). Example: **Components** -> `/components`. Do not keep a mismatched demo slug after renaming a nav page.
+
 ### Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (empty landing), Theme, Components (`/text-field` with Text Field / Drop-Down List / Date Field header tabs).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (README-style overview), Components (`/components` with Text Field / Drop-Down List / Date Field header tabs), Theme. Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name.
 
 ## When new shared components are introduced
 
