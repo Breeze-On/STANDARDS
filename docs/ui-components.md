@@ -43,22 +43,36 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 
 ### Main Section (`BoSectionMain`)
 
-**Main Section** is a borderless content block (same role as a card for grouping page content, but **no** border, **no** shadow, and **no** inside padding). Header is **optional**.
+**Display name:** Main Section.  
+**Component:** `BoSectionMain` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+
+A **Main Section** groups related page content. It is intentionally **not** a floating card:
+
+| Concern | Main Section (`BoSectionMain`) | Content card (`BoCard`) |
+| --- | --- | --- |
+| Border | None | Card-container border |
+| Shadow | None | Card-container shadow |
+| Inside padding | **None** (0) | Theme spacing on the card |
+| Background | Transparent | Card-container background |
+| Optional header | Yes (see below) | Simple title/footer (card chrome) |
+
+Header is **optional**. When omitted, only the body content is rendered.
 
 #### Optional header
 
-When a header is present:
-
 | Concern | Standard |
 | --- | --- |
-| Label | Bold, **16px**, black (`#000000`); top-left aligned |
-| Icon | Optional; to the **left** of the label; vertically center-aligned with the label |
-| Rule | Grey horizontal line **directly under** the header text/icon row; almost no gap (≈2px) between text and rule |
-| API | `Title` and/or `TitleContent`; optional `IconContent` |
+| Label | Bold, **13px**, black (`#000000`); top-left aligned |
+| Icon | Optional; to the **left** of the label; ~13px; tight ~4px gap to label; **vertically center-aligned** with the label (prefer `BoIcon` in `IconContent`) |
+| Rule | Grey horizontal line **directly under** the header text/icon row; almost no gap (~2px); uses `--bo-color-card-container-border` |
+| API | `Title` and/or `TitleContent`; optional `IconContent`; body via `ChildContent` |
 
-Implementation: [SYSTEM-SHARED-UI `BoSectionMain`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/src/BreezeOn.UI/Layout/BoSectionMain.razor). Product apps use `BoSectionMain` for Main Sections — do not reimplement this chrome in page CSS.
+Product apps must use `BoSectionMain` for Main Sections — do not reimplement this chrome in page CSS.
 
-`BoSectionSub` (Sub Section) is **not** shipped yet.
+**Related (not shipped):** `BoSectionSub` (Sub Section) — do not document or invent until implemented.
+
+**Gallery reference:** Theme page (`/theme`) — Main Section titled "Primary Color" with `PaintBrushSparkle` (Regular) icon and a Hex Code field.
+
 
 ### Header tabs (optional page sections)
 
@@ -125,4 +139,14 @@ Nav page URLs **must match the page name** (lowercase, hyphenated if multi-word)
 
 ## When new shared components are introduced
 
-Document each shared component here (name, purpose, repo/package, usage expectations) at the time it exists, and keep this file current-state only.
+Documentation is part of **completion criteria** (same change set as code). Current reality only — never document planned components as shipped.
+
+For every new or changed public `Bo*` surface:
+
+1. Update **this** file (`docs/ui-components.md`): inventory row + dedicated rules section when the component has locked UX standards.
+2. Update [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) `README.md`, `README_AI.md`, and `AGENTS.md` as needed (link here; do not duplicate long org rules).
+3. Add or update gallery examples when the component is demonstrable.
+4. Update naming / ecosystem docs only if repo or package identity changed.
+5. Create or supersede an ADR when the change is architectural (see [`docs/adr.md`](adr.md)).
+
+A change is incomplete until STANDARDS and the owning product/library docs match the implemented code.
