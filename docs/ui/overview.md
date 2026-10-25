@@ -39,7 +39,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | Component | Purpose | Detail |
 | --- | --- | --- |
 | Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens); dual Light/Dark palettes | [tokens.md](tokens.md), [typography.md](typography.md) |
-| `IBoThemeModeService` | In-memory `ThemeMode` + active palette application | [tokens.md](tokens.md) |
+| `IBoThemeModeService` | `ThemeMode` + active palette; cookie `bo-theme-mode` restore via `BoProviders` bootstrap | [tokens.md](tokens.md) |
 | `BoProviders` | Hosts Fluent providers, `BoMessageDialogHost`, `BoSettingsDialogHost` | — |
 | `BoAppShell` | Option B app chrome: full-height nav + header / body / footer column | [shell.md](shell.md) |
 | `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None | [shell.md](shell.md), [tokens.md](tokens.md) |

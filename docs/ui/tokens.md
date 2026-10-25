@@ -8,7 +8,7 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 
 - **Dual palettes, one semantic name per role.** CSS variables stay `--bo-color-primary` (etc.). Do **not** use `*-light` / `*-dark` suffixes on token names or markup.
 - `BoThemeMode` = `Light` | `Dark`. `IBoThemeModeService` applies `BoThemePalettes.Light` / `.Dark` onto the active `BoThemeOptions`.
-- Slice A: mode is **in-memory** (circuit/session). Cookie persistence is not shipped yet.
+- **Cookie persistence (shipped):** name `bo-theme-mode`; values `light` \| `dark` (lowercase); `Path=/`; `Max-Age≈31536000` (1 year); `SameSite=Lax`; `Secure` when the page is HTTPS; `HttpOnly=false` (JS-readable for Interactive Server restore). Invalid/missing → **Light**. `BoProviders` hosts `BoThemeModeBootstrap` which calls `InitializeAsync()` once per circuit. Hosts should load `_content/BreezeOn.UI/js/bo-theme-mode.js` early (gallery `App.razor` does) so `document.documentElement.dataset.boThemeMode` can be set before circuit restore (FOUC minimized, not eliminated).
 - Gallery Theme (`/theme`) fields reset from the active palette when mode changes. Editing Theme Text Fields does not live-recolor the shell; the header theme switch does.
 
 ## Palette rules (locked)
@@ -25,17 +25,17 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 | `color-semantic-white` | `--bo-color-semantic-white` | `#FFFFFF` | `#FFFFFF` | Canonical white |
 | `color-semantic-black` | `--bo-color-semantic-black` | `#000000` | `#000000` | Canonical black |
 | `color-section-tab-label` | `--bo-color-section-tab-label` | `#000000` | `#F2F5F3` | Section headers; header-tab default text/icon |
-| `color-text-field-label` | `--bo-color-text-field-label` | `#757575` | `#9AA39D` | Text Field label (10px bold uppercase) |
+| `color-text-field-label` | `--bo-color-text-field-label` | `#757575` | `#A8B2AC` | Text Field label (10px bold uppercase) |
 | `color-field-background` | `--bo-color-field-background` | `#FFFFFF` | `#252D29` | Text Field input fill |
 | `color-background` | `--bo-color-background` | `#F6F7F8` | `#121614` | Page/canvas behind shell cards |
 | `color-card-container-background` | `--bo-color-card-container-background` | `#FFFFFF` | `#1E2622` | Shell and content card fill |
-| `color-card-container-border` | `--bo-color-card-container-border` | `#E8EDF1` | `#3A4540` | Card / divider borders |
+| `color-card-container-border` | `--bo-color-card-container-border` | `#E8EDF1` | `#4A5650` | Card / divider borders |
 | `color-primary` | `--bo-color-primary` | `#224D3A` | `#2D5A45` | Accent: nav panel fill, primary buttons |
 | `color-primary-hover` | `--bo-color-primary-hover` | `#1A3A2C` | `#3A6F56` | Primary button hover |
 | `color-secondary` | `--bo-color-secondary` | `#7CF76C` | `#7CF76C` | Secondary accent |
 | `color-tertiary` | `--bo-color-tertiary` | `#D8F3DC` | `#3D5C4A` | Soft surface: selected nav, secondary buttons, tab fills |
-| `color-text` | `--bo-color-text` | `#242424` | `#E8ECE9` | Default body text |
-| `color-text-muted` | `--bo-color-text-muted` | `#616161` | `#9AA39D` | Muted text (e.g. character count) |
+| `color-text` | `--bo-color-text` | `#242424` | `#EEF2EF` | Default body text |
+| `color-text-muted` | `--bo-color-text-muted` | `#616161` | `#A8B2AC` | Muted text (e.g. character count) |
 | `color-danger` | `--bo-color-danger` | `#C50F1F` | `#FF8A8A` | Danger / mandatory asterisk |
 | `color-success` | `--bo-color-success` | `#0E700E` | `#4ADE80` | Success |
 | `color-nav-text` | `--bo-color-nav-text` | `#FFFFFF` | `#FFFFFF` | Unselected nav text/icon |
