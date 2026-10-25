@@ -1,5 +1,7 @@
 # Operational runbooks
 
+Owner: Operations
+
 Operational runbooks document repeatable procedures for deploying, recovering, troubleshooting, and maintaining running systems.
 
 ## Current state

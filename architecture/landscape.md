@@ -1,5 +1,7 @@
 # Architecture — Ecosystem landscape
 
+Owner: Architecture
+
 High-level map of the **implemented** Breeze On ecosystem: repositories, dependency position, hosting, and data relationships as they exist today.
 
 Current-reality only. For org identity and the repository table, see [ecosystem.md](ecosystem.md). For ADM and security detail, see [adm.md](adm.md) and [security.md](security.md).

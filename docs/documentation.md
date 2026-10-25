@@ -1,5 +1,7 @@
 # Documentation standards
 
+Owner: Documentation
+
 Applies to every Breeze On repository, including STANDARDS itself.
 
 ## Philosophy (highest priority)
@@ -17,11 +19,53 @@ Documentation must represent **CURRENT REALITY ONLY**.
 7. Whenever code, architecture, standards, ADRs, or behavior change, update documentation in the **same change set**.
 8. `README.md`, `README_AI.md`, and Architecture Decision Records (ADRs) are living documents and must remain synchronized with the current implementation state.
 
+## Glossary
+
+Shared vocabulary for humans and agents: [`glossary.md`](glossary.md). Prefer linking to glossary entries instead of inventing alternate definitions in product docs.
+
+## Document ownership metadata
+
+Major STANDARDS documents may include a single lightweight line near the top:
+
+```text
+Owner: <area>
+```
+
+Allowed values (documentation ownership areas only):
+
+| Value | Typical documents |
+| --- | --- |
+| `Architecture` | `architecture/*`, ADR process / decision index |
+| `Engineering` | Stack, database, environments, application model |
+| `UI` | `docs/ui/*` |
+| `Documentation` | Documentation standards, glossary, naming, placeholders for undeclared areas |
+| `Operations` | `runbooks/` |
+| `Product` | Product-facing application descriptions when ownership is product-scoped |
+
+**What this is:** a discoverability hint for maintainers about which organizational **area** a document belongs to.
+
+**What this is not:** an approval workflow, a permission model, a review board, named individuals or teams, or a gate before merging.
+
+Do not invent additional owner labels or assign personal names. Omit the line on trivial stubs/redirects when it adds no value.
+
+## Periodic review (advisory)
+
+Documentation should be **reviewed periodically** so it continues to reflect **current reality**.
+
+When reviewing (or when drift is noticed during normal work):
+
+- Confirm content still matches implemented systems and standards in use
+- **Remove** obsolete content when discovered
+- **Correct** broken references when discovered
+- Update related indexes in the same change set when structure or links change
+
+This guidance is **advisory and pragmatic**. It does **not** create mandatory review cycles, compliance checklists, scheduled governance meetings, or formal sign-off processes. Same-change-set updates when reality changes remain the primary duty ([Definition of Done](#definition-of-done)).
+
 ## STANDARDS repo layout
 
 | Tree | Holds |
 | --- | --- |
-| `docs/` | Standards and governance (how we work) |
+| `docs/` | Standards and governance (how we work); glossary: [`glossary.md`](glossary.md) |
 | `docs/ui/` | Hierarchical UI standards (entry: [`ui/overview.md`](ui/overview.md)); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
 | `runbooks/` | Operational procedures (sparse today); index: [`../runbooks/README.md`](../runbooks/README.md) |
 | `architecture/` | Descriptions of systems that exist now (what exists); landscape map: [`../architecture/landscape.md`](../architecture/landscape.md) |

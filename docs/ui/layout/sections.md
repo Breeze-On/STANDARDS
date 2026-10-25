@@ -1,5 +1,7 @@
 # UI — Sections
 
+Owner: UI
+
 Main Section and Sub Section content grouping. Related: [layout.md](layout.md) (Row + page composition), [forms.md](../controls/forms.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md).
 
 **Composition (hard standard):** Form fields **must** be inside a [`BoRow`](layout.md#row-borow); every `BoRow` **must** be inside a Section. Full rules: [layout.md — Page composition](layout.md#page-composition-locked--hard-standard).

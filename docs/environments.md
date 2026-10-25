@@ -1,5 +1,7 @@
 # Environments
 
+Owner: Engineering
+
 Central reference for **environment names and models** used across Breeze On documentation and applications. Product repositories should **link here** instead of redefining environment concepts.
 
 Current Reality Only: details below match what is implemented or already defined in STANDARDS and product docs today.

@@ -1,5 +1,7 @@
 # UI — Layout (Row + page composition)
 
+Owner: UI
+
 Row layout and the Page → Section → Row → Field composition contract. Related: [sections.md](sections.md), [forms.md](../controls/forms.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md).
 
 ## Page composition (locked — hard standard)

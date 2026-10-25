@@ -1,5 +1,7 @@
 # README_AI — STANDARDS
 
+Owner: Documentation
+
 Required context for AI agents working in any **Breeze-On** repository.
 
 This file documents how the **STANDARDS** repository is structured and how agents must use it. Keep this file synchronized with the actual contents of this repo.
@@ -34,6 +36,7 @@ Details: [`docs/documentation.md`](docs/documentation.md). ADR process: [`docs/a
 | What exists? | `architecture/` — start at [`architecture/landscape.md`](architecture/landscape.md) |
 | How do we work? | `docs/` |
 | Why was this decided? | `decisions/` (ADRs) — index [`decisions/README.md`](decisions/README.md) |
+| What does this term mean? | [`docs/glossary.md`](docs/glossary.md) |
 | What is a Breeze On application? | [`docs/application-model.md`](docs/application-model.md) |
 | What do environments mean? | [`docs/environments.md`](docs/environments.md) |
 | What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
@@ -48,6 +51,7 @@ STANDARDS/
 ├─ README_AI.md
 ├─ docs/                 # standards, conventions, governance
 │  ├─ documentation.md
+│  ├─ glossary.md        # shared vocabulary (current usage)
 │  ├─ adr.md
 │  ├─ naming.md
 │  ├─ engineering.md
@@ -80,6 +84,8 @@ STANDARDS/
 | Path | Purpose |
 | --- | --- |
 | `docs/` | Standards, conventions, rules, practices, naming, documentation requirements, engineering decisions, UI patterns, environments, application model, ADR process |
+| `docs/glossary.md` | Shared vocabulary — current usage only; do not invent terms |
+| `docs/documentation.md` | Current-reality rules; lightweight `Owner:` metadata; advisory periodic review (not mandatory cycles) |
 | `docs/ui/` | Hierarchical UI standards (entry: `overview.md`); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
 | `docs/*` placeholders | `domain-modeling`, `testing`, `security-governance`, `observability`, `versioning` — state that org standards are **not yet formally defined** (do not invent rules there) |
 | `runbooks/` | Operational procedures; little content today — see `runbooks/README.md` |
@@ -103,18 +109,20 @@ If you add or remove files under `docs/`, `decisions/`, or `architecture/`, upda
 Before planning or implementing in a Breeze On repo:
 
 1. Read this file and [`docs/documentation.md`](docs/documentation.md).
-2. Read [`docs/adr.md`](docs/adr.md) and relevant files under [`decisions/`](decisions/).
-3. Read other `docs/*` and `architecture/*` files relevant to the task (for topology: [`architecture/landscape.md`](architecture/landscape.md); for UI: [`docs/ui/overview.md`](docs/ui/overview.md)).
-4. Read that product repo’s `README_AI.md` for **local** scope only.
-5. If you introduce a lasting convention or a new implemented system, document it here (`docs/` or `architecture/`) as current state — do not invent a one-off undocumented rule.
-6. If you introduce or change a **significant architectural decision**, create or update an ADR in `decisions/` (or supersede an existing one) in the **same change set**.
-7. For database work: follow [`docs/database.md`](docs/database.md). Product apps that own schema must update `sql/current_model/`, `docs/db-model.md`, and `sql/seed/` together.
-8. For local database work: follow [`docs/local-database.md`](docs/local-database.md); do not point Development at Azure SQL by default.
-9. For environment naming: follow [`docs/environments.md`](docs/environments.md); do not redefine environments independently in product docs.
-10. For what an application repo must include: follow [`docs/application-model.md`](docs/application-model.md).
-11. For UI standards: follow [`docs/ui/overview.md`](docs/ui/overview.md) and docs under `foundations/`, `shell/`, `layout/`, `controls/`; when docs grow too large, deepen the hierarchy and update the UI index (organic structure rule in the overview).
-12. Placeholder docs (`domain-modeling`, `testing`, `security-governance`, `observability`, `versioning`) mean **no org standard yet** — do not invent requirements there; update them only when conventions are actually established.
-13. For operational procedures: see [`runbooks/README.md`](runbooks/README.md); add runbooks only from real procedures.
+2. Use [`docs/glossary.md`](docs/glossary.md) for shared terminology; do not invent alternate definitions.
+3. Read [`docs/adr.md`](docs/adr.md) and relevant files under [`decisions/`](decisions/).
+4. Read other `docs/*` and `architecture/*` files relevant to the task (for topology: [`architecture/landscape.md`](architecture/landscape.md); for UI: [`docs/ui/overview.md`](docs/ui/overview.md)).
+5. Read that product repo’s `README_AI.md` for **local** scope only.
+6. If you introduce a lasting convention or a new implemented system, document it here (`docs/` or `architecture/`) as current state — do not invent a one-off undocumented rule.
+7. If you introduce or change a **significant architectural decision**, create or update an ADR in `decisions/` (or supersede an existing one) in the **same change set**.
+8. For database work: follow [`docs/database.md`](docs/database.md). Product apps that own schema must update `sql/current_model/`, `docs/db-model.md`, and `sql/seed/` together.
+9. For local database work: follow [`docs/local-database.md`](docs/local-database.md); do not point Development at Azure SQL by default.
+10. For environment naming: follow [`docs/environments.md`](docs/environments.md); do not redefine environments independently in product docs.
+11. For what an application repo must include: follow [`docs/application-model.md`](docs/application-model.md).
+12. For UI standards: follow [`docs/ui/overview.md`](docs/ui/overview.md) and docs under `foundations/`, `shell/`, `layout/`, `controls/`; when docs grow too large, deepen the hierarchy and update the UI index (organic structure rule in the overview).
+13. Placeholder docs (`domain-modeling`, `testing`, `security-governance`, `observability`, `versioning`) mean **no org standard yet** — do not invent requirements there; update them only when conventions are actually established.
+14. For operational procedures: see [`runbooks/README.md`](runbooks/README.md); add runbooks only from real procedures.
+15. Major STANDARDS docs may carry lightweight `Owner:` metadata (area label only — not an approval workflow); see [`docs/documentation.md`](docs/documentation.md).
 
 ## Product README_AI expectations
 

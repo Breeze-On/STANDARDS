@@ -1,5 +1,7 @@
 # Domain modeling
 
+Owner: Documentation
+
 **Status:** Not yet formally defined.
 
 Breeze On does not currently maintain organization-wide standards for business or domain modeling.

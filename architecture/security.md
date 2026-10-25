@@ -1,5 +1,7 @@
 # Architecture — Security
 
+Owner: Architecture
+
 Current-state security posture for implemented Breeze On applications.
 
 ## ADM authentication

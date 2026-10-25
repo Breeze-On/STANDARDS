@@ -1,5 +1,7 @@
 # Observability
 
+Owner: Documentation
+
 **Status:** Not yet formally defined.
 
 Breeze On does not currently maintain organization-wide observability standards.

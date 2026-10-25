@@ -1,8 +1,10 @@
 # Architecture
 
+Owner: Architecture
+
 Descriptions of **implemented** Breeze On systems. Answers: **what exists**.
 
-Current reality only — do not place planned or speculative designs here. How we work: [`docs/`](../docs/). Why decisions were made: [`decisions/`](../decisions/).
+Current reality only — do not place planned or speculative designs here. How we work: [`docs/`](../docs/). Why decisions were made: [`decisions/`](../decisions/). Shared vocabulary: [`docs/glossary.md`](../docs/glossary.md).
 
 ## Index
 

@@ -1,4 +1,6 @@
-# Versioning and release management
+# Versioning
+
+Owner: Documentation
 
 **Status:** Not yet formally defined.
 

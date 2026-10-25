@@ -1,5 +1,7 @@
 # UI — App shell
 
+Owner: UI
+
 App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.md](navigation.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md).
 
 ## `BoAppShell` (required)

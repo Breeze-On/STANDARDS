@@ -1,5 +1,7 @@
 # Architecture — Ecosystem
 
+Owner: Architecture
+
 Current-state description of the Breeze On organization on GitHub.
 
 For a high-level map of repository relationships, UI dependency position, Azure hosting, and SQL (local vs DV), see [landscape.md](landscape.md).

@@ -1,5 +1,7 @@
 # Breeze On — STANDARDS
 
+Owner: Documentation
+
 Organization-wide **standards** and **current-state architecture** for every Breeze On repository.
 
 **Canonical repo:** [Breeze-On/STANDARDS](https://github.com/Breeze-On/STANDARDS)
@@ -20,7 +22,7 @@ Documentation must represent **CURRENT REALITY ONLY**.
 
 `README.md` and `README_AI.md` (here and in every repo) are **living documents** and must stay synchronized with the current implementation state.
 
-Full rules: [`docs/documentation.md`](docs/documentation.md). ADR process: [`docs/adr.md`](docs/adr.md).
+Full rules: [`docs/documentation.md`](docs/documentation.md) (includes lightweight document ownership metadata and advisory periodic review). Glossary: [`docs/glossary.md`](docs/glossary.md). ADR process: [`docs/adr.md`](docs/adr.md).
 
 ## How this repository answers questions
 
@@ -29,6 +31,7 @@ Full rules: [`docs/documentation.md`](docs/documentation.md). ADR process: [`doc
 | What exists? | [`architecture/`](architecture/) — start at [landscape](architecture/landscape.md) |
 | How do we work? | [`docs/`](docs/) |
 | Why was this decision made? | [`decisions/`](decisions/) (ADRs) |
+| What does this term mean? | [`docs/glossary.md`](docs/glossary.md) |
 | What defines a Breeze On application? | [`docs/application-model.md`](docs/application-model.md) |
 | How are environments defined? | [`docs/environments.md`](docs/environments.md) |
 | What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
@@ -45,6 +48,7 @@ STANDARDS/
 ├─ README_AI.md              # Agents — mandate and how to use this repo
 ├─ docs/                     # Standards, conventions, governance
 │  ├─ documentation.md
+│  ├─ glossary.md            # Shared vocabulary (current usage)
 │  ├─ adr.md
 │  ├─ naming.md
 │  ├─ engineering.md
@@ -97,7 +101,8 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 
 | Document | Covers |
 | --- | --- |
-| [Documentation](docs/documentation.md) | Current-reality rules; README / README_AI; ADRs; update duty |
+| [Documentation](docs/documentation.md) | Current-reality rules; ownership metadata; advisory review; README / README_AI; ADRs; update duty |
+| [Glossary](docs/glossary.md) | Shared vocabulary (current usage only) |
 | [ADR process](docs/adr.md) | When and how to write Architecture Decision Records |
 | [Naming](docs/naming.md) | Org, repos, projects, display names |
 | [Engineering](docs/engineering.md) | Stack and repo shape in use |

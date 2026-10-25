@@ -1,5 +1,7 @@
 # Application model
 
+Owner: Engineering
+
 Defines what constitutes a **standard Breeze On application** based on patterns already implemented in the ecosystem (primarily ADM). Shared libraries (e.g. `BreezeOn.UI`) follow related documentation and boundary rules but are not full applications.
 
 ## What exists today

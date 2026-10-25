@@ -1,5 +1,7 @@
 # Architecture Decision Records (ADR)
 
+Owner: Architecture
+
 Standard for recording **why** significant architectural decisions were made in the Breeze On ecosystem.
 
 ## Purpose

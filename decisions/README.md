@@ -1,5 +1,7 @@
 # Architecture Decision Records
 
+Owner: Architecture
+
 ADRs document **why** significant architectural decisions were made. Process and template: [`docs/adr.md`](../docs/adr.md).
 
 ## Index metadata

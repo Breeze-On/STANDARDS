@@ -1,5 +1,7 @@
 # Naming standards
 
+Owner: Documentation
+
 Current conventions across the organization.
 
 ## Organization
@@ -32,3 +34,5 @@ Current conventions across the organization.
 - `README_AI.md` — agents
 
 Prefer clear, stable names. Do not rename established public identifiers without an explicit org decision.
+
+Shared vocabulary beyond naming forms: [glossary.md](glossary.md).

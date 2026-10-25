@@ -1,5 +1,7 @@
 # UI — Navigation and routes
 
+Owner: UI
+
 Left navigation and URL path standards. Related: [shell.md](shell.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md).
 
 ## Left navigation standard (locked)

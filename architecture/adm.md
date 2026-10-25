@@ -1,5 +1,7 @@
 # Architecture — ADM
 
+Owner: Architecture
+
 Current-state description of the Administration application.
 
 ## Identity

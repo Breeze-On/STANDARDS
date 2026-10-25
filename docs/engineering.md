@@ -1,5 +1,7 @@
 ﻿# Engineering standards
 
+Owner: Engineering
+
 Current technical defaults for Breeze On application work.
 
 ## Stack
@@ -39,3 +41,5 @@ Applications that own schema must keep `sql/current_model/` and `docs/db-model.m
 ## Documentation
 
 Engineering changes that affect how others run or understand the app must update that repo’s README / README_AI per [documentation standards](documentation.md). Cross-cutting or new implemented systems must update STANDARDS `architecture/` in the same change set when applicable. Architectural decision changes must update or supersede ADRs in the same change set.
+
+Shared vocabulary: [glossary.md](glossary.md). Document ownership metadata and advisory review guidance: [documentation.md](documentation.md).

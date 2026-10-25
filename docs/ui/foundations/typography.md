@@ -1,5 +1,7 @@
 # UI — Typography
 
+Owner: UI
+
 Typeface standard for `BreezeOn.UI`. Related: [tokens.md](tokens.md), [forms.md](../controls/forms.md), [overview.md](../overview.md).
 
 ## Default typeface (hard standard)

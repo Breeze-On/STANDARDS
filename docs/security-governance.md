@@ -1,5 +1,7 @@
 # Security governance
 
+Owner: Documentation
+
 **Status:** Not yet formally defined.
 
 This document is a placeholder for future **organization-wide security governance** standards. It is distinct from implemented security architecture:
