@@ -92,4 +92,4 @@ When behavior, setup, schema, or architecture changes:
 | STANDARDS | How we work, what exists org-wide, ADRs |
 | `.github` profile | Vision / mission / ecosystem messaging only |
 
-Applications consume Shared UI via the public `Bo*` API; they do not own the design-system implementation.
+Applications that adopt the shared design system consume Shared UI via the public `Bo*` API; they do not own the design-system implementation. Current topology (including whether a given app already references `BreezeOn.UI`): [architecture/landscape.md](../architecture/landscape.md). UI standards: [docs/ui/overview.md](ui/overview.md).

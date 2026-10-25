@@ -2,6 +2,8 @@
 
 Current-state description of the Breeze On organization on GitHub.
 
+For a high-level map of repository relationships, UI dependency position, Azure hosting, and SQL (local vs DV), see [landscape.md](landscape.md).
+
 ## Identity
 
 | | |
@@ -29,4 +31,4 @@ Multi-repo: one repository per application or shared concern. Unrelated products
 
 STANDARDS is the single source of truth for conventions, for documenting systems that exist, and for Architecture Decision Records (`decisions/`). Product repos link to STANDARDS; they do not redefine org-wide rules.
 
-Related: [application-model.md](../docs/application-model.md), [environments.md](../docs/environments.md), [adr.md](../docs/adr.md), [ADR-001 multi-repository](../decisions/ADR-001-multi-repository-model.md).
+Related: [landscape.md](landscape.md), [application-model.md](../docs/application-model.md), [environments.md](../docs/environments.md), [adr.md](../docs/adr.md), [ADR-001 multi-repository](../decisions/ADR-001-multi-repository-model.md).

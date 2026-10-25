@@ -26,11 +26,12 @@ Full rules: [`docs/documentation.md`](docs/documentation.md). ADR process: [`doc
 
 | Question | Where |
 | --- | --- |
-| What exists? | [`architecture/`](architecture/) |
+| What exists? | [`architecture/`](architecture/) — start at [landscape](architecture/landscape.md) |
 | How do we work? | [`docs/`](docs/) |
 | Why was this decision made? | [`decisions/`](decisions/) (ADRs) |
 | What defines a Breeze On application? | [`docs/application-model.md`](docs/application-model.md) |
 | How are environments defined? | [`docs/environments.md`](docs/environments.md) |
+| What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
 
 ## Repository structure
 
@@ -49,11 +50,21 @@ STANDARDS/
 │  ├─ local-database.md
 │  ├─ environments.md
 │  ├─ application-model.md
-│  └─ ui-components.md
+│  ├─ ui-components.md       # Redirect stub → docs/ui/
+│  └─ ui/                    # UI standards (modular)
+│     ├─ overview.md
+│     ├─ shell.md
+│     ├─ navigation.md
+│     ├─ sections.md
+│     ├─ forms.md
+│     ├─ typography.md
+│     └─ tokens.md
 ├─ decisions/                # Architecture Decision Records (ADRs)
 ├─ templates/
 │  └─ local-sql/             # Docker SQL sandbox starter (copy into app repos)
 └─ architecture/             # Currently implemented systems only
+   ├─ README.md
+   ├─ landscape.md
    ├─ ecosystem.md
    ├─ adm.md
    └─ security.md
@@ -69,7 +80,7 @@ Architecture Decision Records. Answers: **why** a significant decision was made.
 
 ### `architecture/` — current systems
 
-Descriptions of **implemented** Breeze On systems, platform structure, application responsibilities, and security architecture as they exist today. Answers: **what exists**.
+Descriptions of **implemented** Breeze On systems, platform structure, application responsibilities, and security architecture as they exist today. Answers: **what exists**. Index: [`architecture/README.md`](architecture/README.md).
 
 Do not mix speculative design into these trees. If it is not real yet, it does not belong here.
 
@@ -87,16 +98,16 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [Local database](docs/local-database.md) | SQL Server Docker sandbox for local development |
 | [Environments](docs/environments.md) | Local and DV environment definitions; hosted seed labels |
 | [Application model](docs/application-model.md) | What constitutes a Breeze On application (current patterns) |
-| [UI components](docs/ui-components.md) | Shared UI conventions in use |
+| [UI standards](docs/ui/overview.md) | Shared UI conventions (`docs/ui/` modular tree) |
 
 ### Decisions (`decisions/`)
 
-| ADR | Title | Status |
-| --- | --- | --- |
-| [ADR-001](decisions/ADR-001-multi-repository-model.md) | Multi-repository model | Accepted |
-| [ADR-002](decisions/ADR-002-blazor-interactive-server.md) | Blazor Interactive Server | Accepted |
-| [ADR-003](decisions/ADR-003-azure-sql-with-local-docker-sql.md) | Azure SQL with local Docker SQL | Accepted |
-| [ADR-004](decisions/ADR-004-breezeon-ui-abstraction-layer.md) | BreezeOn.UI abstraction layer | Accepted |
+| ADR | Title | Status | Category | Impact Area |
+| --- | --- | --- | --- | --- |
+| [ADR-001](decisions/ADR-001-multi-repository-model.md) | Multi-repository model | Accepted | Governance | Organization / all repositories |
+| [ADR-002](decisions/ADR-002-blazor-interactive-server.md) | Blazor Interactive Server | Accepted | Platform | Applications, Shared UI gallery |
+| [ADR-003](decisions/ADR-003-azure-sql-with-local-docker-sql.md) | Azure SQL with local Docker SQL | Accepted | Data | Applications with databases, Hosting |
+| [ADR-004](decisions/ADR-004-breezeon-ui-abstraction-layer.md) | BreezeOn.UI abstraction layer | Accepted | UI | Shared UI, Product applications |
 
 Full index: [`decisions/README.md`](decisions/README.md).
 
@@ -110,9 +121,12 @@ Full index: [`decisions/README.md`](decisions/README.md).
 
 | Document | Covers |
 | --- | --- |
+| [Landscape](architecture/landscape.md) | Ecosystem map: repos, UI position, Azure hosting, SQL, boundaries |
 | [Ecosystem](architecture/ecosystem.md) | Org layout and existing repositories |
 | [ADM](architecture/adm.md) | Administration application (current) |
 | [Security](architecture/security.md) | Auth and access as implemented |
+
+Index: [`architecture/README.md`](architecture/README.md).
 
 ## Agent expectations
 

@@ -65,4 +65,5 @@ Routine local runs do **not** use Azure SQL. Org pattern: [local-database.md](..
 
 - This application lives only in `SYSTEM-ADMIN-ADM`.
 - Org-wide standards and cross-cutting architecture live in `Breeze-On/STANDARDS`, not duplicated here at length.
+- Ecosystem map (repos, hosting, SQL, UI position): [landscape.md](landscape.md).
 - Application expectations: [application-model.md](../docs/application-model.md). Environments: [environments.md](../docs/environments.md).

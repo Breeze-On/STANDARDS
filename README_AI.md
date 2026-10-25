@@ -31,11 +31,12 @@ Details: [`docs/documentation.md`](docs/documentation.md). ADR process: [`docs/a
 
 | Question | Where |
 | --- | --- |
-| What exists? | `architecture/` |
+| What exists? | `architecture/` — start at [`architecture/landscape.md`](architecture/landscape.md) |
 | How do we work? | `docs/` |
-| Why was this decided? | `decisions/` (ADRs) |
+| Why was this decided? | `decisions/` (ADRs) — index [`decisions/README.md`](decisions/README.md) |
 | What is a Breeze On application? | [`docs/application-model.md`](docs/application-model.md) |
 | What do environments mean? | [`docs/environments.md`](docs/environments.md) |
+| What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
 
 ## Repository structure (this repo)
 
@@ -52,11 +53,21 @@ STANDARDS/
 │  ├─ local-database.md
 │  ├─ environments.md
 │  ├─ application-model.md
-│  └─ ui-components.md
+│  ├─ ui-components.md   # redirect stub → docs/ui/
+│  └─ ui/                # UI standards (modular)
+│     ├─ overview.md
+│     ├─ shell.md
+│     ├─ navigation.md
+│     ├─ sections.md
+│     ├─ forms.md
+│     ├─ typography.md
+│     └─ tokens.md
 ├─ decisions/            # Architecture Decision Records
 ├─ templates/
 │  └─ local-sql/         # Docker SQL sandbox starter for app repos
 └─ architecture/         # currently implemented systems only
+   ├─ README.md
+   ├─ landscape.md
    ├─ ecosystem.md
    ├─ adm.md
    └─ security.md
@@ -65,9 +76,10 @@ STANDARDS/
 | Path | Purpose |
 | --- | --- |
 | `docs/` | Standards, conventions, rules, practices, naming, documentation requirements, engineering decisions, UI patterns, environments, application model, ADR process |
-| `decisions/` | ADRs (why decisions were made) |
+| `docs/ui/` | Modular UI standards (entry: `overview.md`); grow by responsibility when documents become large |
+| `decisions/` | ADRs (why decisions were made); index includes Category and Impact Area |
 | `templates/` | Copy-paste starters for apps (e.g. local SQL Docker) |
-| `architecture/` | Currently implemented systems, platform structure, application responsibilities, security architecture |
+| `architecture/` | Currently implemented systems, landscape map, platform structure, application responsibilities, security architecture |
 
 If you add or remove files under `docs/`, `decisions/`, or `architecture/`, update **this** `README_AI.md` and the root `README.md` in the same change set.
 
@@ -86,7 +98,7 @@ Before planning or implementing in a Breeze On repo:
 
 1. Read this file and [`docs/documentation.md`](docs/documentation.md).
 2. Read [`docs/adr.md`](docs/adr.md) and relevant files under [`decisions/`](decisions/).
-3. Read other `docs/*` and `architecture/*` files relevant to the task.
+3. Read other `docs/*` and `architecture/*` files relevant to the task (for topology: [`architecture/landscape.md`](architecture/landscape.md); for UI: [`docs/ui/overview.md`](docs/ui/overview.md)).
 4. Read that product repo’s `README_AI.md` for **local** scope only.
 5. If you introduce a lasting convention or a new implemented system, document it here (`docs/` or `architecture/`) as current state — do not invent a one-off undocumented rule.
 6. If you introduce or change a **significant architectural decision**, create or update an ADR in `decisions/` (or supersede an existing one) in the **same change set**.
@@ -94,6 +106,7 @@ Before planning or implementing in a Breeze On repo:
 8. For local database work: follow [`docs/local-database.md`](docs/local-database.md); do not point Development at Azure SQL by default.
 9. For environment naming: follow [`docs/environments.md`](docs/environments.md); do not redefine environments independently in product docs.
 10. For what an application repo must include: follow [`docs/application-model.md`](docs/application-model.md).
+11. For UI standards: follow [`docs/ui/overview.md`](docs/ui/overview.md) and the focused sibling docs; when docs grow too large, split by responsibility and update the UI index (organic structure rule in the overview).
 
 ## Product README_AI expectations
 

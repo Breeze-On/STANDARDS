@@ -1,0 +1,55 @@
+# UI — Sections
+
+Main Section and Sub Section content grouping. Related: [forms.md](forms.md), [tokens.md](tokens.md), [overview.md](overview.md).
+
+## Main Section (`BoSectionMain`)
+
+**Display name:** Main Section.  
+**Component:** `BoSectionMain` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+
+A **Main Section** groups related page content. It is intentionally **not** a floating card:
+
+| Concern | Main Section (`BoSectionMain`) | Content card (`BoCard`) |
+| --- | --- | --- |
+| Outer chrome | No border, no shadow; transparent background | Card-container border / shadow / fill |
+| Content body padding | **6px** equal on all four sides | Theme spacing on the card |
+| Content body width | Full width of the section (edge-to-edge) | Within card padding |
+| Outside bottom margin | **16px** (`BoSectionMain`) | N/A |
+| Optional header | Yes (see below) | Simple title/footer (card chrome) |
+
+Header is **optional**. When omitted, only the body content is rendered.
+
+### Optional header
+
+| Concern | Standard |
+| --- | --- |
+| Label | Bold, **13px**, black (`#000000`); top-left aligned |
+| Icon | Optional; to the **left** of the label; ~13px; tight ~4px gap to label; **vertically center-aligned** with the label (prefer `BoIcon` in `IconContent`) |
+| Rule | Grey horizontal line **directly under** the header text/icon row; almost no gap (~2px); uses `--bo-color-card-container-border` |
+| Flush to body | Content container sits **immediately under** the header rule — **no gap** |
+| API | `Title` and/or `TitleContent`; optional `IconContent`; body via `ChildContent` |
+
+### Content container
+
+The body (`ChildContent`) is the section **content container**: full section width, **6px** inside padding on **all four sides** (equal top/right/bottom/left), flush under the header rule when a header is present.
+
+**Outside bottom margin:** **16px** below the section (space after the content body / blue-box edge when stacked). Do not rely on `BoStack` gap for Main/Sub spacing — use `Gap="0"` (or equivalent) when stacking sections so this margin is not doubled.
+
+Product apps must use `BoSectionMain` for Main Sections — do not reimplement this chrome in page CSS.
+
+**Gallery reference:** Theme page (`/theme`) — Main Sections "Primary Color" (`PaintBrushSparkle` + Hex Code) and "Preview" (`EyeLines` + gallery-only color swatch).
+
+## Sub Section (`BoSectionSub`)
+
+**Display name:** Sub Section.  
+**Component:** `BoSectionSub` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+
+A **Sub Section** uses the **same** optional header and content-container rules as Main Section (flush under rule, full width, **equal 6px** body padding on all sides). Shared CSS: `.bo-section` / `.bo-section__*`.
+
+| Concern | Standard |
+| --- | --- |
+| API | Same as Main: `Title` / `TitleContent`, optional `IconContent`, `ChildContent` |
+| Chrome | Same content-container contract as [Main Section](#main-section-bosectionmain) |
+| Outside bottom margin | **12px** (tighter than Main’s 16px) |
+
+Use `BoSectionSub` for nested/subordinate groupings; use `BoSectionMain` for top-level page sections. When stacking sections, prefer `BoStack Gap="0"` so outside-bottom margins are not doubled.

@@ -85,12 +85,17 @@ Status: Accepted
 ## Consequences
 ```
 
+## Index discoverability
+
+The ADR index ([`decisions/README.md`](../decisions/README.md)) includes **Category** and **Impact Area** columns so agents and humans can find relevant decisions quickly. When creating or superseding an ADR, update those columns in the **same change set**. Category examples: Governance, Platform, UI, Data, Hosting, Architecture.
+
 ## Relationship to STANDARDS and product docs
 
 | Location | Role |
 | --- | --- |
 | `docs/adr.md` (this file) | How ADRs work |
 | `decisions/*.md` | Individual ADRs |
+| `decisions/README.md` | Index with Status, Category, Impact Area |
 | `docs/*` | Working standards (including this process) |
 | `architecture/*` | Current implemented systems |
 | Product `README` / `README_AI` | Repo-specific surface; **link** to STANDARDS and relevant ADRs — do not restate ADR content at length |

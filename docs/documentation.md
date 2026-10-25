@@ -22,8 +22,9 @@ Documentation must represent **CURRENT REALITY ONLY**.
 | Tree | Holds |
 | --- | --- |
 | `docs/` | Standards and governance (how we work) |
-| `architecture/` | Descriptions of systems that exist now (what exists) |
-| `decisions/` | Architecture Decision Records (why decisions were made) |
+| `docs/ui/` | Modular UI standards (entry: [`ui/overview.md`](ui/overview.md)); split by responsibility as the design system grows |
+| `architecture/` | Descriptions of systems that exist now (what exists); landscape map: [`../architecture/landscape.md`](../architecture/landscape.md) |
+| `decisions/` | Architecture Decision Records (why decisions were made); index with Category / Impact Area: [`../decisions/README.md`](../decisions/README.md) |
 
 Do not place unimplemented designs in these trees.
 
@@ -89,8 +90,8 @@ This is an agent workflow for the Breeze-On org, not a product feature. Cursor e
 A change is incomplete until **all affected documentation reflects current reality**, including:
 
 - Product `README` / `README_AI` / `AGENTS` as applicable
-- STANDARDS `docs/` and/or `architecture/` as applicable
-- **ADRs** created, updated, or superseded when architectural decisions are affected
+- STANDARDS `docs/` (including modular `docs/ui/` when UI standards change) and/or `architecture/` as applicable
+- **ADRs** created, updated, or superseded when architectural decisions are affected (update [`decisions/README.md`](../decisions/README.md) Category / Impact Area columns)
 - Indexes and cross-references kept accurate
 
-Updates must occur in the **same change set** as the implementation change.
+Updates must occur in the **same change set** as the implementation change. Documentation maintenance is part of **Definition of Done**.

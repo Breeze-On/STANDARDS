@@ -7,8 +7,8 @@ Current technical defaults for Breeze On application work.
 | Layer | Standard |
 | --- | --- |
 | UI | Blazor Web App, Interactive Server (global interactivity); [ADR-002](../decisions/ADR-002-blazor-interactive-server.md) |
-| Shared UI | `BreezeOn.UI` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI); see [ui-components.md](ui-components.md); [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
-| Typography | **Calibri** default UI font (hard standard via `BreezeOn.UI` / `--bo-font-family`); see [ui-components.md](ui-components.md) |
+| Shared UI | `BreezeOn.UI` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI); see [ui/overview.md](ui/overview.md); [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
+| Typography | **Calibri** default UI font (hard standard via `BreezeOn.UI` / `--bo-font-family`); see [ui/typography.md](ui/typography.md) |
 | Runtime | ASP.NET Core / C# / .NET 10 |
 | Auth (ADM today) | ASP.NET Core Identity |
 | Database | Azure SQL / SQL Server (T-SQL) + local Docker; see [database.md](database.md), [local-database.md](local-database.md); [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.md) |
