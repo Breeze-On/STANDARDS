@@ -38,26 +38,31 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 | Component | Purpose | Detail |
 | --- | --- | --- |
-| Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens) | [tokens.md](tokens.md), [typography.md](typography.md) |
-| `BoProviders` | Hosts Fluent providers and `BoMessageDialogHost` without exposing Fluent | — |
+| Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens); dual Light/Dark palettes | [tokens.md](tokens.md), [typography.md](typography.md) |
+| `IBoThemeModeService` | In-memory `ThemeMode` + active palette application | [tokens.md](tokens.md) |
+| `BoProviders` | Hosts Fluent providers, `BoMessageDialogHost`, `BoSettingsDialogHost` | — |
 | `BoAppShell` | Option B app chrome: full-height nav + header / body / footer column | [shell.md](shell.md) |
 | `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None | [shell.md](shell.md), [tokens.md](tokens.md) |
 | `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail; bottom collapse control; prefer `IconContent` with `BoIcon` | [navigation.md](navigation.md) |
 | `BoIcon` | Public icon API (`Name`, `BoIconVariant`, `Size`); resolves Fluent System Icons internally | [navigation.md](navigation.md) |
-| `BoAppHeader` | Top header card; `AppTitle` + `  -  ` + `Subtitle` inline; optional `TabsContent` | [shell.md](shell.md) |
+| `BoAppHeader` | Top header card; titles + trailing actions; optional `TabsContent` / `ActionsContent` | [shell.md](shell.md) |
+| `BoHeaderActions` | Theme switch + Settings + Profile cluster | [shell.md](shell.md) |
+| `BoThemeSwitch` | Apple-style Light/Dark switch (`BrightnessLow` icon) | [shell.md](shell.md), [tokens.md](tokens.md) |
+| `BoProfileMenu` | Avatar placeholder + Sign out menu (design only) | [shell.md](shell.md) |
 | `BoTabs` / `BoTab` | Optional page-section tabs under the header title row | [shell.md](shell.md) |
 | `BoTabPanels` / `BoTabPanel` | Keep-alive body sections keyed to tabs (`SelectedTab`) | [shell.md](shell.md) |
 | `BoAppBody` | Scrollable body region content host (scrolls inside body card) | [shell.md](shell.md) |
 | `BoAppFooter` | Bottom footer card (optional per page via `ShowFooter`; shorter inside padding) | [shell.md](shell.md) |
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` | [tokens.md](tokens.md) |
 | `BoSectionMain` | **Main Section** — borderless content block with optional header | [sections.md](sections.md) |
-| `BoSectionSub` | **Sub Section** — same content-container chrome as Main | [sections.md](sections.md) |
+| `BoSectionSub` | **Sub Section** — nested grouping (different label/margins than Main) | [sections.md](sections.md) |
 | `BoRow` | **Row** — equal-width field slots inside a section | [layout.md](layout.md) |
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](sections.md) |
 | `BoPageHeader` | Page title and description | — |
 | `BoTextField` | Text input | [forms.md](forms.md) |
 | `BoButton` | Pill button (primary / secondary / stealth); shorter+wider padding; shadow + hover lift; optional icon | [tokens.md](tokens.md) |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`) | — |
+| `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone placeholders) | [shell.md](shell.md) |
 
 ## Local gallery
 

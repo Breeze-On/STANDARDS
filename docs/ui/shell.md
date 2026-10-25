@@ -9,13 +9,27 @@ App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.
 | Region | Component | Role |
 | --- | --- | --- |
 | Left nav | `BoNavPane` / `BoNavLink` | Platform navigation — see [navigation.md](navigation.md) |
-| Header | `BoAppHeader` | Top header card; `AppTitle` + `  -  ` + `Subtitle` inline; optional `TabsContent` |
+| Header | `BoAppHeader` | Top header card; `AppTitle` + `  -  ` + `Subtitle` inline; trailing actions; optional `TabsContent` |
 | Body | `BoAppBody` | Body region inside a floating card; card hugs short content; when content exceeds the viewport slot, the card caps and scrolls internally |
 | Footer | `BoAppFooter` | Optional per page (`ShowFooter`); when shown, fixed bottom footer card |
 
 `BoShellCard` provides floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None. Token names: [tokens.md](tokens.md).
 
 Authoritative product-facing detail also lives in the [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md).
+
+## Header actions (locked)
+
+Title row is a flex row: **titles (left)** | **actions (right)**, vertically center-aligned. Default actions via `BoHeaderActions` (override with `BoAppHeader.ActionsContent` when needed).
+
+Order left → right:
+
+| Control | Component | Behavior (current) |
+| --- | --- | --- |
+| Light / Dark theme | `BoThemeSwitch` | Apple-style switch; `BrightnessLow` (Regular) icon left of track; toggles `IBoThemeModeService` (in-memory) |
+| Settings | Settings icon button in `BoHeaderActions` | Opens centered `BoSettingsDialogHost` with Language / Timezone placeholders (non-functional) |
+| Profile | `BoProfileMenu` | Circular avatar placeholder; menu with **Sign out** (design only — no auth) |
+
+Theme mode / dual palettes: [tokens.md](tokens.md). Cookie persistence for theme is not shipped yet.
 
 ## App shell footer (optional per page)
 
