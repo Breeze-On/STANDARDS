@@ -14,7 +14,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [sections.md](sections.md) | Main Section / Sub Section |
 | [layout.md](layout.md) | Row (`BoRow`), page composition, planning JSON schema |
 | [forms.md](forms.md) | Text Field, Drop-Down List, and form controls |
-| [i18n.md](i18n.md) | Culture / timezone cookies + en/fr resource foundation |
+| [i18n.md](i18n.md) | Culture / timezone cookies; per-app resource libraries; no hardcoded labels |
 | [typography.md](typography.md) | Default typeface |
 | [tokens.md](tokens.md) | Design / shell tokens |
 
