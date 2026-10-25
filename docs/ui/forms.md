@@ -25,7 +25,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 
 | Concern | Standard |
 | --- | --- |
-| Label font | **10px**, **bold**, **uppercase**, grey (`#757575`) |
+| Label font | **10px**, **bold**, **uppercase**; color `--bo-color-text-field-label` (`color-text-field-label`, default `#757575`) — see [tokens.md](tokens.md) |
 | Label-to-input gap | Minimal (~0-1px) |
 | Input typed text | **Calibri** (`--bo-font-family`); **14px** — see [typography.md](typography.md) |
 | Mandatory mark | When `Required`: bold red `*` after the label; modest gap before the star (`margin-left` ~0.2em); color `--bo-color-danger` |
@@ -33,6 +33,6 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Focus | Recolor Fluent’s **native** bottom focus border to **primary** (`--bo-color-primary`) so it stays on the control edge and keeps rounded corners; not Fluent blue; do **not** add a separate underline below the field |
 | Character count | Optional (`ShowCharacterCount`, default false); format `current/max` (no brackets); **inside** the input (Fluent `EndTemplate`), trailing/right; italic **10px**; muted. Denominator = `MaxLength` (**default 600**) |
 
-**Gallery reference:** Theme (`/theme`) Primary Color fields inside `BoRow`s (Hex Code, Internal Code, Description); Components Text Field playground.
+**Gallery reference:** Theme (`/theme`) color tabs (fields inside `BoRow`s); Components Text Field playground.
 
 These Text Field rules are **org standards** for every `BoTextField` usage.

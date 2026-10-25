@@ -25,8 +25,8 @@ Header is **optional**. When omitted, only the body content is rendered.
 
 | Concern | Standard |
 | --- | --- |
-| Label | Bold, **13px**, black (`#000000`), **uppercase**; top-left aligned |
-| Icon | Optional; to the **left** of the label; ~13px; tight ~4px gap to label; **vertically center-aligned** with the label (prefer `BoIcon` in `IconContent`) |
+| Label | Bold, **13px**, **uppercase**; color `--bo-color-section-tab-label` (alias of `color-semantic-black`, default `#000000`); top-left aligned — see [tokens.md](tokens.md) |
+| Icon | Optional; to the **left** of the label; ~13px; tight ~4px gap to label; **vertically center-aligned** with the label; same color as label (prefer `BoIcon` in `IconContent`) |
 | Rule | Grey horizontal line **directly under** the header text/icon row; almost no gap (~2px); uses `--bo-color-card-container-border` |
 | Flush to body | Content container sits **immediately under** the header rule — **no gap** |
 | API | `Title` and/or `TitleContent`; optional `IconContent`; body via `ChildContent` |
@@ -39,7 +39,7 @@ The body (`ChildContent`) is the section **content container**: full section wid
 
 Product apps must use `BoSectionMain` for Main Sections — do not reimplement this chrome in page CSS.
 
-**Gallery reference:** Theme page (`/theme`) — Main Sections "Primary Color" (`PaintBrushSparkle` + two `BoRow`s: Hex/Internal Code, Description) and "Preview" (`EyeLines` + gallery-only color swatch).
+**Gallery reference:** Theme page (`/theme`) — header tabs Primary / Secondary / Tertiary / Background / Border / Field Label; each tab uses Main Section (`{Friendly Name} Color`) + Preview swatch.
 
 ## Sub Section (`BoSectionSub`)
 
