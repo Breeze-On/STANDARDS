@@ -48,7 +48,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoTabs` / `BoTab` | Optional page-section tabs under the header title row | [shell.md](shell.md) |
 | `BoTabPanels` / `BoTabPanel` | Keep-alive body sections keyed to tabs (`SelectedTab`) | [shell.md](shell.md) |
 | `BoAppBody` | Scrollable body region content host (scrolls inside body card) | [shell.md](shell.md) |
-| `BoAppFooter` | **Hard standard** bottom footer card (required with `BoAppShell`; shorter inside padding) | [shell.md](shell.md) |
+| `BoAppFooter` | Bottom footer card (optional per page via `ShowFooter`; shorter inside padding) | [shell.md](shell.md) |
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` | [tokens.md](tokens.md) |
 | `BoSectionMain` | **Main Section** — borderless content block with optional header | [sections.md](sections.md) |
 | `BoSectionSub` | **Sub Section** — same content-container chrome as Main | [sections.md](sections.md) |
@@ -61,7 +61,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (README-style overview), Components (`/components` with Text Field / Drop-Down List / Date Field header tabs), Theme (Primary Color Main Section with `BoRow`s: Hex Code + Internal Code, Description; Preview swatch). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (README-style overview), Components (`/components` with Text Field / Drop-Down List / Date Field header tabs), Theme (per color tab: Main `{Name} Color` → Sub **Attributes** fields + Sub **Preview** swatch). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](navigation.md).
 
 ## Documentation governance
 

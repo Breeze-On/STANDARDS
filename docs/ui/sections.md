@@ -39,19 +39,23 @@ The body (`ChildContent`) is the section **content container**: full section wid
 
 Product apps must use `BoSectionMain` for Main Sections — do not reimplement this chrome in page CSS.
 
-**Gallery reference:** Theme page (`/theme`) — header tabs Primary / Secondary / Tertiary / Background / Border / Field Label; each tab uses Main Section (`{Friendly Name} Color`) + Preview swatch.
+**Gallery reference:** Theme page (`/theme`) — header tabs Primary / Secondary / Tertiary / Background / Border / Field Label; each tab uses Main Section (`{Friendly Name} Color`) with Sub Sections **Attributes** (fields) and **Preview** (swatch; no icons on either Sub).
 
 ## Sub Section (`BoSectionSub`)
 
 **Display name:** Sub Section.  
 **Component:** `BoSectionSub` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
 
-A **Sub Section** uses the **same** optional header and content-container rules as Main Section (flush under rule, full width, **equal 6px** body padding on all sides). Shared CSS: `.bo-section` / `.bo-section__*`.
+A **Sub Section** is for nested/subordinate groupings inside a Main Section. It shares the optional header **structure** (flush rule, optional icon) and **6px** body padding with Main, but uses **different** title typography and **outside margins**.
 
 | Concern | Standard |
 | --- | --- |
 | API | Same as Main: `Title` / `TitleContent`, optional `IconContent`, `ChildContent` |
-| Chrome | Same content-container contract as [Main Section](#main-section-bosectionmain) |
-| Outside bottom margin | **12px** (tighter than Main’s 16px) |
+| Content body padding | **6px** equal on all four sides (same as Main) |
+| Label | Bold, **11px** (Main 13px − 2), **not uppercase** (sentence / title case as provided); color `--bo-color-section-tab-label` |
+| Icon (when present) | ~11px; same alignment rules as Main |
+| Outside left / right margin | **6px** each (indent vs Main) |
+| Outside top margin | **8px** |
+| Outside bottom margin | **4px** (tighter than Main’s 16px) |
 
-Use `BoSectionSub` for nested/subordinate groupings; use `BoSectionMain` for top-level page sections. When stacking sections, prefer `BoStack Gap="0"` so outside-bottom margins are not doubled.
+Use `BoSectionSub` for nested groupings; use `BoSectionMain` for top-level page sections. When stacking sections, prefer `BoStack Gap="0"` so outside margins are not doubled by stack gap.

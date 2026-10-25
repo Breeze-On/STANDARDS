@@ -49,4 +49,4 @@ Legacy aliases still emitted: `--bo-color-surface` → card-container-background
 
 Shared accents used by nav and buttons: `PrimaryColor` / `TertiaryColor`. Nav color rules: [navigation.md](navigation.md). Header tab fills: [shell.md](shell.md).
 
-**Gallery:** Theme (`/theme`) tabs (order) — Primary, Secondary, Tertiary, Background, Border, Field Label. Tab icon = `PaintBrushSparkle` for all; section title = `{Friendly Name} Color`.
+**Gallery:** Theme (`/theme`) tabs (order) — Primary, Secondary, Tertiary, Background, Border, Field Label. Each tab: Main Section `{Friendly Name} Color` (tab icon) containing Sub Sections **Attributes** (fields, no icon) and **Preview** (swatch, no icon). Main icons: Primary `PaintBrushSparkle` (Regular); Secondary `ColorFill` (Regular); Tertiary `Eyedropper` (Regular); Background `ImageBorder` (Filled); Border `BorderAll` (Regular — Fluent has no `Border` glyph); Field Label `TextCaseTitle` (Regular).

@@ -177,6 +177,8 @@ Expected layout: Row 1 â†’ two equal columns with 16px gap + separator; Row 2 â†
 
 ### Example â€” Theme Primary Color (gallery)
 
+Main Section `{Name} Color` contains Sub Sections **Attributes** (fields) and **Preview** (gallery swatch; no icon). Nested `sections` under a parent is not in schemaVersion `"1"` â€” Dev maps Attributes rows under a `kind: "sub"` sibling group inside the main section body, or uses two top-level sections when emitting flat JSON. Gallery Razor nests `BoSectionSub` inside `BoSectionMain`.
+
 ```json
 {
   "schemaVersion": "1",
@@ -189,6 +191,11 @@ Expected layout: Row 1 â†’ two equal columns with 16px gap + separator; Row 2 â†
       "kind": "main",
       "title": "Primary Color",
       "icon": { "name": "PaintBrushSparkle", "variant": "Regular" },
+      "rows": []
+    },
+    {
+      "kind": "sub",
+      "title": "Attributes",
       "rows": [
         {
           "fields": [
@@ -226,4 +233,4 @@ Expected layout: Row 1 â†’ two equal columns with 16px gap + separator; Row 2 â†
 }
 ```
 
-(Preview section with a non-`Bo*` swatch is gallery-only and is outside this field schema.)
+(Preview Sub Section with a non-`Bo*` swatch is gallery-only and is outside this field schema.)
