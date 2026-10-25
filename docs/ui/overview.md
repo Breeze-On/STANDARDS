@@ -12,6 +12,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [shell.md](shell.md) | App shell chrome, footer, header tabs |
 | [navigation.md](navigation.md) | Left navigation, route/URL matching |
 | [sections.md](sections.md) | Main Section / Sub Section |
+| [layout.md](layout.md) | Row (`BoRow`), page composition, planning JSON schema |
 | [forms.md](forms.md) | Text Field and form controls |
 | [typography.md](typography.md) | Default typeface |
 | [tokens.md](tokens.md) | Design / shell tokens |
@@ -51,6 +52,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` | [tokens.md](tokens.md) |
 | `BoSectionMain` | **Main Section** — borderless content block with optional header | [sections.md](sections.md) |
 | `BoSectionSub` | **Sub Section** — same content-container chrome as Main | [sections.md](sections.md) |
+| `BoRow` | **Row** — equal-width field slots inside a section | [layout.md](layout.md) |
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](sections.md) |
 | `BoPageHeader` | Page title and description | — |
 | `BoTextField` | Text input | [forms.md](forms.md) |
@@ -59,7 +61,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (README-style overview), Components (`/components` with Text Field / Drop-Down List / Date Field header tabs), Theme (Primary Color Main Section). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (README-style overview), Components (`/components` with Text Field / Drop-Down List / Date Field header tabs), Theme (Primary Color Main Section with `BoRow`s: Hex Code + Internal Code, Description; Preview swatch). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](navigation.md).
 
 ## Documentation governance
 

@@ -1,6 +1,8 @@
 # UI — Forms
 
-Form control standards. Related: [sections.md](sections.md), [typography.md](typography.md), [tokens.md](tokens.md), [overview.md](overview.md).
+Form control standards. Related: [layout.md](layout.md) (Row + page composition JSON), [sections.md](sections.md), [typography.md](typography.md), [tokens.md](tokens.md), [overview.md](overview.md).
+
+**Hard standard:** every Text Field (and future form controls) **must** be a direct child of a [`BoRow`](layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](layout.md#page-composition-locked--hard-standard).
 
 ## Text Field (`BoTextField`)
 
@@ -23,7 +25,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 
 | Concern | Standard |
 | --- | --- |
-| Label font | **13px**, regular weight (not bold), black (`#000000`) |
+| Label font | **10px**, **bold**, **uppercase**, grey (`#757575`) |
 | Label-to-input gap | Minimal (~0-1px) |
 | Input typed text | **Calibri** (`--bo-font-family`); **14px** — see [typography.md](typography.md) |
 | Mandatory mark | When `Required`: bold red `*` after the label; modest gap before the star (`margin-left` ~0.2em); color `--bo-color-danger` |
@@ -31,6 +33,6 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Focus | Recolor Fluent’s **native** bottom focus border to **primary** (`--bo-color-primary`) so it stays on the control edge and keeps rounded corners; not Fluent blue; do **not** add a separate underline below the field |
 | Character count | Optional (`ShowCharacterCount`, default false); format `current/max` (no brackets); **inside** the input (Fluent `EndTemplate`), trailing/right; italic **10px**; muted. Denominator = `MaxLength` (**default 600**) |
 
-**Gallery reference:** Theme (`/theme`) Hex Code field (`FieldKey="ColorHexCodePrimary"`, default MaxLength 600); Components Text Field playground.
+**Gallery reference:** Theme (`/theme`) Primary Color fields inside `BoRow`s (Hex Code, Internal Code, Description); Components Text Field playground.
 
 These Text Field rules are **org standards** for every `BoTextField` usage.

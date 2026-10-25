@@ -1,6 +1,8 @@
 # UI — Sections
 
-Main Section and Sub Section content grouping. Related: [forms.md](forms.md), [tokens.md](tokens.md), [overview.md](overview.md).
+Main Section and Sub Section content grouping. Related: [layout.md](layout.md) (Row + page composition), [forms.md](forms.md), [tokens.md](tokens.md), [overview.md](overview.md).
+
+**Composition (hard standard):** Form fields **must** be inside a [`BoRow`](layout.md#row-borow); every `BoRow` **must** be inside a Section. Full rules: [layout.md — Page composition](layout.md#page-composition-locked--hard-standard).
 
 ## Main Section (`BoSectionMain`)
 
@@ -23,7 +25,7 @@ Header is **optional**. When omitted, only the body content is rendered.
 
 | Concern | Standard |
 | --- | --- |
-| Label | Bold, **13px**, black (`#000000`); top-left aligned |
+| Label | Bold, **13px**, black (`#000000`), **uppercase**; top-left aligned |
 | Icon | Optional; to the **left** of the label; ~13px; tight ~4px gap to label; **vertically center-aligned** with the label (prefer `BoIcon` in `IconContent`) |
 | Rule | Grey horizontal line **directly under** the header text/icon row; almost no gap (~2px); uses `--bo-color-card-container-border` |
 | Flush to body | Content container sits **immediately under** the header rule — **no gap** |
@@ -37,7 +39,7 @@ The body (`ChildContent`) is the section **content container**: full section wid
 
 Product apps must use `BoSectionMain` for Main Sections — do not reimplement this chrome in page CSS.
 
-**Gallery reference:** Theme page (`/theme`) — Main Sections "Primary Color" (`PaintBrushSparkle` + Hex Code) and "Preview" (`EyeLines` + gallery-only color swatch).
+**Gallery reference:** Theme page (`/theme`) — Main Sections "Primary Color" (`PaintBrushSparkle` + two `BoRow`s: Hex/Internal Code, Description) and "Preview" (`EyeLines` + gallery-only color swatch).
 
 ## Sub Section (`BoSectionSub`)
 

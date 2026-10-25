@@ -56,6 +56,7 @@ STANDARDS/
 │     ├─ shell.md
 │     ├─ navigation.md
 │     ├─ sections.md
+│     ├─ layout.md
 │     ├─ forms.md
 │     ├─ typography.md
 │     └─ tokens.md

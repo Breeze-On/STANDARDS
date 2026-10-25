@@ -12,6 +12,8 @@ Shell and accent tokens currently shipped by `BreezeOn.UI`. Related: [shell.md](
 | `card-container-shadow` | `--bo-shadow-card-container` | Card elevation |
 | `shell-margin` | `--bo-space-shell-margin` | Slim margins on shell cards; **nav right margin is 0** (gap from main column left margin) |
 | `content-card-margin` | `--bo-space-content-card-margin` | Slightly larger margins for in-body content cards |
+| `row-inset` | `--bo-space-row-inset` | Inside padding for `BoRow` and each field container (default `4px`) — see [layout.md](layout.md) |
+| `row-gap` | `--bo-space-row-gap` | Gap between field containers in a `BoRow` (default `16px`) — see [layout.md](layout.md) |
 | `primary` | `--bo-color-primary` | Accent (`#224D3A`): nav panel fill, primary buttons |
 | `primary-hover` | `--bo-color-primary-hover` | Primary button hover |
 | `secondary` | `--bo-color-secondary` | Selected header tab rounded bottom border (`#7CF76C`) |
