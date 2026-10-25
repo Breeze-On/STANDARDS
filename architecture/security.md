@@ -45,3 +45,5 @@ Connection strings do not embed SQL passwords for the hosted app. Do not commit 
 ## Scope note
 
 This document describes only what is implemented today. Cross-app SSO and Microsoft Entra External ID for end users are not implemented.
+
+Organization-wide **security governance** standards (secret management policy, vulnerability management, etc.) are **not yet formally defined**. See the placeholder [`docs/security-governance.md`](../docs/security-governance.md). Do not confuse that placeholder with this architecture document.

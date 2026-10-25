@@ -37,6 +37,8 @@ Details: [`docs/documentation.md`](docs/documentation.md). ADR process: [`docs/a
 | What is a Breeze On application? | [`docs/application-model.md`](docs/application-model.md) |
 | What do environments mean? | [`docs/environments.md`](docs/environments.md) |
 | What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
+| Is testing / observability / versioning / domain modeling standardized? | Placeholder `docs/*.md` files — **not yet formally defined**; do not invent rules |
+| Where are operational runbooks? | [`runbooks/README.md`](runbooks/README.md) |
 
 ## Repository structure (this repo)
 
@@ -53,16 +55,17 @@ STANDARDS/
 │  ├─ local-database.md
 │  ├─ environments.md
 │  ├─ application-model.md
+│  ├─ domain-modeling.md / testing.md / security-governance.md /
+│  │    observability.md / versioning.md   # placeholders (not yet formally defined)
 │  ├─ ui-components.md   # redirect stub → docs/ui/
-│  └─ ui/                # UI standards (modular)
+│  └─ ui/                # UI standards (hierarchical by responsibility)
 │     ├─ overview.md
-│     ├─ shell.md
-│     ├─ navigation.md
-│     ├─ sections.md
-│     ├─ layout.md
-│     ├─ forms.md
-│     ├─ typography.md
-│     └─ tokens.md
+│     ├─ foundations/    # tokens, typography, i18n
+│     ├─ shell/          # shell, navigation
+│     ├─ layout/         # sections, layout (Row)
+│     └─ controls/       # forms
+├─ runbooks/             # operational runbooks (sparse today)
+│  └─ README.md
 ├─ decisions/            # Architecture Decision Records
 ├─ templates/
 │  └─ local-sql/         # Docker SQL sandbox starter for app repos
@@ -77,10 +80,12 @@ STANDARDS/
 | Path | Purpose |
 | --- | --- |
 | `docs/` | Standards, conventions, rules, practices, naming, documentation requirements, engineering decisions, UI patterns, environments, application model, ADR process |
-| `docs/ui/` | Modular UI standards (entry: `overview.md`); grow by responsibility when documents become large |
+| `docs/ui/` | Hierarchical UI standards (entry: `overview.md`); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
+| `docs/*` placeholders | `domain-modeling`, `testing`, `security-governance`, `observability`, `versioning` — state that org standards are **not yet formally defined** (do not invent rules there) |
+| `runbooks/` | Operational procedures; little content today — see `runbooks/README.md` |
 | `decisions/` | ADRs (why decisions were made); index includes Category and Impact Area |
 | `templates/` | Copy-paste starters for apps (e.g. local SQL Docker) |
-| `architecture/` | Currently implemented systems, landscape map, platform structure, application responsibilities, security architecture |
+| `architecture/` | Currently implemented systems, landscape map, platform structure, application responsibilities, security architecture (`architecture/security.md` ≠ `docs/security-governance.md`) |
 
 If you add or remove files under `docs/`, `decisions/`, or `architecture/`, update **this** `README_AI.md` and the root `README.md` in the same change set.
 
@@ -107,7 +112,9 @@ Before planning or implementing in a Breeze On repo:
 8. For local database work: follow [`docs/local-database.md`](docs/local-database.md); do not point Development at Azure SQL by default.
 9. For environment naming: follow [`docs/environments.md`](docs/environments.md); do not redefine environments independently in product docs.
 10. For what an application repo must include: follow [`docs/application-model.md`](docs/application-model.md).
-11. For UI standards: follow [`docs/ui/overview.md`](docs/ui/overview.md) and the focused sibling docs; when docs grow too large, split by responsibility and update the UI index (organic structure rule in the overview).
+11. For UI standards: follow [`docs/ui/overview.md`](docs/ui/overview.md) and docs under `foundations/`, `shell/`, `layout/`, `controls/`; when docs grow too large, deepen the hierarchy and update the UI index (organic structure rule in the overview).
+12. Placeholder docs (`domain-modeling`, `testing`, `security-governance`, `observability`, `versioning`) mean **no org standard yet** — do not invent requirements there; update them only when conventions are actually established.
+13. For operational procedures: see [`runbooks/README.md`](runbooks/README.md); add runbooks only from real procedures.
 
 ## Product README_AI expectations
 

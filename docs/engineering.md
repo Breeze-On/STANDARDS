@@ -8,7 +8,7 @@ Current technical defaults for Breeze On application work.
 | --- | --- |
 | UI | Blazor Web App, Interactive Server (global interactivity); [ADR-002](../decisions/ADR-002-blazor-interactive-server.md) |
 | Shared UI | `BreezeOn.UI` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI); see [ui/overview.md](ui/overview.md); [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
-| Typography | **Calibri** default UI font (hard standard via `BreezeOn.UI` / `--bo-font-family`); see [ui/typography.md](ui/typography.md) |
+| Typography | **Calibri** default UI font (hard standard via `BreezeOn.UI` / `--bo-font-family`); see [ui/foundations/typography.md](ui/foundations/typography.md) |
 | Runtime | ASP.NET Core / C# / .NET 10 |
 | Auth (ADM today) | ASP.NET Core Identity |
 | Database | Azure SQL / SQL Server (T-SQL) + local Docker; see [database.md](database.md), [local-database.md](local-database.md); [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.md) |
@@ -38,4 +38,4 @@ Applications that own schema must keep `sql/current_model/` and `docs/db-model.m
 
 ## Documentation
 
-Engineering changes that affect how others run or understand the app must update that repoâ€™s README / README_AI per [documentation standards](documentation.md). Cross-cutting or new implemented systems must update STANDARDS `architecture/` in the same change set when applicable. Architectural decision changes must update or supersede ADRs in the same change set.
+Engineering changes that affect how others run or understand the app must update that repo’s README / README_AI per [documentation standards](documentation.md). Cross-cutting or new implemented systems must update STANDARDS `architecture/` in the same change set when applicable. Architectural decision changes must update or supersede ADRs in the same change set.

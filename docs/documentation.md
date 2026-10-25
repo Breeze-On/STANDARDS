@@ -22,11 +22,22 @@ Documentation must represent **CURRENT REALITY ONLY**.
 | Tree | Holds |
 | --- | --- |
 | `docs/` | Standards and governance (how we work) |
-| `docs/ui/` | Modular UI standards (entry: [`ui/overview.md`](ui/overview.md)); split by responsibility as the design system grows |
+| `docs/ui/` | Hierarchical UI standards (entry: [`ui/overview.md`](ui/overview.md)); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
+| `runbooks/` | Operational procedures (sparse today); index: [`../runbooks/README.md`](../runbooks/README.md) |
 | `architecture/` | Descriptions of systems that exist now (what exists); landscape map: [`../architecture/landscape.md`](../architecture/landscape.md) |
 | `decisions/` | Architecture Decision Records (why decisions were made); index with Category / Impact Area: [`../decisions/README.md`](../decisions/README.md) |
 
 Do not place unimplemented designs in these trees.
+
+### Placeholder standards (undeclared governance areas)
+
+Some `docs/` files exist only to record that an area is **not yet formally defined** (e.g. [`domain-modeling.md`](domain-modeling.md), [`testing.md`](testing.md), [`security-governance.md`](security-governance.md), [`observability.md`](observability.md), [`versioning.md`](versioning.md)). Those placeholders:
+
+- State the **current reality** that no org-wide standard exists yet
+- May list topics expected to be covered **later**, without defining rules
+- Must not invent requirements, strategies, or implementation mandates
+
+Update a placeholder into a real standard only when conventions are agreed and in use.
 
 ## Architecture Decision Records
 

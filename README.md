@@ -32,6 +32,8 @@ Full rules: [`docs/documentation.md`](docs/documentation.md). ADR process: [`doc
 | What defines a Breeze On application? | [`docs/application-model.md`](docs/application-model.md) |
 | How are environments defined? | [`docs/environments.md`](docs/environments.md) |
 | What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
+| Is there a testing / observability / versioning standard yet? | Placeholder docs under `docs/` (status: not yet formally defined) |
+| Where are operational runbooks? | [`runbooks/README.md`](runbooks/README.md) |
 
 ## Repository structure
 
@@ -50,16 +52,20 @@ STANDARDS/
 │  ├─ local-database.md
 │  ├─ environments.md
 │  ├─ application-model.md
+│  ├─ domain-modeling.md     # Placeholder — not yet formally defined
+│  ├─ testing.md             # Placeholder — not yet formally defined
+│  ├─ security-governance.md # Placeholder — distinct from architecture/security.md
+│  ├─ observability.md       # Placeholder — not yet formally defined
+│  ├─ versioning.md          # Placeholder — not yet formally defined
 │  ├─ ui-components.md       # Redirect stub → docs/ui/
-│  └─ ui/                    # UI standards (modular)
+│  └─ ui/                    # UI standards (hierarchical by responsibility)
 │     ├─ overview.md
-│     ├─ shell.md
-│     ├─ navigation.md
-│     ├─ sections.md
-│     ├─ layout.md
-│     ├─ forms.md
-│     ├─ typography.md
-│     └─ tokens.md
+│     ├─ foundations/        # tokens, typography, i18n
+│     ├─ shell/              # shell, navigation
+│     ├─ layout/             # sections, layout (Row)
+│     └─ controls/           # forms
+├─ runbooks/                 # Operational runbooks (sparse today)
+│  └─ README.md
 ├─ decisions/                # Architecture Decision Records (ADRs)
 ├─ templates/
 │  └─ local-sql/             # Docker SQL sandbox starter (copy into app repos)
@@ -99,7 +105,18 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [Local database](docs/local-database.md) | SQL Server Docker sandbox for local development |
 | [Environments](docs/environments.md) | Local and DV environment definitions; hosted seed labels |
 | [Application model](docs/application-model.md) | What constitutes a Breeze On application (current patterns) |
-| [UI standards](docs/ui/overview.md) | Shared UI conventions (`docs/ui/` modular tree) |
+| [UI standards](docs/ui/overview.md) | Shared UI conventions (`docs/ui/` hierarchical tree) |
+| [Domain modeling](docs/domain-modeling.md) | Placeholder — not yet formally defined |
+| [Testing](docs/testing.md) | Placeholder — not yet formally defined |
+| [Security governance](docs/security-governance.md) | Placeholder — future governance (see also [architecture/security.md](architecture/security.md)) |
+| [Observability](docs/observability.md) | Placeholder — not yet formally defined |
+| [Versioning](docs/versioning.md) | Placeholder — not yet formally defined |
+
+### Runbooks
+
+| Path | Covers |
+| --- | --- |
+| [runbooks/](runbooks/README.md) | Operational procedures home (little content today) |
 
 ### Decisions (`decisions/`)
 
