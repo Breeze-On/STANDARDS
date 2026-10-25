@@ -13,7 +13,8 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [navigation.md](navigation.md) | Left navigation, route/URL matching |
 | [sections.md](sections.md) | Main Section / Sub Section |
 | [layout.md](layout.md) | Row (`BoRow`), page composition, planning JSON schema |
-| [forms.md](forms.md) | Text Field and form controls |
+| [forms.md](forms.md) | Text Field, Drop-Down List, and form controls |
+| [i18n.md](i18n.md) | Culture / timezone cookies + en/fr resource foundation |
 | [typography.md](typography.md) | Default typeface |
 | [tokens.md](tokens.md) | Design / shell tokens |
 
@@ -40,7 +41,8 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | --- | --- | --- |
 | Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens); dual Light/Dark palettes | [tokens.md](tokens.md), [typography.md](typography.md) |
 | `IBoThemeModeService` | `ThemeMode` + active palette; cookie `bo-theme-mode` restore via `BoProviders` bootstrap | [tokens.md](tokens.md) |
-| `BoProviders` | Hosts Fluent providers, `BoMessageDialogHost`, `BoSettingsDialogHost` | — |
+| `BoProviders` | Hosts Fluent providers, theme/locale bootstrap, dialog hosts | [tokens.md](tokens.md), [i18n.md](i18n.md) |
+| `IBoLocaleService` | Culture + IANA timezone; cookies `bo-culture` / `bo-timezone` | [i18n.md](i18n.md) |
 | `BoAppShell` | Option B app chrome: full-height nav + header / body / footer column | [shell.md](shell.md) |
 | `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None | [shell.md](shell.md), [tokens.md](tokens.md) |
 | `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail; bottom collapse control; prefer `IconContent` with `BoIcon` | [navigation.md](navigation.md) |
@@ -60,9 +62,10 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](sections.md) |
 | `BoPageHeader` | Page title and description | — |
 | `BoTextField` | Text input | [forms.md](forms.md) |
+| `BoDropDownList` | Drop-Down List (same field chrome as Text Field) | [forms.md](forms.md) |
 | `BoButton` | Pill button (primary / secondary / stealth); shorter+wider padding; shadow + hover lift; optional icon | [tokens.md](tokens.md) |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`) | — |
-| `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone placeholders) | [shell.md](shell.md) |
+| `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell.md), [i18n.md](i18n.md) |
 
 ## Local gallery
 

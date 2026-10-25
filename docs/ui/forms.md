@@ -2,7 +2,7 @@
 
 Form control standards. Related: [layout.md](layout.md) (Row + page composition JSON), [sections.md](sections.md), [typography.md](typography.md), [tokens.md](tokens.md), [overview.md](overview.md).
 
-**Hard standard:** every Text Field (and future form controls) **must** be a direct child of a [`BoRow`](layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](layout.md#page-composition-locked--hard-standard).
+**Hard standard:** every Text Field, Drop-Down List, and future form controls **must** be a direct child of a [`BoRow`](layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](layout.md#page-composition-locked--hard-standard).
 
 ## Text Field (`BoTextField`)
 
@@ -36,3 +36,27 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 **Gallery reference:** Theme (`/theme`) color tabs (fields inside `BoRow`s); Components Text Field playground.
 
 These Text Field rules are **org standards** for every `BoTextField` usage.
+
+## Drop-Down List (`BoDropDownList`)
+
+**Display name:** Drop-Down List.  
+**Component:** `BoDropDownList` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+
+Same field chrome as Text Field (label, mandatory asterisk, grey rest border, primary focus, field background). Fluent select stays **internal** to the library.
+
+| Parameter | Role |
+| --- | --- |
+| `Label` | Field label text |
+| `FieldKey` | Stable typed DTO / entity property identifier (mapping metadata only) |
+| `Required` | Mandatory asterisk when true |
+| `Items` | `IEnumerable<BoDropDownListItem>` (`Value` + `Text`) |
+| `Value` / `ValueChanged` | Two-way bind (`string?`) to the working model |
+| `Placeholder`, `Disabled`, `ErrorText` | Standard field chrome |
+
+### Label and chrome
+
+Same table as Text Field (10px bold uppercase label, Calibri 14px control text, danger asterisk, card-container border at rest, primary focus edge, `--bo-color-field-background` fill). No character count.
+
+**Gallery reference:** Components Drop-Down List tab; Settings dialog Language / Timezone rows.
+
+These Drop-Down List rules are **org standards** for every `BoDropDownList` usage.

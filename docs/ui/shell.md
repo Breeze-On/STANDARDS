@@ -26,10 +26,10 @@ Order left → right:
 | Control | Component | Behavior (current) |
 | --- | --- | --- |
 | Light / Dark theme | `BoThemeSwitch` | Apple-style switch; `BrightnessLow` (Regular) icon left of track; toggles `IBoThemeModeService` (persists `bo-theme-mode` cookie; see [tokens.md](tokens.md)) |
-| Settings | Settings icon button in `BoHeaderActions` | Opens centered `BoSettingsDialogHost` with Language / Timezone placeholders (non-functional) |
+| Settings | Settings icon button in `BoHeaderActions` | Opens centered `BoSettingsDialogHost`: one Main Section **Settings**, two `BoRow`s with `BoDropDownList` (Language, Timezone); apply-on-change via `IBoLocaleService` |
 | Profile | `BoProfileMenu` | Circular avatar placeholder; menu with **Sign out** (design only — no auth) |
 
-Theme mode / dual palettes: [tokens.md](tokens.md). Cookie persistence for theme is not shipped yet.
+Theme mode / dual palettes: [tokens.md](tokens.md). Locale prefs: [i18n.md](i18n.md).
 
 ## App shell footer (optional per page)
 
