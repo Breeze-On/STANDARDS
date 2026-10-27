@@ -73,9 +73,12 @@ Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout
 
 - [ ] Deferred mandatory validation pattern respected (asterisk immediately; error chrome **after** attempt) — [forms.md § Deferred mandatory validation](controls/forms.md#deferred-mandatory-validation-locked).
 - [ ] Required fields use standard behavior; **Disabled** fields skip required validation.
-- [ ] Universal required message (`Validation_FieldRequired` — “This field is required”); never field-label-specific.
-- [ ] Submit integrates with **`BoValidationContext`** / **`IBoSubmitInterceptor`** (scope to active tab / `ValidationGroup` when using keep-alive tabs).
-- [ ] Validation fail → Error toast pattern as documented; do not open success Submit dialog on fail.
+- [ ] Universal required message (`Validation_FieldRequired`); never field-label-specific.
+- [ ] Fields expose `FieldKey` + `ValidationGroup` (tab); sections set `SectionKey` so failures report Field → Sub → Main → Tab.
+- [ ] Submit integrates with **`BoValidationContext`** / **`IBoSubmitInterceptor`**. Prefer `Validate(null)` (all keep-alive groups).
+- [ ] Fail badges (`BoValidationFailBadge`) on failed tabs + Main/Sub headers; clear live when fields are fixed.
+- [ ] Validation fail → **Alert** toast (Main + Body resources); do not open success Submit dialog on fail.
+- [ ] New/changed field controls: follow [forms.md § Field component checklist](controls/forms.md#field-component-checklist).
 
 ### Localization
 

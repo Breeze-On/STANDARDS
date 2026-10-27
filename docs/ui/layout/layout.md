@@ -44,6 +44,7 @@ A **Row** is a layout container for one or more fields in a section. It standard
 | Row + container inside padding | **`--bo-space-row-inset`** (default **4px**) on all four sides — see [tokens.md](../foundations/tokens.md) |
 | Field container outside spacing | **`--bo-space-row-gap`** (default **16px**) `column-gap` between adjacent containers (no vertical separator between containers) |
 | Field width | Control fills the field container width (`max-width` overridden inside a row; input stretches 100%) |
+| Vertical align | Default: middle-align field containers. When any child is a **multi-select or tall** Drop-Down List (`AllowMultiple` / multi read-only), the Row uses **`align-items: start`** so chips/lines top-align; single-line siblings remain optically centered within their own slot |
 
 ### Spacing tokens (change once, applies to Row + field container)
 

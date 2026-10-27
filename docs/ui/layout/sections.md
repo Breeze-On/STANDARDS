@@ -31,7 +31,8 @@ Header is **optional**. When omitted, only the body content is rendered.
 | Icon | Optional; to the **left** of the label; ~13px; tight ~4px gap to label; **vertically center-aligned** with the label; same color as label (prefer `BoIcon` in `IconContent`) |
 | Rule | Grey horizontal line **directly under** the header text/icon row; almost no gap (~2px); uses `--bo-color-card-container-border` |
 | Flush to body | Content container sits **immediately under** the header rule — **no gap** |
-| API | `Title` and/or `TitleContent`; optional `IconContent`; body via `ChildContent` |
+| API | `SectionKey` (stable id for validation ancestry / fail badge); `Title` and/or `TitleContent`; optional `IconContent`; body via `ChildContent` |
+| Validation fail | After Submit attempt, if `SectionKey` is in `BoValidationContext.FailedSectionMains`, show `BoValidationFailBadge` (red disc + white “!”) at the header end (**4px** from right, **4px** from bottom) — [forms.md](../controls/forms.md#deferred-mandatory-validation-locked) |
 
 ### Content container
 
@@ -52,7 +53,8 @@ A **Sub Section** is for nested/subordinate groupings inside a Main Section. It 
 
 | Concern | Standard |
 | --- | --- |
-| API | Same as Main: `Title` / `TitleContent`, optional `IconContent`, `ChildContent` |
+| API | Same as Main: `SectionKey`, `Title` / `TitleContent`, optional `IconContent`, `ChildContent` |
+| Validation fail | Same badge as Main when `SectionKey` ∈ `FailedSectionSubs`; cascades Main + Sub keys to child fields |
 | Content body padding | **6px** equal on all four sides (same as Main) |
 | Label | Bold, **11px** (Main 13px − 2), **not uppercase** (sentence / title case as provided); color `--bo-color-section-tab-label` |
 | Icon (when present) | ~11px; same alignment rules as Main |

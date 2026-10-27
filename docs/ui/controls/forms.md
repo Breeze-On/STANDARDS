@@ -13,10 +13,44 @@ Form control standards. Related: [layout.md](../layout/layout.md) (Row + page co
 | Asterisk | When `Required` is true **and the field is not `Disabled`**, show the red `*` immediately |
 | Error chrome | **Only after a validation attempt** (e.g. shell Submit). Until then, empty required fields show no error text and no red border |
 | Required message | Universal resource string — English **"This field is required"** (`Validation_FieldRequired`). Same for every control; never field-label-specific |
-| Invalid border | Danger color (`--bo-color-danger`) on the control edge when the required-empty rule fails after attempt |
+| Invalid border | Danger color (`--bo-color-danger`) on the **control edge only** (same as Text Field input border) when the required-empty rule fails after attempt — **not** a wash/outline on the BoRow item container |
 | Disabled | A `Disabled` field **never** shows the mandatory asterisk, **never** shows character count, and **never** participates in required validation (Submit ignores it for mandatory checks) |
-| Mechanism | Cascading `BoValidationContext`; fields register via `IBoValidatableField`; optional `ValidationGroup` (e.g. active Theme tab). Pages gate Submit with `IBoSubmitInterceptor` |
-| Fail path (gallery) | Toast **Error** with **"Mandatory fields are required"** — do not run the success Submit dialog |
+| Mechanism | Cascading `BoValidationContext`; fields register via `IBoValidatableField`; pages gate Submit with `IBoSubmitInterceptor` |
+| Scope | Gallery Submit validates **all** registered groups (`Validate(null)`), not only the active tab |
+| Live clear | After attempt, field value changes call `NotifyFieldChanged()` — one O(n) pass over registered fields; fail badges clear when that ancestor no longer has required-empty fields |
+| Fail path (gallery) | Toast **Alert** — Main `Validation_MandatoryFieldsToast`; Body `Validation_MandatoryFieldsToastBody` (“Required information is missing. Review and complete all required fields.”) |
+
+### Failure ancestry (structured)
+
+Each required-empty failure is a `BoValidationFailure`:
+
+| Identifier | Source |
+| --- | --- |
+| `FieldKey` | Field `FieldKey` |
+| `SectionSubKey` | Cascaded from `BoSectionSub.SectionKey` (if any) |
+| `SectionMainKey` | Cascaded from `BoSectionMain.SectionKey` (if any) |
+| `TabKey` | Field `ValidationGroup` (match `BoTab.TabKey` when using tabs) |
+
+Context aggregates: `Failures`, `FailedGroups` (tabs), `FailedSectionMains`, `FailedSectionSubs`.
+
+### Fail badges
+
+`BoValidationFailBadge`: red filled disc + white “!” + subtle shadow (CSS; Fluent ErrorCircle is single-tone). Shown on:
+
+- Matching **tab** label (`TabKey` ∈ `FailedGroups`)
+- Matching **Main** / **Sub** section header (`SectionKey` ∈ failed section sets; **4px** from the right and **4px** from the bottom of the header)
+
+### Field component checklist
+
+When shipping or changing a form `Bo*` control:
+
+- [ ] Direct child of `BoRow` inside a Section
+- [ ] `FieldKey` + `@bind-Value` to typed model; never hardcode user-visible labels
+- [ ] `Required` / `Disabled` / deferred validation via `IBoValidatableField` (expose `FieldKey`, `ValidationGroup`, section keys from cascade)
+- [ ] Call `BoValidationContext.NotifyFieldChanged()` after value changes
+- [ ] Invalid chrome = control edge only; universal `Validation_FieldRequired`
+- [ ] Default Placeholder from resources when applicable
+- [ ] Update STANDARDS `forms.md` + gallery Preview (editable \| read-only \| Backend Value) in the same change set
 
 ## Read-Only Field (`BoFieldReadOnly`)
 
@@ -44,7 +78,7 @@ Flat **display-only** companion for read views. Always shows **already-formatted
 
 **Formatting (app-side):** document and apply date/number/boolean display formats in the product app (or page) before binding `Value`. Do not invent parallel typed read-only controls for flat scalars.
 
-**Gallery reference:** Components Preview second column (Text Field / Drop-Down List / Checkbox / Date sample).
+**Gallery reference:** Components Preview — editable | read-only | **Backend Value (Typed Entity & Database)** (`BoFieldReadOnly` showing the bound typed value).
 
 These Read-Only Field rules are **org standards** for every `BoFieldReadOnly` usage.
 
@@ -89,24 +123,36 @@ These Text Field rules are **org standards** for every `BoTextField` usage.
 **Display name:** Drop-Down List.  
 **Component:** `BoDropDownList` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
 
-Same field chrome as Text Field (label, mandatory asterisk, grey rest border, primary focus, field background). Fluent select stays **internal** to the library.
+Same field chrome as Text Field (label, mandatory asterisk, grey rest border, primary focus, `--bo-color-field-background` fill — including Dark). Public API is `Bo*`; searchable list is owned by BreezeOn (Fluent is not the public surface).
 
 | Parameter | Role |
 | --- | --- |
 | `Label` | Field label text |
 | `FieldKey` | Stable typed DTO / entity property identifier (mapping metadata only) |
-| `Required` | Mandatory asterisk when true **and not `Disabled`**; no required validation when disabled |
-| `Items` | `IEnumerable<BoDropDownListItem>` (`Value` + `Text`) |
-| `Value` / `ValueChanged` | Two-way bind (`string?`) to the working model |
-| `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_DropDown_Placeholder_Default`** ("Choose…"). **Always omitted when `Disabled`** |
+| `Required` | Mandatory asterisk when true **and not `Disabled`/`ReadOnly`**; no required validation when disabled/read-only |
+| `Items` | `IEnumerable<BoDropDownListItem>` — prefer **`Code` + `Description`** (`Value`/`Text` remain aliases) |
+| `Value` / `ValueChanged` | Two-way bind (`string?`) = **Code only** (single); when `AllowMultiple`, Codes joined by **`;`** (empty → null/`""`) |
+| `DisplayCode` | When true, list/selection shows `"{Code} - {Description}"`; default false = Description only |
+| `AllowMultiple` | Multi-select; closed control shows removable **chips** + control-level **Clear all**; open list toggles rows (no checkboxes in the list) |
+| `ReadOnly` | Single: Description for selected Code. Multi: one checked Description **per line** (`;` → line breaks for UI) |
+| `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_DropDown_Placeholder_Default`** ("Select a value") |
 | `ValidationGroup` | Optional group for scoped Submit validation |
-| `Disabled`, `ErrorText` | Standard field chrome |
+| `Disabled`, `ErrorText` | Standard field chrome; Disabled hides chevron/clear, no open, greyer fill |
+
+### Search and list
+
+- Search lives in the **expanded panel** as a **fixed first row** (always available — including `DisplayCode` and `AllowMultiple`).
+- Type filters where **Description contains** the query (case-insensitive). When **`DisplayCode`** is on (Code is shown in the list), also match **Code**.
+- Show at most **100** matches (narrow with search).
+- Clear: single-select control **×** clears Value; multi-select keeps per-chip × plus a control **×** that clears all Codes.
+- Selected rows in the list: bold + subtle elevated/shadow highlight (not tertiary fill); no list checkboxes for multi.
+- Gallery seed (code-local): `DDL_0001`…`DDL_0150` / `Drop-Down List Value 001`…`150`.
 
 ### Label and chrome
 
-Same table as Text Field (10px bold uppercase label, Calibri 14px control text, danger asterisk when editable, card-container border at rest, primary focus edge, `--bo-color-field-background` fill; Disabled greyer fill, no Placeholder, no mandatory asterisk / required validation). No character count. Same deferred mandatory validation rules.
+Same as Text Field for editable chrome and deferred mandatory validation (invalid = input border only). Multi-height fields: `BoRow` uses **`align-items: start`** when any child is multi/tall; single-line controls stay optically centered in their slot. See [layout.md — Row](../layout/layout.md#row-borow).
 
-**Gallery reference:** Components Drop-Down List Preview; Settings dialog Language / Timezone rows.
+**Gallery reference:** Components Drop-Down List Preview (DisplayCode / AllowMultiple / Disabled knobs; editable + read-only + Backend Value); Settings dialog Language / Timezone rows.
 
 These Drop-Down List rules are **org standards** for every `BoDropDownList` usage.
 
@@ -115,15 +161,26 @@ These Drop-Down List rules are **org standards** for every `BoDropDownList` usag
 **Display name:** Checkbox.  
 **Component:** `BoCheckbox` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
 
-Boolean control: `Label` + `FieldKey` + `@bind-Value` (`bool`). Place as a direct child of `BoRow` when used in form layouts.
+Boolean control: `Label` + `FieldKey` + `@bind-Value` (`bool`). Place as a direct child of `BoRow` when used in form layouts. Vertically middle-aligned in the BoRow item container with sibling fields.
 
 | Parameter | Role |
 | --- | --- |
-| `Label` | Label text — **11px bold**, field-label color, **not** uppercase; vertically centered with the control box |
+| `Label` | Editable: **11px bold**, field-label color, **not** uppercase. Read-only: Text Field label chrome (10px bold uppercase) |
 | `FieldKey` | Stable typed DTO / entity property identifier (mapping metadata) |
 | `Value` / `ValueChanged` | Two-way bind to a **typed `bool`** property |
-| `Disabled` | Standard disabled chrome |
+| `Required` | **Mandatory** when editable — red asterisk after the label; after Submit attempt, fails when **unchecked** (`Value == false`). Suppressed when `Disabled` or `ReadOnly` |
+| `ValidationGroup` | Optional group for Submit validation |
+| `Disabled` | Standard disabled chrome (editable mode only) |
+| `ReadOnly` | Dual Yes/No display (exception to flat `BoFieldReadOnly`) |
 
-Control box is compact (~12px); control and label are vertically center-aligned. Gallery: Components Checkbox tab Preview (`editableCheckbox`); also used on Components Parameters rows.
+### Editable
+
+Control box is compact (~12px); control and label are vertically center-aligned. Asterisk at the **end** of the label when `Required`. Invalid after attempt: danger outline on the **checkbox control** only (not the BoRow item container).
+
+### Read-only (`ReadOnly`)
+
+Always shows **two** options: localized **Yes** / **No** (`Field_Boolean_Yes` / `Field_Boolean_No`; FR Oui/Non). Exactly one option is checked to match `Value`. Compact modern boxes (primary fill when checked); no edit/focus. Not a plain text `BoFieldReadOnly`.
+
+**Gallery:** Components Checkbox tab — Parameters (Mandatory/Disabled knobs) + Preview (editable + `ReadOnly` companion).
 
 These Checkbox rules are **org standards** for every `BoCheckbox` usage.

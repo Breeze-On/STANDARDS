@@ -64,6 +64,7 @@ Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTab
 | Outside spacing | 16px gap between tabs; inside header padding |
 | Switch behavior | All panels load together and stay mounted; hide inactive with CSS (no remount/reload) |
 | `SelectedTab` | Bindable in-memory key (`@bind-SelectedTab`); defaults to first tab; persists across switches |
+| Validation fail chrome | After Submit attempt, tabs whose `TabKey` is in `FailedGroups` show `BoValidationFailBadge` (red disc + white “!”) to the **right of the label**, vertically centered. Clears live when that group no longer fails (`NotifyFieldChanged`) |
 
 Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Header tabs standard).
 
@@ -170,4 +171,13 @@ Top-right toast stack hosted in `BoProviders` (`BoToastHost`).
 | `Information` | Blue + `Info` |
 | `Error` | Danger + `ErrorCircle` |
 
-API: `ShowAsync(variant, message, autoDismissMs?)` (default ~5s). Gallery Submit uses **Error** with **"Mandatory fields are required"** when deferred validation fails (see [forms.md](../controls/forms.md)).
+| Concern | Standard |
+| --- | --- |
+| API | `ShowAsync(variant, mainLabel, bodyLabel?, autoDismissMs?)` (default ~5s) |
+| MainLabel | Bold; `--bo-color-text` (black in Light, near-white in Dark) |
+| BodyLabel | Optional; line break under Main; ~13px; field-label grey (`--bo-color-text-field-label`) |
+| Layout | Compact horizontal card (~300px max); wider icon column with soft 3D disc + larger filled glyph; labels right; icon vertically centered to the label block |
+| Motion | Slide+fade in/out from the right (~200–220ms) |
+| Dismiss | Click toast (or Enter/Space/Escape) dismisses; auto-dismiss remains |
+
+Gallery Submit uses **Alert** (not Error) with Main **"Mandatory fields are required"** and Body **"Required information is missing. Review and complete all required fields."** when deferred validation fails (see [forms.md](../controls/forms.md)).
