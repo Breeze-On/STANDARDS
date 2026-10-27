@@ -8,7 +8,7 @@ Defines what constitutes a **standard Breeze On application** based on patterns 
 
 | Kind | Example repository | Notes |
 | --- | --- | --- |
-| Application | [SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | Blazor Web App, Identity, SQL ownership, DV hosting |
+| Application | [SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | Blazor Web App, SQL ownership, DV hosting, `scripts/dev-*.ps1` |
 | Shared library | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | RCL + gallery; no business DB |
 | Org standards | [STANDARDS](https://github.com/Breeze-On/STANDARDS) | Not an application |
 
@@ -44,14 +44,16 @@ Every application repository must:
 
 ## Local development expectations
 
+**Script standard (all runnable hosts):** every application and the Shared UI gallery must expose [`scripts/dev-reset.ps1`](local-development-scripts.md) as the single local entry point (no `dev-up` / `dev-down`). Secrets come only from a gitignored `.env`. Details: [local-development-scripts.md](local-development-scripts.md).
+
 For applications with a database (ADM pattern):
 
 - Default local engine: SQL Server Docker sandbox ([local-database.md](local-database.md)).
 - Repo typically includes `docker-compose.yml`, `.env.example`, init/seed scripts, and README steps.
 - Do not default Development to Azure SQL.
-- Agents follow the product `README_AI` autonomous local test steps when present.
+- Agents use `.\scripts\dev-reset.ps1` for autonomous local verification.
 
-For the Shared UI gallery: local `dotnet run` of the gallery project; no database required.
+For the Shared UI gallery: same script names; no database — scripts build and launch `BreezeOn.UI.Gallery`.
 
 ## Deployment expectations
 

@@ -28,6 +28,7 @@ Full rules: [`docs/documentation.md`](docs/documentation.md) (includes lightweig
 
 | Question | Where |
 | --- | --- |
+| Where should an AI agent start? | [`docs/ai/BREEZEON-AI-QUICKSTART.md`](docs/ai/BREEZEON-AI-QUICKSTART.md) (see [`docs/ai/`](docs/ai/)) |
 | What exists? | [`architecture/`](architecture/) — start at [landscape](architecture/landscape.md) |
 | How do we work? | [`docs/`](docs/) |
 | Why was this decision made? | [`decisions/`](decisions/) (ADRs) |
@@ -48,6 +49,7 @@ STANDARDS/
 ├─ README.md                 # This file — humans, index, structure
 ├─ README_AI.md              # Agents — mandate and how to use this repo
 ├─ docs/                     # Standards, conventions, governance
+│  ├─ ai/                    # AI onboarding (quickstart first)
 │  ├─ documentation.md
 │  ├─ glossary.md            # Shared vocabulary (current usage)
 │  ├─ adr.md
@@ -55,6 +57,7 @@ STANDARDS/
 │  ├─ engineering.md
 │  ├─ database.md
 │  ├─ local-database.md
+│  ├─ local-development-scripts.md  # Local Development Script Standard (dev-reset.ps1)
 │  ├─ environments.md
 │  ├─ application-model.md
 │  ├─ domain-modeling.md     # Placeholder — not yet formally defined
@@ -110,6 +113,7 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [Engineering](docs/engineering.md) | Stack and repo shape in use |
 | [Database](docs/database.md) | NVARCHAR lengths; NOT NULL rules; sql/current_model; seed; per-app `docs/db-model.md` |
 | [Local database](docs/local-database.md) | SQL Server Docker sandbox for local development |
+| [Local development scripts](docs/local-development-scripts.md) | Single entry: `dev-reset.ps1`; secrets via `.env` |
 | [Environments](docs/environments.md) | Local and DV environment definitions; hosted seed labels |
 | [Application model](docs/application-model.md) | What constitutes a Breeze On application (current patterns) |
 | [UI standards](docs/ui/overview.md) | Shared UI conventions (`docs/ui/` hierarchical tree) |

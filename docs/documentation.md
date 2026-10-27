@@ -66,6 +66,8 @@ This guidance is **advisory and pragmatic**. It does **not** create mandatory re
 | Tree | Holds |
 | --- | --- |
 | `docs/` | Standards and governance (how we work); glossary: [`glossary.md`](glossary.md) |
+| `docs/ai/` | AI onboarding path (mandatory quickstart first); index: [`ai/README.md`](ai/README.md) |
+| `docs/local-development-scripts.md` | Org Local Development Script Standard (`dev-reset.ps1` only) |
 | `docs/ui/` | Hierarchical UI standards (entry: [`ui/overview.md`](ui/overview.md); page checklist: [`ui/page-development.md`](ui/page-development.md)); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
 | `runbooks/` | Operational procedures (sparse today); index: [`../runbooks/README.md`](../runbooks/README.md) |
 | `architecture/` | Descriptions of systems that exist now (what exists); landscape map: [`../architecture/landscape.md`](../architecture/landscape.md) |
@@ -113,7 +115,7 @@ Belongs in **STANDARDS** (`README_AI.md`, `docs/`, `architecture/`, `decisions/`
 
 ### Product README_AI.md must
 
-1. Reference [`STANDARDS/README_AI.md`](https://github.com/Breeze-On/STANDARDS/blob/main/README_AI.md).
+1. Point agents to [`docs/ai/BREEZEON-AI-QUICKSTART.md`](https://github.com/Breeze-On/STANDARDS/blob/main/docs/ai/BREEZEON-AI-QUICKSTART.md) first, then [`STANDARDS/README_AI.md`](https://github.com/Breeze-On/STANDARDS/blob/main/README_AI.md).
 2. Hold **repository-specific** context only (role, local surface, boundaries).
 3. Require agents to follow STANDARDS and to **update documentation** (including ADRs when architecture changes) when a task changes reality.
 4. Enforce **current state only**.

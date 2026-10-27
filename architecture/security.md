@@ -4,21 +4,21 @@ Owner: Architecture
 
 Current-state security posture for implemented Breeze On applications.
 
-## ADM authentication
+## ADM application authentication
 
 | | |
 | --- | --- |
-| Mechanism | ASP.NET Core Identity |
+| Mechanism | **Not implemented** (ASP.NET Core Identity removed from ADM) |
 | App | ADM (`SYSTEM-ADMIN-ADM` / `BreezeOn.Adm`) |
-| User store (local) | SQL Server Docker database `BreezeOnLocal` (`AspNet*` tables) |
-| User store (DV) | Azure SQL database `BreezeOnDV` (`AspNet*` tables) |
-| Capabilities in use | Register, login, logout, account manage flows from the Identity UI |
-| Email confirmation | Not required in current DV configuration (`RequireConfirmedAccount = false`) |
+| UI access | Shell pages are public (Home + destination pages) |
+| User store | None — no `AspNet*` tables |
+
+End-user authentication and authorization will be introduced in a future milestone once Identity / security requirements are defined.
 
 ## Authorization (current)
 
-- Dashboard requires an authenticated user (`[Authorize]`).
-- Home and account/login/register routes follow the Identity + Blazor layout shipped in ADM.
+- No `[Authorize]` attributes on ADM product pages.
+- No login redirect for shell routes.
 
 ## Local SQL access
 

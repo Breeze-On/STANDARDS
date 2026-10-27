@@ -30,9 +30,11 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | --- | --- |
 | UI framework | Blazor Web App, Interactive Server (global interactivity) |
 | Runtime | ASP.NET Core / C# / .NET 10 (App Service stack: `DOTNETCORE|10.0`) |
-| Auth | ASP.NET Core Identity (`AspNet*` tables via EF migrations) |
-| Surfaces | Home (cards), Dashboard (authorized), left navigation, Identity account pages |
-| Data access | EF Core + SQL Server provider |
+| Shared UI | ProjectReference to `SYSTEM-SHARED-UI` / `BreezeOn.UI` (`Bo*` only; [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md)) |
+| Auth | **Not implemented** — ASP.NET Core Identity removed; no login/register; shell pages public |
+| Surfaces | `BoAppShell` + left nav; Home (`BoNavHub`); Applications / Organisation Entities / App Configuration (public empty bodies for UI adoption) |
+| Localization | ADM `AdmResources.resx` / `AdmResources.fr.resx` via `IAdmLocalizer` (not Gallery `BoUi`) |
+| Data access | EF Core + SQL Server provider (empty `ApplicationDbContext` + `InitialBaseline` for `__EFMigrationsHistory`; business schema via SQL scripts) |
 | SQL scripts | `sql/current_model/` (T-SQL): schema `SYSADM`, table `SYSADM.ADMApplications` |
 | DB model doc | [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM/blob/main/docs/db-model.md) |
 | Local database | SQL Server Docker (`BreezeOnLocal`); see [local-database.md](../docs/local-database.md) |

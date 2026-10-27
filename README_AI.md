@@ -4,6 +4,15 @@ Owner: Documentation
 
 Required context for AI agents working in any **Breeze-On** repository.
 
+## Start here (mandatory)
+
+**Before any analysis, planning, or implementation**, read:
+
+1. [`docs/ai/BREEZEON-AI-QUICKSTART.md`](docs/ai/BREEZEON-AI-QUICKSTART.md) — org orientation in minutes  
+2. Then [`docs/ai/README.md`](docs/ai/README.md) for reading order  
+
+Do **not** ingest every STANDARDS file by default. Use the quickstart, then open detailed docs only as needed.
+
 This file documents how the **STANDARDS** repository is structured and how agents must use it. Keep this file synchronized with the actual contents of this repo.
 
 ## Single source of truth
@@ -33,6 +42,8 @@ Details: [`docs/documentation.md`](docs/documentation.md). ADR process: [`docs/a
 
 | Question | Where |
 | --- | --- |
+| Where do I start as an AI agent? | [`docs/ai/BREEZEON-AI-QUICKSTART.md`](docs/ai/BREEZEON-AI-QUICKSTART.md) |
+| AI standards / adoption summaries? | [`docs/ai/`](docs/ai/) |
 | What exists? | `architecture/` — start at [`architecture/landscape.md`](architecture/landscape.md) |
 | How do we work? | `docs/` |
 | Why was this decided? | `decisions/` (ADRs) — index [`decisions/README.md`](decisions/README.md) |
@@ -51,6 +62,7 @@ STANDARDS/
 ├─ README.md
 ├─ README_AI.md
 ├─ docs/                 # standards, conventions, governance
+│  ├─ ai/                # AI onboarding (quickstart first)
 │  ├─ documentation.md
 │  ├─ glossary.md        # shared vocabulary (current usage)
 │  ├─ adr.md
@@ -58,6 +70,7 @@ STANDARDS/
 │  ├─ engineering.md
 │  ├─ database.md
 │  ├─ local-database.md
+│  ├─ local-development-scripts.md
 │  ├─ environments.md
 │  ├─ application-model.md
 │  ├─ domain-modeling.md / testing.md / security-governance.md /
@@ -110,7 +123,8 @@ If you add or remove files under `docs/`, `decisions/`, or `architecture/`, upda
 
 Before planning or implementing in a Breeze On repo:
 
-1. Read this file and [`docs/documentation.md`](docs/documentation.md).
+0. Read [`docs/ai/BREEZEON-AI-QUICKSTART.md`](docs/ai/BREEZEON-AI-QUICKSTART.md) (mandatory).
+1. Read this file and [`docs/documentation.md`](docs/documentation.md) as needed for STANDARDS navigation.
 2. Use [`docs/glossary.md`](docs/glossary.md) for shared terminology; do not invent alternate definitions.
 3. Read [`docs/adr.md`](docs/adr.md) and relevant files under [`decisions/`](decisions/).
 4. Read other `docs/*` and `architecture/*` files relevant to the task (for topology: [`architecture/landscape.md`](architecture/landscape.md); for UI: [`docs/ui/overview.md`](docs/ui/overview.md)).
@@ -118,7 +132,7 @@ Before planning or implementing in a Breeze On repo:
 6. If you introduce a lasting convention or a new implemented system, document it here (`docs/` or `architecture/`) as current state — do not invent a one-off undocumented rule.
 7. If you introduce or change a **significant architectural decision**, create or update an ADR in `decisions/` (or supersede an existing one) in the **same change set**.
 8. For database work: follow [`docs/database.md`](docs/database.md). Product apps that own schema must update `sql/current_model/`, `docs/db-model.md`, and `sql/seed/` together.
-9. For local database work: follow [`docs/local-database.md`](docs/local-database.md); do not point Development at Azure SQL by default.
+9. For local database work: follow [`docs/local-database.md`](docs/local-database.md); do not point Development at Azure SQL by default. For one-command local bring-up: [`docs/local-development-scripts.md`](docs/local-development-scripts.md) (`.\scripts\dev-reset.ps1` only — do not invent `dev-up` / `dev-down` or alternate startup scripts).
 10. For environment naming: follow [`docs/environments.md`](docs/environments.md); do not redefine environments independently in product docs.
 11. For what an application repo must include: follow [`docs/application-model.md`](docs/application-model.md).
 12. For UI standards: start with the page checklist [`docs/ui/page-development.md`](docs/ui/page-development.md), then [`docs/ui/overview.md`](docs/ui/overview.md) and docs under `foundations/`, `shell/`, `layout/`, `controls/`; when docs grow too large, deepen the hierarchy and update the UI index (organic structure rule in the overview).
@@ -130,7 +144,7 @@ Before planning or implementing in a Breeze On repo:
 
 Each product `README_AI.md` should:
 
-- Reference **this** file (`Breeze-On/STANDARDS` → `README_AI.md`).
+- Point agents first to [`docs/ai/BREEZEON-AI-QUICKSTART.md`](docs/ai/BREEZEON-AI-QUICKSTART.md), then **this** file.
 - Contain only repository-specific context (role, local surface, boundaries).
 - Require agents to follow STANDARDS, update docs in the same change set, and update or respect ADRs when architecture changes.
 - Avoid copying organization-wide standards, architecture, or ADR text that already lives here.

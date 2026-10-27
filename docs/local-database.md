@@ -63,7 +63,7 @@ Optional: override the connection string with User Secrets to point at Azure SQL
 3. Create the physical database if it does not exist.
 4. Apply that app’s `sql/current_model/` scripts **in documented order** (schema scripts first, then tables).
 5. Apply that app’s `sql/seed/` scripts for local sample/fake data (required for local-ready testing; never default-apply seed to hosted Azure SQL).
-6. Configure the app’s local SA password (`LocalSql:SaPassword` user-secrets and/or `MSSQL_SA_PASSWORD`) and run the application. ASP.NET Core Identity / EF migrations (if used) apply on startup as configured by the app.
+6. Configure the app’s local SA password (`LocalSql:SaPassword` user-secrets and/or `MSSQL_SA_PASSWORD`) and run the application via `.\scripts\dev-reset.ps1`. EF migrations (if used) apply via the script (and/or on startup) as configured by the app.
 
 Apps that own business schema **must** maintain `sql/seed/` and update it in the same change set as schema changes (see [database.md](database.md)).
 
@@ -77,7 +77,7 @@ Apps that own business schema **must** maintain `sql/seed/` and update it in the
 
 ### Agents
 
-Product `README_AI.md` / `AGENTS.md` should describe how to bring up the local sandbox autonomously (Docker → init → seed → `dotnet run`) without using Azure SQL for routine verification. Never commit or print `.env` passwords.
+Product apps with SQL must use the org script standard ([local-development-scripts.md](local-development-scripts.md)): `.\scripts\dev-reset.ps1` (Docker → drop/recreate → init → seed → migrate → build → launch). Never commit or print `.env` passwords.
 
 ## What belongs where
 

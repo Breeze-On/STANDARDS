@@ -45,10 +45,10 @@ Current-reality only. For org identity and the repository table, see [ecosystem.
 ```text
   STANDARDS  <---- link / follow ----  SYSTEM-ADMIN-ADM
       ^                                    |
-      |                                    | (no Shared UI package reference today)
+      |                                    | ProjectReference → BreezeOn.UI
       +---- link / follow ----  SYSTEM-SHARED-UI
                                     |
-                                    +-- gallery host consumes BreezeOn.UI
+                                    +-- gallery host + ADM consume BreezeOn.UI
 ```
 
 ## UI dependency position (`BreezeOn.UI`)
@@ -56,7 +56,7 @@ Current-reality only. For org identity and the repository table, see [ecosystem.
 Public UI contract: **`BreezeOn.UI`** in `SYSTEM-SHARED-UI` ([ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md)). Fluent UI Blazor is an **internal** implementation detail of that library.
 
 ```text
-  Product applications (when adopting the shared design system)
+  Product applications
       ->  BreezeOn.UI   (public Bo* API)
           ->  Fluent UI Blazor  (internal)
 ```
@@ -64,7 +64,7 @@ Public UI contract: **`BreezeOn.UI`** in `SYSTEM-SHARED-UI` ([ADR-004](../decisi
 | Consumer | Current state |
 | --- | --- |
 | `BreezeOn.UI.Gallery` (in SYSTEM-SHARED-UI) | Interactive Server host; consumes `BreezeOn.UI` locally |
-| ADM (`SYSTEM-ADMIN-ADM`) | Blazor Interactive Server app with its own UI + Identity; **does not** reference `BreezeOn.UI` yet |
+| ADM (`SYSTEM-ADMIN-ADM`) | Blazor Interactive Server; **ProjectReference** to `BreezeOn.UI` (`BoAppShell` shell, Home `BoNavHub`, public empty destination pages); **no** ASP.NET Core Identity |
 
 UI conventions: [`docs/ui/overview.md`](../docs/ui/overview.md).
 
