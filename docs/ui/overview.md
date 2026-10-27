@@ -85,7 +85,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; Preview = editable \| read-only \| **Backend Value**; Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
 
 ## Documentation governance
 

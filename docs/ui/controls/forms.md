@@ -125,7 +125,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Character count | Optional (`ShowCharacterCount`, default false); format `current/max` (no brackets); **inside** the input (Fluent `EndTemplate`), trailing/right; italic **10px**; muted. Denominator = `MaxLength` (**default 600**). **Hidden when `Disabled`** |
 | Disabled | Hide Placeholder; hide character count; hide mandatory asterisk; skip required validation; greyer fill (`--bo-color-background`) so the field reads as non-editable; muted text |
 
-**Gallery reference:** Theme (`/theme`) Attributes rows (`BoFieldReadOnly` Light + Dark); Components Text Field Preview (editable \| read-only \| Backend Value).
+**Gallery reference:** Theme (`/theme`) Attributes rows (`BoFieldReadOnly` Light + Dark); Components Text Field — Parameters Sub padded to **6** slots (`BoEmptyField`); Preview (editable \| read-only \| Backend Value).
 
 These Text Field rules are **org standards** for every `BoTextField` usage.
 
@@ -164,7 +164,7 @@ Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory
 
 Same as Text Field for editable chrome and deferred mandatory validation (invalid = input border only): shared label gap, md corner radius on the closed control. Multi-height fields: `BoRow` uses **`align-items: start`** when any child is multi/tall; single-line controls stay optically centered in their slot. See [layout.md — Row](../layout/layout.md#row-borow).
 
-**Gallery reference:** Components Drop-Down List Preview (DisplayCode / AllowMultiple / Disabled knobs; editable + read-only + Backend Value); Settings dialog Language / Timezone rows.
+**Gallery reference:** Components Drop-Down List — Parameters Sub padded to **6** slots (`BoEmptyField`); Preview (DisplayCode / AllowMultiple / Disabled knobs; editable + read-only + Backend Value); Settings dialog Language / Timezone rows.
 
 These Drop-Down List rules are **org standards** for every `BoDropDownList` usage.
 
@@ -200,7 +200,7 @@ Always shows **two** options: localized **Yes** / **No** (`Field_Boolean_Yes` / 
 | Chrome | Soft / non-interactive: `cursor: default`; muted unchecked fill; checked = muted primary wash + primary border + primary tick (not solid interactive fill); no hover lift |
 | Text | Muted body color |
 
-**Gallery:** Components Checkbox tab — Parameters (Mandatory/Disabled) + Preview (editable \| `ReadOnly` Yes-No \| Backend Value `true`/`false`).
+**Gallery:** Components Checkbox tab — Parameters (Mandatory/Disabled/Hide Editable) padded to **6** slots (`BoEmptyField`) + Preview (editable \| `ReadOnly` Yes-No \| Backend Value `true`/`false`).
 
 These Checkbox rules are **org standards** for every `BoCheckbox` usage.
 
@@ -257,6 +257,6 @@ Planning JSON: `control: "DateField"`; optional `mode: "Date"` \| `"DateTime"`. 
 
 **Placement:** Direct child of `BoRow` inside a Section; participates in `BoValidationContext` / fail badges.
 
-**Gallery reference:** Components Date Field — Parameters (Mandatory / Disabled / Mode = DateTime / Hide Editable) + Preview (editable \| host-formatted read-only \| **Backend Value** as date+time).
+**Gallery reference:** Components Date Field — Parameters (Mandatory / Disabled / Mode = DateTime / Hide Editable) padded to **6** slots (`BoEmptyField`) + Preview (editable \| host-formatted read-only \| **Backend Value** as date+time).
 
 These Date Field rules are **org standards** for every `BoDateField` usage.
