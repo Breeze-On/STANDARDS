@@ -17,11 +17,11 @@ Page → Body (BoAppShell body) → Section (BoSectionMain / BoSectionSub) → R
 | Section | `BoSectionMain` / `BoSectionSub` | Group related content; optional header — see [sections.md](sections.md) |
 | Row | `BoRow` | One horizontal band of fields; equal-width slots; owns horizontal field layout |
 | Field container | Direct child of `BoRow` (`.bo-row > *`) | Slot around one field (padding + separator target) |
-| Field | `BoTextField` (etc.) | Control chrome + `@bind-Value` to typed working model — see [forms.md](../controls/forms.md) |
+| Field | `BoTextField` / `BoFieldReadOnly` (etc.) | Editable control chrome + `@bind-Value`, or read-only pre-formatted `Value` — see [forms.md](../controls/forms.md) |
 
 ### Mandatory placement rules (agents and apps)
 
-1. **Every form field** (`BoTextField` and future form `Bo*` controls) **must** be placed as a **direct child of a `BoRow`** (that child *is* the field container). Do not put fields as loose children of a Section body without a Row.
+1. **Every form field** (`BoTextField`, `BoFieldReadOnly`, and future form `Bo*` controls) **must** be placed as a **direct child of a `BoRow`** (that child *is* the field container). Do not put fields as loose children of a Section body without a Row.
 2. **Every `BoRow` must** live **inside a Section** (`BoSectionMain` or `BoSectionSub` content). Do not put Rows directly under the shell body without a Section.
 3. Stack multiple Rows inside a Section with `BoStack Gap="0"` when vertical spacing should come only from section/row rules (not double gaps).
 4. Stack multiple Sections with `BoStack Gap="0"` so section outside-bottom margins are not doubled.
@@ -103,7 +103,7 @@ To change inset globally (e.g. to `6px` or `8px`), set `BoThemeOptions.SpaceRowI
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
-| `control` | string | Yes | `"TextField"` → `BoTextField` (extend when new controls ship) |
+| `control` | string | Yes | `"TextField"` → `BoTextField`; `"ReadOnlyField"` → `BoFieldReadOnly` (extend when new controls ship) |
 | `label` | string | Yes | Field label |
 | `fieldKey` | string | Yes | Stable DTO / working-model property id (`FieldKey` / `@bind-Value` target) |
 | `required` | boolean | No | Default false → `Required` / Mandatory asterisk |
@@ -123,6 +123,7 @@ Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount`, 
 | `sections[].rows[]` | one `BoRow` **inside that Section** each |
 | `rows[].fields[]` length N | N **direct** children of that `BoRow` (each child = field container + field) |
 | `control: "TextField"` | `BoTextField` with `Label`, `FieldKey`, `Required`, `MaxLength`, `ShowCharacterCount`, … + `@bind-Value` to the typed property for `fieldKey` |
+| `control: "ReadOnlyField"` | `BoFieldReadOnly` with `Label`, `FieldKey`, pre-formatted `Value` (host formats; no Required/validation) |
 | Multiple sections | Wrap in `BoStack Gap="0"` |
 | Multiple rows in a section | Wrap rows in `BoStack Gap="0"` inside the Section body |
 

@@ -69,6 +69,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoRow` | **Row** — equal-width field slots inside a section | [layout.md](layout/layout.md) |
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](layout/sections.md) |
 | `BoPageHeader` | Page title and description | — |
+| `BoFieldReadOnly` | Flat read-only display field (pre-formatted string `Value`; same label chrome as Text Field) | [forms.md](controls/forms.md) |
 | `BoTextField` | Text input (default Placeholder from resources; deferred mandatory validation) | [forms.md](controls/forms.md) |
 | `BoDropDownList` | Drop-Down List (same field chrome as Text Field) | [forms.md](controls/forms.md) |
 | `BoCheckbox` | Boolean checkbox (`Label` + `FieldKey` + `@bind-Value` bool; compact) | [forms.md](controls/forms.md) |
@@ -80,7 +81,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (navigation hub — `BoNavHub` + `BoNavCardStyleHyperlink` for Components / Theme / Google external; no markdown overview), Components (`/components` — each tab: Main → Sub **Parameters** / **Preview** / **Documentation**), Theme (per color tab: Main `{Name} Color` → Sub **Attributes** + Sub **Preview**; Submit validates active tab). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (navigation hub — `BoNavHub` + `BoNavCardStyleHyperlink` for Components / Theme / Google external; no markdown overview), Components (`/components` — each tab: Main → Sub **Parameters** / **Preview** (editable + `BoFieldReadOnly` where applicable) / **Documentation**), Theme (per color tab: Main `{Name} Color` → Sub **Attributes** + Sub **Preview**; Submit validates active tab). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](shell/navigation.md).
 
 ## Documentation governance
 

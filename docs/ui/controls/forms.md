@@ -4,7 +4,7 @@ Owner: UI
 
 Form control standards. Related: [layout.md](../layout/layout.md) (Row + page composition JSON), [sections.md](../layout/sections.md), [typography.md](../foundations/typography.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [shell.md](../shell/shell.md) (toasts / Submit).
 
-**Hard standard:** every Text Field, Drop-Down List, Checkbox, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
+**Hard standard:** every Text Field, Drop-Down List, Checkbox, Read-Only Field, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
 
 ## Deferred mandatory validation (locked)
 
@@ -17,6 +17,36 @@ Form control standards. Related: [layout.md](../layout/layout.md) (Row + page co
 | Disabled | A `Disabled` field **never** shows the mandatory asterisk, **never** shows character count, and **never** participates in required validation (Submit ignores it for mandatory checks) |
 | Mechanism | Cascading `BoValidationContext`; fields register via `IBoValidatableField`; optional `ValidationGroup` (e.g. active Theme tab). Pages gate Submit with `IBoSubmitInterceptor` |
 | Fail path (gallery) | Toast **Error** with **"Mandatory fields are required"** — do not run the success Submit dialog |
+
+## Read-Only Field (`BoFieldReadOnly`)
+
+**Display name:** Read-Only Field.  
+**Component:** `BoFieldReadOnly` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+
+Flat **display-only** companion for read views. Always shows **already-formatted text** (string, number, decimal, date, etc. share the same chrome). The host formats values **before** passing `Value` — the control does not own culture/type formatters.
+
+| Parameter | Role |
+| --- | --- |
+| `Label` | Field label text — **same chrome as Text Field** (10px bold uppercase, field-label color) |
+| `Value` | Pre-formatted display string; null/whitespace → blank |
+| `FieldKey` | Stable typed DTO / entity property identifier (mapping metadata only) |
+| `Class` / `Style` | Optional (use `bo-field--section-flush` in section rows like other fields) |
+
+### Label and chrome
+
+| Concern | Standard |
+| --- | --- |
+| Label font | **Same as Text Field** — 10px bold uppercase; `--bo-color-text-field-label` |
+| Label-to-value gap | Minimal (~0-1px), same as editable fields |
+| Value text | **Calibri** 14px; body text color (`--bo-color-text`); no input border, fill, or focus ring |
+| Validation | None — not required, no asterisk, no deferred validation |
+| Placement | Direct child of `BoRow` inside a Section |
+
+**Formatting (app-side):** document and apply date/number/boolean display formats in the product app (or page) before binding `Value`. Do not invent parallel typed read-only controls for flat scalars.
+
+**Gallery reference:** Components Preview second column (Text Field / Drop-Down List / Checkbox / Date sample).
+
+These Read-Only Field rules are **org standards** for every `BoFieldReadOnly` usage.
 
 ## Text Field (`BoTextField`)
 
@@ -50,7 +80,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Character count | Optional (`ShowCharacterCount`, default false); format `current/max` (no brackets); **inside** the input (Fluent `EndTemplate`), trailing/right; italic **10px**; muted. Denominator = `MaxLength` (**default 600**). **Hidden when `Disabled`** |
 | Disabled | Hide Placeholder; hide character count; hide mandatory asterisk; skip required validation; greyer fill (`--bo-color-background`) so the field reads as non-editable; muted text |
 
-**Gallery reference:** Theme (`/theme`) Attributes rows; Components Text Field Preview (`editableTextField`).
+**Gallery reference:** Theme (`/theme`) Attributes rows; Components Text Field Preview (`editableTextField` + `BoFieldReadOnly` companion).
 
 These Text Field rules are **org standards** for every `BoTextField` usage.
 
