@@ -4,7 +4,7 @@ Owner: UI
 
 Form control standards. Related: [layout.md](../layout/layout.md) (Row + page composition JSON), [sections.md](../layout/sections.md), [typography.md](../foundations/typography.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [shell.md](../shell/shell.md) (toasts / Submit).
 
-**Hard standard:** every Text Field, Drop-Down List, Checkbox, Date Field, Read-Only Field, Empty Field, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
+**Hard standard:** every Text Field, Drop-Down List, Checkbox, Date Field, Number Field, Read-Only Field, Empty Field, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
 
 ## Reserved / empty row slots (locked)
 
@@ -260,3 +260,54 @@ Planning JSON: `control: "DateField"`; optional `mode: "Date"` \| `"DateTime"`. 
 **Gallery reference:** Components Date Field — Parameters (Mandatory / Disabled / Mode = DateTime / Hide Editable) padded to **6** slots (`BoEmptyField`) + Preview (editable \| host-formatted read-only \| **Backend Value** as date+time).
 
 These Date Field rules are **org standards** for every `BoDateField` usage.
+
+## Number Field (`BoNumberField`)
+
+**Display name:** Number Field.  
+**Component:** `BoNumberField` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+
+Numeric entry with Text Field chrome. Public API is `Bo*` only; input uses Fluent text under the hood. Locale separators and currency/% affix placement come from `IBoLocaleService`.
+
+| Parameter | Role |
+| --- | --- |
+| `Label` | Same chrome as Text Field (10px bold uppercase, field-label color) |
+| `FieldKey` | Stable typed DTO / entity property identifier |
+| `Value` / `ValueChanged` | `@bind-Value` to **`decimal?` only** (never `int` / `double` / string) |
+| `IsInteger` | When true, blocks decimal point; scale is 0 |
+| `NumberOfDecimals` | `int?` — meaningful when `!IsInteger`; default **0** when unset |
+| `IsCurrency` / `CurrencyIsoCode` | Currency mode; approved ISO codes **CAD** / **USD** / **GBP** (internal catalog). `IsCurrency` and `IsPercent` are **mutually exclusive** |
+| `IsPercent` | UI shows **0–100**; bound value is **entered ÷ 100** (e.g. 90 → `0.90m`) |
+| `Alignment` | `BoNumberFieldAlignment`: `Left` / `Center` / `Right`; **default Right** (also apply to read-only companions) |
+| `Required` / `Disabled` / `IsHidden` | Same deferred mandatory rules as Text Field (Disabled / hidden skip participation) |
+| `Placeholder` | Optional; default resource **`Field_Number_Placeholder_Default`** ("Enter value"); **hidden when Disabled** |
+| `ValidationGroup` / `ErrorText` / `Class` / `Style` | Same family as other form fields |
+
+### Typed model / persistence (hard standard)
+
+| Concern | Standard |
+| --- | --- |
+| Bound type | Always **`decimal?`** on the typed DTO / entity / working model |
+| Forbidden | Binding to `int` / `double` / string as the model type |
+| Database | Prefer `decimal(36, N)` where **N = max(2, NumberOfDecimals)** — host owns SQL; library does not |
+| Percent storage | Persist the **fractional** value (UI 90 → `0.90`) |
+| Read-only display | Host formats via the same rules as unfocused `BoNumberField` (`BoNumberDisplay.Format` helpers) |
+| Backend Value (gallery) | Shows persisted `decimal?` (percent as fractional) |
+
+Planning JSON: `control: "NumberField"`; optional `isInteger`, `numberOfDecimals`, `isCurrency`, `currencyIsoCode`, `isPercent`, `alignment`, `hidden`.
+
+### Focus, blur, and validation
+
+| Concern | Standard |
+| --- | --- |
+| Focus | Raw digits (+ `.` when decimals allowed); no thousand separators / affixes while editing; **first click / focus selects the whole value** so typing replaces it (second click places the caret) |
+| Blur / unfocused | Culture number format (group separators + scale); currency symbol or `%` before/after per culture / catalog |
+| Keystrokes | Non-numeric rejected; `IsInteger` blocks `.`; decimals clamped to `NumberOfDecimals` |
+| Required | Asterisk immediate; red border + 10px error **after** validation attempt; live clear via `NotifyFieldChanged` |
+| Percent range | Outside 0–100 (UI) uses the same deferred invalid chrome; keys `Validation_NumberPercentRange` / `Validation_NumberInvalid` |
+| Currency catalog | Extend the **internal** `BoCurrencyCatalog` table in BreezeOn.UI when adding ISO codes (not a product-page concern) |
+
+**Placement:** Direct child of `BoRow` inside a Section; participates in `BoValidationContext` / fail badges (`IBoValidatableField` + `IsInvalid`).
+
+**Gallery reference:** Components Number Field — Parameters (Mandatory / Disabled / Hide Editable / Is Integer / Number of Decimals / Is Currency / Currency IsoCode / Is Percent / Alignment; pad to **6** slots per row) + Preview (editable \| host-formatted read-only \| **Backend Value** as persisted `decimal?`).
+
+These Number Field rules are **org standards** for every `BoNumberField` usage.

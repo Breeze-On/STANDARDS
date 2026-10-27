@@ -112,7 +112,7 @@ Do **not** use `display: none` to hide a row child — that collapses columns. P
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
-| `control` | string | Yes | `"TextField"` → `BoTextField`; `"ReadOnlyField"` → `BoFieldReadOnly`; `"EmptyField"` → `BoEmptyField`; `"DateField"` → `BoDateField` |
+| `control` | string | Yes | `"TextField"` → `BoTextField`; `"ReadOnlyField"` → `BoFieldReadOnly`; `"EmptyField"` → `BoEmptyField`; `"DateField"` → `BoDateField`; `"NumberField"` → `BoNumberField` |
 | `label` | string | Yes* | Field label (*omit / unused for `EmptyField`) |
 | `fieldKey` | string | Yes* | Stable DTO / working-model property id (*omit for `EmptyField`) |
 | `required` | boolean | No | Default false → `Required` / Mandatory asterisk |
@@ -122,6 +122,12 @@ Do **not** use `display: none` to hide a row child — that collapses columns. P
 | `disabled` | boolean | No | Default false |
 | `hidden` | boolean | No | Default false → `IsHidden` (reserved slot; no reflow) |
 | `mode` | string | No | Date Field only: `"Date"` (default) or `"DateTime"` → `BoDateField.Mode` |
+| `isInteger` | boolean | No | Number Field only: blocks decimals |
+| `numberOfDecimals` | number | No | Number Field only: scale when not integer (default 0) |
+| `isCurrency` | boolean | No | Number Field only; mutually exclusive with `isPercent` |
+| `currencyIsoCode` | string | No | Number Field only: `CAD` / `USD` / `GBP` when `isCurrency` |
+| `isPercent` | boolean | No | Number Field only; UI 0–100, bind ÷100; mutually exclusive with `isCurrency` |
+| `alignment` | string | No | Number Field only: `"Left"` \| `"Center"` \| `"Right"` (default `"Right"`) |
 
 Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount` as a separate BoRow parameter.
 
@@ -138,6 +144,7 @@ Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount` a
 | `control: "ReadOnlyField"` | `BoFieldReadOnly` with `Label`, `FieldKey`, pre-formatted `Value` (host formats; no Required/validation) |
 | `control: "EmptyField"` | `BoEmptyField` (alignment slot only) |
 | `control: "DateField"` | `BoDateField` with `Label`, `FieldKey`, `Required`, optional `Mode` (`Date` / `DateTime`) + `@bind-Value` (**`DateTime?` only** — never `DateOnly`; Date mode → midnight) |
+| `control: "NumberField"` | `BoNumberField` with `Label`, `FieldKey`, `Required`, optional `isInteger` / `numberOfDecimals` / `isCurrency` / `currencyIsoCode` / `isPercent` / `alignment` + `@bind-Value` (**`decimal?` only**; percent UI 0–100 → bind ÷100) |
 | `hidden: true` | `IsHidden="true"` on the field (reserved column) |
 | Multiple sections | Wrap in `BoStack Gap="0"` |
 | Multiple rows in a section | Wrap rows in `BoStack Gap="0"` inside the Section body |

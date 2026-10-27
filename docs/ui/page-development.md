@@ -67,10 +67,11 @@ Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout
 - [ ] **`BoDropDownList`** for Code/Description selection (panel search; `DisplayCode` / `AllowMultiple` as needed) — [forms.md](controls/forms.md#drop-down-list-bodropdownlist).
 - [ ] **`BoCheckbox`** for boolean values (`Required` / `ReadOnly` Yes-No) — [forms.md](controls/forms.md#checkbox-bocheckbox).
 - [ ] **`BoDateField`** for date / date-time — bind **`DateTime?` only** (never `DateOnly`); `Mode` Date or DateTime is UI-only; Date mode still persists midnight — [forms.md](controls/forms.md#date-field-bodatefield).
+- [ ] **`BoNumberField`** for numbers — bind **`decimal?` only**; integer/decimals; `IsCurrency` / `IsPercent` mutually exclusive; percent UI 0–100 → bind ÷100; alignment default Right — [forms.md](controls/forms.md#number-field-bonumberfield).
 - [ ] **`BoFieldReadOnly`** for display-only scalars (host formats `Value`) — [forms.md](controls/forms.md#read-only-field-bofieldreadonly).
 - [ ] **`BoEmptyField`** / **`IsHidden`** for reserved alignment slots — [layout.md](layout/layout.md).
 - [ ] Sections that participate in Submit validation set **`SectionKey`** — [sections.md](layout/sections.md).
-- [ ] Planning JSON: shipped control names only (`TextField`, `ReadOnlyField`, `EmptyField`, `DateField`, …; optional `hidden` / `mode`) — [layout.md](layout/layout.md).
+- [ ] Planning JSON: shipped control names only (`TextField`, `ReadOnlyField`, `EmptyField`, `DateField`, `NumberField`, …; optional `hidden` / `mode` / number flags) — [layout.md](layout/layout.md).
 
 ### Validation
 
