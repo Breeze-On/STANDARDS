@@ -176,8 +176,8 @@ Top-right toast stack hosted in `BoProviders` (`BoToastHost`).
 | API | `ShowAsync(variant, mainLabel, bodyLabel?, autoDismissMs?)` (default ~5s) |
 | MainLabel | Bold; `--bo-color-text` (black in Light, near-white in Dark) |
 | BodyLabel | Optional; line break under Main; ~13px; field-label grey (`--bo-color-text-field-label`) |
-| Layout | Compact horizontal card (~300px max); wider icon column with soft 3D disc + larger filled glyph; labels right; icon vertically centered to the label block |
+| Layout | Compact horizontal card (~300px max); wider icon column with soft 3D disc + filled glyph; labels right; icon centered on the disc |
 | Motion | Slide+fade in/out from the right (~200–220ms) |
 | Dismiss | Click toast (or Enter/Space/Escape) dismisses; auto-dismiss remains |
 
-Gallery Submit uses **Alert** (not Error) with Main **"Mandatory fields are required"** and Body **"Required information is missing. Review and complete all required fields."** when deferred validation fails (see [forms.md](../controls/forms.md)).
+Gallery Submit uses **Alert** (not Error): Main `Validation_MandatoryFieldsToast` (“Mandatory fields are required”); Body `Validation_MandatoryFieldsToastBody` (“Required information is missing. Review and complete all required fields.”) — see [forms.md](../controls/forms.md).

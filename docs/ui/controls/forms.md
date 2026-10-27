@@ -114,7 +114,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Character count | Optional (`ShowCharacterCount`, default false); format `current/max` (no brackets); **inside** the input (Fluent `EndTemplate`), trailing/right; italic **10px**; muted. Denominator = `MaxLength` (**default 600**). **Hidden when `Disabled`** |
 | Disabled | Hide Placeholder; hide character count; hide mandatory asterisk; skip required validation; greyer fill (`--bo-color-background`) so the field reads as non-editable; muted text |
 
-**Gallery reference:** Theme (`/theme`) Attributes rows (`BoFieldReadOnly` Light + Dark); Components Text Field Preview (`editableTextField` + `BoFieldReadOnly` companion).
+**Gallery reference:** Theme (`/theme`) Attributes rows (`BoFieldReadOnly` Light + Dark); Components Text Field Preview (editable \| read-only \| Backend Value).
 
 These Text Field rules are **org standards** for every `BoTextField` usage.
 
@@ -144,8 +144,9 @@ Same field chrome as Text Field (label, mandatory asterisk, grey rest border, pr
 - Search lives in the **expanded panel** as a **fixed first row** (always available — including `DisplayCode` and `AllowMultiple`).
 - Type filters where **Description contains** the query (case-insensitive). When **`DisplayCode`** is on (Code is shown in the list), also match **Code**.
 - Show at most **100** matches (narrow with search).
+- On open, focus moves to the search box (type without an extra click).
 - Clear: single-select control **×** clears Value; multi-select keeps per-chip × plus a control **×** that clears all Codes.
-- Selected rows in the list: bold + subtle elevated/shadow highlight (not tertiary fill); no list checkboxes for multi.
+- Selected rows: bold + soft elevated/shadow highlight; left accent bar **1.5px**, soft-rounded (not full corner wrap); no list checkboxes for multi.
 - Gallery seed (code-local): `DDL_0001`…`DDL_0150` / `Drop-Down List Value 001`…`150`.
 
 ### Label and chrome
@@ -181,6 +182,6 @@ Control box is compact (~12px); control and label are vertically center-aligned.
 
 Always shows **two** options: localized **Yes** / **No** (`Field_Boolean_Yes` / `Field_Boolean_No`; FR Oui/Non). Exactly one option is checked to match `Value`. Compact modern boxes (primary fill when checked); no edit/focus. Not a plain text `BoFieldReadOnly`.
 
-**Gallery:** Components Checkbox tab — Parameters (Mandatory/Disabled knobs) + Preview (editable + `ReadOnly` companion).
+**Gallery:** Components Checkbox tab — Parameters (Mandatory/Disabled) + Preview (editable \| `ReadOnly` Yes-No \| Backend Value `true`/`false`).
 
 These Checkbox rules are **org standards** for every `BoCheckbox` usage.

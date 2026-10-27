@@ -120,6 +120,7 @@ Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount`, 
 | JSON | Razor / standard |
 | --- | --- |
 | `sections[].kind: "main"` / `"sub"` | `BoSectionMain` / `BoSectionSub` |
+| `sections[].sectionKey` | `SectionKey` (validation ancestry / fail badge) |
 | `sections[].title` / `icon` | `Title` + optional `IconContent` (`BoIcon`) |
 | `sections[].rows[]` | one `BoRow` **inside that Section** each |
 | `rows[].fields[]` length N | N **direct** children of that `BoRow` (each child = field container + field) |

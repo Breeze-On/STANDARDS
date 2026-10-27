@@ -65,24 +65,25 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` | [tokens.md](foundations/tokens.md) |
 | `BoNavHub` | Home hub host (~33%·67%, gradient + dots, brand logo `80cqmin`) | [shell.md](shell/shell.md#home--navigation-hub-locked-platform-pattern) |
 | `BoNavCardStyleHyperlink` | Home destination card (internal SPA or external new-tab); locked chrome | [shell.md](shell/shell.md#home--navigation-hub-locked-platform-pattern) |
-| `BoSectionMain` | **Main Section** — borderless content block with optional header | [sections.md](layout/sections.md) |
-| `BoSectionSub` | **Sub Section** — nested grouping (different label/margins than Main) | [sections.md](layout/sections.md) |
+| `BoSectionMain` | **Main Section** — optional header; `SectionKey` for validation fail badge / ancestry | [sections.md](layout/sections.md) |
+| `BoSectionSub` | **Sub Section** — nested grouping; `SectionKey` + cascaded Main/Sub keys to fields | [sections.md](layout/sections.md) |
 | `BoRow` | **Row** — equal-width field slots inside a section | [layout.md](layout/layout.md) |
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](layout/sections.md) |
 | `BoPageHeader` | Page title and description | — |
 | `BoFieldReadOnly` | Flat read-only display field (pre-formatted string `Value`; same label chrome as Text Field) | [forms.md](controls/forms.md) |
-| `BoTextField` | Text input (default Placeholder from resources; deferred mandatory validation) | [forms.md](controls/forms.md) |
-| `BoDropDownList` | Drop-Down List (same field chrome as Text Field) | [forms.md](controls/forms.md) |
-| `BoCheckbox` | Boolean checkbox (`Label` + `FieldKey` + `@bind-Value` bool; compact) | [forms.md](controls/forms.md) |
+| `BoTextField` | Text input (default Placeholder; deferred mandatory validation) | [forms.md](controls/forms.md) |
+| `BoDropDownList` | Searchable Code/Description Drop-Down (`DisplayCode`, `AllowMultiple` chips, panel search) | [forms.md](controls/forms.md) |
+| `BoCheckbox` | Boolean (`Required` / `ReadOnly` Yes-No) | [forms.md](controls/forms.md) |
 | `BoButton` | Pill button (primary / secondary / stealth); shorter+wider padding; shadow + hover lift; optional icon | [tokens.md](foundations/tokens.md) |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`) | — |
-| `IBoToastService` / `BoToastHost` | Top-right toasts (Success / Alert / Information / Error) | [shell.md](shell/shell.md) |
-| `BoValidationContext` / `IBoSubmitInterceptor` | Deferred mandatory validation + Submit gate | [forms.md](controls/forms.md) |
+| `IBoToastService` / `BoToastHost` | Top-right toasts (Main/Body; Success / Alert / Information / Error; click dismiss) | [shell.md](shell/shell.md) |
+| `BoValidationContext` / `IBoSubmitInterceptor` | Deferred validation; `Validate(null)`; live fail badges; Field→Sub→Main→Tab failures | [forms.md](controls/forms.md) |
+| `BoValidationFailBadge` | Red disc + white “!” (tabs + section headers) | [forms.md](controls/forms.md) |
 | `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell/shell.md), [i18n.md](foundations/i18n.md) |
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (navigation hub — `BoNavHub` + `BoNavCardStyleHyperlink` for Components / Theme / Google external; no markdown overview), Components (`/components` — each tab: Main → Sub **Parameters** / **Preview** (editable + `BoFieldReadOnly` where applicable) / **Documentation**), Theme (per color tab: Main `{Name} Color (Light Theme)` + Main `{Name} Color (Dark Theme)` → each with Sub **Attributes** (`BoFieldReadOnly`) + Sub **Preview**; values from `BoThemePalettes`; Submit has no Theme field validation). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; Preview = editable \| read-only \| **Backend Value**; Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
 
 ## Documentation governance
 

@@ -64,10 +64,11 @@ Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout
 ### Controls
 
 - [ ] **`BoTextField`** for text entry — [forms.md](controls/forms.md#text-field-botextfield).
-- [ ] **`BoDropDownList`** for selection — [forms.md](controls/forms.md#drop-down-list-bodropdownlist).
-- [ ] **`BoCheckbox`** for boolean values — [forms.md](controls/forms.md#checkbox-bocheckbox).
-- [ ] **`BoFieldReadOnly`** for display-only scalars (host formats `Value`; no typed read-only variants for flat scalars) — [forms.md](controls/forms.md#read-only-field-bofieldreadonly).
-- [ ] Planning JSON: `"TextField"` / `"ReadOnlyField"` (and other shipped control names only) — [layout.md](layout/layout.md).
+- [ ] **`BoDropDownList`** for Code/Description selection (panel search; `DisplayCode` / `AllowMultiple` as needed) — [forms.md](controls/forms.md#drop-down-list-bodropdownlist).
+- [ ] **`BoCheckbox`** for boolean values (`Required` / `ReadOnly` Yes-No) — [forms.md](controls/forms.md#checkbox-bocheckbox).
+- [ ] **`BoFieldReadOnly`** for display-only scalars (host formats `Value`) — [forms.md](controls/forms.md#read-only-field-bofieldreadonly).
+- [ ] Sections that participate in Submit validation set **`SectionKey`** — [sections.md](layout/sections.md).
+- [ ] Planning JSON: shipped control names only (`TextField`, `ReadOnlyField`, …) — [layout.md](layout/layout.md).
 
 ### Validation
 
