@@ -12,6 +12,7 @@ Form control standards. Related: [layout.md](../layout/layout.md) (Row + page co
 | --- | --- |
 | Asterisk | When `Required` is true **and the field is not `Disabled`**, show the red `*` immediately |
 | Error chrome | **Only after a validation attempt** (e.g. shell Submit). Until then, empty required fields show no error text and no red border |
+| Error text size | **10px** (shared `.bo-field__error`) — danger color; not body 14px |
 | Required message | Universal resource string — English **"This field is required"** (`Validation_FieldRequired`). Same for every control; never field-label-specific |
 | Invalid border | Danger color (`--bo-color-danger`) on the **control edge only** (same as Text Field input border) when the required-empty rule fails after attempt — **not** a wash/outline on the BoRow item container |
 | Disabled | A `Disabled` field **never** shows the mandatory asterisk, **never** shows character count, and **never** participates in required validation (Submit ignores it for mandatory checks) |
@@ -71,7 +72,7 @@ Flat **display-only** companion for read views. Always shows **already-formatted
 | Concern | Standard |
 | --- | --- |
 | Label font | **Same as Text Field** — 10px bold uppercase; `--bo-color-text-field-label` |
-| Label-to-value gap | Minimal (~0-1px), same as editable fields |
+| Label-to-value gap | Same as editable fields (`--bo-field-label-gap`, default **4px**) |
 | Value text | **Calibri** 14px; body text color (`--bo-color-text`); no input border, fill, or focus ring |
 | Validation | None — not required, no asterisk, no deferred validation |
 | Placement | Direct child of `BoRow` inside a Section |
@@ -106,10 +107,10 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Concern | Standard |
 | --- | --- |
 | Label font | **10px**, **bold**, **uppercase**; color `--bo-color-text-field-label` (`color-text-field-label`, default `#757575`) — see [tokens.md](../foundations/tokens.md) |
-| Label-to-input gap | Minimal (~0-1px) |
+| Label-to-input gap | **`--bo-field-label-gap`** (default **4px**) — same for Text Field and Drop-Down List |
 | Input typed text | **Calibri** (`--bo-font-family`); **14px** — see [typography.md](../foundations/typography.md) |
 | Mandatory mark | When `Required` and not `Disabled`: bold red `*` after the label; modest gap before the star (`margin-left` ~0.2em); color `--bo-color-danger` |
-| Rest border / outline | Grey using `--bo-color-card-container-border` |
+| Rest border / outline | Grey using `--bo-color-card-container-border`; **fully rounded** control corners via `--bo-radius-md` (same as Drop-Down List closed box) |
 | Focus | Recolor Fluent’s **native** bottom focus border to **primary** (`--bo-color-primary`) so it stays on the control edge and keeps rounded corners; not Fluent blue; do **not** add a separate underline below the field |
 | Character count | Optional (`ShowCharacterCount`, default false); format `current/max` (no brackets); **inside** the input (Fluent `EndTemplate`), trailing/right; italic **10px**; muted. Denominator = `MaxLength` (**default 600**). **Hidden when `Disabled`** |
 | Disabled | Hide Placeholder; hide character count; hide mandatory asterisk; skip required validation; greyer fill (`--bo-color-background`) so the field reads as non-editable; muted text |
@@ -123,7 +124,7 @@ These Text Field rules are **org standards** for every `BoTextField` usage.
 **Display name:** Drop-Down List.  
 **Component:** `BoDropDownList` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
 
-Same field chrome as Text Field (label, mandatory asterisk, grey rest border, primary focus, `--bo-color-field-background` fill — including Dark). Public API is `Bo*`; searchable list is owned by BreezeOn (Fluent is not the public surface).
+Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory asterisk, grey rest border, **`--bo-radius-md` rounded** closed box, primary focus, `--bo-color-field-background` fill — including Dark). Public API is `Bo*`; searchable list is owned by BreezeOn (Fluent is not the public surface).
 
 | Parameter | Role |
 | --- | --- |
@@ -151,7 +152,7 @@ Same field chrome as Text Field (label, mandatory asterisk, grey rest border, pr
 
 ### Label and chrome
 
-Same as Text Field for editable chrome and deferred mandatory validation (invalid = input border only). Multi-height fields: `BoRow` uses **`align-items: start`** when any child is multi/tall; single-line controls stay optically centered in their slot. See [layout.md — Row](../layout/layout.md#row-borow).
+Same as Text Field for editable chrome and deferred mandatory validation (invalid = input border only): shared label gap, md corner radius on the closed control. Multi-height fields: `BoRow` uses **`align-items: start`** when any child is multi/tall; single-line controls stay optically centered in their slot. See [layout.md — Row](../layout/layout.md#row-borow).
 
 **Gallery reference:** Components Drop-Down List Preview (DisplayCode / AllowMultiple / Disabled knobs; editable + read-only + Backend Value); Settings dialog Language / Timezone rows.
 
@@ -180,7 +181,14 @@ Control box is compact (~12px); control and label are vertically center-aligned.
 
 ### Read-only (`ReadOnly`)
 
-Always shows **two** options: localized **Yes** / **No** (`Field_Boolean_Yes` / `Field_Boolean_No`; FR Oui/Non). Exactly one option is checked to match `Value`. Compact modern boxes (primary fill when checked); no edit/focus. Not a plain text `BoFieldReadOnly`.
+Always shows **two** options: localized **Yes** / **No** (`Field_Boolean_Yes` / `Field_Boolean_No`; FR Oui/Non). Exactly one option is checked to match `Value`. Not a plain text `BoFieldReadOnly`.
+
+| Concern | Standard |
+| --- | --- |
+| Box size | Fixed **14×14** outer size for both checked and unchecked (`box-sizing: border-box`) |
+| Tick | Horizontally and vertically **centered** in the box (flex); rotate only — no off-center translate |
+| Chrome | Soft / non-interactive: `cursor: default`; muted unchecked fill; checked = muted primary wash + primary border + primary tick (not solid interactive fill); no hover lift |
+| Text | Muted body color |
 
 **Gallery:** Components Checkbox tab — Parameters (Mandatory/Disabled) + Preview (editable \| `ReadOnly` Yes-No \| Backend Value `true`/`false`).
 
