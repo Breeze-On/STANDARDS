@@ -47,7 +47,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | --- | --- | --- |
 | Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens); dual Light/Dark palettes | [tokens.md](foundations/tokens.md), [typography.md](foundations/typography.md) |
 | `IBoThemeModeService` | `ThemeMode` + active palette; cookie `bo-theme-mode` restore via `BoProviders` bootstrap | [tokens.md](foundations/tokens.md) |
-| `BoProviders` | Hosts Fluent providers, theme/locale bootstrap, dialog hosts | [tokens.md](foundations/tokens.md), [i18n.md](foundations/i18n.md) |
+| `BoProviders` | Hosts Fluent providers, theme/locale bootstrap, dialog / toast hosts | [tokens.md](foundations/tokens.md), [i18n.md](foundations/i18n.md), [shell.md](shell/shell.md) |
 | `IBoLocaleService` | Culture + IANA timezone; cookies `bo-culture` / `bo-timezone` | [i18n.md](foundations/i18n.md) |
 | `BoAppShell` | Option B app chrome: full-height nav + header / body / footer column | [shell.md](shell/shell.md) |
 | `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None | [shell.md](shell/shell.md), [tokens.md](foundations/tokens.md) |
@@ -62,20 +62,25 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoAppBody` | Scrollable body region content host (scrolls inside body card) | [shell.md](shell/shell.md) |
 | `BoAppFooter` | Bottom footer card (optional per page via `ShowFooter`; shorter inside padding) | [shell.md](shell/shell.md) |
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` | [tokens.md](foundations/tokens.md) |
+| `BoNavHub` | Responsive centered host for navigation card grids (landing / dashboard hub) | [shell.md](shell/shell.md) |
+| `BoNavCardStyleHyperlink` | Navigation destination card (internal SPA or external URL); token-driven hover | [shell.md](shell/shell.md) |
 | `BoSectionMain` | **Main Section** — borderless content block with optional header | [sections.md](layout/sections.md) |
 | `BoSectionSub` | **Sub Section** — nested grouping (different label/margins than Main) | [sections.md](layout/sections.md) |
 | `BoRow` | **Row** — equal-width field slots inside a section | [layout.md](layout/layout.md) |
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](layout/sections.md) |
 | `BoPageHeader` | Page title and description | — |
-| `BoTextField` | Text input | [forms.md](controls/forms.md) |
+| `BoTextField` | Text input (default Placeholder from resources; deferred mandatory validation) | [forms.md](controls/forms.md) |
 | `BoDropDownList` | Drop-Down List (same field chrome as Text Field) | [forms.md](controls/forms.md) |
+| `BoCheckbox` | Boolean checkbox (`Label` + `FieldKey` + `@bind-Value` bool; compact) | [forms.md](controls/forms.md) |
 | `BoButton` | Pill button (primary / secondary / stealth); shorter+wider padding; shadow + hover lift; optional icon | [tokens.md](foundations/tokens.md) |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`) | — |
+| `IBoToastService` / `BoToastHost` | Top-right toasts (Success / Alert / Information / Error) | [shell.md](shell/shell.md) |
+| `BoValidationContext` / `IBoSubmitInterceptor` | Deferred mandatory validation + Submit gate | [forms.md](controls/forms.md) |
 | `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell/shell.md), [i18n.md](foundations/i18n.md) |
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (README-style overview), Components (`/components` with Text Field / Drop-Down List / Date Field header tabs), Theme (per color tab: Main `{Name} Color` → Sub **Attributes** fields + Sub **Preview** swatch). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (navigation hub — `BoNavHub` + `BoNavCardStyleHyperlink` for Components / Theme; no markdown overview), Components (`/components` — each tab: Main → Sub **Parameters** / **Preview** / **Documentation**), Theme (per color tab: Main `{Name} Color` → Sub **Attributes** + Sub **Preview**; Submit validates active tab). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](shell/navigation.md).
 
 ## Documentation governance
 

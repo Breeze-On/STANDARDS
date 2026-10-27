@@ -56,3 +56,37 @@ Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTab
 | `SelectedTab` | Bindable in-memory key (`@bind-SelectedTab`); defaults to first tab; persists across switches |
 
 Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Header tabs standard).
+
+## Navigation hub cards (landing / dashboard)
+
+Use for app Home (or similar) **page hubs** — not for form fields (forms still use Section → Row → Field; see [layout.md](../layout/layout.md)).
+
+| Component | Role |
+| --- | --- |
+| `BoNavHub` | Full-height two-panel host: left cards on canvas background (no texture); right brand panel with texture + large logo (`LogoSrc` / `BrandContent`) |
+| `BoNavCardStyleHyperlink` | Destination card: `Label`, `Description`, `Hyperlink`, `IsExternal`, optional `IconContent` / `Badge` / `Category` / `Footer` |
+
+| Concern | Standard |
+| --- | --- |
+| Internal links | SPA navigation (`NavigationManager.NavigateTo`) — no full browser refresh |
+| External links | New tab; `rel="noopener noreferrer"` |
+| Body card (Home) | Fills available shell height; **no** body scrollbar while the hub is present |
+| Hub layout | Desktop: 50/50 columns; mobile: cards then brand stack |
+| Card header | Icon tile + large label on one row (vertically centered); ~90% width rule; description uses Text Field label chrome (10px bold uppercase field-label color) |
+| Card icon | Centered in tile; larger glyph; hover scales/rotates tile and fills primary |
+| Visual | Token-driven card fill/border/shadow; hover lift ~200ms; Calibri via theme |
+| Typography | Org default (**Calibri**) — no per-component typeface override |
+| Gallery | Home lists Components + Theme cards (excludes Home itself); hero SVG at `wwwroot/brand/home-hero.svg`; `ShowFooter` false |
+
+## Toasts (`IBoToastService`)
+
+Top-right toast stack hosted in `BoProviders` (`BoToastHost`).
+
+| Variant | Accent / icon |
+| --- | --- |
+| `Success` | Green + `CheckmarkCircle` |
+| `Alert` | Amber + `Warning` |
+| `Information` | Blue + `Info` |
+| `Error` | Danger + `ErrorCircle` |
+
+API: `ShowAsync(variant, message, autoDismissMs?)` (default ~5s). Gallery Submit uses **Error** with **"Mandatory fields are required"** when deferred validation fails (see [forms.md](../controls/forms.md)).
