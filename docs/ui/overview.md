@@ -11,6 +11,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | Document | Responsibility |
 | --- | --- |
 | [overview.md](overview.md) (this file) | Library contract, shipped inventory, gallery, documentation governance |
+| [page-development.md](page-development.md) | Page-construction checklist for humans and AI agents (links to detailed standards) |
 | **Foundations** | |
 | [foundations/tokens.md](foundations/tokens.md) | Design / shell tokens |
 | [foundations/typography.md](foundations/typography.md) | Default typeface |
@@ -93,8 +94,9 @@ For every new or changed public `Bo*` surface:
 
 1. Add or update the inventory row in this overview.
 2. Document rules in the appropriate responsibility file under `foundations/`, `shell/`, `layout/`, or `controls/` (create a focused sibling if needed).
-3. Update the gallery when the component is previewable.
-4. Update STANDARDS indexes (`README.md`, `README_AI.md`, this overview) and any product README / README_AI links in the same change set.
+3. Update [page-development.md](page-development.md) when the change affects how pages must be built (checklist living-document rule).
+4. Update the gallery when the component is previewable.
+5. Update STANDARDS indexes (`README.md`, `README_AI.md`, this overview) and any product README / README_AI links in the same change set.
 
 ### Organic structure rule
 

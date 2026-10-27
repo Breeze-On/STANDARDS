@@ -35,6 +35,7 @@ Full rules: [`docs/documentation.md`](docs/documentation.md) (includes lightweig
 | What defines a Breeze On application? | [`docs/application-model.md`](docs/application-model.md) |
 | How are environments defined? | [`docs/environments.md`](docs/environments.md) |
 | What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
+| How do I build a compliant page? | [`docs/ui/page-development.md`](docs/ui/page-development.md) |
 | Is there a testing / observability / versioning standard yet? | Placeholder docs under `docs/` (status: not yet formally defined) |
 | Where are operational runbooks? | [`runbooks/README.md`](runbooks/README.md) |
 
@@ -64,6 +65,7 @@ STANDARDS/
 │  ├─ ui-components.md       # Redirect stub → docs/ui/
 │  └─ ui/                    # UI standards (hierarchical by responsibility)
 │     ├─ overview.md
+│     ├─ page-development.md # Page-construction checklist
 │     ├─ foundations/        # tokens, typography, i18n
 │     ├─ shell/              # shell, navigation
 │     ├─ layout/             # sections, layout (Row)

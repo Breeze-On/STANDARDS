@@ -66,7 +66,7 @@ This guidance is **advisory and pragmatic**. It does **not** create mandatory re
 | Tree | Holds |
 | --- | --- |
 | `docs/` | Standards and governance (how we work); glossary: [`glossary.md`](glossary.md) |
-| `docs/ui/` | Hierarchical UI standards (entry: [`ui/overview.md`](ui/overview.md)); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
+| `docs/ui/` | Hierarchical UI standards (entry: [`ui/overview.md`](ui/overview.md); page checklist: [`ui/page-development.md`](ui/page-development.md)); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
 | `runbooks/` | Operational procedures (sparse today); index: [`../runbooks/README.md`](../runbooks/README.md) |
 | `architecture/` | Descriptions of systems that exist now (what exists); landscape map: [`../architecture/landscape.md`](../architecture/landscape.md) |
 | `decisions/` | Architecture Decision Records (why decisions were made); index with Category / Impact Area: [`../decisions/README.md`](../decisions/README.md) |

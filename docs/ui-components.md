@@ -5,6 +5,7 @@ UI standards live under [`docs/ui/`](ui/overview.md), organized by responsibilit
 | Document | Responsibility |
 | --- | --- |
 | [overview.md](ui/overview.md) | Library contract, shipped inventory, gallery, documentation governance |
+| [page-development.md](ui/page-development.md) | Page-construction checklist (humans / AI agents) |
 | [foundations/tokens.md](ui/foundations/tokens.md) | Design / shell tokens |
 | [foundations/typography.md](ui/foundations/typography.md) | Default typeface (Calibri) |
 | [foundations/i18n.md](ui/foundations/i18n.md) | Culture / timezone; per-app resources |

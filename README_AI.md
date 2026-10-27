@@ -40,6 +40,7 @@ Details: [`docs/documentation.md`](docs/documentation.md). ADR process: [`docs/a
 | What is a Breeze On application? | [`docs/application-model.md`](docs/application-model.md) |
 | What do environments mean? | [`docs/environments.md`](docs/environments.md) |
 | What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
+| How do I build a compliant page? | [`docs/ui/page-development.md`](docs/ui/page-development.md) — checklist; then detailed `docs/ui/*` |
 | Is testing / observability / versioning / domain modeling standardized? | Placeholder `docs/*.md` files — **not yet formally defined**; do not invent rules |
 | Where are operational runbooks? | [`runbooks/README.md`](runbooks/README.md) |
 
@@ -64,6 +65,7 @@ STANDARDS/
 │  ├─ ui-components.md   # redirect stub → docs/ui/
 │  └─ ui/                # UI standards (hierarchical by responsibility)
 │     ├─ overview.md
+│     ├─ page-development.md  # page-construction checklist
 │     ├─ foundations/    # tokens, typography, i18n
 │     ├─ shell/          # shell, navigation
 │     ├─ layout/         # sections, layout (Row)
@@ -119,7 +121,7 @@ Before planning or implementing in a Breeze On repo:
 9. For local database work: follow [`docs/local-database.md`](docs/local-database.md); do not point Development at Azure SQL by default.
 10. For environment naming: follow [`docs/environments.md`](docs/environments.md); do not redefine environments independently in product docs.
 11. For what an application repo must include: follow [`docs/application-model.md`](docs/application-model.md).
-12. For UI standards: follow [`docs/ui/overview.md`](docs/ui/overview.md) and docs under `foundations/`, `shell/`, `layout/`, `controls/`; when docs grow too large, deepen the hierarchy and update the UI index (organic structure rule in the overview).
+12. For UI standards: start with the page checklist [`docs/ui/page-development.md`](docs/ui/page-development.md), then [`docs/ui/overview.md`](docs/ui/overview.md) and docs under `foundations/`, `shell/`, `layout/`, `controls/`; when docs grow too large, deepen the hierarchy and update the UI index (organic structure rule in the overview).
 13. Placeholder docs (`domain-modeling`, `testing`, `security-governance`, `observability`, `versioning`) mean **no org standard yet** — do not invent requirements there; update them only when conventions are actually established.
 14. For operational procedures: see [`runbooks/README.md`](runbooks/README.md); add runbooks only from real procedures.
 15. Major STANDARDS docs may carry lightweight `Owner:` metadata (area label only — not an approval workflow); see [`docs/documentation.md`](docs/documentation.md).
