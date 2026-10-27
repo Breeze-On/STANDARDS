@@ -62,8 +62,8 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoAppBody` | Scrollable body region content host (scrolls inside body card) | [shell.md](shell/shell.md) |
 | `BoAppFooter` | Bottom footer card (optional per page via `ShowFooter`; shorter inside padding) | [shell.md](shell/shell.md) |
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` | [tokens.md](foundations/tokens.md) |
-| `BoNavHub` | Responsive centered host for navigation card grids (landing / dashboard hub) | [shell.md](shell/shell.md) |
-| `BoNavCardStyleHyperlink` | Navigation destination card (internal SPA or external URL); token-driven hover | [shell.md](shell/shell.md) |
+| `BoNavHub` | Home hub host (~33%·67%, gradient + dots, brand logo `80cqmin`) | [shell.md](shell/shell.md#home--navigation-hub-locked-platform-pattern) |
+| `BoNavCardStyleHyperlink` | Home destination card (internal SPA or external new-tab); locked chrome | [shell.md](shell/shell.md#home--navigation-hub-locked-platform-pattern) |
 | `BoSectionMain` | **Main Section** — borderless content block with optional header | [sections.md](layout/sections.md) |
 | `BoSectionSub` | **Sub Section** — nested grouping (different label/margins than Main) | [sections.md](layout/sections.md) |
 | `BoRow` | **Row** — equal-width field slots inside a section | [layout.md](layout/layout.md) |

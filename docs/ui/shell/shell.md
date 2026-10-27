@@ -57,26 +57,97 @@ Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTab
 
 Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Header tabs standard).
 
-## Navigation hub cards (landing / dashboard)
+## Home / navigation hub (locked platform pattern)
 
-Use for app Home (or similar) **page hubs** — not for form fields (forms still use Section → Row → Field; see [layout.md](../layout/layout.md)).
+Use for each product app’s **Home** (or equivalent landing hub). This is **not** a form layout — forms still use Section → Row → Field ([layout.md](../layout/layout.md)).
+
+**Hard rule:** every product app Home uses `BoNavHub` + one or more `BoNavCardStyleHyperlink` children. Do not invent alternate Home chrome (markdown dumps, ad-hoc card grids, Fluent types in product apps).
+
+### Components
 
 | Component | Role |
 | --- | --- |
-| `BoNavHub` | Full-height two-panel host: left cards on canvas background (no texture); right brand panel with texture + large logo (`LogoSrc` / `BrandContent`) |
-| `BoNavCardStyleHyperlink` | Destination card: `Label`, `Description`, `Hyperlink`, `IsExternal`, optional `IconContent` / `Badge` / `Category` / `Footer` |
+| `BoNavHub` | Full-height two-panel host: left cards + right brand logo |
+| `BoNavCardStyleHyperlink` | Destination card (internal SPA or external URL) |
+
+### Shell / body (Home)
 
 | Concern | Standard |
 | --- | --- |
-| Internal links | SPA navigation (`NavigationManager.NavigateTo`) — no full browser refresh |
-| External links | New tab; `rel="noopener noreferrer"` |
-| Body card (Home) | Fills available shell height; **no** body scrollbar while the hub is present |
-| Hub layout | Desktop: 50/50 columns; mobile: cards then brand stack |
-| Card header | Icon tile + large label on one row (vertically centered); ~90% width rule; description uses Text Field label chrome (10px bold uppercase field-label color) |
-| Card icon | Centered in tile; larger glyph; hover scales/rotates tile and fills primary |
-| Visual | Token-driven card fill/border/shadow; hover lift ~200ms; Calibri via theme |
-| Typography | Org default (**Calibri**) — no per-component typeface override |
-| Gallery | Home lists Components + Theme cards (excludes Home itself); hero SVG at `wwwroot/brand/home-hero.svg`; `ShowFooter` false |
+| Footer | `ShowFooter` = **false** on Home |
+| Body card | Fills the available shell viewport slot; **no** body scrollbar while `.bo-nav-hub` is present |
+| Body padding | Hub host clears default body padding; panel padding lives on hub columns |
+| Typeface | Org default (**Calibri**) — no per-component override |
+
+### Hub layout (locked)
+
+| Concern | Standard |
+| --- | --- |
+| Desktop columns | **~33% · ~67%** (`1fr` / `2fr`) — left cards, right brand |
+| Mobile (`≤768px`) | Single column: cards first, brand below (`minmax(12rem, ~42%)` brand row) |
+| Left column | Transparent over hub background; cards **horizontally + vertically centered** in the column |
+| Card stack width | `min(100%, 22rem)`, centered in the left column |
+| Gap between cards | Fluid `clamp(~0.75rem … ~2rem)`; thin horizontal rule between cards uses `--bo-color-card-container-border` (~76% of card width, centered in the gap) |
+| Left column padding | Fluid `clamp` (vertical ~0.75–2rem, horizontal ~0.5–1rem) |
+
+### Background (locked — theme tokens only)
+
+| Layer | Standard |
+| --- | --- |
+| Base gradient | Left → right **custom multi-stop** white/card-container → tertiary (not linear). Stops: **0%** solid card-container; **20%** → 40% tertiary mix; **40%** → 55%; **60%** → 70%; **80%** → 85%; **100%** → ~92% tertiary mix (soft, no flat saturated block) |
+| Dot texture | 18px dot matrix over the hub; soft mask ramps visibility **0% → 40%** of hub width (peak from 40%); Light opacity ~0.45, Dark ~0.5 |
+| Card bloom | Quiet radial behind the card stack (card-container + low tertiary) so cards stay the focal point |
+| Dark mode | Same structure; palette via `IBoThemeModeService` / dual tokens |
+
+### Brand / right panel (locked structure; per-app asset)
+
+| Concern | Standard |
+| --- | --- |
+| Host | `BoNavHub` `LogoSrc` **or** `BrandContent` (custom fragment wins when set) |
+| Logo cell | Square sized to **`80cqmin`** (80% of the smaller brand-panel side); `object-fit: contain` |
+| Alt text | Required for `LogoSrc` via `LogoAlt` (localized) |
+| Asset | Per-app SVG (or equivalent) under that app’s `wwwroot` — gallery: `wwwroot/brand/home-hero.svg` |
+| Do not | Hardcode another app’s logo; invent a different right-panel layout |
+
+### `BoNavCardStyleHyperlink` (locked chrome)
+
+| Parameter | Required | Notes |
+| --- | --- | --- |
+| `Label` | Yes | Primary title — localized |
+| `Description` | Yes | Supporting copy — localized |
+| `Hyperlink` | Yes | Internal route or absolute URL |
+| `IsExternal` | When external | Default `false` |
+| `IconContent` | Yes (Home) | Prefer `BoIcon` (~Size **32**); never Fluent types from product apps |
+| `Badge` / `Category` / `Footer` | Optional | Extensibility only |
+
+| Concern | Standard |
+| --- | --- |
+| **Internal** (`IsExternal` false) | SPA: `NavigationManager.NavigateTo`; same-tab; no full browser refresh |
+| **External** (`IsExternal` true) | New tab; `rel="noopener noreferrer"` |
+| Card chrome | `--bo-color-card-container-*` fill/border/shadow; hover lift ~200ms + light tertiary wash |
+| Header row | Icon tile + **large label** on one row, vertically centered |
+| Icon tile | Centered glyph; fluid size via `clamp`/`cqi`; Light: primary glyph on tertiary-tinted tile; **Dark: white glyph at rest**; hover → primary fill + scale/rotate |
+| In-card rule | ~**90%** width horizontal rule under header |
+| Description | Same chrome as Text Field label: **10px**, bold, **uppercase**, `--bo-color-text-field-label` |
+| Fluid type | Label / icon / padding use `clamp` + container `cqi` so zoom/narrow columns stay inside the card |
+| Focus | Visible primary focus ring |
+
+### Per-app vs locked
+
+| Locked (all apps) | Per-app only |
+| --- | --- |
+| `BoNavHub` + `BoNavCardStyleHyperlink` composition | **Number of cards** and destination routes |
+| ~33/67 split, full-height body, no Home footer | **Card labels + descriptions** (each app’s own resource library) |
+| Gradient stops + dot texture + card bloom | **Card icons** (`BoIcon` Name/Variant) |
+| Card chrome, header/rule/description styles | **Right-panel logo** asset + alt text |
+| Internal SPA vs external new-tab rules | Optional primary/tertiary accents (shared token roles) |
+| Dual Light/Dark via theme mode | App title / subtitle / left-nav page set |
+
+**Not per-app:** inventing a different Home layout, using Fluent UI types in product pages, hardcoding user-visible strings, or putting form Section→Row on Home instead of the hub.
+
+### Gallery reference
+
+SYSTEM-SHARED-UI Gallery Home (`/`): two cards (Components, Theme — excludes Home itself); `LogoSrc="brand/home-hero.svg"`; `ShowFooter` false. Implementation SSOT for CSS: `breezeon-ui.css` (`.bo-nav-hub*`, `.bo-nav-card*`).
 
 ## Toasts (`IBoToastService`)
 
