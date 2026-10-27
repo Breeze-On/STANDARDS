@@ -54,7 +54,7 @@ A **Row** is a layout container for one or more fields in a section. It standard
 
 To change inset globally (e.g. to `6px` or `8px`), set `BoThemeOptions.SpaceRowInset` / `--bo-space-row-inset` — do not hardcode per page.
 
-**Gallery reference:** Theme (`/theme`) — Primary Color section: Row 1 = Hex Code + Internal Code; Row 2 = Description.
+**Gallery reference:** Theme (`/theme`) — Primary Color (Light Theme) / (Dark Theme) sections: Row 1 = Hex Code + Internal Code; Row 2 = Description (`BoFieldReadOnly`).
 
 ### Not shipped yet (do not invent)
 
@@ -178,9 +178,9 @@ Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount`, 
 
 Expected layout: Row 1 → two equal columns with 16px gap + separator; Row 2 → one full-width field. Both Rows inside the Identification Section.
 
-### Example — Theme Primary Color (gallery)
+### Example — Theme Primary Color Light (gallery)
 
-Main Section `{Name} Color` contains Sub Sections **Attributes** (fields) and **Preview** (gallery swatch; no icon). Nested `sections` under a parent is not in schemaVersion `"1"` — Dev maps Attributes rows under a `kind: "sub"` sibling group inside the main section body, or uses two top-level sections when emitting flat JSON. Gallery Razor nests `BoSectionSub` inside `BoSectionMain`.
+Each Theme color tab stacks Main `{Name} Color (Light Theme)` then Main `{Name} Color (Dark Theme)`. Nested `sections` under a parent is not in schemaVersion `"1"` — Gallery Razor nests `BoSectionSub` inside each `BoSectionMain`. Attributes use `BoFieldReadOnly` (`control: "ReadOnlyField"`).
 
 ```json
 {
@@ -192,7 +192,7 @@ Main Section `{Name} Color` contains Sub Sections **Attributes** (fields) and **
   "sections": [
     {
       "kind": "main",
-      "title": "Primary Color",
+      "title": "Primary Color (Light Theme)",
       "icon": { "name": "PaintBrushSparkle", "variant": "Regular" },
       "rows": []
     },
@@ -203,30 +203,23 @@ Main Section `{Name} Color` contains Sub Sections **Attributes** (fields) and **
         {
           "fields": [
             {
-              "control": "TextField",
+              "control": "ReadOnlyField",
               "label": "Hex Code",
-              "fieldKey": "ColorHexCodePrimary",
-              "required": true,
-              "showCharacterCount": true
+              "fieldKey": "ColorHexCodePrimaryLight"
             },
             {
-              "control": "TextField",
+              "control": "ReadOnlyField",
               "label": "Internal Code",
-              "fieldKey": "PrimaryColorInternalCode",
-              "required": true,
-              "showCharacterCount": true
+              "fieldKey": "PrimaryColorInternalCodeLight"
             }
           ]
         },
         {
           "fields": [
             {
-              "control": "TextField",
+              "control": "ReadOnlyField",
               "label": "Description",
-              "fieldKey": "Description",
-              "required": true,
-              "maxLength": 1000,
-              "showCharacterCount": true
+              "fieldKey": "DescriptionPrimaryLight"
             }
           ]
         }
@@ -236,4 +229,4 @@ Main Section `{Name} Color` contains Sub Sections **Attributes** (fields) and **
 }
 ```
 
-(Preview Sub Section with a non-`Bo*` swatch is gallery-only and is outside this field schema.)
+(Dark Theme Main uses the same shape with `…Dark` FieldKeys. Preview Sub Section with a non-`Bo*` swatch is gallery-only and is outside this field schema.)

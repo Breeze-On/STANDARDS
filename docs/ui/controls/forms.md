@@ -80,7 +80,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Character count | Optional (`ShowCharacterCount`, default false); format `current/max` (no brackets); **inside** the input (Fluent `EndTemplate`), trailing/right; italic **10px**; muted. Denominator = `MaxLength` (**default 600**). **Hidden when `Disabled`** |
 | Disabled | Hide Placeholder; hide character count; hide mandatory asterisk; skip required validation; greyer fill (`--bo-color-background`) so the field reads as non-editable; muted text |
 
-**Gallery reference:** Theme (`/theme`) Attributes rows; Components Text Field Preview (`editableTextField` + `BoFieldReadOnly` companion).
+**Gallery reference:** Theme (`/theme`) Attributes rows (`BoFieldReadOnly` Light + Dark); Components Text Field Preview (`editableTextField` + `BoFieldReadOnly` companion).
 
 These Text Field rules are **org standards** for every `BoTextField` usage.
 

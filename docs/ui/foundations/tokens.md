@@ -11,7 +11,7 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 - **Dual palettes, one semantic name per role.** CSS variables stay `--bo-color-primary` (etc.). Do **not** use `*-light` / `*-dark` suffixes on token names or markup.
 - `BoThemeMode` = `Light` | `Dark`. `IBoThemeModeService` applies `BoThemePalettes.Light` / `.Dark` onto the active `BoThemeOptions`.
 - **Cookie persistence (shipped):** name `bo-theme-mode`; values `light` \| `dark` (lowercase); `Path=/`; `Max-Age≈31536000` (1 year); `SameSite=Lax`; `Secure` when the page is HTTPS; `HttpOnly=false` (JS-readable for Interactive Server restore). Invalid/missing → **Light**. `BoProviders` hosts `BoThemeModeBootstrap` which calls `InitializeAsync()` once per circuit. Hosts should load `_content/BreezeOn.UI/js/bo-theme-mode.js` early (gallery `App.razor` does) so `document.documentElement.dataset.boThemeMode` can be set before circuit restore (FOUC minimized, not eliminated).
-- Gallery Theme (`/theme`) fields reset from the active palette when mode changes. Editing Theme Text Fields does not live-recolor the shell; the header theme switch does.
+- Gallery Theme (`/theme`) shows **both** Light and Dark palette values as read-only fields (`BoFieldReadOnly`) under separate Main Sections. It does not live-recolor the shell; the header theme switch does.
 
 ## Palette rules (locked)
 
@@ -63,4 +63,4 @@ Legacy aliases still emitted: `--bo-color-surface` → card-container-background
 
 Shared accents used by nav and buttons: `PrimaryColor` / `TertiaryColor`. Nav color rules: [navigation.md](../shell/navigation.md). Header tab fills: [shell.md](../shell/shell.md).
 
-**Gallery:** Theme (`/theme`) tabs (order) — Primary, Secondary, Tertiary, Background, Border, Field Label. Each tab: Main Section `{Friendly Name} Color` (tab icon) containing Sub Sections **Attributes** (fields, no icon) and **Preview** (swatch, no icon). Fields mirror the **active** `ThemeMode` palette. Main icons: Primary `PaintBrushSparkle` (Regular); Secondary `ColorFill` (Regular); Tertiary `Eyedropper` (Regular); Background `ImageBorder` (Filled); Border `BorderAll` (Regular — Fluent has no `Border` glyph); Field Label `TextCaseTitle` (Regular).
+**Gallery:** Theme (`/theme`) tabs (order) — Primary, Secondary, Tertiary, Background, Border, Field Label. Each tab stacks two Main Sections: `{Friendly Name} Color (Light Theme)` then `{Friendly Name} Color (Dark Theme)` (same tab icon on each). Each Main contains Sub **Attributes** (`BoFieldReadOnly` Hex / Internal Code / Description; FieldKeys suffixed `Light` / `Dark`) and Sub **Preview** (swatch). Values come from `BoThemePalettes.Light` / `.Dark` (not the active shell mode). Main icons: Primary `PaintBrushSparkle` (Regular); Secondary `ColorFill` (Regular); Tertiary `Eyedropper` (Regular); Background `ImageBorder` (Filled); Border `BorderAll` (Regular — Fluent has no `Border` glyph); Field Label `TextCaseTitle` (Regular).

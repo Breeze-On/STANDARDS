@@ -41,7 +41,7 @@ The body (`ChildContent`) is the section **content container**: full section wid
 
 Product apps must use `BoSectionMain` for Main Sections — do not reimplement this chrome in page CSS.
 
-**Gallery reference:** Theme page (`/theme`) — header tabs Primary / Secondary / Tertiary / Background / Border / Field Label; each tab uses Main Section (`{Friendly Name} Color`) with Sub Sections **Attributes** (fields) and **Preview** (swatch; no icons on either Sub).
+**Gallery reference:** Theme page (`/theme`) — header tabs Primary / Secondary / Tertiary / Background / Border / Field Label; each tab stacks Main `{Friendly Name} Color (Light Theme)` then Main `{Friendly Name} Color (Dark Theme)`, each with Sub **Attributes** (`BoFieldReadOnly`) and Sub **Preview** (swatch; no icons on either Sub).
 
 ## Sub Section (`BoSectionSub`)
 
