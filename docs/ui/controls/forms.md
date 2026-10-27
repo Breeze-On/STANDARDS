@@ -4,7 +4,16 @@ Owner: UI
 
 Form control standards. Related: [layout.md](../layout/layout.md) (Row + page composition JSON), [sections.md](../layout/sections.md), [typography.md](../foundations/typography.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [shell.md](../shell/shell.md) (toasts / Submit).
 
-**Hard standard:** every Text Field, Drop-Down List, Checkbox, Read-Only Field, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
+**Hard standard:** every Text Field, Drop-Down List, Checkbox, Date Field, Read-Only Field, Empty Field, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
+
+## Reserved / empty row slots (locked)
+
+| Surface | Standard |
+| --- | --- |
+| `IsHidden` | On form fields: still occupies a `BoRow` column (`.bo-row-item--hidden`); chrome not shown; **do not** use `display: none`. Skips required validation while hidden. |
+| `BoEmptyField` | Empty alignment slot (no label/value); one equal-width column |
+
+See [layout.md — Reserved / empty slots](../layout/layout.md#reserved--empty-slots-shipped).
 
 ## Deferred mandatory validation (locked)
 
@@ -16,6 +25,7 @@ Form control standards. Related: [layout.md](../layout/layout.md) (Row + page co
 | Required message | Universal resource string — English **"This field is required"** (`Validation_FieldRequired`). Same for every control; never field-label-specific |
 | Invalid border | Danger color (`--bo-color-danger`) on the **control edge only** (same as Text Field input border) when the required-empty rule fails after attempt — **not** a wash/outline on the BoRow item container |
 | Disabled | A `Disabled` field **never** shows the mandatory asterisk, **never** shows character count, and **never** participates in required validation (Submit ignores it for mandatory checks) |
+| Hidden (`IsHidden`) | Same as Disabled for mandatory participation — reserved slot only; no asterisk / required fail while hidden |
 | Mechanism | Cascading `BoValidationContext`; fields register via `IBoValidatableField`; pages gate Submit with `IBoSubmitInterceptor` |
 | Scope | Gallery Submit validates **all** registered groups (`Validate(null)`), not only the active tab |
 | Live clear | After attempt, field value changes call `NotifyFieldChanged()` — one O(n) pass over registered fields; fail badges clear when that ancestor no longer has required-empty fields |
@@ -193,3 +203,60 @@ Always shows **two** options: localized **Yes** / **No** (`Field_Boolean_Yes` / 
 **Gallery:** Components Checkbox tab — Parameters (Mandatory/Disabled) + Preview (editable \| `ReadOnly` Yes-No \| Backend Value `true`/`false`).
 
 These Checkbox rules are **org standards** for every `BoCheckbox` usage.
+
+## Date Field (`BoDateField`)
+
+**Display name:** Date Field.  
+**Component:** `BoDateField` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+
+Single-value date (or date+time) control. Public API is `Bo*` only; calendar popover is owned by BreezeOn.
+
+| Parameter | Role |
+| --- | --- |
+| `Label` | Same chrome as Text Field (10px bold uppercase, field-label color) |
+| `FieldKey` | Stable typed DTO / entity property identifier |
+| `Value` / `ValueChanged` | `@bind-Value` to **`DateTime?` only** (see typed model hard standard below) |
+| `Mode` | `BoDateFieldMode.Date` (default) or `DateTime` — **UI only**; does not change the bound CLR type |
+| `Required` / `Disabled` / `IsHidden` | Same deferred mandatory rules as Text Field (Disabled / hidden skip participation) |
+| `Placeholder` | Optional; default resource **`Field_Date_Placeholder_Default`** ("Choose a date") or **`Field_DateTime_Placeholder_Default`** when `Mode` is DateTime; **hidden when Disabled** |
+| `ValidationGroup` / `ErrorText` / `Class` / `Style` | Same family as other form fields |
+
+### Typed model / persistence (hard standard)
+
+| Concern | Standard |
+| --- | --- |
+| Bound type | Always **`DateTime?`** on the typed DTO / entity / working model |
+| Forbidden | **`DateOnly`**, `DateOnly?`, or binding the field to a date-only string property as the model type |
+| Why | One persistence shape end-to-end; converting **from** `DateTime` (strip/ignore time) is easier than promoting a date-only value to datetime later |
+| Date mode storage | Still a `DateTime`; control **normalizes time to midnight** (`00:00:00`, `DateTimeKind.Unspecified`) on every write |
+| DateTime mode storage | `DateTime` with hour + minute (seconds cleared); `DateTimeKind.Unspecified` |
+| Database | Prefer a datetime / datetime2 (nullable) column that matches the entity — do not use a date-only column for `BoDateField` bindings |
+| Read-only display | Host may format a **short date** string for `BoFieldReadOnly` when the UX is date-only; that is display-only |
+| Backend Value (gallery) | Always shown as **date + time** (`g` / culture general) to prove the typed value is `DateTime?` even when `Mode` is Date |
+
+Planning JSON: `control: "DateField"`; optional `mode: "Date"` \| `"DateTime"`. The generated property remains `DateTime?`.
+
+### Value and locale
+
+| Concern | Standard |
+| --- | --- |
+| Date mode | Calendar / typing collect a **date**; bound value is `DateTime` at midnight |
+| DateTime mode | Date + hour/minute; culture-aware display (`g`). Panel time row: digit **hh** (0–12 with AM/PM, or 0–23 when culture is 24h) · digit **mm** (0–60, clamp overshoot to 60; stored minute 0–59) · **AM/PM** select when culture uses 12h (`AMDesignator` / `PMDesignator`). No native `<input type="time">`. |
+| Locale | Format + calendar month/weekday names from `IBoLocaleService` / `bo-culture` (**en-CA** / **fr-CA**) — same family as other i18n |
+| Typing | Parse culture-formatted input on blur / Enter; invalid input reverts to last good value |
+
+### Chrome and picker
+
+| Concern | Standard |
+| --- | --- |
+| Label gap / corners / focus | Same as Text Field / DDL: **`--bo-field-label-gap`**, **`--bo-radius-md`**, primary focus border, field fill |
+| Invalid border | Control edge only after validation attempt |
+| Picker | Modern popover calendar: **fixed** placement (`boPopup` / `bo-popup.js`) so it overlays shell card / section overflow; rounded panel, soft elevation, tertiary/primary accents, today ring, selected primary fill |
+| Month nav (Dark) | Prev/next arrow glyphs are **white** (`--bo-color-semantic-white`) on the nav chip so they stay visible |
+| Affordances | Clear × + calendar toggle (same family as Drop-Down List clear/chevron) |
+
+**Placement:** Direct child of `BoRow` inside a Section; participates in `BoValidationContext` / fail badges.
+
+**Gallery reference:** Components Date Field — Parameters (Mandatory / Disabled / Mode = DateTime / Hide Editable) + Preview (editable \| host-formatted read-only \| **Backend Value** as date+time).
+
+These Date Field rules are **org standards** for every `BoDateField` usage.

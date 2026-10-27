@@ -57,7 +57,7 @@ When the page is a **Home** (or equivalent landing hub):
 - [ ] Every **`BoRow` is inside a Section**.
 - [ ] Every form field is a **direct child of a `BoRow`**.
 - [ ] Stack Sections/Rows with **`BoStack Gap="0"`** so outside margins are not doubled.
-- [ ] Do not invent free-floating fields, custom grids, or unshipped Row features (`columnCount`, reserved slots, dynamic hide/show).
+- [ ] Do not invent free-floating fields or custom grids. For reserved columns use **`IsHidden`** or **`BoEmptyField`** — not `display: none` / not a separate `columnCount` parameter.
 
 Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout.md#page-composition-json-planning-agent-input); nest Sub Sections in Razor even when flat JSON is used.
 
@@ -66,9 +66,11 @@ Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout
 - [ ] **`BoTextField`** for text entry — [forms.md](controls/forms.md#text-field-botextfield).
 - [ ] **`BoDropDownList`** for Code/Description selection (panel search; `DisplayCode` / `AllowMultiple` as needed) — [forms.md](controls/forms.md#drop-down-list-bodropdownlist).
 - [ ] **`BoCheckbox`** for boolean values (`Required` / `ReadOnly` Yes-No) — [forms.md](controls/forms.md#checkbox-bocheckbox).
+- [ ] **`BoDateField`** for date / date-time — bind **`DateTime?` only** (never `DateOnly`); `Mode` Date or DateTime is UI-only; Date mode still persists midnight — [forms.md](controls/forms.md#date-field-bodatefield).
 - [ ] **`BoFieldReadOnly`** for display-only scalars (host formats `Value`) — [forms.md](controls/forms.md#read-only-field-bofieldreadonly).
+- [ ] **`BoEmptyField`** / **`IsHidden`** for reserved alignment slots — [layout.md](layout/layout.md).
 - [ ] Sections that participate in Submit validation set **`SectionKey`** — [sections.md](layout/sections.md).
-- [ ] Planning JSON: shipped control names only (`TextField`, `ReadOnlyField`, …) — [layout.md](layout/layout.md).
+- [ ] Planning JSON: shipped control names only (`TextField`, `ReadOnlyField`, `EmptyField`, `DateField`, …; optional `hidden` / `mode`) — [layout.md](layout/layout.md).
 
 ### Validation
 

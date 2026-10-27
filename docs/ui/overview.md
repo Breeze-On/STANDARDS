@@ -23,7 +23,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [layout/sections.md](layout/sections.md) | Main Section / Sub Section |
 | [layout/layout.md](layout/layout.md) | Row (`BoRow`), page composition, planning JSON schema |
 | **Controls** | |
-| [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, and form controls |
+| [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, Date Field, and form controls |
 
 Former single file [`docs/ui-components.md`](../ui-components.md) redirects here. Flat paths under `docs/ui/*.md` (e.g. `docs/ui/tokens.md`) redirect to the hierarchical files above.
 
@@ -71,9 +71,11 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](layout/sections.md) |
 | `BoPageHeader` | Page title and description | — |
 | `BoFieldReadOnly` | Flat read-only display field (pre-formatted string `Value`; same label chrome as Text Field) | [forms.md](controls/forms.md) |
+| `BoEmptyField` | Empty `BoRow` alignment slot (no label/value) | [layout.md](layout/layout.md), [forms.md](controls/forms.md) |
 | `BoTextField` | Text input (default Placeholder; deferred mandatory validation) | [forms.md](controls/forms.md) |
 | `BoDropDownList` | Searchable Code/Description Drop-Down (`DisplayCode`, `AllowMultiple` chips, panel search) | [forms.md](controls/forms.md) |
 | `BoCheckbox` | Boolean (`Required` / `ReadOnly` Yes-No) | [forms.md](controls/forms.md) |
+| `BoDateField` | Date / DateTime UI; bound type always `DateTime?` (never `DateOnly`); locale + fixed calendar popover | [forms.md](controls/forms.md) |
 | `BoButton` | Pill button (primary / secondary / stealth); shorter+wider padding; shadow + hover lift; optional icon | [tokens.md](foundations/tokens.md) |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`) | — |
 | `IBoToastService` / `BoToastHost` | Top-right toasts (Main/Body; Success / Alert / Information / Error; click dismiss) | [shell.md](shell/shell.md) |

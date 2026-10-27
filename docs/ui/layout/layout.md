@@ -57,10 +57,18 @@ To change inset globally (e.g. to `6px` or `8px`), set `BoThemeOptions.SpaceRowI
 
 **Gallery reference:** Theme (`/theme`) — Primary Color (Light Theme) / (Dark Theme) sections: Row 1 = Hex Code + Internal Code; Row 2 = Description (`BoFieldReadOnly`).
 
+### Reserved / empty slots (shipped)
+
+| Surface | Standard |
+| --- | --- |
+| `IsHidden` on form fields | Field **still occupies** a `BoRow` column; chrome not shown (`.bo-row-item--hidden` — **not** `display: none`). Siblings do **not** reflow. Skips required validation while hidden. |
+| `BoEmptyField` | Alignment-only empty slot (no label/value); one equal-width column |
+
+Do **not** use `display: none` to hide a row child — that collapses columns. Prefer `IsHidden` or `BoEmptyField`.
+
 ### Not shipped yet (do not invent)
 
-- `columnCount` / reserved empty slots (“2 fields aligned as if 4 columns”)
-- Dynamic hide/show column rules
+- `columnCount` as a separate `BoRow` parameter (use `IsHidden` / `BoEmptyField` instead)
 - Separate `BoRowContainer` component type (container = direct child of `BoRow` today)
 
 ## Page composition JSON (planning-agent input)
@@ -104,16 +112,18 @@ To change inset globally (e.g. to `6px` or `8px`), set `BoThemeOptions.SpaceRowI
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
-| `control` | string | Yes | `"TextField"` → `BoTextField`; `"ReadOnlyField"` → `BoFieldReadOnly` (extend when new controls ship) |
-| `label` | string | Yes | Field label |
-| `fieldKey` | string | Yes | Stable DTO / working-model property id (`FieldKey` / `@bind-Value` target) |
+| `control` | string | Yes | `"TextField"` → `BoTextField`; `"ReadOnlyField"` → `BoFieldReadOnly`; `"EmptyField"` → `BoEmptyField`; `"DateField"` → `BoDateField` |
+| `label` | string | Yes* | Field label (*omit / unused for `EmptyField`) |
+| `fieldKey` | string | Yes* | Stable DTO / working-model property id (*omit for `EmptyField`) |
 | `required` | boolean | No | Default false → `Required` / Mandatory asterisk |
 | `maxLength` | number | No | Default **600** for Text Field |
 | `showCharacterCount` | boolean | No | Default false |
 | `placeholder` | string | No | Optional |
 | `disabled` | boolean | No | Default false |
+| `hidden` | boolean | No | Default false → `IsHidden` (reserved slot; no reflow) |
+| `mode` | string | No | Date Field only: `"Date"` (default) or `"DateTime"` → `BoDateField.Mode` |
 
-Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount`, visibility flags, empty reserved slots.
+Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount` as a separate BoRow parameter.
 
 ### Translation rules (JSON → Razor)
 
@@ -126,6 +136,9 @@ Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount`, 
 | `rows[].fields[]` length N | N **direct** children of that `BoRow` (each child = field container + field) |
 | `control: "TextField"` | `BoTextField` with `Label`, `FieldKey`, `Required`, `MaxLength`, `ShowCharacterCount`, … + `@bind-Value` to the typed property for `fieldKey` |
 | `control: "ReadOnlyField"` | `BoFieldReadOnly` with `Label`, `FieldKey`, pre-formatted `Value` (host formats; no Required/validation) |
+| `control: "EmptyField"` | `BoEmptyField` (alignment slot only) |
+| `control: "DateField"` | `BoDateField` with `Label`, `FieldKey`, `Required`, optional `Mode` (`Date` / `DateTime`) + `@bind-Value` (**`DateTime?` only** — never `DateOnly`; Date mode → midnight) |
+| `hidden: true` | `IsHidden="true"` on the field (reserved column) |
 | Multiple sections | Wrap in `BoStack Gap="0"` |
 | Multiple rows in a section | Wrap rows in `BoStack Gap="0"` inside the Section body |
 
