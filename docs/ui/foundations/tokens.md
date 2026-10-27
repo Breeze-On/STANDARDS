@@ -35,17 +35,21 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 | `color-primary` | `--bo-color-primary` | `#224D3A` | `#2D5A45` | Accent: nav panel fill, primary buttons |
 | `color-primary-hover` | `--bo-color-primary-hover` | `#1A3A2C` | `#3A6F56` | Primary button hover |
 | `color-secondary` | `--bo-color-secondary` | `#7CF76C` | `#7CF76C` | Secondary accent |
-| `color-tertiary` | `--bo-color-tertiary` | `#D8F3DC` | `#3D5C4A` | Soft surface: selected nav, secondary buttons, tab fills |
+| `color-tertiary` | `--bo-color-tertiary` | `#D8F3DC` | `#3D5C4A` | Soft surface: secondary buttons, tab fills (not selected nav) |
+| `color-nav-selected` | `--bo-color-nav-selected` | `#D8F3DC` | `#D8F3DC` | Selected left-nav item fill — **same as Light tertiary in both modes** |
+| `color-nav-logo-divider` | `--bo-color-nav-logo-divider` | `#E8EDF1` | `#E8EDF1` | Horizontal rule under nav brand logos — **same as Light card-container-border in both modes** |
 | `color-text` | `--bo-color-text` | `#242424` | `#EEF2EF` | Default body text |
 | `color-text-muted` | `--bo-color-text-muted` | `#616161` | `#A8B2AC` | Muted text (e.g. character count) |
 | `color-danger` | `--bo-color-danger` | `#C50F1F` | `#FF8A8A` | Danger / mandatory asterisk |
 | `color-success` | `--bo-color-success` | `#0E700E` | `#4ADE80` | Success |
 | `color-nav-text` | `--bo-color-nav-text` | `#FFFFFF` | `#FFFFFF` | Unselected nav text/icon |
-| `color-nav-text-selected` | `--bo-color-nav-text-selected` | `#000000` | `#FFFFFF` | Selected nav text/icon |
+| `color-nav-text-selected` | `--bo-color-nav-text-selected` | `#000000` | `#000000` | Selected nav text/icon (black on light selected fill) |
 | `color-nav-text-hover` | `--bo-color-nav-text-hover` | `#FFFFFF` | `#FFFFFF` | Unselected nav text on hover |
 | `color-nav-hover-background` | `--bo-color-nav-hover-background` | `rgba(255,255,255,0.16)` | `rgba(255,255,255,0.12)` | Unselected nav hover fill |
 
-Legacy aliases still emitted: `--bo-color-surface` → card-container-background; `--bo-color-surface-muted` → background; `--bo-color-border` → card-container-border; `--bo-color-nav-background` → primary; `--bo-color-nav-selected` → tertiary.
+Legacy aliases still emitted: `--bo-color-surface` → card-container-background; `--bo-color-surface-muted` → background; `--bo-color-border` → card-container-border; `--bo-color-nav-background` → primary.
+
+**Nav-stable tokens:** `color-nav-selected` and `color-nav-logo-divider` do **not** follow Dark `color-tertiary` / `color-card-container-border`. They keep Light values so selected page fill and the brand logo divider match Light chrome in Dark mode.
 
 ## Non-color shell tokens (current)
 

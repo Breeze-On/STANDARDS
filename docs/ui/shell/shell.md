@@ -11,7 +11,7 @@ App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.
 | Region | Component | Role |
 | --- | --- | --- |
 | Left nav | `BoNavPane` / `BoNavLink` | Platform navigation — see [navigation.md](navigation.md) |
-| Header | `BoAppHeader` | Top header card; `AppTitle` + `  -  ` + `Subtitle` inline; trailing actions; optional `TabsContent` |
+| Header | `BoAppHeader` | Top header card; **per-page** `AppTitle` / `Subtitle` (host-localized); trailing actions; optional `TabsContent` |
 | Body | `BoAppBody` | Body region inside a floating card; card hugs short content; when content exceeds the viewport slot, the card caps and scrolls internally |
 | Footer | `BoAppFooter` | Optional per page (`ShowFooter`); when shown, fixed bottom footer card |
 
@@ -32,6 +32,16 @@ Order left → right:
 | Profile | `BoProfileMenu` | Circular avatar placeholder; menu with **Sign out** (design only — no auth) |
 
 Theme mode / dual palettes: [tokens.md](../foundations/tokens.md). Locale prefs: [i18n.md](../foundations/i18n.md).
+
+## Header titles (per-page)
+
+`AppTitle` and `Subtitle` are **per page**, supplied by the host from that app’s resource library (Gallery: `BoUi` keys such as `Home_Header_AppTitle`). Do not hardcode user-visible strings.
+
+| Concern | Standard |
+| --- | --- |
+| `AppTitle` | Required for normal pages; localized |
+| `Subtitle` | Optional; when null/whitespace, **omit** the `  -  ` separator (implemented in `BoAppHeader`) |
+| Dash | Shown only between a non-empty title and a non-empty subtitle |
 
 ## App shell footer (optional per page)
 
@@ -147,7 +157,7 @@ Use for each product app’s **Home** (or equivalent landing hub). This is **not
 
 ### Gallery reference
 
-SYSTEM-SHARED-UI Gallery Home (`/`): two cards (Components, Theme — excludes Home itself); `LogoSrc="brand/home-hero.svg"`; `ShowFooter` false. Implementation SSOT for CSS: `breezeon-ui.css` (`.bo-nav-hub*`, `.bo-nav-card*`).
+SYSTEM-SHARED-UI Gallery Home (`/`): three cards (Components, Theme, Google external — excludes Home itself); `LogoSrc="brand/home-hero.svg"`; `ShowFooter` false. Implementation SSOT for CSS: `breezeon-ui.css` (`.bo-nav-hub*`, `.bo-nav-card*`).
 
 ## Toasts (`IBoToastService`)
 

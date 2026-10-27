@@ -80,7 +80,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (navigation hub — `BoNavHub` + `BoNavCardStyleHyperlink` for Components / Theme; no markdown overview), Components (`/components` — each tab: Main → Sub **Parameters** / **Preview** / **Documentation**), Theme (per color tab: Main `{Name} Color` → Sub **Attributes** + Sub **Preview**; Submit validates active tab). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host to preview components (`dotnet run` in that project). Gallery pages (current): Home (navigation hub — `BoNavHub` + `BoNavCardStyleHyperlink` for Components / Theme / Google external; no markdown overview), Components (`/components` — each tab: Main → Sub **Parameters** / **Preview** / **Documentation**), Theme (per color tab: Main `{Name} Color` → Sub **Attributes** + Sub **Preview**; Submit validates active tab). Nav order: Home / Components (`/components`) / Theme; nav starts collapsed. URL must match page name — see [navigation.md](shell/navigation.md).
 
 ## Documentation governance
 

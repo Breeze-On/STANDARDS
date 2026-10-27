@@ -10,11 +10,11 @@ Left navigation and URL path standards. Related: [shell.md](shell.md), [tokens.m
 
 **Required structure (top to bottom):** brand logos (expanded + minimized) → horizontal divider → nav pages with Fluent icons via `BoIcon` → fixed collapse control.
 
-**Fixed (not per-app):** Fluent icons through `BoIcon` for page items; logo divider; page hover (lift); selected fill using **tertiary** with **black bold** text/icon; unselected **white** text/icon on **primary** nav panel; collapse control (transparent background, **white** icon, hover like unselected nav; `PanelRightExpand` when expanded, `PanelLeftExpand` when collapsed). Hover/selected patterns are **left-nav only**.
+**Fixed (not per-app):** Fluent icons through `BoIcon` for page items; logo divider; page hover (lift); selected fill using **`color-nav-selected`** (`#D8F3DC` Light tertiary — **same hex in Light and Dark**) with **black bold** text/icon; unselected **white** text/icon on **primary** nav panel; brand logo divider using **`color-nav-logo-divider`** (`#E8EDF1` Light card border — **same hex in both modes**); collapse control (transparent background, **white** icon, hover like unselected nav; `PanelRightExpand` when expanded, `PanelLeftExpand` when collapsed). Hover/selected patterns are **left-nav only**.
 
-**Per-application customization:** logo image URLs (`LogoExpandedSrc` / `LogoMinimizedSrc`); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; optional `PrimaryColor` / `TertiaryColor`.
+**Per-application customization:** logo image URLs (`LogoExpandedSrc` / `LogoMinimizedSrc`); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; optional `PrimaryColor` / `TertiaryColor` (soft surfaces / primary rail — not selected-nav fill).
 
-Accent tokens for primary/tertiary: [tokens.md](../foundations/tokens.md). Shell regions: [shell.md](shell.md).
+Accent tokens: [tokens.md](../foundations/tokens.md). Shell regions: [shell.md](shell.md).
 
 Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Left navigation standard).
 
