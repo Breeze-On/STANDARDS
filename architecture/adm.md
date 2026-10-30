@@ -51,7 +51,9 @@ It is the configuration and access hub for the Breeze On ecosystem.
 
 Routine local runs do **not** use Azure SQL. Org pattern: [local-database.md](../docs/local-database.md). Human runbook and agent steps: ADM [`README.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM/blob/main/README.md) / [`README_AI.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM/blob/main/README_AI.md).
 
-## DV environment (current)
+## DEV environment (current)
+
+GitHub Environment name: **`DEV`**. Physical Azure resource names below are as implemented (some still use a `dv` suffix).
 
 | Resource | Value |
 | --- | --- |

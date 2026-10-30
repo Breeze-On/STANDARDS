@@ -4,7 +4,7 @@ Owner: Engineering
 
 Standard for running a **local SQL Server** in Docker so Breeze On applications can develop and test without consuming Azure SQL or Entra tokens.
 
-Hosted environments (DV / PP / PR) remain **Azure SQL** with Managed Identity (or Entra Default for operators). Local password authentication is **local only** — never use SQL `sa` passwords against Azure SQL. Environment definitions: [environments.md](environments.md). Decision context: [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.md).
+Hosted environments (DEV / UAT / PRD) remain **Azure SQL** with Managed Identity (or Entra Default for operators). Local password authentication is **local only** — never use SQL `sa` passwords against Azure SQL. Environment definitions: [environments.md](environments.md). Decision context: [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.md).
 
 ## Purpose
 
@@ -54,7 +54,7 @@ Do **not** commit the real password. Typical pattern:
 - Docker Compose reads `MSSQL_SA_PASSWORD` from `.env`.
 - The app resolves the same password from environment variable `MSSQL_SA_PASSWORD` and/or configuration `LocalSql:SaPassword` (User Secrets) and substitutes it into the Development connection string.
 
-Optional: override the connection string with User Secrets to point at Azure SQL when intentionally testing hosted DV (requires `az login` for Entra Default). That is not the default local path.
+Optional: override the connection string with User Secrets to point at Azure SQL when intentionally testing hosted DEV (requires `az login` for Entra Default). That is not the default local path.
 
 ## Init sequence
 
@@ -90,7 +90,7 @@ Product apps with SQL must use the org script standard ([local-development-scrip
 
 ## Hosted vs local (do not mix)
 
-| | Local sandbox | Hosted (e.g. DV) |
+| | Local sandbox | Hosted (e.g. DEV) |
 | --- | --- | --- |
 | Engine | SQL Server container | Azure SQL |
 | Auth | SQL login (`sa` or local login) | Managed Identity / Entra Default |

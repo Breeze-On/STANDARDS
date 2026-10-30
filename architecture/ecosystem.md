@@ -4,7 +4,7 @@ Owner: Architecture
 
 Current-state description of the Breeze On organization on GitHub.
 
-For a high-level map of repository relationships, UI dependency position, Azure hosting, and SQL (local vs DV), see [landscape.md](landscape.md).
+For a high-level map of repository relationships, UI dependency position, Azure hosting, and SQL (local vs DEV), see [landscape.md](landscape.md).
 
 ## Identity
 
@@ -26,7 +26,7 @@ Multi-repo: one repository per application or shared concern. Unrelated products
 | --- | --- |
 | [Breeze-On/STANDARDS](https://github.com/Breeze-On/STANDARDS) | Org standards (`docs/`) and current architecture (`architecture/`) |
 | [Breeze-On/.github](https://github.com/Breeze-On/.github) | Organization profile README (`profile/README.md`) |
-| [Breeze-On/SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | ADM — administration application (DV hosted on Azure App Service + Azure SQL) |
+| [Breeze-On/SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | ADM — administration application (DEV hosted on Azure App Service + Azure SQL) |
 | [Breeze-On/SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | Shared UI library (`BreezeOn.UI`) and local component gallery |
 
 ## Governance

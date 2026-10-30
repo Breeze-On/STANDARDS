@@ -32,7 +32,7 @@ Current-reality only. For org identity and the repository table, see [ecosystem.
 | --- | --- | --- |
 | [STANDARDS](https://github.com/Breeze-On/STANDARDS) | Org standards | Conventions, current architecture descriptions, ADRs |
 | [.github](https://github.com/Breeze-On/.github) | Org profile | Vision / mission / ecosystem messaging only |
-| [SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | Application | ADM Blazor app, Identity, business schema, local SQL sandbox, DV deploy |
+| [SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | Application | ADM Blazor app, Identity, business schema, local SQL sandbox, DEV deploy |
 | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | Shared library | `BreezeOn.UI` (`Bo*`) + local component gallery |
 
 **Boundary rules in force today**
@@ -68,37 +68,39 @@ Public UI contract: **`BreezeOn.UI`** in `SYSTEM-SHARED-UI` ([ADR-004](../decisi
 
 UI conventions: [`docs/ui/overview.md`](../docs/ui/overview.md).
 
-## Azure hosting (implemented — ADM DV)
+## Azure hosting (implemented — DEV)
 
-Only ADM has hosted DV infrastructure documented today.
+Hosted **DEV** infrastructure documented today (GitHub Environment name: **`DEV`**).
 
 ```text
-  GitHub Actions (manual DV deploy)
+  GitHub Actions (manual DEV deploy)
            |
-           v
-  Azure App Service
-  breezeon-system-admin-adm-dv
-  (Linux, Free F1, .NET 10)
-  plan: asp-breezeon-dev
-  RG: RG-BREEZEON-DEV
+           +---> ADM App Service
+           |     breezeon-system-admin-adm-dv
+           |     (Linux, Free F1, .NET 10)
+           |     plan: asp-breezeon-dev
+           |     RG: RG-BREEZEON-DEV
+           |            |
+           |            | Managed Identity
+           |            v
+           |     Azure SQL BreezeOnDV
            |
-           | Managed Identity
-           v
-  Azure SQL
-  sql-breezeon-dev.database.windows.net
-  database: BreezeOnDV
+           +---> Shared UI Gallery App Service
+                 breezeon-system-shared-ui-dev
+                 (Linux, .NET 10; no database)
 ```
 
 | Resource | Value |
 | --- | --- |
 | Resource group | `RG-BREEZEON-DEV` |
-| App Service | `breezeon-system-admin-adm-dv` |
-| App Service plan | `asp-breezeon-dev` |
+| ADM App Service | `breezeon-system-admin-adm-dv` |
+| Gallery App Service | `breezeon-system-shared-ui-dev` |
+| App Service plan (ADM) | `asp-breezeon-dev` |
 | Azure SQL server | `sql-breezeon-dev.database.windows.net` |
-| Azure SQL database | `BreezeOnDV` |
-| App DB auth | System-assigned Managed Identity |
+| Azure SQL database (ADM) | `BreezeOnDV` |
+| ADM App DB auth | System-assigned Managed Identity |
 
-Shared UI is **not** hosted as a production web app; it is consumed as a library (gallery is local only).
+`BreezeOn.UI` remains a library consumed by product apps; the Gallery is also hosted on DEV for shared UI smoke.
 
 Detail: [adm.md](adm.md), [environments.md](../docs/environments.md).
 
@@ -111,14 +113,14 @@ Detail: [adm.md](adm.md), [environments.md](../docs/environments.md).
   Auth: SQL sa (gitignored .env / User Secrets)
   Schema: sql/current_model/   Seed: sql/seed/ (local only)
 
-  Hosted DV (ADM)
+  Hosted DEV (ADM)
   -----------------------------------------
   Azure SQL BreezeOnDV
   App: Managed Identity
   Operators: Microsoft Entra (as documented)
 ```
 
-| Concern | Local | DV (ADM) |
+| Concern | Local | DEV (ADM) |
 | --- | --- | --- |
 | Engine | SQL Server in Docker | Azure SQL |
 | Database | `BreezeOnLocal` | `BreezeOnDV` |

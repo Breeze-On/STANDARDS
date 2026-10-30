@@ -66,7 +66,7 @@ High level only. Detail: [`architecture/landscape.md`](../../architecture/landsc
 | --- | --- | --- |
 | Governance SSOT | `STANDARDS` | Docs, architecture descriptions, ADRs |
 | Shared UI | `SYSTEM-SHARED-UI` | `BreezeOn.UI` + Gallery |
-| Application | `SYSTEM-ADMIN-ADM` | ADM product, SYSADM SQL, DV deploy |
+| Application | `SYSTEM-ADMIN-ADM` | ADM product, SYSADM SQL, DEV deploy |
 
 **Dependency direction (must preserve):**
 

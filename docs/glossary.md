@@ -28,7 +28,7 @@ Related:
 
 ## Application
 
-A purpose-built product repository that hosts a runnable Breeze On app (today: ADM pattern — Blazor Web App, Identity when used, optional SQL ownership and DV hosting). Distinct from a shared library or the STANDARDS repo.
+A purpose-built product repository that hosts a runnable Breeze On app (today: ADM pattern — Blazor Web App, Identity when used, optional SQL ownership and DEV hosting). Distinct from a shared library or the STANDARDS repo.
 
 Related:
 - [application-model.md](application-model.md)
@@ -105,13 +105,27 @@ Related:
 - [ui/controls/forms.md](ui/controls/forms.md)
 - [domain-modeling.md](domain-modeling.md)
 
-## DV Environment
+## DEV Environment
 
-Hosted development environment (DV = Development hosted). For ADM today: Azure App Service + Azure SQL (`BreezeOnDV`), Managed Identity for the app. Local seed scripts must not be applied to DV / PP / PR by default.
+Hosted development environment (**DEV**). GitHub Environment name: `DEV`. For ADM today: Azure App Service + Azure SQL (`BreezeOnDV` physical database name), Managed Identity for the app. Local seed scripts must not be applied to DEV / UAT / PRD by default. Legacy docs may have said DV / PP / PR — use DEV / UAT / PRD going forward.
 
 Related:
 - [environments.md](environments.md)
 - [architecture/adm.md](../architecture/adm.md)
+
+## UAT Environment
+
+Hosted user-acceptance / pre-production label (**UAT**). GitHub Environment name: `UAT`. Reserved in seed/governance language; separate UAT Azure resources are not documented as implemented yet.
+
+Related:
+- [environments.md](environments.md)
+
+## PRD Environment
+
+Hosted production label (**PRD**). GitHub Environment name: `PRD`. Reserved in seed/governance language; separate PRD Azure resources are not documented as implemented yet.
+
+Related:
+- [environments.md](environments.md)
 
 ## Local Environment
 

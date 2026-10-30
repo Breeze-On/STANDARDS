@@ -8,12 +8,18 @@ Current Reality Only: details below match what is implemented or already defined
 
 ## Summary
 
-| Name | Role | Implemented hosting (ADM) |
+| Name | Role | Implemented hosting (today) |
 | --- | --- | --- |
 | **Local** | Developer / agent sandbox | SQL Server Docker on the workstation |
-| **DV** | Hosted development | Azure App Service + Azure SQL (`BreezeOnDV`) |
+| **DEV** | Hosted development | Azure App Service + Azure SQL (ADM / Shared UI Gallery as documented) |
+| **UAT** | User acceptance / pre-production | Label reserved for hosted UAT; no separate UAT resources documented as implemented yet |
+| **PRD** | Production | Label reserved for hosted production; no separate PRD resources documented as implemented yet |
 
-Scripts and docs also name **PP** and **PR** alongside **DV** when listing hosted Azure SQL environments that must **not** receive local `sql/seed/` by default ([database.md](database.md), [local-database.md](local-database.md)). Those labels are part of existing seed/governance language; this file does not invent separate hosted resources beyond what architecture docs already describe for DV.
+**GitHub Environment names** for deploy workflows must be **`DEV`**, **`UAT`**, and **`PRD`** (exact spelling). Do not use legacy labels `DV` / `PP` / `PR` for new Environments or new docs.
+
+Azure **resource** names may still contain older suffixes (e.g. App Service `…-dv`, database `BreezeOnDV`). Document the **environment** as DEV/UAT/PRD and list the physical Azure names as they exist.
+
+Scripts and docs name **DEV**, **UAT**, and **PRD** when listing hosted Azure SQL environments that must **not** receive local `sql/seed/` by default ([database.md](database.md), [local-database.md](local-database.md)).
 
 ---
 
@@ -32,29 +38,50 @@ Org pattern: [local-database.md](local-database.md). Decision context: [ADR-003]
 
 ---
 
-## DV
+## DEV
 
 | | |
 | --- | --- |
-| **Name** | DV (Development hosted) |
-| **Purpose** | Shared hosted development instance of ADM |
-| **Hosting model** | Azure App Service Linux Free F1 (`breezeon-system-admin-adm-dv`), resource group `RG-BREEZEON-DEV`, stack `DOTNETCORE\|10.0` |
-| **Authentication model** | ASP.NET Core Identity for end users; App Service → Azure SQL via **system-assigned Managed Identity**; operators may use Entra Default for scripts |
-| **Database model** | Azure SQL `sql-breezeon-dev.database.windows.net` / database `BreezeOnDV`; Identity `AspNet*` via EF; business schema under `SYSADM` |
-| **Intended usage** | Deployed ADM for DV smoke and shared hosted development; CI via GitHub Environment `DV` |
+| **Name** | DEV (hosted development) |
+| **Purpose** | Shared hosted development instance |
+| **Hosting model (ADM)** | Azure App Service Linux Free F1 (`breezeon-system-admin-adm-dv`), resource group `RG-BREEZEON-DEV`, stack `DOTNETCORE\|10.0` |
+| **Hosting model (Shared UI Gallery)** | Azure App Service Linux (`breezeon-system-shared-ui-dev`), resource group `RG-BREEZEON-DEV`, stack .NET 10 |
+| **Authentication model (ADM)** | ASP.NET Core Identity for end users; App Service → Azure SQL via **system-assigned Managed Identity**; operators may use Entra Default for scripts |
+| **Database model (ADM)** | Azure SQL `sql-breezeon-dev.database.windows.net` / database `BreezeOnDV`; Identity `AspNet*` via EF; business schema under `SYSADM` |
+| **Intended usage** | Deployed smoke and shared hosted development; CI via GitHub Environment **`DEV`** |
 
-Details: [architecture/adm.md](../architecture/adm.md), [architecture/security.md](../architecture/security.md).
+Details: [architecture/adm.md](../architecture/adm.md), [architecture/security.md](../architecture/security.md), [architecture/landscape.md](../architecture/landscape.md).
 
 ---
 
-## Hosted seed rule (DV / PP / PR)
+## UAT
 
-Local `sql/seed/` is for the **Local** sandbox only. Do **not** apply seed scripts to hosted Azure SQL environments named **DV**, **PP**, or **PR** by default. Product READMEs and seed READMEs already use these three labels together for that rule.
+| | |
+| --- | --- |
+| **Name** | UAT |
+| **Purpose** | User acceptance / pre-production hosted instance |
+| **Status** | Name reserved in seed/governance language; no UAT App Service / database documented as implemented yet |
+
+---
+
+## PRD
+
+| | |
+| --- | --- |
+| **Name** | PRD |
+| **Purpose** | Production hosted instance |
+| **Status** | Name reserved in seed/governance language; no PRD App Service / database documented as implemented yet |
+
+---
+
+## Hosted seed rule (DEV / UAT / PRD)
+
+Local `sql/seed/` is for the **Local** sandbox only. Do **not** apply seed scripts to hosted Azure SQL environments named **DEV**, **UAT**, or **PRD** by default. Product READMEs and seed READMEs use these three labels together for that rule.
 
 ---
 
 ## Product documentation
 
 - Describe environment-specific URLs, connection settings, and workflows in the **product** README / README_AI.
-- Use this document for shared meaning of Local vs hosted DV and for the hosted seed-exclusion labels.
+- Use this document for shared meaning of Local vs hosted **DEV** / **UAT** / **PRD** and for the hosted seed-exclusion labels.
 - Do not duplicate full environment matrices in every product README.

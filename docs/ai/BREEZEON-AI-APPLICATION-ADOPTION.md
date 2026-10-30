@@ -33,7 +33,7 @@ Success criterion for adoption: a separate application runs on Interactive Serve
 7. **Home:** `BoNavHub` + one `BoNavCardStyleHyperlink` per destination; `ShowFooter` false on Home.
 8. **Titles:** Per-route localized `BoAppHeader` `AppTitle` / `Subtitle` (empty subtitle omits dash).
 9. **App resources:** Own `.resx` + locale-aware localizer; subscribe to `IBoLocaleService.Changed`.
-10. **CI:** If ProjectReference is used, checkout Shared UI as a sibling (ADM DV workflow pattern).
+10. **CI:** If ProjectReference is used, checkout Shared UI as a sibling (ADM DEV workflow pattern).
 11. **Docs:** Update product README / README_AI and STANDARDS architecture when the app becomes a Shared UI consumer.
 
 Page construction checklist: [`docs/ui/page-development.md`](../ui/page-development.md).
@@ -53,7 +53,7 @@ Page construction checklist: [`docs/ui/page-development.md`](../ui/page-developm
 | Brand | `wwwroot/brand/home-hero.svg` |
 | Resources | `Resources/AdmResources.resx` (+ `.fr`), `IAdmLocalizer` |
 | Styles | `wwwroot/app.css` — height/overflow + Calibri / tokens; strip template chrome |
-| Deploy | `.github/workflows/deploy-dv.yml` — sibling Shared UI checkout |
+| Deploy | `.github/workflows/deploy-dev.yml` — GitHub Environment `DEV`; sibling Shared UI checkout |
 
 Remove when adopting cleanly: default Blazor sidebar/`NavMenu`, Bootstrap-first chrome, Identity Account tree (if not required), any `[Authorize]` that blocks shell validation.
 

@@ -8,7 +8,7 @@ Defines what constitutes a **standard Breeze On application** based on patterns 
 
 | Kind | Example repository | Notes |
 | --- | --- | --- |
-| Application | [SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | Blazor Web App, SQL ownership, DV hosting, `scripts/dev-*.ps1` |
+| Application | [SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | Blazor Web App, SQL ownership, DEV hosting, `scripts/dev-*.ps1` |
 | Shared library | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | RCL + gallery; no business DB |
 | Org standards | [STANDARDS](https://github.com/Breeze-On/STANDARDS) | Not an application |
 
@@ -59,8 +59,8 @@ For the Shared UI gallery: same script names; no database — scripts build and 
 
 As implemented for ADM:
 
-- Hosted DV on Azure App Service (Linux Free F1, .NET 10 stack) with Azure SQL and Managed Identity.
-- GitHub Actions deploy workflow and GitHub Environment secrets as documented in the ADM README.
+- Hosted DEV on Azure App Service (Linux Free F1, .NET 10 stack) with Azure SQL and Managed Identity.
+- GitHub Actions deploy workflow and GitHub Environment **`DEV`** secrets as documented in the ADM README.
 - Environment naming and meaning: [environments.md](environments.md).
 
 Shared UI is not separately hosted as a production web app; it is consumed as a library.

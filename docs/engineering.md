@@ -35,7 +35,7 @@ Applications that own schema must keep `sql/current_model/` and `docs/db-model.m
 ## Application shape and environments
 
 - What a Breeze On application repository includes: [application-model.md](application-model.md).
-- Environment names (Local, DV) and hosted seed labels: [environments.md](environments.md).
+- Environment names (Local, DEV, UAT, PRD) and hosted seed labels: [environments.md](environments.md).
 - Significant architectural decisions: [adr.md](adr.md) and [`decisions/`](../decisions/).
 
 ## Documentation

@@ -13,6 +13,6 @@ Use **Blazor Web App** with **Interactive Server** as the standard UI hosting/in
 ## Consequences
 
 - Product pages run on the server with SignalR circuits; full server .NET APIs and Identity cookie flows remain straightforward.
-- Hosted apps require an always-on ASP.NET Core process (e.g. Azure App Service for ADM DV).
+- Hosted apps require an always-on ASP.NET Core process (e.g. Azure App Service for ADM DEV).
 - The Shared UI gallery uses the same Interactive Server pattern for local preview without a database.
 - Product apps should not adopt a different Blazor hosting model without an ADR update or supersession.

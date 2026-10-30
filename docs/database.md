@@ -66,7 +66,7 @@ Every application that owns business tables must keep a **local-ready** seed so 
 
 - Sample/fake data for **local Docker SQL** only.
 - Not the schema source of truth; keep scripts **idempotent** when practical.
-- Do **not** apply to hosted DV / PP / PR by default.
+- Do **not** apply to hosted DEV / UAT / PRD by default.
 - **Keep in sync:** when `sql/current_model/` or `docs/db-model.md` changes, update `sql/seed/` in the **same change set** so local testing still works.
 - Ship a seed script (e.g. `scripts/local-db-seed.ps1`) and document it in the app README / README_AI.
 - Local sandbox workflow: [local-database.md](local-database.md).

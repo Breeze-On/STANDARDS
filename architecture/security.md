@@ -29,7 +29,7 @@ End-user authentication and authorization will be introduced in a future milesto
 
 Local SQL passwords must never be committed or used against Azure SQL. See [local-database.md](../docs/local-database.md).
 
-## Azure SQL access (DV)
+## Azure SQL access (DEV)
 
 | Principal | How |
 | --- | --- |
