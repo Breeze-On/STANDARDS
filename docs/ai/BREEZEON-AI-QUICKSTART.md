@@ -20,7 +20,7 @@ One ecosystem, multiple specialized applications, shared platform capability wit
 ### Goals
 
 - Encode clear objectives in each product (not generic toolkits).
-- Share foundations (UI contract, environments, documentation, ADRs) across apps.
+- Share foundations (UI contract, environments, hosted deployment, documentation, ADRs) across apps.
 - Keep docs and code synchronized with **what exists today**.
 
 ### Architectural philosophy
@@ -66,7 +66,7 @@ High level only. Detail: [`architecture/landscape.md`](../../architecture/landsc
 | --- | --- | --- |
 | Governance SSOT | `STANDARDS` | Docs, architecture descriptions, ADRs |
 | Shared UI | `SYSTEM-SHARED-UI` | `BreezeOn.UI` + Gallery |
-| Application | `SYSTEM-ADMIN-ADM` | ADM product, SYSADM SQL, DEV deploy |
+| Application | `SYSTEM-ADMIN-ADM` | ADM product, SYSADM SQL, DEV deploy metadata (procedures → STANDARDS) |
 
 **Dependency direction (must preserve):**
 
@@ -156,6 +156,7 @@ Autonomous local verification: `.\scripts\dev-reset.ps1` (requires `.env` from `
 - Duplicate shell, home hub, form chrome, or tokens already in `BreezeOn.UI`
 - Hardcode user-visible strings or reuse Gallery `BoUi` as another app’s glossary
 - Ignore accepted ADRs or invent conflicting hosting/UI stacks
+- Duplicate hosted deploy procedures into product repos (use [`hosted-deployment.md`](../hosted-deployment.md))
 - Leave documentation stale after changing behavior, setup, schema, or architecture
 - Document planned/future work as if it were current reality
 - Point routine Development at Azure SQL when local Docker SQL is the org pattern
@@ -181,6 +182,8 @@ Autonomous local verification: `.\scripts\dev-reset.ps1` (requires `.env` from `
 | Shell / nav | [`docs/ui/shell/shell.md`](../ui/shell/shell.md), [`navigation.md`](../ui/shell/navigation.md) |
 | i18n | [`docs/ui/foundations/i18n.md`](../ui/foundations/i18n.md) |
 | Local scripts | [`docs/local-development-scripts.md`](../local-development-scripts.md) |
+| Environments | [`docs/environments.md`](../environments.md) |
+| Hosted deployment | [`docs/hosted-deployment.md`](../hosted-deployment.md) |
 | ADR index | [`decisions/README.md`](../../decisions/README.md) |
 | ADR-002 / ADR-004 | Blazor Interactive Server · BreezeOn.UI abstraction |
 | Shared UI agents | [SYSTEM-SHARED-UI `README_AI.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README_AI.md) |

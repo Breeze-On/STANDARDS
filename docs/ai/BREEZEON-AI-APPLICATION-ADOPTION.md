@@ -53,7 +53,7 @@ Page construction checklist: [`docs/ui/page-development.md`](../ui/page-developm
 | Brand | `wwwroot/brand/home-hero.svg` |
 | Resources | `Resources/AdmResources.resx` (+ `.fr`), `IAdmLocalizer` |
 | Styles | `wwwroot/app.css` — height/overflow + Calibri / tokens; strip template chrome |
-| Deploy | `.github/workflows/deploy-dev.yml` — GitHub Environment `DEV`; sibling Shared UI checkout |
+| Deploy | `.github/workflows/deploy-dev.yml` — product metadata + sibling Shared UI checkout; procedures: [hosted-deployment.md](../hosted-deployment.md) |
 
 Remove when adopting cleanly: default Blazor sidebar/`NavMenu`, Bootstrap-first chrome, Identity Account tree (if not required), any `[Authorize]` that blocks shell validation.
 

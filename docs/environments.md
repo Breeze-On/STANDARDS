@@ -19,6 +19,8 @@ Current Reality Only: details below match what is implemented or already defined
 
 Azure **resource** names may still contain older suffixes (e.g. App Service `…-dv`, database `BreezeOnDV`). Document the **environment** as DEV/UAT/PRD and list the physical Azure names as they exist.
 
+**Hosted deploy procedures** (App Service stack, publish profile, GitHub secrets, workflows): [hosted-deployment.md](hosted-deployment.md) — not redefined in product repositories.
+
 Scripts and docs name **DEV**, **UAT**, and **PRD** when listing hosted Azure SQL environments that must **not** receive local `sql/seed/` by default ([database.md](database.md), [local-database.md](local-database.md)).
 
 ---
@@ -82,6 +84,7 @@ Local `sql/seed/` is for the **Local** sandbox only. Do **not** apply seed scrip
 
 ## Product documentation
 
-- Describe environment-specific URLs, connection settings, and workflows in the **product** README / README_AI.
+- Describe environment-specific URLs, connection settings, and **product deploy metadata** (App Service name, resource group) in the **product** README / README_AI.
 - Use this document for shared meaning of Local vs hosted **DEV** / **UAT** / **PRD** and for the hosted seed-exclusion labels.
+- Use [hosted-deployment.md](hosted-deployment.md) for deploy procedures and conventions; do not duplicate them in product repos.
 - Do not duplicate full environment matrices in every product README.

@@ -68,8 +68,9 @@ This guidance is **advisory and pragmatic**. It does **not** create mandatory re
 | `docs/` | Standards and governance (how we work); glossary: [`glossary.md`](glossary.md) |
 | `docs/ai/` | AI onboarding path (mandatory quickstart first); index: [`ai/README.md`](ai/README.md) |
 | `docs/local-development-scripts.md` | Org Local Development Script Standard (`dev-reset.ps1` only) |
+| `docs/hosted-deployment.md` | Canonical hosted deploy standard (App Service, publish profile, GitHub Environments) |
 | `docs/ui/` | Hierarchical UI standards (entry: [`ui/overview.md`](ui/overview.md); page checklist: [`ui/page-development.md`](ui/page-development.md)); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
-| `runbooks/` | Operational procedures (sparse today); index: [`../runbooks/README.md`](../runbooks/README.md) |
+| `runbooks/` | Operational procedures (sparse today); index: [`../runbooks/README.md`](../runbooks/README.md) — deploy **standard** lives in `hosted-deployment.md` |
 | `architecture/` | Descriptions of systems that exist now (what exists); landscape map: [`../architecture/landscape.md`](../architecture/landscape.md) |
 | `decisions/` | Architecture Decision Records (why decisions were made); index with Category / Impact Area: [`../decisions/README.md`](../decisions/README.md) |
 

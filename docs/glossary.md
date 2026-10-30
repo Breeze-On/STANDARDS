@@ -111,6 +111,7 @@ Hosted development environment (**DEV**). GitHub Environment name: `DEV`. For AD
 
 Related:
 - [environments.md](environments.md)
+- [hosted-deployment.md](hosted-deployment.md)
 - [architecture/adm.md](../architecture/adm.md)
 
 ## UAT Environment
@@ -119,6 +120,7 @@ Hosted user-acceptance / pre-production label (**UAT**). GitHub Environment name
 
 Related:
 - [environments.md](environments.md)
+- [hosted-deployment.md](hosted-deployment.md)
 
 ## PRD Environment
 
@@ -126,6 +128,7 @@ Hosted production label (**PRD**). GitHub Environment name: `PRD`. Reserved in s
 
 Related:
 - [environments.md](environments.md)
+- [hosted-deployment.md](hosted-deployment.md)
 
 ## Local Environment
 

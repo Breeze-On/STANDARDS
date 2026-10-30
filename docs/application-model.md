@@ -57,13 +57,17 @@ For the Shared UI gallery: same script names; no database — scripts build and 
 
 ## Deployment expectations
 
-As implemented for ADM:
+Org deploy standard (procedures, secrets, workflow conventions, App Service stack): **[hosted-deployment.md](hosted-deployment.md)**.
 
-- Hosted DEV on Azure App Service (Linux Free F1, .NET 10 stack) with Azure SQL and Managed Identity.
-- GitHub Actions deploy workflow and GitHub Environment **`DEV`** secrets as documented in the ADM README.
+Product repositories must **not** become the source of truth for deployment procedures. They document only product-specific metadata (App Service name, resource group, URL, workflow path, sibling-checkout notes) and link to that standard.
+
+As implemented today:
+
+- Hosted **DEV** on Azure App Service (Linux, .NET 10) for ADM and the Shared UI Gallery; ADM also uses Azure SQL with Managed Identity.
+- Manual `workflow_dispatch` via `.github/workflows/deploy-dev.yml` and GitHub Environment **`DEV`**.
 - Environment naming and meaning: [environments.md](environments.md).
 
-Shared UI is not separately hosted as a production web app; it is consumed as a library.
+`BreezeOn.UI` is consumed as a library; the Gallery host may be deployed separately for smoke/demo.
 
 ## Database ownership expectations
 

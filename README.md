@@ -115,6 +115,7 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [Local database](docs/local-database.md) | SQL Server Docker sandbox for local development |
 | [Local development scripts](docs/local-development-scripts.md) | Single entry: `dev-reset.ps1`; secrets via `.env` |
 | [Environments](docs/environments.md) | Local, DEV, UAT, PRD; hosted seed labels; GitHub Environment names |
+| [Hosted deployment](docs/hosted-deployment.md) | App Service deploy standard; publish profile; GitHub Environment secrets; workflow convention |
 | [Application model](docs/application-model.md) | What constitutes a Breeze On application (current patterns) |
 | [UI standards](docs/ui/overview.md) | Shared UI conventions (`docs/ui/` hierarchical tree) |
 | [Domain modeling](docs/domain-modeling.md) | Placeholder — not yet formally defined |
