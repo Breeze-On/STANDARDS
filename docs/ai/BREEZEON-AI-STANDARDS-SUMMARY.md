@@ -17,6 +17,7 @@ Concise map of org standards for AI agents. **SSOT remains the linked documents*
 | What exists | Describe implemented systems only | [`architecture/`](../../architecture/), [landscape.md](../../architecture/landscape.md) |
 | App shape | Expected application repo contents | [application-model.md](../application-model.md) |
 | Environments | Org environment vocabulary | [environments.md](../environments.md) |
+| Hosted deployment | App Service / publish profile / GitHub Environment deploy standard | [hosted-deployment.md](../hosted-deployment.md) |
 
 Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.md](../../decisions/README.md)).
 
