@@ -92,6 +92,7 @@ Product-specific App Service names and resource groups are listed in product REA
 | Secret name | Where | Value |
 | --- | --- | --- |
 | **`AZURE_WEBAPP_PUBLISH_PROFILE`** | GitHub Environment (`DEV` today; `UAT` / `PRD` when used) | Full Azure App Service **publish profile** XML |
+| **`SHARED_UI_CHECKOUT_TOKEN`** | GitHub Environment (same as above), **when** the workflow checks out private `SYSTEM-SHARED-UI` | Fine-grained PAT (or GitHub App installation token) with **Contents: Read** on `Breeze-On/SYSTEM-SHARED-UI`. Pass as `token:` on that `actions/checkout` step. Default `GITHUB_TOKEN` cannot read other private repos (API returns **Not Found**). |
 
 ### Obtaining the publish profile (manual, once per App Service / Environment)
 
@@ -115,7 +116,7 @@ Do not commit publish profiles to git. Do not document alternate secret names in
 | Deploy action | `azure/webapps-deploy` (or current org-approved equivalent) using `publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}` |
 | Display name | Workflow `name:` should read clearly as **Deploy DEV** (or Deploy UAT / Deploy PRD) |
 
-Product workflows may include app-specific steps (e.g. checkout a sibling Shared UI repo for `ProjectReference` restore). Those steps are **product metadata**, not a second copy of this standard.
+Product workflows may include app-specific steps (e.g. checkout a sibling Shared UI repo for `ProjectReference` restore). Which repos/paths to check out are **product metadata**; the **`SHARED_UI_CHECKOUT_TOKEN`** secret name and private-repo token requirement above are part of this standard when that checkout is used.
 
 ---
 
