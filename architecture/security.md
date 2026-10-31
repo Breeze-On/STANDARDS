@@ -38,10 +38,27 @@ Local SQL passwords must never be committed or used against Azure SQL. See [loca
 
 Connection strings do not embed SQL passwords for the hosted app. Do not commit production secrets.
 
+### Connection string name
+
+| Setting | Value |
+| --- | --- |
+| Config key | **`SQLAzureConnection`** (`ConnectionStrings:SQLAzureConnection`) |
+| App Service | Environment variables → **Connection strings** → name `SQLAzureConnection`, type SQLAzure |
+| Hosted value shape | `Server=tcp:<sql-server>.database.windows.net,1433;Initial Catalog=<database>;Authentication=Active Directory Managed Identity;Encrypt=True;TrustServerCertificate=False;` |
+| Repo | Empty in `appsettings.json`; local Docker value in `appsettings.Development.json` under the same key |
+
+Deploy procedure: [hosted-deployment.md](../docs/hosted-deployment.md) § Hosted database connection.
+
+### Grant App Service Managed Identity (SQL)
+
+Run as an Azure SQL Entra admin against the **target database**. SQL user name must match the App Service name. Template: [`templates/azure-sql/grant-app-service-mi.sql`](../templates/azure-sql/grant-app-service-mi.sql).
+
+Roles granted today: `db_datareader`, `db_datawriter`, `db_ddladmin`.
+
 ## Secrets and local data
 
 - Do not commit credentials or production secrets (including `.env`).
-- App Service stores `DefaultConnection` as a connection string setting (Managed Identity auth).
+- App Service stores **`SQLAzureConnection`** as a connection string setting (Managed Identity auth).
 - Local Development defaults to Docker SQL with password substitution (`__FROM_ENV__` → `LocalSql:SaPassword` or `MSSQL_SA_PASSWORD`).
 
 ## Scope note

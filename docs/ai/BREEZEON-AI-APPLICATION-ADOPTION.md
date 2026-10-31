@@ -34,7 +34,8 @@ Success criterion for adoption: a separate application runs on Interactive Serve
 8. **Titles:** Per-route localized `BoAppHeader` `AppTitle` / `Subtitle` (empty subtitle omits dash).
 9. **App resources:** Own `.resx` + locale-aware localizer; subscribe to `IBoLocaleService.Changed`.
 10. **CI:** If ProjectReference is used, checkout Shared UI as a sibling (EAC DEV workflow pattern).
-11. **Docs:** Update product README / README_AI and STANDARDS architecture when the app becomes a Shared UI consumer.
+11. **Hosted SQL (data-owning apps):** Connection string key **`SQLAzureConnection`** (empty in repo `appsettings.json`); App Service Environment variables → Connection strings + system-assigned MI; grant via [`templates/azure-sql/`](../../templates/azure-sql/). Procedure: [hosted-deployment.md](../hosted-deployment.md).
+12. **Docs:** Update product README / README_AI and STANDARDS architecture when the app becomes a Shared UI consumer.
 
 Page construction checklist: [`docs/ui/page-development.md`](../ui/page-development.md).
 
@@ -84,8 +85,9 @@ Remove when adopting cleanly: default Blazor sidebar/`NavMenu`, Bootstrap-first 
 6. Define IA: Home hub cards + left nav routes (URL = page name)
 7. Ship empty or thin destination pages inside BoAppShell
 8. Provide `scripts/dev-reset.ps1` + `.env.example` and document Local Development in README (org [local-development-scripts](../local-development-scripts.md) standard — no `dev-up` / `dev-down`)
-9. Update product README_AI + STANDARDS architecture/landscape in the same change set
-10. Verify: `.\scripts\dev-reset.ps1`, theme/locale switch, nav + Home cards — no Fluent imports in product pages
+9. If the app owns Azure SQL: enable App Service MI, set `SQLAzureConnection`, run [`templates/azure-sql/grant-app-service-mi.sql`](../../templates/azure-sql/grant-app-service-mi.sql)
+10. Update product README_AI + STANDARDS architecture/landscape in the same change set
+11. Verify: `.\scripts\dev-reset.ps1`, theme/locale switch, nav + Home cards — no Fluent imports in product pages
 ```
 
 Do **not** invent a second design system. Extend `BreezeOn.UI` (with Gallery + STANDARDS UI docs) when a shared control is missing. Do **not** invent a custom local startup workflow — reuse `dev-reset.ps1`.

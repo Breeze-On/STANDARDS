@@ -29,8 +29,10 @@ Current Reality Only: documents the **approved implementation in use today**. Fu
 **Out of scope**
 
 - Local development (`dev-reset.ps1`, Docker SQL) — see [local-development-scripts.md](local-development-scripts.md), [local-database.md](local-database.md)
-- Application data model, Managed Identity SQL grants, Identity auth — see [architecture/](../architecture/) and product `docs/`
+- Application data model and end-user Identity auth — see [architecture/](../architecture/) and product `docs/`
 - UAT / PRD Azure resource inventories (those hosts are not documented as implemented yet) — naming pattern only
+
+**In this document for data-owning apps:** App Service connection string name **`SQLAzureConnection`** and how to set it. SQL Managed Identity **grant script** lives under [`templates/azure-sql/`](../templates/azure-sql/); access model: [architecture/security.md](../architecture/security.md).
 
 ---
 
@@ -103,6 +105,21 @@ Product-specific App Service names and resource groups are listed in product REA
 5. In GitHub → repository → **Settings** → **Environments** → **`DEV`** (or UAT/PRD), create or update secret **`AZURE_WEBAPP_PUBLISH_PROFILE`** with the full XML contents.
 
 Do not commit publish profiles to git. Do not document alternate secret names in product repos.
+
+---
+
+## Hosted database connection (data-owning apps)
+
+Repo `appsettings.json` keeps **`ConnectionStrings:SQLAzureConnection`** empty. Local Docker SQL belongs in `appsettings.Development.json` under the **same key**. Hosted overrides come from Azure App Service — never commit Azure SQL connection strings.
+
+| Step | Action |
+| --- | --- |
+| 1 | Enable **system-assigned Managed Identity** on the App Service (Identity → System assigned → On). |
+| 2 | App Service → **Settings → Environment variables → Connection strings** (or `az webapp config connection-string set`). |
+| 3 | Add name **`SQLAzureConnection`**, type **SQLAzure**, value: `Server=tcp:<sql-server>.database.windows.net,1433;Initial Catalog=<database>;Authentication=Active Directory Managed Identity;Encrypt=True;TrustServerCertificate=False;` |
+| 4 | Grant the App Service MI as a SQL user (name = App Service name) — template [`templates/azure-sql/grant-app-service-mi.sql`](../templates/azure-sql/grant-app-service-mi.sql). |
+
+Equivalent app setting name: `ConnectionStrings__SQLAzureConnection`. Apps without a business database skip this section. Full access model: [architecture/security.md](../architecture/security.md). Environment suffixes: [naming.md](naming.md).
 
 ---
 
