@@ -116,7 +116,7 @@ Related:
 
 ## DEV Environment
 
-Hosted development environment (**DEV**). GitHub Environment name: `DEV`. For EAC today: Azure App Service + Azure SQL (`BreezeOnDV` physical database name), Managed Identity for the app. Local seed scripts must not be applied to DEV / UAT / PRD by default. Legacy docs may have said DV / PP / PR — use DEV / UAT / PRD going forward.
+Hosted development environment (**DEV**). GitHub Environment name: `DEV`. Azure resource token: **`dev`** (not `dv`). For EAC today: App Service `breezeon-system-admin-eac-dev` + Azure SQL (`BreezeOnDV` is a legacy physical DB name), Managed Identity for the app. Local seed scripts must not be applied to DEV / UAT / PRD by default. Labels and suffixes: [naming.md](naming.md) § Environments.
 
 Related:
 - [environments.md](environments.md)
@@ -125,7 +125,7 @@ Related:
 
 ## UAT Environment
 
-Hosted user-acceptance / pre-production label (**UAT**). GitHub Environment name: `UAT`. Reserved in seed/governance language; separate UAT Azure resources are not documented as implemented yet.
+Hosted user-acceptance / pre-production label (**UAT**). GitHub Environment name: `UAT`. Azure resource token: **`uat`**. Reserved in seed/governance language; separate UAT Azure resources are not documented as implemented yet.
 
 Related:
 - [environments.md](environments.md)
@@ -133,7 +133,7 @@ Related:
 
 ## PRD Environment
 
-Hosted production label (**PRD**). GitHub Environment name: `PRD`. Reserved in seed/governance language; separate PRD Azure resources are not documented as implemented yet.
+Hosted production label (**PRD**). GitHub Environment name: `PRD`. Azure resource token: **`prd`**. Reserved in seed/governance language; separate PRD Azure resources are not documented as implemented yet.
 
 Related:
 - [environments.md](environments.md)

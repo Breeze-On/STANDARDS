@@ -17,7 +17,7 @@ Current Reality Only: details below match what is implemented or already defined
 
 **GitHub Environment names** for deploy workflows must be **`DEV`**, **`UAT`**, and **`PRD`** (exact spelling). Do not use legacy labels `DV` / `PP` / `PR` for new Environments or new docs.
 
-Azure **resource** names may still contain older suffixes (e.g. App Service `…-dv`, database `BreezeOnDV`). Document the **environment** as DEV/UAT/PRD and list the physical Azure names as they exist.
+Azure **resource** environment tokens must be lowercase **`dev`**, **`uat`**, and **`prd`** (for example App Service `…-dev`, never `…-dv`). Full naming table: [naming.md](naming.md) § Environments. List physical names as they exist today in architecture / product docs; legacy tokens such as database `BreezeOnDV` are current-reality exceptions until renamed — do not use them as the pattern for new resources.
 
 **Hosted deploy procedures** (App Service stack, publish profile, GitHub secrets, workflows): [hosted-deployment.md](hosted-deployment.md) — not redefined in product repositories.
 
@@ -49,7 +49,7 @@ Org pattern: [local-database.md](local-database.md). Decision context: [ADR-003]
 | **Hosting model (EAC)** | Azure App Service Linux Free F1 (`breezeon-system-admin-eac-dev`), resource group `RG-BREEZEON-DEV`, stack `DOTNETCORE\|10.0` |
 | **Hosting model (Shared UI Gallery)** | Azure App Service Linux (`breezeon-system-shared-ui-dev`), resource group `RG-BREEZEON-DEV`, stack .NET 10 |
 | **Authentication model (EAC)** | Auth not implemented for end users; App Service → Azure SQL via **system-assigned Managed Identity**; operators may use Entra Default for scripts |
-| **Database model (EAC)** | Azure SQL `sql-breezeon-dev.database.windows.net` / database `BreezeOnDV`; no `AspNet*` tables; business schema under `System` |
+| **Database model (EAC)** | Azure SQL `sql-breezeon-dev.database.windows.net` / database `BreezeOnDV` (legacy physical name; new DBs should use `{Logical}Dev` / `Uat` / `Prd` per [naming.md](naming.md)); no `AspNet*` tables; business schema under `System` |
 | **Intended usage** | Deployed smoke and shared hosted development; CI via GitHub Environment **`DEV`** |
 
 Details: [architecture/eac.md](../architecture/eac.md), [architecture/security.md](../architecture/security.md), [architecture/landscape.md](../architecture/landscape.md).

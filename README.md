@@ -111,12 +111,12 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [Documentation](docs/documentation.md) | Current-reality rules; ownership metadata; advisory review; README / README_AI; ADRs; update duty |
 | [Glossary](docs/glossary.md) | Shared vocabulary (current usage only) |
 | [ADR process](docs/adr.md) | When and how to write Architecture Decision Records |
-| [Naming](docs/naming.md) | Org, repos, projects, display names |
+| [Naming](docs/naming.md) | Org, repos, projects; environment labels `DEV`/`UAT`/`PRD` and Azure suffixes `dev`/`uat`/`prd` |
 | [Engineering](docs/engineering.md) | Stack and repo shape in use |
 | [Database](docs/database.md) | NVARCHAR lengths; NOT NULL rules; sql/current_model; seed; per-app `docs/db-model.md` |
 | [Local database](docs/local-database.md) | SQL Server Docker sandbox for local development |
 | [Local development scripts](docs/local-development-scripts.md) | Single entry: `dev-reset.ps1`; secrets via `.env` |
-| [Environments](docs/environments.md) | Local, DEV, UAT, PRD; hosted seed labels; GitHub Environment names |
+| [Environments](docs/environments.md) | Local, DEV, UAT, PRD; hosted seed labels; GitHub Environments; Azure `dev`/`uat`/`prd` tokens |
 | [Hosted deployment](docs/hosted-deployment.md) | App Service deploy standard; publish profile; GitHub Environment secrets; workflow convention |
 | [Application model](docs/application-model.md) | What constitutes a Breeze On application (current patterns) |
 | [UI standards](docs/ui/overview.md) | Shared UI conventions (`docs/ui/` hierarchical tree) |

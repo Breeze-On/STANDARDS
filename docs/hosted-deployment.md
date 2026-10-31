@@ -48,7 +48,7 @@ Current Reality Only: documents the **approved implementation in use today**. Fu
 
 Hosted environment **labels** and GitHub Environment **names** are **`DEV`**, **`UAT`**, and **`PRD`**. Meaning and seed rules: [environments.md](environments.md).
 
-Azure **resource** names may still use older suffixes (e.g. `…-dv`, database `BreezeOnDV`). Document the environment as DEV/UAT/PRD and list physical names as they exist in product or architecture docs.
+Azure **resource** environment tokens are always **`dev`**, **`uat`**, and **`prd`** (never `dv` / `pp` / `pr`). Naming table: [naming.md](naming.md) § Environments. List physical names as they exist in product or architecture docs; legacy names (for example database `BreezeOnDV`) are exceptions until renamed.
 
 UAT and PRD follow the **same deploy pattern** when those App Services and GitHub Environments exist. Do not invent UAT/PRD hosting inventories here until they are implemented.
 

@@ -60,7 +60,7 @@ GitHub Environment name: **`DEV`**. Physical Azure resource names below reflect 
 | --- | --- |
 | Resource group | `RG-BREEZEON-DEV` |
 | Azure SQL server | `sql-breezeon-dev.database.windows.net` |
-| Azure SQL database | `BreezeOnDV` |
+| Azure SQL database | `BreezeOnDV` (legacy physical name; convention for new DBs is `{Logical}Dev`) |
 | App Service | `breezeon-system-admin-eac-dev` (Linux Free F1) |
 | App Service plan | `asp-breezeon-dev` |
 | App Service DB auth | Managed Identity (`Authentication=Active Directory Managed Identity`) |
