@@ -54,14 +54,14 @@ Routine local runs do **not** use Azure SQL. Org pattern: [local-database.md](..
 
 ## DEV environment (current)
 
-GitHub Environment name: **`DEV`**. Physical Azure resource names below are as documented for recreate (App Service may be deleted and recreated as `breezeon-system-admin-eac-dv`).
+GitHub Environment name: **`DEV`**. Physical Azure resource names below reflect current reality.
 
 | Resource | Value |
 | --- | --- |
 | Resource group | `RG-BREEZEON-DEV` |
 | Azure SQL server | `sql-breezeon-dev.database.windows.net` |
 | Azure SQL database | `BreezeOnDV` |
-| App Service | `breezeon-system-admin-eac-dv` (Linux; recreate manually — not migrated in-place) |
+| App Service | `breezeon-system-admin-eac-dev` (Linux Free F1) |
 | App Service plan | `asp-breezeon-dev` |
 | App Service DB auth | Managed Identity (`Authentication=Active Directory Managed Identity`) |
 

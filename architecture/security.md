@@ -34,7 +34,7 @@ Local SQL passwords must never be committed or used against Azure SQL. See [loca
 | Principal | How |
 | --- | --- |
 | Operators (e.g. Entra admin) | Microsoft Entra / Azure CLI token; used for scripts and optional Entra Default overrides |
-| App Service `breezeon-system-admin-eac-dv` | System-assigned Managed Identity mapped as SQL user `breezeon-system-admin-eac-dv` with `db_datareader`, `db_datawriter`, `db_ddladmin` |
+| App Service `breezeon-system-admin-eac-dev` | System-assigned Managed Identity mapped as SQL user `breezeon-system-admin-eac-dev` with `db_datareader`, `db_datawriter`, `db_ddladmin` |
 
 Connection strings do not embed SQL passwords for the hosted app. Do not commit production secrets.
 

@@ -46,7 +46,7 @@ Org pattern: [local-database.md](local-database.md). Decision context: [ADR-003]
 | --- | --- |
 | **Name** | DEV (hosted development) |
 | **Purpose** | Shared hosted development instance |
-| **Hosting model (EAC)** | Azure App Service Linux Free F1 (`breezeon-system-admin-eac-dv`), resource group `RG-BREEZEON-DEV`, stack `DOTNETCORE\|10.0` |
+| **Hosting model (EAC)** | Azure App Service Linux Free F1 (`breezeon-system-admin-eac-dev`), resource group `RG-BREEZEON-DEV`, stack `DOTNETCORE\|10.0` |
 | **Hosting model (Shared UI Gallery)** | Azure App Service Linux (`breezeon-system-shared-ui-dev`), resource group `RG-BREEZEON-DEV`, stack .NET 10 |
 | **Authentication model (EAC)** | Auth not implemented for end users; App Service → Azure SQL via **system-assigned Managed Identity**; operators may use Entra Default for scripts |
 | **Database model (EAC)** | Azure SQL `sql-breezeon-dev.database.windows.net` / database `BreezeOnDV`; no `AspNet*` tables; business schema under `System` |

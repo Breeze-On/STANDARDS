@@ -76,7 +76,7 @@ Hosted **DEV** infrastructure documented today (GitHub Environment name: **`DEV`
   GitHub Actions (manual DEV deploy)
            |
            +---> EAC App Service
-           |     breezeon-system-admin-eac-dv
+           |     breezeon-system-admin-eac-dev
            |     (Linux, Free F1, .NET 10)
            |     plan: asp-breezeon-dev
            |     RG: RG-BREEZEON-DEV
@@ -93,7 +93,7 @@ Hosted **DEV** infrastructure documented today (GitHub Environment name: **`DEV`
 | Resource | Value |
 | --- | --- |
 | Resource group | `RG-BREEZEON-DEV` |
-| EAC App Service | `breezeon-system-admin-eac-dv` |
+| EAC App Service | `breezeon-system-admin-eac-dev` |
 | Gallery App Service | `breezeon-system-shared-ui-dev` |
 | App Service plan (EAC) | `asp-breezeon-dev` |
 | Azure SQL server | `sql-breezeon-dev.database.windows.net` |
