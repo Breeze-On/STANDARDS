@@ -35,8 +35,8 @@ Former single file [`docs/ui-components.md`](../ui-components.md) redirects here
 | Repository | [Breeze-On/SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) |
 | Package / project | `BreezeOn.UI` (`src/BreezeOn.UI`) |
 | Approach | Option B+: BreezeOn public API on top of Fluent UI Blazor (Fluent is internal) |
-| Registration | `services.AddBreezeOnUI()` |
-| Host requirements | Render `BoThemeProvider` and `BoProviders` in the app layout |
+| Registration | `services.AddBreezeOnUI()` or `AddBreezeOnUI(configureTheme)` — `configureTheme` is honored via `IOptions<BoThemeOptions>` ([tokens.md § Theme options](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
+| Host requirements | Render `BoThemeProvider` and `BoProviders` in the app layout; include `breezeon-ui.css`, the Fluent bundle CSS, and the five `bo-*.js` scripts (incl. `bo-number-field.js` for `BoNumberField`) — [page-development.md § Host integration](page-development.md#host-integration-required) |
 | Decision record | [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 
 Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not reference `Microsoft.FluentUI.AspNetCore.Components` types from product pages.
@@ -47,13 +47,13 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 | Component | Purpose | Detail |
 | --- | --- | --- |
-| Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens); dual Light/Dark palettes | [tokens.md](foundations/tokens.md), [typography.md](foundations/typography.md) |
+| Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens, warning/info/scrim, z-index, focus ring); dual Light/Dark palettes; `configureTheme` via `IOptions<BoThemeOptions>` | [tokens.md](foundations/tokens.md), [typography.md](foundations/typography.md) |
 | `IBoThemeModeService` | `ThemeMode` + active palette; cookie `bo-theme-mode` restore via `BoProviders` bootstrap | [tokens.md](foundations/tokens.md) |
 | `BoProviders` | Hosts Fluent providers, theme/locale bootstrap, dialog / toast hosts | [tokens.md](foundations/tokens.md), [i18n.md](foundations/i18n.md), [shell.md](shell/shell.md) |
-| `IBoLocaleService` | Culture + IANA timezone; cookies `bo-culture` / `bo-timezone` | [i18n.md](foundations/i18n.md) |
+| `IBoLocaleService` | Culture + IANA timezone; cookies `bo-culture` / `bo-timezone`; `FormatCulture` (en-CA / fr-CA) + `UiCulture`; no process-wide culture mutation | [i18n.md](foundations/i18n.md) |
 | `BoAppShell` | Option B app chrome: full-height nav + header / body / footer column | [shell.md](shell/shell.md) |
 | `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None | [shell.md](shell/shell.md), [tokens.md](foundations/tokens.md) |
-| `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail; bottom collapse control; prefer `IconContent` with `BoIcon` | [navigation.md](shell/navigation.md) |
+| `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail (labels visually hidden; `BoNavLink.Title` tooltip when collapsed; localized `Chrome_Aria_Nav*`); bottom collapse control; prefer `IconContent` with `BoIcon` | [navigation.md](shell/navigation.md) |
 | `BoIcon` | Public icon API (`Name`, `BoIconVariant`, `Size`); resolves Fluent System Icons internally | [navigation.md](shell/navigation.md) |
 | `BoAppHeader` | Top header card; titles + trailing actions; optional `TabsContent` / `ActionsContent` | [shell.md](shell/shell.md) |
 | `BoHeaderActions` | Theme switch + Settings + Profile cluster | [shell.md](shell/shell.md) |
@@ -71,17 +71,17 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoRow` | **Row** — equal-width field slots inside a section | [layout.md](layout/layout.md) |
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](layout/sections.md) |
 | `BoPageHeader` | Page title and description | — |
-| `BoFieldReadOnly` | Flat read-only display field (pre-formatted string `Value`; same label chrome as Text Field) | [forms.md](controls/forms.md) |
+| `BoFieldReadOnly` | Flat read-only display field (pre-formatted string `Value`; same label chrome as Text Field; `Alignment`) | [forms.md](controls/forms.md) |
 | `BoEmptyField` | Empty `BoRow` alignment slot (no label/value) | [layout.md](layout/layout.md), [forms.md](controls/forms.md) |
-| `BoTextField` | Text input (default Placeholder; deferred mandatory validation) | [forms.md](controls/forms.md) |
+| `BoTextField` | Text input (default Placeholder; `ReadOnly`; deferred mandatory validation; `ErrorText` → invalid) | [forms.md](controls/forms.md) |
 | `BoDropDownList` | Searchable Code/Description Drop-Down (`DisplayCode`, `AllowMultiple` chips, panel search) | [forms.md](controls/forms.md) |
 | `BoCheckbox` | Boolean (`Required` / `ReadOnly` Yes-No) | [forms.md](controls/forms.md) |
-| `BoDateField` | Date / DateTime UI; bound type always `DateTime?` (never `DateOnly`); locale + fixed calendar popover | [forms.md](controls/forms.md) |
-| `BoNumberField` | Number UI; bound type always `decimal?`; integer/decimals; currency/% (mutex); focus raw / blur formatted; alignment default Right | [forms.md](controls/forms.md) |
-| `BoButton` | Pill button (primary / secondary / stealth); shorter+wider padding; shadow + hover lift; optional icon | [tokens.md](foundations/tokens.md) |
+| `BoDateField` | Date / DateTime UI; bound type always `DateTime?` (never `DateOnly`); `ReadOnly`; locale (`FormatCulture`) + fixed calendar popover | [forms.md](controls/forms.md) |
+| `BoNumberField` | Number UI; bound type always `decimal?`; integer/decimals; currency/% (mutex); focus raw / blur formatted; `ReadOnly`; alignment default Right; needs host `bo-number-field.js` | [forms.md](controls/forms.md) |
+| `BoButton` | Pill button (primary / secondary / stealth); `HtmlType` (`BoButtonType`); shorter+wider padding; shadow + hover lift; optional icon | [forms.md](controls/forms.md), [tokens.md](foundations/tokens.md) |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`) | — |
 | `IBoToastService` / `BoToastHost` | Top-right toasts (Main/Body; Success / Alert / Information / Error; click dismiss) | [shell.md](shell/shell.md) |
-| `BoValidationContext` / `IBoSubmitInterceptor` | Deferred validation; `Validate(null)`; live fail badges; Field→Sub→Main→Tab failures | [forms.md](controls/forms.md) |
+| `BoValidationContext` / `IBoSubmitInterceptor` | Deferred validation; `Validate(null)` attempts all groups, `Validate(group)` only that group (`IsAttempted(group)`); live fail badges; Field→Sub→Main→Tab failures | [forms.md](controls/forms.md) |
 | `BoValidationFailBadge` | Red disc + white “!” (tabs + section headers) | [forms.md](controls/forms.md) |
 | `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell/shell.md), [i18n.md](foundations/i18n.md) |
 | `BoGrid` / `BoGridColumn` / `BoGridCache` | Section-level grid (ReadOnly / RowEdit / InlineEdit / NestedView); typed cache; frozen sort while editing; column `Align` / `Width` (Flex default); Nested View expand/collapse + rails; optional horizontal scroll; host `bo-grid.js` for truncated-cell titles | [grids.md](controls/grids.md) |

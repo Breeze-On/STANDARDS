@@ -28,6 +28,8 @@ See [layout.md — Reserved / empty slots](../layout/layout.md#reserved--empty-s
 | Hidden (`IsHidden`) | Same as Disabled for mandatory participation — reserved slot only; no asterisk / required fail while hidden |
 | Mechanism | Cascading `BoValidationContext`; fields register via `IBoValidatableField`; pages gate Submit with `IBoSubmitInterceptor` |
 | Scope | Gallery Submit validates **all** registered groups (`Validate(null)`), not only the active tab |
+| Group scoping | `BoValidationContext.IsAttempted(group)` drives field chrome. `Validate(group)` attempts **only** that group — fields in other groups do not show required chrome or fail badges. `Validate(null)` attempts all groups. Fields with no `ValidationGroup` participate only in a `Validate(null)` attempt |
+| Host `ErrorText` | A non-empty `ErrorText` on a field sets `IsInvalid` (fails `BoValidationContext` validation / fail badges) **and** shows the red invalid chrome + error text, independent of `Required`. Required-empty after attempt still shows the universal required message instead |
 | Live clear | After attempt, field value changes call `NotifyFieldChanged()` — one O(n) pass over registered fields; fail badges clear when that ancestor no longer has required-empty fields |
 | Fail path (gallery) | Toast **Alert** — Main `Validation_MandatoryFieldsToast`; Body `Validation_MandatoryFieldsToastBody` (“Required information is missing. Review and complete all required fields.”) |
 
@@ -61,7 +63,11 @@ When shipping or changing a form `Bo*` control:
 - [ ] `FieldKey` + `@bind-Value` to typed model; never hardcode user-visible labels
 - [ ] `Required` / `Disabled` / deferred validation via `IBoValidatableField` (expose `FieldKey`, `ValidationGroup`, section keys from cascade)
 - [ ] Call `BoValidationContext.NotifyFieldChanged()` after value changes
-- [ ] Invalid chrome = control edge only; universal `Validation_FieldRequired`
+- [ ] Invalid chrome = control edge only; universal `Validation_FieldRequired`; host `ErrorText` also sets invalid chrome (`BoFieldChromeRules.IsInvalidChrome`)
+- [ ] Root classes via `BoFieldChromeRules.RootClass` (invalid / disabled / hidden modifiers) — all editable controls, including Number Field
+- [ ] `ReadOnly` (Text / Number / Date): not editable, skips required validation; `Disabled` / `IsHidden` unchanged
+- [ ] `<label for>` points at the control id (`FieldKey` → `bo-field-{FieldKey}`, else an auto id)
+- [ ] Unmatched attributes (`AdditionalAttributes`, captured) are forwarded by the control
 - [ ] Default Placeholder from resources when applicable
 - [ ] Update STANDARDS `forms.md` + gallery Preview (editable \| read-only \| Backend Value) in the same change set
 
@@ -77,6 +83,8 @@ Flat **display-only** companion for read views. Always shows **already-formatted
 | `Label` | Field label text — **same chrome as Text Field** (10px bold uppercase, field-label color) |
 | `Value` | Pre-formatted display string; null/whitespace → blank |
 | `FieldKey` | Stable typed DTO / entity property identifier (mapping metadata only) |
+| `IsHidden` | Reserved row slot; chrome hidden |
+| `Alignment` | `BoNumberFieldAlignment` Left (default) / Center / Right — use Right/Center for numeric companions (same `bo-field--align-*` modifiers as Number Field) |
 | `Class` / `Style` | Optional (use `bo-field--section-flush` in section rows like other fields) |
 
 ### Label and chrome
@@ -112,7 +120,9 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | `Value` / `ValueChanged` | Two-way bind to the working model |
 | `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_Placeholder_Default`** ("Enter text..."). **Always omitted when `Disabled`** |
 | `ValidationGroup` | Optional group for scoped Submit validation |
-| `Disabled`, `ErrorText` | Standard field chrome (`ErrorText` for non-required messages; required-empty uses the universal string after attempt) |
+| `Disabled` | Standard disabled chrome |
+| `ReadOnly` | Value shown but not editable; no asterisk and no required validation |
+| `ErrorText` | Host-supplied error: invalid chrome + validation failure (see Deferred mandatory validation); required-empty uses the universal string after attempt |
 
 ### Label and chrome
 
@@ -189,6 +199,7 @@ Boolean control: `Label` + `FieldKey` + `@bind-Value` (`bool`). Place as a direc
 | `ValidationGroup` | Optional group for Submit validation |
 | `Disabled` | Standard disabled chrome (editable mode only) |
 | `ReadOnly` | Dual Yes/No display (exception to flat `BoFieldReadOnly`) |
+| `ErrorText` | Host-supplied error: invalid outline on the checkbox control + error text; fails validation (same rule as other fields) |
 
 ### Editable
 
@@ -224,7 +235,7 @@ Single-value date (or date+time) control. Public API is `Bo*` only; calendar pop
 | `Mode` | `BoDateFieldMode.Date` (default) or `DateTime` — **UI only**; does not change the bound CLR type |
 | `Required` / `Disabled` / `IsHidden` | Same deferred mandatory rules as Text Field (Disabled / hidden skip participation) |
 | `Placeholder` | Optional; default resource **`Field_Date_Placeholder_Default`** ("Choose a date") or **`Field_DateTime_Placeholder_Default`** when `Mode` is DateTime; **hidden when Disabled** |
-| `ValidationGroup` / `ErrorText` / `Class` / `Style` | Same family as other form fields |
+| `ReadOnly` | Not editable (no calendar popover); no asterisk / required validation |
 
 ### Typed model / persistence (hard standard)
 
@@ -284,8 +295,8 @@ Numeric entry with Text Field chrome. Public API is `Bo*` only; input uses Fluen
 | `IsPercent` | UI shows **0–100**; bound value is **entered ÷ 100** (e.g. 90 → `0.90m`) |
 | `Alignment` | `BoNumberFieldAlignment`: `Left` / `Center` / `Right`; **default Right** (also apply to read-only companions) |
 | `Required` / `Disabled` / `IsHidden` | Same deferred mandatory rules as Text Field (Disabled / hidden skip participation) |
-| `Placeholder` | Optional; default resource **`Field_Number_Placeholder_Default`** ("Enter value"); **hidden when Disabled** |
-| `ValidationGroup` / `ErrorText` / `Class` / `Style` | Same family as other form fields |
+| `Placeholder` | Optional; default resource **`Field_Number_Placeholder_Default`** ("Enter value"); **hidden when Disabled or ReadOnly** |
+| `ReadOnly` | Not editable; no asterisk / required validation |
 
 ### Typed model / persistence (hard standard)
 
@@ -316,3 +327,15 @@ Planning JSON: `control: "NumberField"`; optional `isInteger`, `numberOfDecimals
 **Gallery reference:** Components Number Field — Parameters (Mandatory / Disabled / Hide Editable / Is Integer / Number of Decimals / Is Currency / Currency IsoCode / Is Percent / Alignment; pad to **6** slots per row) + Preview (editable \| host-formatted read-only \| **Backend Value** as persisted `decimal?`).
 
 These Number Field rules are **org standards** for every `BoNumberField` usage.
+
+## Button (`BoButton`)
+
+**Component:** `BoButton` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI). Pill button; visual tokens in [tokens.md](../foundations/tokens.md).
+
+| Parameter | Role |
+| --- | --- |
+| `Variant` | `BoButtonVariant`: `Primary` (default), `Secondary`, `Stealth` |
+| `HtmlType` | `BoButtonType` enum: `Button` (default — does not submit a form), `Submit`, `Reset`. Replaces the former string `Type`; do not pass raw strings |
+| `Disabled`, `OnClick`, `IconContent`, `ChildContent`, `Class`, `Style` | Standard button behavior |
+| `BackgroundColor` / `ForegroundColor` | Optional overrides |
+| `AdditionalAttributes` | Unmatched attributes are captured and forwarded |

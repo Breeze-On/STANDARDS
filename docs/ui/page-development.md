@@ -16,6 +16,30 @@ This document does **not** replace detailed standards. It is the authoritative *
 - Ensure new pages follow Breeze On UI standards.
 - Stay useful for both humans and AI agents.
 
+## Host integration (required)
+
+Every app host that renders `BreezeOn.UI` must wire the following once (reference: SYSTEM-SHARED-UI Gallery `App.razor` + `MainLayout.razor`). Pages inherit this; do not repeat per page.
+
+| Concern | Requirement |
+| --- | --- |
+| Services | `services.AddBreezeOnUI()` or `AddBreezeOnUI(opts => …)` — registers Fluent internally; `configureTheme` is honored via `IOptions<BoThemeOptions>` ([tokens.md § Theme options](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
+| Localization | Supported cultures `en` / `fr` + `UseRequestLocalization()` — [i18n.md](foundations/i18n.md) |
+| Layout | Render **`BoThemeProvider`** (CSS variables) and **`BoProviders`** (Fluent providers, theme/locale bootstrap, dialog + toast hosts) around the app; pages live inside **`BoAppShell`** |
+| CSS (in `<head>`) | `_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css` and `_content/BreezeOn.UI/breezeon-ui.css` |
+| JS (in `<head>`) | `_content/BreezeOn.UI/js/bo-theme-mode.js`, `bo-locale.js`, `bo-popup.js`, `bo-number-field.js`, `bo-grid.js` |
+
+JS file roles:
+
+| Script | Needed for |
+| --- | --- |
+| `bo-theme-mode.js` | Theme-mode cookie helpers; sets `document.documentElement.dataset.boThemeMode` |
+| `bo-locale.js` | Locale cookie helpers for `bo-culture` / `bo-timezone` |
+| `bo-popup.js` | Fixed-position panels for `BoDropDownList` and `BoDateField` |
+| `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge to the Fluent input, select-all, display sync). Without it number entry does not behave per standard |
+| `bo-grid.js` | `BoGrid` truncated-cell hover titles |
+
+Include **all five** scripts even if a page does not use every control — shell chrome and future pages depend on them. Note: the early scripts reduce theme/locale flash only partly; CSS variables are still emitted by `BoThemeProvider` after the circuit renders (see [tokens.md](foundations/tokens.md)).
+
 ## New page development checklist
 
 Every new or changed Breeze On page should validate the following.
@@ -96,6 +120,8 @@ When the page includes a data grid:
 - [ ] Universal required message (`Validation_FieldRequired`); never field-label-specific.
 - [ ] Fields expose `FieldKey` + `ValidationGroup` (tab); sections set `SectionKey` so failures report Field → Sub → Main → Tab.
 - [ ] Submit integrates with **`BoValidationContext`** / **`IBoSubmitInterceptor`**. Prefer `Validate(null)` (all keep-alive groups).
+- [ ] `Validate(group)` attempts only that group (unrelated groups show no required chrome); `Validate(null)` attempts all — [forms.md](controls/forms.md#deferred-mandatory-validation-locked). Host `ErrorText` marks a field invalid.
+- [ ] Format numbers/dates with `IBoLocaleService.FormatCulture`, not ambient `CurrentCulture` — [i18n.md](foundations/i18n.md).
 - [ ] Fail badges (`BoValidationFailBadge`) on failed tabs + Main/Sub headers in the **left icon slot** (replaces normal icon while failed); clear live when fields are fixed.
 - [ ] Validation fail → **Alert** toast (Main + Body resources); do not open success Submit dialog on fail.
 - [ ] New/changed field controls: follow [forms.md § Field component checklist](controls/forms.md#field-component-checklist).

@@ -82,6 +82,8 @@ The library **never** talks to SQL or application repositories.
 | `Display` | Read-only / non-editing cell template (`BoGridCellContext<TItem>`) |
 | `Edit` | Editable cell template (`BoTextField`, `BoDropDownList`, `BoDateField`, `BoNumberField`, …) |
 
+Changing a column's `Title`, `FieldKey`, `Required`, `Align`, or `Width` after first render re-renders the grid (`NotifyColumnsChanged`), so headers and layout stay in sync with dynamic column parameters.
+
 ### Cell context (`BoGridCellContext<TItem>`)
 
 | Member | Role |
@@ -130,7 +132,7 @@ Add New while sorted inserts at the **top** of the frozen order without re-sorti
 Default off (`IsPagination = false`). When on:
 
 - Slice with `StartIndex` + `PaginationSize` after sort.
-- Footer **one row:** **Showing {from}–{to} of {total}** (`Grid_Pagination_Showing`) left; first / previous / **windowed page numbers (max 5)** / next / last centered — **icons** preferred (Chevrons); no text labels on the buttons.
+- Footer **one row:** **Showing {from}–{to} of {total}** (`Grid_Pagination_Showing`) left; first / previous / **windowed page numbers (max 5)** / next / last centered — **icons** preferred (Chevrons); no text labels on the buttons. The "Showing…" text is formatted with **`IBoLocaleService.FormatCulture`**. `BoGrid` subscribes to `Locale.Changed` and re-renders on language change (no page reload).
 - Window examples: page 1 → `1 2 3 4 5`; page 5 → `3 4 5 6 7`; near end clamps correctly.
 
 ## Row Edit (locked)
@@ -181,9 +183,9 @@ After seed, per-node toggles own the expansion set. Cache `Reset` / `ReplaceAll`
 
 | Key | Action |
 | --- | --- |
-| Left Arrow | Collapse |
-| Right Arrow | Expand |
-| Enter / Space | Toggle |
+| Left Arrow | Collapse (handled in `keydown`) |
+| Right Arrow | Expand (handled in `keydown`) |
+| Enter / Space | Toggle via the native **button click** only — not handled in `keydown`, so a key press toggles exactly once (no double-toggle) |
 
 `aria-expanded` on the toggle; leaf rows have no control (spacer only).
 

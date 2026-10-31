@@ -10,7 +10,7 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 
 - **Dual palettes, one semantic name per role.** CSS variables stay `--bo-color-primary` (etc.). Do **not** use `*-light` / `*-dark` suffixes on token names or markup.
 - `BoThemeMode` = `Light` | `Dark`. `IBoThemeModeService` applies `BoThemePalettes.Light` / `.Dark` onto the active `BoThemeOptions`.
-- **Cookie persistence (shipped):** name `bo-theme-mode`; values `light` \| `dark` (lowercase); `Path=/`; `Max-Age≈31536000` (1 year); `SameSite=Lax`; `Secure` when the page is HTTPS; `HttpOnly=false` (JS-readable for Interactive Server restore). Invalid/missing → **Light**. `BoProviders` hosts `BoThemeModeBootstrap` which calls `InitializeAsync()` once per circuit. Hosts should load `_content/BreezeOn.UI/js/bo-theme-mode.js` early (gallery `App.razor` does) so `document.documentElement.dataset.boThemeMode` can be set before circuit restore (FOUC minimized, not eliminated).
+- **Cookie persistence (shipped):** name `bo-theme-mode`; values `light` \| `dark` (lowercase); `Path=/`; `Max-Age≈31536000` (1 year); `SameSite=Lax`; `Secure` when the page is HTTPS; `HttpOnly=false` (JS-readable for Interactive Server restore). Invalid/missing → **Light**. `BoProviders` hosts `BoThemeModeBootstrap` which calls `InitializeAsync()` once per circuit. Hosts should load `_content/BreezeOn.UI/js/bo-theme-mode.js` early (gallery `App.razor` does) so `document.documentElement.dataset.boThemeMode` can be set from the cookie on `<html>` before circuit restore. **FOUC is not fixed by this:** token values (palette colors, structural tokens) are still emitted inline by `BoThemeProvider` from `IBoThemeModeService.Active`, and `.bo-theme-root[data-bo-theme-mode]` follows the service mode — so the shell can still paint Light until the circuit restores the cookie. The early dataset only helps `html`-level consumers; it does not apply tokens.
 - Gallery Theme (`/theme`) shows **both** Light and Dark palette values as read-only fields (`BoFieldReadOnly`) under separate Main Sections. It does not live-recolor the shell; the header theme switch does.
 
 ## Palette rules (locked)
@@ -42,6 +42,9 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 | `color-text-muted` | `--bo-color-text-muted` | `#616161` | `#A8B2AC` | Muted text (e.g. character count) |
 | `color-danger` | `--bo-color-danger` | `#C50F1F` | `#FF8A8A` | Danger / mandatory asterisk |
 | `color-success` | `--bo-color-success` | `#0E700E` | `#4ADE80` | Success |
+| `color-warning` | `--bo-color-warning` | `#C19C00` | `#C19C00` | Alert toast accent / badge gradient |
+| `color-info` | `--bo-color-info` | `#0078D4` | `#0078D4` | Information accent (Information toasts) |
+| `color-overlay-scrim` | `--bo-color-overlay-scrim` | `rgba(0,0,0,0.35)` | `rgba(0,0,0,0.35)` | Modal / profile-menu scrim |
 | `color-nav-text` | `--bo-color-nav-text` | `#FFFFFF` | `#FFFFFF` | Unselected nav text/icon |
 | `color-nav-text-selected` | `--bo-color-nav-text-selected` | `#000000` | `#000000` | Selected nav text/icon (black on light selected fill) |
 | `color-nav-text-hover` | `--bo-color-nav-text-hover` | `#FFFFFF` | `#FFFFFF` | Unselected nav text on hover |
@@ -60,6 +63,34 @@ Legacy aliases still emitted: `--bo-color-surface` → card-container-background
 | `content-card-margin` | `--bo-space-content-card-margin` | Larger margins for in-body content cards |
 | `row-inset` | `--bo-space-row-inset` | Inside padding for `BoRow` and each field container (default `4px`) — see [layout.md](../layout/layout.md) |
 | `row-gap` | `--bo-space-row-gap` | Gap between field containers in a `BoRow` (default `16px`) — see [layout.md](../layout/layout.md) |
+
+### Layering and focus tokens (current)
+
+Emitted by `BoThemeProvider` (fixed values; not `BoThemeOptions` properties):
+
+| CSS variable | Value | Used for |
+| --- | --- | --- |
+| `--bo-z-profile-scrim` | `900` | Profile menu scrim |
+| `--bo-z-profile-menu` | `901` | Profile menu panel |
+| `--bo-z-dialog` | `1000` | Dialog / Settings overlay |
+| `--bo-z-popup-backdrop` | `9998` | `BoDropDownList` / `BoDateField` popup backdrop |
+| `--bo-z-popup` | `10000` | Popup panel (above dialogs) |
+| `--bo-z-toast` | `11000` | Toasts (top layer) |
+| `--bo-focus-ring` | `0 0 0 2px var(--bo-color-primary)` | Shared keyboard focus ring on interactive controls |
+
+## Theme options (`AddBreezeOnUI(configureTheme)`)
+
+`AddBreezeOnUI(opts => …)` registers `IOptions<BoThemeOptions>`; `IBoThemeModeService` reads it and re-applies it after every palette switch (Light ↔ Dark).
+
+| Option group | Behavior |
+| --- | --- |
+| **Structural** (font family, radii, spacing, row inset/gap, shell/content margins, nav widths, card border width) | **Always applied** in both modes |
+| `ColorWarning`, `ColorInfo` | Applied in both modes when non-empty |
+| **Light accents** (`ColorPrimary`, `ColorPrimaryHover`, `ColorSecondary`, `ColorTertiary`) | Applied in **Light** only, and only when the value **differs** from the Light palette default (hex compare, case-insensitive). Setting a value equal to the default is a no-op. `ColorPrimaryHover` applies only together with a customized `ColorPrimary` (blank hover → falls back to `ColorPrimary`) |
+| **Dark accents** (`ColorPrimaryDark`, `ColorPrimaryHoverDark`, `ColorSecondaryDark`, `ColorTertiaryDark`) | Applied in **Dark** only, when set. `ColorPrimaryHoverDark` blank → hover uses `ColorPrimaryDark`. When unset, Dark keeps the Dark palette accents. Light accent options never leak into Dark |
+| Other color properties (backgrounds, text, nav, card, border, danger, success, scrim, …) | Come from the Light/Dark **palette**, not from `configureTheme` |
+
+The `*Dark` names exist only as **option properties**; CSS variable names stay mode-agnostic (`--bo-color-primary`). Without `configureTheme`, the Light and Dark palettes apply unchanged.
 
 Shared accents used by nav and buttons: `PrimaryColor` / `TertiaryColor`. Nav color rules: [navigation.md](../shell/navigation.md). Header tab fills: [shell.md](../shell/shell.md).
 

@@ -14,6 +14,17 @@ Left navigation and URL path standards. Related: [shell.md](shell.md), [tokens.m
 
 **Per-application customization:** logo image URLs (`LogoExpandedSrc` / `LogoMinimizedSrc`); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; optional `PrimaryColor` / `TertiaryColor` (soft surfaces / primary rail — not selected-nav fill).
 
+### Collapsed nav, tooltips, and accessibility (current)
+
+| Concern | Standard |
+| --- | --- |
+| Collapsed labels | Link labels and brand text are **visually hidden** (1px clip pattern), **not** `display: none` — they stay in the accessibility tree |
+| `BoNavLink.Title` | Optional localized text used as the `title` tooltip **only while the nav is collapsed** (label is visually hidden). Hosts should set it to the localized page label |
+| Landmark label | `<nav>` `aria-label` = `Chrome_Aria_Nav` (expanded) / `Chrome_Aria_NavCollapsed` (collapsed) |
+| Collapse control | `title` + `aria-label` = `Chrome_Aria_NavCollapse` / `Chrome_Aria_NavExpand`; `aria-expanded` reflects the expanded state |
+| Validation badge | `BoValidationFailBadge` `title` = `Chrome_Aria_ValidationFailed` (icon itself `aria-hidden`) |
+| Localization | All of the above resolve through `IBoUiLocalizer` (`Chrome_Aria_*` keys in `BoUi.resx` / `BoUi.fr.resx`); product apps with their own resource library supply equivalent strings — [i18n.md](../foundations/i18n.md) |
+
 Accent tokens: [tokens.md](../foundations/tokens.md). Shell regions: [shell.md](shell.md).
 
 Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Left navigation standard).
