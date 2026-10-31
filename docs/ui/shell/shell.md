@@ -64,7 +64,7 @@ Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTab
 | Outside spacing | 16px gap between tabs; inside header padding |
 | Switch behavior | All panels load together and stay mounted; hide inactive with CSS (no remount/reload) |
 | `SelectedTab` | Bindable in-memory key (`@bind-SelectedTab`); defaults to first tab; persists across switches |
-| Validation fail chrome | After Submit attempt, tabs whose `TabKey` is in `FailedGroups` show `BoValidationFailBadge` (red disc + white “!”) to the **right of the label**, vertically centered. Clears live when that group no longer fails (`NotifyFieldChanged`) |
+| Validation fail chrome | After Submit attempt, tabs whose `TabKey` is in `FailedGroups` show `BoValidationFailBadge` in the **left icon slot** (replaces `IconContent` while failed). Clears live when that group no longer fails (`NotifyFieldChanged`) |
 
 Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Header tabs standard).
 

@@ -24,6 +24,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [layout/layout.md](layout/layout.md) | Row (`BoRow`), page composition, planning JSON schema |
 | **Controls** | |
 | [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, Date Field, and form controls |
+| [controls/grids.md](controls/grids.md) | Grid (`BoGrid`) — Read-Only / Row Edit / Inline Edit / Nested View |
 
 Former single file [`docs/ui-components.md`](../ui-components.md) redirects here. Flat paths under `docs/ui/*.md` (e.g. `docs/ui/tokens.md`) redirect to the hierarchical files above.
 
@@ -83,14 +84,16 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoValidationContext` / `IBoSubmitInterceptor` | Deferred validation; `Validate(null)`; live fail badges; Field→Sub→Main→Tab failures | [forms.md](controls/forms.md) |
 | `BoValidationFailBadge` | Red disc + white “!” (tabs + section headers) | [forms.md](controls/forms.md) |
 | `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell/shell.md), [i18n.md](foundations/i18n.md) |
+| `BoGrid` / `BoGridColumn` / `BoGridCache` | Section-level grid (ReadOnly / RowEdit / InlineEdit / NestedView); typed cache; frozen sort while editing; column `Align` / `Width` (Flex default); Nested View expand/collapse + rails; optional horizontal scroll; host `bo-grid.js` for truncated-cell titles | [grids.md](controls/grids.md) |
+| `BoSectionMain` / `BoSectionSub` `Required` | Optional red asterisk after section title (e.g. mandatory grid) | [sections.md](layout/sections.md), [grids.md](controls/grids.md) |
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Grid** tab replaces Preview with Sub **Grid Control** hosting `BoGrid`; Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
 
 ## Documentation governance
 
-Documentation is part of **completion criteria** (same change set as code). Current reality only — never document planned components as shipped.
+Documentation is part of **completion criteria** (same change set as code). Current reality only — never document planned components as shipped. Org DoD: [documentation.md](../documentation.md#definition-of-done).
 
 ### When new shared components are introduced
 
@@ -101,6 +104,7 @@ For every new or changed public `Bo*` surface:
 3. Update [page-development.md](page-development.md) when the change affects how pages must be built (checklist living-document rule).
 4. Update the gallery when the component is previewable.
 5. Update STANDARDS indexes (`README.md`, `README_AI.md`, this overview) and any product README / README_AI links in the same change set.
+6. New feature / parameter / UX or design-standard change / behavior-affecting refactor → documentation in the **same change set** (UI component DoD).
 
 ### Organic structure rule
 

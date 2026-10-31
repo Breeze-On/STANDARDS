@@ -46,10 +46,12 @@ Context aggregates: `Failures`, `FailedGroups` (tabs), `FailedSectionMains`, `Fa
 
 ### Fail badges
 
-`BoValidationFailBadge`: red filled disc + white “!” + subtle shadow (CSS; Fluent ErrorCircle is single-tone). Shown on:
+`BoValidationFailBadge`: compact disc (~11px) + centered white “!” + soft shadow (CSS; Fluent ErrorCircle is single-tone). Light theme uses a **softer** danger red; dark theme keeps full danger. Visible but not dominant.
 
-- Matching **tab** label (`TabKey` ∈ `FailedGroups`)
-- Matching **Main** / **Sub** section header (`SectionKey` ∈ failed section sets; **4px** from the right and **4px** from the bottom of the header)
+**Placement (locked):** on `BoSectionMain` / `BoSectionSub` / `BoTab`, the badge appears **left of the label** in the **icon slot**. When validation fails it **replaces** the configured `IconContent`; when the failure clears, the original icon returns. Shown on:
+
+- Matching **tab** label (`TabKey` ∈ `FailedGroups`) — left icon slot
+- Matching **Main** / **Sub** section header (`SectionKey` ∈ failed section sets) — left icon slot (replaces `IconContent` while failed)
 
 ### Field component checklist
 
@@ -174,25 +176,27 @@ These Drop-Down List rules are **org standards** for every `BoDropDownList` usag
 **Display name:** Checkbox.  
 **Component:** `BoCheckbox` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
 
-Boolean control: `Label` + `FieldKey` + `@bind-Value` (`bool`). Place as a direct child of `BoRow` when used in form layouts. Vertically middle-aligned in the BoRow item container with sibling fields.
+Boolean control: `Label` + `FieldKey` + `@bind-Value` (`bool`). Place as a direct child of `BoRow` when used in form layouts.
+
+**Alignment (locked):** same vertical structure as Text Field — an **invisible label-height spacer** (always reserved) + a **control row**. The checkbox control aligns with the **input area** of a sibling `BoTextField` (control row `min-height` ~32px, vertically centered), not with the top of the field container.
 
 | Parameter | Role |
 | --- | --- |
-| `Label` | Editable: **11px bold**, field-label color, **not** uppercase. Read-only: Text Field label chrome (10px bold uppercase) |
+| `Label` | Text **beside** the checkbox (body text, not field-label chrome). Spacer still reserves Text Field label height for row alignment |
 | `FieldKey` | Stable typed DTO / entity property identifier (mapping metadata) |
 | `Value` / `ValueChanged` | Two-way bind to a **typed `bool`** property |
-| `Required` | **Mandatory** when editable — red asterisk after the label; after Submit attempt, fails when **unchecked** (`Value == false`). Suppressed when `Disabled` or `ReadOnly` |
+| `Required` | **Mandatory** when editable — red asterisk after the beside-checkbox label; after Submit attempt, fails when **unchecked** (`Value == false`). Suppressed when `Disabled` or `ReadOnly` |
 | `ValidationGroup` | Optional group for Submit validation |
 | `Disabled` | Standard disabled chrome (editable mode only) |
 | `ReadOnly` | Dual Yes/No display (exception to flat `BoFieldReadOnly`) |
 
 ### Editable
 
-Control box is compact (~12px); control and label are vertically center-aligned. Asterisk at the **end** of the label when `Required`. Invalid after attempt: danger outline on the **checkbox control** only (not the BoRow item container).
+Control box is compact (~12px) with the label immediately to its **right** (not in the field-label row). Asterisk after the beside-checkbox label when `Required`. Invalid after attempt: danger outline on the **checkbox control** only (not the BoRow item container).
 
 ### Read-only (`ReadOnly`)
 
-Always shows **two** options: localized **Yes** / **No** (`Field_Boolean_Yes` / `Field_Boolean_No`; FR Oui/Non). Exactly one option is checked to match `Value`. Not a plain text `BoFieldReadOnly`.
+Same spacer + control-row structure. Always shows **two** options: localized **Yes** / **No** (`Field_Boolean_Yes` / `Field_Boolean_No`; FR Oui/Non). Exactly one option is checked to match `Value`. Not a plain text `BoFieldReadOnly`.
 
 | Concern | Standard |
 | --- | --- |

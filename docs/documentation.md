@@ -13,11 +13,12 @@ Documentation must represent **CURRENT REALITY ONLY**.
 1. Document **implemented** functionality only.
 2. Document **existing** architecture only.
 3. Document **actual** standards currently in use.
-4. Do **not** document planned features.
-5. Do **not** document future architecture.
+4. Do **not** document planned features **as if they are shipped**.
+5. Do **not** document future architecture **as current**.
 6. Do **not** document roadmap items or intended behavior as if they exist.
-7. Whenever code, architecture, standards, ADRs, or behavior change, update documentation in the **same change set**.
-8. `README.md`, `README_AI.md`, and Architecture Decision Records (ADRs) are living documents and must remain synchronized with the current implementation state.
+7. **Exception (structure only):** a clearly labeled **Planned / not shipped** section may reserve headings for an upcoming capability (example: Nested View under [`docs/ui/controls/grids.md`](ui/controls/grids.md)). It must not imply API availability or product usage.
+8. Whenever code, architecture, standards, ADRs, or behavior change, update documentation in the **same change set**.
+9. `README.md`, `README_AI.md`, and Architecture Decision Records (ADRs) are living documents and must remain synchronized with the current implementation state.
 
 ## Glossary
 
@@ -153,3 +154,17 @@ A change is incomplete until **all affected documentation reflects current reali
 - Indexes and cross-references kept accurate
 
 Updates must occur in the **same change set** as the implementation change. Documentation maintenance is part of **Definition of Done**.
+
+### UI / shared component DoD (BreezeOn.UI)
+
+For work on public `Bo*` components, tokens, or gallery standards, also treat these as incomplete without a docs update in the same change set:
+
+| Change | Documentation update |
+| --- | --- |
+| New feature / mode | STANDARDS `docs/ui/` SSOT + thin product README / README_AI |
+| New public parameter | Parameter tables in the owning control doc |
+| UX / visual standard change | UX section of the owning doc (+ tokens/sections/shell as needed) |
+| Design standard change | STANDARDS `docs/ui/` + overview cross-links |
+| Refactor that changes behavior | Same docs as a feature change; remove obsolete statements |
+
+Examples must match the latest component behavior. Remove documentation that no longer matches implementation.

@@ -61,6 +61,22 @@ When the page is a **Home** (or equivalent landing hub):
 
 Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout.md#page-composition-json-planning-agent-input); nest Sub Sections in Razor even when flat JSON is used.
 
+### Grid (section-level)
+
+When the page includes a data grid:
+
+- [ ] Uses **`BoGrid`** / **`BoGridColumn`** / **`BoGridCache`** — [grids.md](controls/grids.md).
+- [ ] Treats the grid as a **section-level** surface (not a `BoRow` child; not Section → Row → Field for the grid body).
+- [ ] Binds a typed cache with **`CacheId`**; rows expose **`CacheRowId`** + nullable **`PrimaryKey`**.
+- [ ] Chooses **`Mode`**: ReadOnly (default), RowEdit, InlineEdit, or NestedView per requirements.
+- [ ] **`IsPagination`** only when required (default false); sort is over the full cache; display order stays frozen while editing.
+- [ ] Column **`Align`**: text/date Left; number/currency Right unless the design requires otherwise. Headers always left.
+- [ ] Column **`Width`**: leave default **Flex** unless Compact/Hug is intentional; do not invent custom table layouts.
+- [ ] **`EnableHorizontalScroll`** only when many columns truly need a horizontal scrollbar (default false).
+- [ ] Host loads **`_content/BreezeOn.UI/js/bo-grid.js`** when using truncated display cells (hover full-value title).
+- [ ] Cell editors reuse existing **`Bo*`** fields; column / grid **`Required`** follow [grids.md](controls/grids.md).
+- [ ] Nested View: set `NodeKey`; same columns → `ChildrenSelector`; different columns → `ChildRowsHaveDifferentColumns` + `ChildGridTemplate` (nested `BoGrid`, not a new component). Optional `DefaultExpansionState`. See [grids.md Nested View](controls/grids.md#nested-view-locked--shipped).
+
 ### Controls
 
 - [ ] **`BoTextField`** for text entry — [forms.md](controls/forms.md#text-field-botextfield).
@@ -80,7 +96,7 @@ Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout
 - [ ] Universal required message (`Validation_FieldRequired`); never field-label-specific.
 - [ ] Fields expose `FieldKey` + `ValidationGroup` (tab); sections set `SectionKey` so failures report Field → Sub → Main → Tab.
 - [ ] Submit integrates with **`BoValidationContext`** / **`IBoSubmitInterceptor`**. Prefer `Validate(null)` (all keep-alive groups).
-- [ ] Fail badges (`BoValidationFailBadge`) on failed tabs + Main/Sub headers; clear live when fields are fixed.
+- [ ] Fail badges (`BoValidationFailBadge`) on failed tabs + Main/Sub headers in the **left icon slot** (replaces normal icon while failed); clear live when fields are fixed.
 - [ ] Validation fail → **Alert** toast (Main + Body resources); do not open success Submit dialog on fail.
 - [ ] New/changed field controls: follow [forms.md § Field component checklist](controls/forms.md#field-component-checklist).
 
