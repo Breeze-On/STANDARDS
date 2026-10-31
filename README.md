@@ -38,6 +38,7 @@ Full rules: [`docs/documentation.md`](docs/documentation.md) (includes lightweig
 | What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
 | How do I build a compliant page? | [`docs/ui/page-development.md`](docs/ui/page-development.md) |
 | Is there a testing / observability / versioning standard yet? | Placeholder docs under `docs/` (status: not yet formally defined) |
+| How do we handle dependency vulnerabilities? | [`docs/security-governance.md`](docs/security-governance.md) |
 | Where are operational runbooks? | [`runbooks/README.md`](runbooks/README.md) |
 
 ## Repository structure
@@ -62,7 +63,7 @@ STANDARDS/
 │  ├─ application-model.md
 │  ├─ domain-modeling.md     # Placeholder — not yet formally defined
 │  ├─ testing.md             # Placeholder — not yet formally defined
-│  ├─ security-governance.md # Placeholder — distinct from architecture/security.md
+│  ├─ security-governance.md # Dependency & vulnerability governance
 │  ├─ observability.md       # Placeholder — not yet formally defined
 │  ├─ versioning.md          # Placeholder — not yet formally defined
 │  ├─ ui-components.md       # Redirect stub → docs/ui/
@@ -77,7 +78,8 @@ STANDARDS/
 │  └─ README.md
 ├─ decisions/                # Architecture Decision Records (ADRs)
 ├─ templates/
-│  └─ local-sql/             # Docker SQL sandbox starter (copy into app repos)
+│  ├─ local-sql/             # Docker SQL sandbox starter (copy into app repos)
+│  └─ dependabot/            # Dependabot starter (copy into app/library repos)
 └─ architecture/             # Currently implemented systems only
    ├─ README.md
    ├─ landscape.md
@@ -120,7 +122,7 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [UI standards](docs/ui/overview.md) | Shared UI conventions (`docs/ui/` hierarchical tree) |
 | [Domain modeling](docs/domain-modeling.md) | Placeholder — not yet formally defined |
 | [Testing](docs/testing.md) | Placeholder — not yet formally defined |
-| [Security governance](docs/security-governance.md) | Placeholder — future governance (see also [architecture/security.md](architecture/security.md)) |
+| [Security governance](docs/security-governance.md) | Dependency & vulnerability policy; Dependabot; NuGet audit (see also [architecture/security.md](architecture/security.md)) |
 | [Observability](docs/observability.md) | Placeholder — not yet formally defined |
 | [Versioning](docs/versioning.md) | Placeholder — not yet formally defined |
 

@@ -32,7 +32,8 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Database | Schema scripts + product `docs/db-model.md`; seed with schema changes | [database.md](../database.md) |
 | Local SQL | Do not default Development to Azure SQL | [local-database.md](../local-database.md) |
 | Local scripts | Every runnable host: `scripts/dev-reset.ps1` only; secrets via `.env`; keep script + README aligned when local needs change | [local-development-scripts.md](../local-development-scripts.md) |
-| Placeholders | testing / observability / versioning / domain-modeling / security-governance — **not formally defined**; do not invent | Placeholder files under `docs/` |
+| Dependencies / vulns | NuGet audit, Dependabot, severity policy, remediation order | [security-governance.md](../security-governance.md) |
+| Placeholders | testing / observability / versioning / domain-modeling — **not formally defined**; do not invent | Placeholder files under `docs/` |
 
 ---
 

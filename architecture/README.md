@@ -13,4 +13,4 @@ Current reality only — do not place planned or speculative designs here. How w
 | [Landscape](landscape.md) | Ecosystem map: repos, UI dependency position, Azure hosting, SQL relationships, boundaries |
 | [Ecosystem](ecosystem.md) | Org identity and existing repositories |
 | [EAC](eac.md) | Enterprise Administration Center (current) |
-| [Security](security.md) | Auth and access as implemented (governance placeholder: [`docs/security-governance.md`](../docs/security-governance.md)) |
+| [Security](security.md) | Auth and access as implemented (dependency/vuln governance: [`docs/security-governance.md`](../docs/security-governance.md)) |

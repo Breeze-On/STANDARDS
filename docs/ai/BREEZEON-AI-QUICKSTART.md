@@ -54,7 +54,7 @@ Product pages consume **`Bo*`** only. Fluent is an implementation detail of Shar
 6. **Documentation must stay current** — Same change set as code when behavior, setup, schema, or architecture changes.
 7. **No direct Fluent UI in applications** — Never import or use `Microsoft.FluentUI.*` on product pages.
 
-Also: do not invent standards for placeholder areas (testing, versioning, etc.) that are not yet defined.
+Also: do not invent standards for placeholder areas (testing, versioning, domain modeling, observability) that are not yet defined. Dependency vulnerability policy is defined: [security-governance.md](../security-governance.md).
 
 ---
 

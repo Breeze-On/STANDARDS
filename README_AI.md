@@ -54,6 +54,7 @@ Details: [`docs/documentation.md`](docs/documentation.md). ADR process: [`docs/a
 | What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
 | How do I build a compliant page? | [`docs/ui/page-development.md`](docs/ui/page-development.md) — checklist; then detailed `docs/ui/*` |
 | Is testing / observability / versioning / domain modeling standardized? | Placeholder `docs/*.md` files — **not yet formally defined**; do not invent rules |
+| How do we handle dependency vulnerabilities? | [`docs/security-governance.md`](docs/security-governance.md) |
 | Where are operational runbooks? | [`runbooks/README.md`](runbooks/README.md) |
 
 ## Repository structure (this repo)
@@ -75,7 +76,8 @@ STANDARDS/
 │  ├─ environments.md
 │  ├─ hosted-deployment.md
 │  ├─ application-model.md
-│  ├─ domain-modeling.md / testing.md / security-governance.md /
+│  ├─ security-governance.md  # dependency & vulnerability governance
+│  ├─ domain-modeling.md / testing.md /
 │  │    observability.md / versioning.md   # placeholders (not yet formally defined)
 │  ├─ ui-components.md   # redirect stub → docs/ui/
 │  └─ ui/                # UI standards (hierarchical by responsibility)
@@ -89,7 +91,8 @@ STANDARDS/
 │  └─ README.md
 ├─ decisions/            # Architecture Decision Records
 ├─ templates/
-│  └─ local-sql/         # Docker SQL sandbox starter for app repos
+│  ├─ local-sql/         # Docker SQL sandbox starter for app repos
+│  └─ dependabot/        # Dependabot starter for app/library repos
 └─ architecture/         # currently implemented systems only
    ├─ README.md
    ├─ landscape.md
@@ -103,11 +106,12 @@ STANDARDS/
 | `docs/` | Standards, conventions, rules, practices, naming, documentation requirements, engineering decisions, UI patterns, environments, hosted deployment, application model, ADR process |
 | `docs/glossary.md` | Shared vocabulary — current usage only; do not invent terms |
 | `docs/documentation.md` | Current-reality rules; lightweight `Owner:` metadata; advisory periodic review (not mandatory cycles) |
+| `docs/security-governance.md` | Dependency & vulnerability policy, Dependabot, NuGet audit (≠ `architecture/security.md`) |
 | `docs/ui/` | Hierarchical UI standards (entry: `overview.md`); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
-| `docs/*` placeholders | `domain-modeling`, `testing`, `security-governance`, `observability`, `versioning` — state that org standards are **not yet formally defined** (do not invent rules there) |
+| `docs/*` placeholders | `domain-modeling`, `testing`, `observability`, `versioning` — state that org standards are **not yet formally defined** (do not invent rules there) |
 | `runbooks/` | Operational procedures; little content today — see `runbooks/README.md` |
 | `decisions/` | ADRs (why decisions were made); index includes Category and Impact Area |
-| `templates/` | Copy-paste starters for apps (e.g. local SQL Docker) |
+| `templates/` | Copy-paste starters for apps (e.g. local SQL Docker, Dependabot) |
 | `architecture/` | Currently implemented systems, landscape map, platform structure, application responsibilities, security architecture (`architecture/security.md` ≠ `docs/security-governance.md`) |
 
 If you add or remove files under `docs/`, `decisions/`, or `architecture/`, update **this** `README_AI.md` and the root `README.md` in the same change set.
@@ -139,9 +143,10 @@ Before planning or implementing in a Breeze On repo:
 11. For hosted deployment: follow [`docs/hosted-deployment.md`](docs/hosted-deployment.md); product repos hold App Service / workflow **metadata** only — do not duplicate deploy procedures.
 12. For what an application repo must include: follow [`docs/application-model.md`](docs/application-model.md).
 13. For UI standards: start with the page checklist [`docs/ui/page-development.md`](docs/ui/page-development.md), then [`docs/ui/overview.md`](docs/ui/overview.md) and docs under `foundations/`, `shell/`, `layout/`, `controls/`; when docs grow too large, deepen the hierarchy and update the UI index (organic structure rule in the overview).
-14. Placeholder docs (`domain-modeling`, `testing`, `security-governance`, `observability`, `versioning`) mean **no org standard yet** — do not invent requirements there; update them only when conventions are actually established.
-15. For operational procedures: see [`runbooks/README.md`](runbooks/README.md); add runbooks only from real procedures. Hosted deploy standard: [`docs/hosted-deployment.md`](docs/hosted-deployment.md).
-16. Major STANDARDS docs may carry lightweight `Owner:` metadata (area label only — not an approval workflow); see [`docs/documentation.md`](docs/documentation.md).
+14. Placeholder docs (`domain-modeling`, `testing`, `observability`, `versioning`) mean **no org standard yet** — do not invent requirements there; update them only when conventions are actually established.
+15. For dependency vulnerabilities / Dependabot / NuGet audit: follow [`docs/security-governance.md`](docs/security-governance.md); product repos keep thin pointers and `.github/dependabot.yml` only.
+16. For operational procedures: see [`runbooks/README.md`](runbooks/README.md); add runbooks only from real procedures. Hosted deploy standard: [`docs/hosted-deployment.md`](docs/hosted-deployment.md).
+17. Major STANDARDS docs may carry lightweight `Owner:` metadata (area label only — not an approval workflow); see [`docs/documentation.md`](docs/documentation.md).
 
 ## Product README_AI expectations
 

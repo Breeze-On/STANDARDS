@@ -38,6 +38,10 @@ Applications that own schema must keep `sql/current_model/` and `docs/db-model.m
 - Environment names (Local, DEV, UAT, PRD) and hosted seed labels: [environments.md](environments.md).
 - Significant architectural decisions: [adr.md](adr.md) and [`decisions/`](../decisions/).
 
+## Dependencies and vulnerabilities
+
+NuGet / Actions dependency hygiene, severity policy, remediation order, and Dependabot expectations: [security-governance.md](security-governance.md). Product repos keep thin pointers; do not duplicate the policy.
+
 ## Documentation
 
 Engineering changes that affect how others run or understand the app must update that repo’s README / README_AI per [documentation standards](documentation.md). Cross-cutting or new implemented systems must update STANDARDS `architecture/` in the same change set when applicable. Architectural decision changes must update or supersede ADRs in the same change set.

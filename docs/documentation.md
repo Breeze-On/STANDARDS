@@ -37,7 +37,7 @@ Allowed values (documentation ownership areas only):
 | Value | Typical documents |
 | --- | --- |
 | `Architecture` | `architecture/*`, ADR process / decision index |
-| `Engineering` | Stack, database, environments, application model |
+| `Engineering` | Stack, database, environments, application model, security governance |
 | `UI` | `docs/ui/*` |
 | `Documentation` | Documentation standards, glossary, naming, placeholders for undeclared areas |
 | `Operations` | `runbooks/` |
@@ -79,7 +79,7 @@ Do not place unimplemented designs in these trees.
 
 ### Placeholder standards (undeclared governance areas)
 
-Some `docs/` files exist only to record that an area is **not yet formally defined** (e.g. [`domain-modeling.md`](domain-modeling.md), [`testing.md`](testing.md), [`security-governance.md`](security-governance.md), [`observability.md`](observability.md), [`versioning.md`](versioning.md)). Those placeholders:
+Some `docs/` files exist only to record that an area is **not yet formally defined** (e.g. [`domain-modeling.md`](domain-modeling.md), [`testing.md`](testing.md), [`observability.md`](observability.md), [`versioning.md`](versioning.md)). Those placeholders:
 
 - State the **current reality** that no org-wide standard exists yet
 - May list topics expected to be covered **later**, without defining rules
