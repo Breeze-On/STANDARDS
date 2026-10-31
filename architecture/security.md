@@ -4,12 +4,12 @@ Owner: Architecture
 
 Current-state security posture for implemented Breeze On applications.
 
-## ADM application authentication
+## EAC application authentication
 
 | | |
 | --- | --- |
-| Mechanism | **Not implemented** (ASP.NET Core Identity removed from ADM) |
-| App | ADM (`SYSTEM-ADMIN-ADM` / `BreezeOn.Adm`) |
+| Mechanism | **Not implemented** (ASP.NET Core Identity removed from EAC) |
+| App | EAC (`SYSTEM-ADMIN-EAC` / `BreezeOn.Eac`) |
 | UI access | Shell pages are public (Home + destination pages) |
 | User store | None — no `AspNet*` tables |
 
@@ -17,7 +17,7 @@ End-user authentication and authorization will be introduced in a future milesto
 
 ## Authorization (current)
 
-- No `[Authorize]` attributes on ADM product pages.
+- No `[Authorize]` attributes on EAC product pages.
 - No login redirect for shell routes.
 
 ## Local SQL access
@@ -34,7 +34,7 @@ Local SQL passwords must never be committed or used against Azure SQL. See [loca
 | Principal | How |
 | --- | --- |
 | Operators (e.g. Entra admin) | Microsoft Entra / Azure CLI token; used for scripts and optional Entra Default overrides |
-| App Service `breezeon-system-admin-adm-dv` | System-assigned Managed Identity mapped as SQL user `breezeon-system-admin-adm-dv` with `db_datareader`, `db_datawriter`, `db_ddladmin` |
+| App Service `breezeon-system-admin-eac-dv` | System-assigned Managed Identity mapped as SQL user `breezeon-system-admin-eac-dv` with `db_datareader`, `db_datawriter`, `db_ddladmin` |
 
 Connection strings do not embed SQL passwords for the hosted app. Do not commit production secrets.
 

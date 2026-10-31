@@ -2,20 +2,21 @@
 
 Owner: Engineering
 
-Defines what constitutes a **standard Breeze On application** based on patterns already implemented in the ecosystem (primarily ADM). Shared libraries (e.g. `BreezeOn.UI`) follow related documentation and boundary rules but are not full applications.
+Defines what constitutes a **standard Breeze On application** based on patterns already implemented in the ecosystem (primarily EAC). Shared libraries (e.g. `BreezeOn.UI`) follow related documentation and boundary rules but are not full applications.
 
 ## What exists today
 
 | Kind | Example repository | Notes |
 | --- | --- | --- |
-| Application | [SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | Blazor Web App, SQL ownership, DEV hosting, `scripts/dev-*.ps1` |
+| Application | [SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) | Blazor Web App, SQL ownership, DEV hosting, `scripts/dev-*.ps1` |
 | Shared library | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | RCL + gallery; no business DB |
 | Org standards | [STANDARDS](https://github.com/Breeze-On/STANDARDS) | Not an application |
 
 ## Dedicated repository ownership
 
 - One **GitHub repository** per application or shared concern ([ADR-001](../decisions/ADR-001-multi-repository-model.md)).
-- Application code uses the `BreezeOn.*` namespace and `src/<Project>` layout (e.g. `src/BreezeOn.Adm`).
+- Application code uses the `BreezeOn.*` namespace and `src/<Project>` layout (e.g. `src/BreezeOn.Eac`).
+- The **repository name** is the application technical identifier (`UniqueCode`); short `Code` and `ApplicationGUID` conventions: [naming.md](naming.md), [database.md](database.md).
 - Do not add unrelated products or business domains into an existing application repository.
 
 ## Required documentation files
@@ -46,7 +47,7 @@ Every application repository must:
 
 **Script standard (all runnable hosts):** every application and the Shared UI gallery must expose [`scripts/dev-reset.ps1`](local-development-scripts.md) as the single local entry point (no `dev-up` / `dev-down`). Secrets come only from a gitignored `.env`. Details: [local-development-scripts.md](local-development-scripts.md).
 
-For applications with a database (ADM pattern):
+For applications with a database (EAC pattern):
 
 - Default local engine: SQL Server Docker sandbox ([local-database.md](local-database.md)).
 - Repo typically includes `docker-compose.yml`, `.env.example`, init/seed scripts, and README steps.
@@ -63,7 +64,7 @@ Product repositories must **not** become the source of truth for deployment proc
 
 As implemented today:
 
-- Hosted **DEV** on Azure App Service (Linux, .NET 10) for ADM and the Shared UI Gallery; ADM also uses Azure SQL with Managed Identity.
+- Hosted **DEV** on Azure App Service (Linux, .NET 10) for EAC and the Shared UI Gallery; EAC also uses Azure SQL with Managed Identity.
 - Manual `workflow_dispatch` via `.github/workflows/deploy-dev.yml` and GitHub Environment **`DEV`**.
 - Environment naming and meaning: [environments.md](environments.md).
 
@@ -81,6 +82,8 @@ Applications that own business tables:
 
 Identity/`AspNet*` tables (when used) are owned by ASP.NET Core Identity / EF migrations and are out of scope for `db-model.md`.
 
+Shared **System** schema ownership (EAC catalog) and application identity columns: [database.md](database.md). Repository-as-technical-id: [naming.md](naming.md).
+
 ## Documentation update responsibilities
 
 When behavior, setup, schema, or architecture changes:
@@ -95,7 +98,7 @@ When behavior, setup, schema, or architecture changes:
 
 | Repository | Owns |
 | --- | --- |
-| Application repo (e.g. ADM) | That app’s UI, Identity wiring, business schema, local sandbox, deploy for that app |
+| Application repo (e.g. EAC) | That app’s UI, Identity wiring, business schema, local sandbox, deploy for that app |
 | SYSTEM-SHARED-UI | `BreezeOn.UI` and gallery only |
 | STANDARDS | How we work, what exists org-wide, ADRs |
 | `.github` profile | Vision / mission / ecosystem messaging only |

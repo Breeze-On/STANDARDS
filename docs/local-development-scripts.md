@@ -66,7 +66,7 @@ Apps with no local secrets today still keep `.env` / `.env.example` so the scrip
 
 ## Application vs Shared UI
 
-| Concern | Application with SQL (e.g. ADM) | Shared UI Gallery |
+| Concern | Application with SQL (e.g. EAC) | Shared UI Gallery |
 | --- | --- | --- |
 | Docker SQL | Required | Not used |
 | Required `.env` vars | At least `MSSQL_SA_PASSWORD` | None required today |
@@ -117,7 +117,7 @@ Product `README_AI.md` must tell agents to use `.\scripts\dev-reset.ps1` for aut
 
 ## Recommendations for future applications
 
-1. Copy the ADM or Shared UI `scripts/dev-reset.ps1` + `dev-common.ps1` pattern; strip or add SQL/Docker steps as needed.  
+1. Copy the EAC or Shared UI `scripts/dev-reset.ps1` + `dev-common.ps1` pattern; strip or add SQL/Docker steps as needed.  
 2. Add `.env.example` on day one, even if empty of required secrets.  
 3. Wire Local Development in `README.md` and Autonomous local test in `README_AI.md` before the first PR that expects humans/agents to run the app.  
 4. Do not reintroduce `dev-up` / `dev-down` or one-off “start.ps1” / “run-local.ps1” entry points.  
@@ -127,7 +127,7 @@ Product `README_AI.md` must tell agents to use `.\scripts\dev-reset.ps1` for aut
 
 Implemented for:
 
-- [SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) — `scripts/dev-reset.ps1` (+ SQL helpers)  
+- [SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) — `scripts/dev-reset.ps1` (+ SQL helpers)  
 - [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `scripts/dev-reset.ps1` (Gallery; no SQL)  
 
 Future BreezeOn applications must ship this model when they add a runnable local host.

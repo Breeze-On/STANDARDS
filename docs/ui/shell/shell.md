@@ -12,7 +12,7 @@ App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.
 | --- | --- | --- |
 | Left nav | `BoNavPane` / `BoNavLink` | Platform navigation — see [navigation.md](navigation.md) |
 | Header | `BoAppHeader` | Top header card; **per-page** `AppTitle` / `Subtitle` (host-localized); trailing actions; optional `TabsContent` |
-| Body | `BoAppBody` | Body region inside a floating card; card hugs short content; when content exceeds the viewport slot, the card caps and scrolls internally |
+| Body | `BoAppBody` | Body region inside a floating card; card **fills** the available shell viewport slot; when content exceeds the slot, scroll **inside** the body (`overflow: auto` on `BoAppBody`). Home / nav hub: card fills the slot with **no** body scrollbar |
 | Footer | `BoAppFooter` | Optional per page (`ShowFooter`); when shown, fixed bottom footer card |
 
 `BoShellCard` provides floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None. Token names: [tokens.md](../foundations/tokens.md).

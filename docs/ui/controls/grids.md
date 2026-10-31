@@ -77,12 +77,13 @@ The library **never** talks to SQL or application repositories.
 | `FieldKey` | Stable column / property id |
 | `Required` | Red asterisk on header; Edit cells should set `Required` on `Bo*` fields |
 | `Align` | Cell **value** alignment only — Left (default) / Center / Right. **Headers always left.** Framework defaults: text & date **Left**; number & currency **Right** |
-| `Width` | `BoGridColumnWidth`: default **Flex** = equal `100%/n` (`table-layout: fixed` + `<colgroup>`; table always 100% of container). Action column (Row Edit / Inline Edit) is Hug via `--bo-grid-action-col-width` (default `4.75rem`; never `1px`). Do not use `calc()` on `<col>`. **Compact** ≈ `12%` when set |
+| `Width` | `BoGridColumnWidth`: default **Flex** = equal `100%/n` among Flex columns without `WidthPercent` (`table-layout: fixed` + `<colgroup>`; table always 100% of container). Action column (Row Edit / Inline Edit) is Hug via `--bo-grid-action-col-width` (default `4.75rem`; never `1px`). Do not use `calc()` on `<col>`. **Compact** ≈ `12%` when set |
+| `WidthPercent` | Optional explicit percent of table width (e.g. `20`). When set on a Flex column, that column uses `width: N%` instead of equal Flex share. Compact/Hug ignore this and keep their fixed behavior |
 | `SortValue` | Optional `Func<TItem, object?>`; when set, header is sortable |
 | `Display` | Read-only / non-editing cell template (`BoGridCellContext<TItem>`) |
 | `Edit` | Editable cell template (`BoTextField`, `BoDropDownList`, `BoDateField`, `BoNumberField`, …) |
 
-Changing a column's `Title`, `FieldKey`, `Required`, `Align`, or `Width` after first render re-renders the grid (`NotifyColumnsChanged`), so headers and layout stay in sync with dynamic column parameters.
+Changing a column's `Title`, `FieldKey`, `Required`, `Align`, `Width`, or `WidthPercent` after first render re-renders the grid (`NotifyColumnsChanged`), so headers and layout stay in sync with dynamic column parameters.
 
 ### Cell context (`BoGridCellContext<TItem>`)
 

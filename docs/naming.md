@@ -18,15 +18,26 @@ Current conventions across the organization.
 - Established repos:
   - `STANDARDS` — organization standards (`docs/`) and current architecture (`architecture/`)
   - `.github` — org profile README
-  - `SYSTEM-ADMIN-ADM` — ADM application
+  - `SYSTEM-ADMIN-EAC` — EAC application (Enterprise Administration Center)
   - `SYSTEM-SHARED-UI` — shared Blazor UI library (`BreezeOn.UI`)
 
 ## Applications (code)
 
 | Application / library | Repo | Project / namespace |
 | --- | --- | --- |
-| ADM | `SYSTEM-ADMIN-ADM` | `BreezeOn.Adm` |
+| EAC | `SYSTEM-ADMIN-EAC` | `BreezeOn.Eac` |
 | Shared UI | `SYSTEM-SHARED-UI` | `BreezeOn.UI` |
+
+## Application technical identifiers
+
+| Concept | Rule | Examples |
+| --- | --- | --- |
+| Repository name | The application’s **technical identifier** in GitHub and in the EAC registry `UniqueCode` | `SYSTEM-ADMIN-EAC`, `SYSTEM-HR-HRM`, `SYSTEM-FINANCE-AP` |
+| `UniqueCode` | Matches the repository name | same as above |
+| `Code` | Short business identifier for the application | `EAC`, `HRM`, `AP` |
+| `ApplicationGUID` | Immutable relationship key (see [database.md](database.md)) | generated GUID string |
+
+Do not invent alternate technical ids that diverge from the repository name without an explicit org decision and STANDARDS update.
 
 ## Documentation files
 

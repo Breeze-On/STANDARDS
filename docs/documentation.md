@@ -137,7 +137,7 @@ When a human asks an agent to **extract all `.md` documentation for external rev
 
 | Item | Requirement |
 | --- | --- |
-| Sources | `STANDARDS`, `SYSTEM-ADMIN-ADM`, `SYSTEM-SHARED-UI`, `.github` (local `Projects` clones preferred; shallow `gh` clone to temp if needed) |
+| Sources | `STANDARDS`, `SYSTEM-ADMIN-EAC`, `SYSTEM-SHARED-UI`, `.github` (local `Projects` clones preferred; shallow `gh` clone to temp if needed) |
 | Output | One `.md` under the user’s `Downloads` folder (timestamped name) |
 | Format | Each source file wrapped with `DOC BEGIN` / `DOC END` plus Repository, File name, Path, and Full GitHub-style path |
 | Not allowed | Zip-only delivery; creating or pushing GitHub repositories |

@@ -18,17 +18,26 @@ Related:
 - [adr.md](adr.md)
 - [decisions/README.md](../decisions/README.md)
 
-## ADM
-
-Administration application — centralized hub for system configuration, business drop-down (DDL) / reference data, security access, and role assignments. Repository: `SYSTEM-ADMIN-ADM` (`BreezeOn.Adm`).
-
-Related:
-- [architecture/adm.md](../architecture/adm.md)
-- [architecture/landscape.md](../architecture/landscape.md)
-
 ## Application
 
-A purpose-built product repository that hosts a runnable Breeze On app (today: ADM pattern — Blazor Web App, Identity when used, optional SQL ownership and DEV hosting). Distinct from a shared library or the STANDARDS repo.
+A purpose-built product repository that hosts a runnable Breeze On app (today: EAC pattern — Blazor Web App, Identity when used, optional SQL ownership and DEV hosting). Distinct from a shared library or the STANDARDS repo.
+
+## ApplicationGUID
+
+Immutable relationship key for an application (and for future cross-entity links). Column name contains `GUID` → **NOT NULL**; generate once; never regenerate on update. See [database.md](database.md).
+
+## Code (application)
+
+Short business identifier for an application (e.g. `EAC`, `HRM`, `AP`). Distinct from `UniqueCode`. See [naming.md](naming.md), [database.md](database.md).
+
+## EAC
+
+Enterprise Administration Center — centralized hub for system configuration, business drop-down (DDL) / reference data, security access, and role assignments. Repository: `SYSTEM-ADMIN-EAC` (`BreezeOn.Eac`). Owns the SQL schema **`System`** (application registry and related platform tables).
+
+Related:
+- [architecture/eac.md](../architecture/eac.md)
+- [architecture/landscape.md](../architecture/landscape.md)
+- [database.md](database.md)
 
 Related:
 - [application-model.md](application-model.md)
@@ -59,10 +68,10 @@ Related:
 
 ## Business Reference Data
 
-Configuration / lookup values managed for the ecosystem (often via ADM). In current ADM docs, paired with business drop-down (DDL) management.
+Configuration / lookup values managed for the ecosystem (often via EAC). In current EAC docs, paired with business drop-down (DDL) management.
 
 Related:
-- [architecture/adm.md](../architecture/adm.md)
+- [architecture/eac.md](../architecture/eac.md)
 - [DDL](#ddl)
 
 ## Current Reality Only
@@ -75,15 +84,15 @@ Related:
 
 ## DDL
 
-Business drop-down list values (lookup / configuration lists) managed through ADM. Distinct from the UI control **Drop-Down List** (`BoDropDownList`).
+Business drop-down list values (lookup / configuration lists) managed through EAC. Distinct from the UI control **Drop-Down List** (`BoDropDownList`).
 
 Related:
-- [architecture/adm.md](../architecture/adm.md)
+- [architecture/eac.md](../architecture/eac.md)
 - [Drop-Down List](#drop-down-list)
 
 ## Domain
 
-Informal term for an application’s business area or ownership boundary (e.g. ADM does not own Shared UI; Shared UI does not own ADM business domains). **Organization-wide domain-modeling standards are not yet formally defined.**
+Informal term for an application’s business area or ownership boundary (e.g. EAC does not own Shared UI; Shared UI does not own EAC business domains). **Organization-wide domain-modeling standards are not yet formally defined.**
 
 Related:
 - [architecture/landscape.md](../architecture/landscape.md)
@@ -107,12 +116,12 @@ Related:
 
 ## DEV Environment
 
-Hosted development environment (**DEV**). GitHub Environment name: `DEV`. For ADM today: Azure App Service + Azure SQL (`BreezeOnDV` physical database name), Managed Identity for the app. Local seed scripts must not be applied to DEV / UAT / PRD by default. Legacy docs may have said DV / PP / PR — use DEV / UAT / PRD going forward.
+Hosted development environment (**DEV**). GitHub Environment name: `DEV`. For EAC today: Azure App Service + Azure SQL (`BreezeOnDV` physical database name), Managed Identity for the app. Local seed scripts must not be applied to DEV / UAT / PRD by default. Legacy docs may have said DV / PP / PR — use DEV / UAT / PRD going forward.
 
 Related:
 - [environments.md](environments.md)
 - [hosted-deployment.md](hosted-deployment.md)
-- [architecture/adm.md](../architecture/adm.md)
+- [architecture/eac.md](../architecture/eac.md)
 
 ## UAT Environment
 
@@ -161,6 +170,14 @@ UI layout display name for `BoRow` — one horizontal band of equal-width field 
 Related:
 - [ui/layout/layout.md](ui/layout/layout.md)
 - [ui/layout/sections.md](ui/layout/sections.md)
+
+## System (SQL schema)
+
+EAC-owned SQL schema for platform administration / shared catalog tables (for example `System.EACApplications`). Other apps consume; they do not fork duplicate catalogs. See [database.md](database.md), [architecture/eac.md](../architecture/eac.md).
+
+## UniqueCode
+
+Application technical identifier in the EAC registry; value follows the GitHub **repository name** (e.g. `SYSTEM-ADMIN-EAC`). Distinct from short `Code`. See [naming.md](naming.md), [database.md](database.md).
 
 ## Shared Library
 

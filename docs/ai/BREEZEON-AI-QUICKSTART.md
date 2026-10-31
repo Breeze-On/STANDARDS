@@ -35,7 +35,7 @@ One ecosystem, multiple specialized applications, shared platform capability wit
 ### Platform mindset
 
 ```text
-Application (e.g. ADM)
+Application (e.g. EAC)
     -> BreezeOn.UI   (public Bo* API)
         -> Fluent UI Blazor  (internal only)
 ```
@@ -66,7 +66,7 @@ High level only. Detail: [`architecture/landscape.md`](../../architecture/landsc
 | --- | --- | --- |
 | Governance SSOT | `STANDARDS` | Docs, architecture descriptions, ADRs |
 | Shared UI | `SYSTEM-SHARED-UI` | `BreezeOn.UI` + Gallery |
-| Application | `SYSTEM-ADMIN-ADM` | ADM product, SYSADM SQL, DEV deploy metadata (procedures → STANDARDS) |
+| Application | `SYSTEM-ADMIN-EAC` | EAC product, SYSADM SQL, DEV deploy metadata (procedures → STANDARDS) |
 
 **Dependency direction (must preserve):**
 
@@ -75,7 +75,7 @@ Product apps  -->  BreezeOn.UI  -->  Fluent (internal)
 STANDARDS     <--  link / follow  --  product & Shared UI
 ```
 
-No reverse dependency of Shared UI on ADM domains/databases. Apps do not own the design-system implementation.
+No reverse dependency of Shared UI on EAC domains/databases. Apps do not own the design-system implementation.
 
 ---
 
@@ -91,17 +91,17 @@ No reverse dependency of Shared UI on ADM domains/databases. Apps do not own the
 
 **Purpose:** Single public Blazor design-system contract (`Bo*`, tokens, `AddBreezeOnUI`) for all product apps.
 
-**Responsibilities:** Shell chrome, theming, locale/theme cookies, navigation hub, form field chrome, layout primitives (Section / Row / Stack), dialogs/toasts — not ADM business domains or databases.
+**Responsibilities:** Shell chrome, theming, locale/theme cookies, navigation hub, form field chrome, layout primitives (Section / Row / Stack), dialogs/toasts — not EAC business domains or databases.
 
 **Design philosophy:** Option B+ floating cards; locked left nav / header actions / Home hub patterns; dual Light/Dark semantic tokens; Calibri default; Fluent stays internal.
 
-**Approved usage:** `services.AddBreezeOnUI()`; host renders `BoThemeProvider` + `BoProviders`; pages use `Bo*` only; Gallery (`BreezeOn.UI.Gallery`) is the component host reference, not a product glossary (`BoUi` resources are not for ADM).
+**Approved usage:** `services.AddBreezeOnUI()`; host renders `BoThemeProvider` + `BoProviders`; pages use `Bo*` only; Gallery (`BreezeOn.UI.Gallery`) is the component host reference, not a product glossary (`BoUi` resources are not for EAC).
 
 ---
 
 ## Application Adoption Pattern
 
-**Canonical reference:** `SYSTEM-ADMIN-ADM` (ADM). See also [`BREEZEON-AI-APPLICATION-ADOPTION.md`](BREEZEON-AI-APPLICATION-ADOPTION.md) and [`architecture/adm.md`](../../architecture/adm.md).
+**Canonical reference:** `SYSTEM-ADMIN-EAC` (EAC). See also [`BREEZEON-AI-APPLICATION-ADOPTION.md`](BREEZEON-AI-APPLICATION-ADOPTION.md) and [`architecture/eac.md`](../../architecture/eac.md).
 
 | Topic | What to understand |
 | --- | --- |
@@ -109,11 +109,11 @@ No reverse dependency of Shared UI on ADM domains/databases. Apps do not own the
 | Integration | Sibling `ProjectReference` to `BreezeOn.UI`; `AddBreezeOnUI()`; Fluent + `breezeon-ui.css` + early theme/locale JS in host `App.razor` |
 | Layout | `MainLayout` = `BoThemeProvider` → `BoAppShell` → `BoProviders`; per-route `BoAppHeader` titles; footer optional (`ShowFooter`) |
 | Home | Locked `BoNavHub` + `BoNavCardStyleHyperlink` (not Section→Row→Field) |
-| Localization | App-owned resources (ADM: `AdmResources` + `IAdmLocalizer`); subscribe to `IBoLocaleService.Changed` |
+| Localization | App-owned resources (EAC: `EacResources` + `IEacLocalizer`); subscribe to `IBoLocaleService.Changed` |
 | Navigation | Left `BoNavPane` / `BoNavLink` + `BoIcon`; URLs match page name (lowercase, hyphenated) |
 | Branding | Library logos `_content/BreezeOn.UI/brand/*`; per-app Home hero under `wwwroot/brand/` |
 
-Auth/Identity is **not** part of current ADM shell adoption (deferred). Business schema remains `sql/current_model/` (SYSADM); EF keeps migration infrastructure without Identity tables.
+Auth/Identity is **not** part of current EAC shell adoption (deferred). Business schema remains `sql/current_model/` (SYSADM); EF keeps migration infrastructure without Identity tables.
 
 ---
 
@@ -162,7 +162,7 @@ Autonomous local verification: `.\scripts\dev-reset.ps1` (requires `.env` from `
 - Point routine Development at Azure SQL when local Docker SQL is the org pattern
 - Skip the org local script standard (`scripts/dev-reset.ps1`) or invent alternate startup scripts (`dev-up` / `dev-down` / custom run scripts)
 - Hardcode secrets instead of a gitignored `.env`
-- Add ADM business features into Shared UI (or UI library concerns into ADM)
+- Add EAC business features into Shared UI (or UI library concerns into EAC)
 
 ---
 
@@ -176,7 +176,7 @@ Autonomous local verification: `.\scripts\dev-reset.ps1` (requires `.env` from `
 | Org agent entry (full) | [`README_AI.md`](../../README_AI.md) |
 | Documentation rules | [`docs/documentation.md`](../documentation.md) |
 | Landscape | [`architecture/landscape.md`](../../architecture/landscape.md) |
-| ADM | [`architecture/adm.md`](../../architecture/adm.md) |
+| EAC | [`architecture/eac.md`](../../architecture/eac.md) |
 | UI overview | [`docs/ui/overview.md`](../ui/overview.md) |
 | Page checklist | [`docs/ui/page-development.md`](../ui/page-development.md) |
 | Shell / nav | [`docs/ui/shell/shell.md`](../ui/shell/shell.md), [`navigation.md`](../ui/shell/navigation.md) |
@@ -187,6 +187,6 @@ Autonomous local verification: `.\scripts\dev-reset.ps1` (requires `.env` from `
 | ADR index | [`decisions/README.md`](../../decisions/README.md) |
 | ADR-002 / ADR-004 | Blazor Interactive Server · BreezeOn.UI abstraction |
 | Shared UI agents | [SYSTEM-SHARED-UI `README_AI.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README_AI.md) |
-| ADM agents | [SYSTEM-ADMIN-ADM `README_AI.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM/blob/main/README_AI.md) |
+| EAC agents | [SYSTEM-ADMIN-EAC `README_AI.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README_AI.md) |
 
 **Next:** Open [`BREEZEON-AI-STANDARDS-SUMMARY.md`](BREEZEON-AI-STANDARDS-SUMMARY.md) if the task touches standards; open [`BREEZEON-AI-APPLICATION-ADOPTION.md`](BREEZEON-AI-APPLICATION-ADOPTION.md) for UI adoption work; then the product repo’s `README_AI.md`.

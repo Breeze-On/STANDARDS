@@ -35,11 +35,13 @@ Page → Body (BoAppShell body) → Section (BoSectionMain / BoSectionSub) → R
 
 A **Row** is a layout container for one or more fields in a section. It standardizes **equal horizontal spread**: N **direct children** → N equal-width field containers. Each field fills its container (`width: 100%` of the slot).
 
+**Default slot width = 1 / N**, where N is the number of **direct** children of the `BoRow` (CSS `1fr` columns). Examples: Row with 3 fields → each **1/3**; Row with 1 field → **1/1** (full row width). Do **not** pad a single full-width field with `BoEmptyField` siblings — that shrinks the field to 1/(1+empties).
+
 | Concern | Standard |
 | --- | --- |
 | API | `ChildContent` (Option A) — not a `Fields` collection parameter |
 | Children | Form fields (`BoTextField`, future `Bo*`) as **direct** children of `BoRow` |
-| Columns | CSS grid: `grid-auto-flow: column`; `grid-auto-columns: 1fr` — 1 child = full width; 4 children = four equal columns |
+| Columns | CSS grid: `grid-auto-flow: column`; `grid-auto-columns: 1fr` — slot width **1/N** (1 child = full width; 3 children = three equal columns) |
 | Field container | Each direct child of `BoRow` (`.bo-row > *`) |
 | Row + container inside padding | **`--bo-space-row-inset`** (default **4px**) on all four sides — see [tokens.md](../foundations/tokens.md) |
 | Field container outside spacing | **`--bo-space-row-gap`** (default **16px**) `column-gap` between adjacent containers (no vertical separator between containers) |
@@ -62,9 +64,9 @@ To change inset globally (e.g. to `6px` or `8px`), set `BoThemeOptions.SpaceRowI
 | Surface | Standard |
 | --- | --- |
 | `IsHidden` on form fields | Field **still occupies** a `BoRow` column; chrome not shown (`.bo-row-item--hidden` — **not** `display: none`). Siblings do **not** reflow. Skips required validation while hidden. |
-| `BoEmptyField` | Alignment-only empty slot (no label/value); one equal-width column |
+| `BoEmptyField` | Alignment-only empty slot (no label/value); one equal-width column — use only when you **intentionally** reserve a column for alignment with another row |
 
-Do **not** use `display: none` to hide a row child — that collapses columns. Prefer `IsHidden` or `BoEmptyField`.
+Do **not** use `display: none` to hide a row child — that collapses columns. Prefer `IsHidden` or `BoEmptyField`. Do **not** use `BoEmptyField` merely to “fill” a row when a single field should span the full width (put that field alone in the `BoRow`).
 
 ### Not shipped yet (do not invent)
 

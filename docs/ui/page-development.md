@@ -128,7 +128,7 @@ When the page includes a data grid:
 
 ### Localization
 
-- [ ] Labels resolved through the **app’s own** `.resx` (Gallery `BoUi` is **not** a shared glossary for ADM or other apps) — [i18n.md](foundations/i18n.md).
+- [ ] Labels resolved through the **app’s own** `.resx` (Gallery `BoUi` is **not** a shared glossary for EAC or other apps) — [i18n.md](foundations/i18n.md).
 - [ ] `AppTitle` and `Subtitle` localized.
 - [ ] Dialog and toast text localized.
 - [ ] New user-visible strings added to resources in the **same change set**.

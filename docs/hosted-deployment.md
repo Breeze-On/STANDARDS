@@ -188,6 +188,6 @@ Do not update only a product README or a one-off workflow comment and leave this
 | [application-model.md](application-model.md) | What a Breeze On app includes; deploy expectations point here |
 | [engineering.md](engineering.md) | Runtime stack (.NET 10) |
 | [architecture/landscape.md](../architecture/landscape.md) | Implemented hosted topology |
-| [architecture/adm.md](../architecture/adm.md) | ADM DEV App Service / SQL names |
+| [architecture/eac.md](../architecture/eac.md) | EAC DEV App Service / SQL names |
 | [ADR-002](../decisions/ADR-002-blazor-interactive-server.md) | Interactive Server hosting model |
 | [documentation.md](documentation.md) | Current-reality and same-change-set rules |

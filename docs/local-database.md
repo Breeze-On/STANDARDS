@@ -35,7 +35,7 @@ Starter files live in [`templates/local-sql/`](../templates/local-sql/). Copy th
 
 ## Database naming
 
-| | Convention | ADM example |
+| | Convention | EAC example |
 | --- | --- | --- |
 | Logical product DB | Product family name | BreezeOn |
 | Environment | `Local` | Local |

@@ -82,7 +82,7 @@ STANDARDS/
    ├─ README.md
    ├─ landscape.md
    ├─ ecosystem.md
-   ├─ adm.md
+   ├─ eac.md
    └─ security.md
 ```
 
@@ -153,7 +153,7 @@ Full index: [`decisions/README.md`](decisions/README.md).
 | --- | --- |
 | [Landscape](architecture/landscape.md) | Ecosystem map: repos, UI position, Azure hosting, SQL, boundaries |
 | [Ecosystem](architecture/ecosystem.md) | Org layout and existing repositories |
-| [ADM](architecture/adm.md) | Administration application (current) |
+| [EAC](architecture/eac.md) | Administration application (current) |
 | [Security](architecture/security.md) | Auth and access as implemented |
 
 Index: [`architecture/README.md`](architecture/README.md).

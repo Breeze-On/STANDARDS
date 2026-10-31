@@ -4,7 +4,7 @@ Owner: Architecture
 
 High-level map of the **implemented** Breeze On ecosystem: repositories, dependency position, hosting, and data relationships as they exist today.
 
-Current-reality only. For org identity and the repository table, see [ecosystem.md](ecosystem.md). For ADM and security detail, see [adm.md](adm.md) and [security.md](security.md).
+Current-reality only. For org identity and the repository table, see [ecosystem.md](ecosystem.md). For EAC and security detail, see [eac.md](eac.md) and [security.md](security.md).
 
 ## Organization
 
@@ -32,23 +32,23 @@ Current-reality only. For org identity and the repository table, see [ecosystem.
 | --- | --- | --- |
 | [STANDARDS](https://github.com/Breeze-On/STANDARDS) | Org standards | Conventions, current architecture descriptions, ADRs |
 | [.github](https://github.com/Breeze-On/.github) | Org profile | Vision / mission / ecosystem messaging only |
-| [SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) | Application | ADM Blazor app, Identity, business schema, local SQL sandbox, DEV deploy |
+| [SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) | Application | EAC Blazor app (no ASP.NET Core Identity), business schema, local SQL sandbox, DEV deploy |
 | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | Shared library | `BreezeOn.UI` (`Bo*`) + local component gallery |
 
 **Boundary rules in force today**
 
 - One repository per application or shared concern ([ADR-001](../decisions/ADR-001-multi-repository-model.md)).
 - Product repos stay thin and **link** to STANDARDS; they do not redefine org-wide rules.
-- `SYSTEM-SHARED-UI` does not own ADM business domains, workflows, or databases.
-- ADM does not own the design-system implementation.
+- `SYSTEM-SHARED-UI` does not own EAC business domains, workflows, or databases.
+- EAC does not own the design-system implementation.
 
 ```text
-  STANDARDS  <---- link / follow ----  SYSTEM-ADMIN-ADM
+  STANDARDS  <---- link / follow ----  SYSTEM-ADMIN-EAC
       ^                                    |
       |                                    | ProjectReference → BreezeOn.UI
       +---- link / follow ----  SYSTEM-SHARED-UI
                                     |
-                                    +-- gallery host + ADM consume BreezeOn.UI
+                                    +-- gallery host + EAC consume BreezeOn.UI
 ```
 
 ## UI dependency position (`BreezeOn.UI`)
@@ -64,7 +64,7 @@ Public UI contract: **`BreezeOn.UI`** in `SYSTEM-SHARED-UI` ([ADR-004](../decisi
 | Consumer | Current state |
 | --- | --- |
 | `BreezeOn.UI.Gallery` (in SYSTEM-SHARED-UI) | Interactive Server host; consumes `BreezeOn.UI` locally |
-| ADM (`SYSTEM-ADMIN-ADM`) | Blazor Interactive Server; **ProjectReference** to `BreezeOn.UI` (`BoAppShell` shell, Home `BoNavHub`, public empty destination pages); **no** ASP.NET Core Identity |
+| EAC (`SYSTEM-ADMIN-EAC`) | Blazor Interactive Server; **ProjectReference** to `BreezeOn.UI` (`BoAppShell` shell, Home `BoNavHub`, Applications `BoGrid`, other destination shells); **no** ASP.NET Core Identity |
 
 UI conventions: [`docs/ui/overview.md`](../docs/ui/overview.md).
 
@@ -75,8 +75,8 @@ Hosted **DEV** infrastructure documented today (GitHub Environment name: **`DEV`
 ```text
   GitHub Actions (manual DEV deploy)
            |
-           +---> ADM App Service
-           |     breezeon-system-admin-adm-dv
+           +---> EAC App Service
+           |     breezeon-system-admin-eac-dv
            |     (Linux, Free F1, .NET 10)
            |     plan: asp-breezeon-dev
            |     RG: RG-BREEZEON-DEV
@@ -93,16 +93,16 @@ Hosted **DEV** infrastructure documented today (GitHub Environment name: **`DEV`
 | Resource | Value |
 | --- | --- |
 | Resource group | `RG-BREEZEON-DEV` |
-| ADM App Service | `breezeon-system-admin-adm-dv` |
+| EAC App Service | `breezeon-system-admin-eac-dv` |
 | Gallery App Service | `breezeon-system-shared-ui-dev` |
-| App Service plan (ADM) | `asp-breezeon-dev` |
+| App Service plan (EAC) | `asp-breezeon-dev` |
 | Azure SQL server | `sql-breezeon-dev.database.windows.net` |
-| Azure SQL database (ADM) | `BreezeOnDV` |
-| ADM App DB auth | System-assigned Managed Identity |
+| Azure SQL database (EAC) | `BreezeOnDV` |
+| EAC App DB auth | System-assigned Managed Identity |
 
 `BreezeOn.UI` remains a library consumed by product apps; the Gallery is also hosted on DEV for shared UI smoke.
 
-Detail: [adm.md](adm.md), [environments.md](../docs/environments.md).
+Detail: [eac.md](eac.md), [environments.md](../docs/environments.md).
 
 ## Azure SQL and local SQL relationship
 
@@ -113,14 +113,14 @@ Detail: [adm.md](adm.md), [environments.md](../docs/environments.md).
   Auth: SQL sa (gitignored .env / User Secrets)
   Schema: sql/current_model/   Seed: sql/seed/ (local only)
 
-  Hosted DEV (ADM)
+  Hosted DEV (EAC)
   -----------------------------------------
   Azure SQL BreezeOnDV
   App: Managed Identity
   Operators: Microsoft Entra (as documented)
 ```
 
-| Concern | Local | DEV (ADM) |
+| Concern | Local | DEV (EAC) |
 | --- | --- | --- |
 | Engine | SQL Server in Docker | Azure SQL |
 | Database | `BreezeOnLocal` | `BreezeOnDV` |
@@ -133,7 +133,7 @@ Decision record: [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.
 
 | Surface | Runtime |
 | --- | --- |
-| ADM | Blazor Web App, Interactive Server, .NET 10 ([ADR-002](../decisions/ADR-002-blazor-interactive-server.md)) |
+| EAC | Blazor Web App, Interactive Server, .NET 10 ([ADR-002](../decisions/ADR-002-blazor-interactive-server.md)) |
 | Shared UI gallery | Same Interactive Server pattern; no database |
 
 ## Related architecture docs
@@ -141,6 +141,6 @@ Decision record: [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.
 | Document | Covers |
 | --- | --- |
 | [ecosystem.md](ecosystem.md) | Org identity and repository list |
-| [adm.md](adm.md) | Administration application |
+| [eac.md](eac.md) | Enterprise Administration Center |
 | [security.md](security.md) | Auth and access as implemented |
 | [architecture/README.md](README.md) | Architecture index |

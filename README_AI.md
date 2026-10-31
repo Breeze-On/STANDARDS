@@ -94,7 +94,7 @@ STANDARDS/
    ├─ README.md
    ├─ landscape.md
    ├─ ecosystem.md
-   ├─ adm.md
+   ├─ eac.md
    └─ security.md
 ```
 

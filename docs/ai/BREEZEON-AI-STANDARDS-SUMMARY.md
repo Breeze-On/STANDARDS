@@ -74,7 +74,7 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Host: `AddBreezeOnUI()`, `UseRequestLocalization`, early `bo-locale.js`, `BoProviders` | Same |
 | Re-render on `Locale.Changed` where localized text is shown | Same |
 
-ADM example: `AdmResources` + `IAdmLocalizer` (locale-aware, not ambient-only).
+EAC example: `EacResources` + `IEacLocalizer` (locale-aware, not ambient-only).
 
 ---
 

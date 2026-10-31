@@ -38,6 +38,24 @@ All other business columns are **NULL**-allowed unless an explicit, documented e
 
 Do not default every column to `NOT NULL`.
 
+## Shared System schema ownership
+
+- The SQL schema **`System`** holds platform administration / shared catalog tables owned by **EAC** (Enterprise Administration Center).
+- Other applications **consume** those registry values (for example via `ApplicationGUID`); they must **not** fork duplicate application-catalog tables.
+- Concrete table inventory lives in the EAC product [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) and `sql/current_model/` — not in this file.
+
+## Application registry identity columns
+
+Conventions for registering applications in the EAC-owned catalog (column semantics are org-wide; physical table is EAC-owned):
+
+| Column | Role |
+| --- | --- |
+| **ApplicationGUID** | Immutable relationship key between entities and across apps. Column name contains `GUID` → **NOT NULL**. Generate once on insert; **never** regenerate or overwrite on update. Prefer a **UNIQUE** constraint/index. |
+| **UniqueCode** | Application **technical** identifier. Value follows the **GitHub repository name** (e.g. `SYSTEM-ADMIN-EAC`, `SYSTEM-HR-HRM`). Prefer a **UNIQUE** constraint/index. Length follows non-Code string defaults unless the product documents an exception. |
+| **Code** | Short **business** identifier (e.g. `EAC`, `HRM`, `AP`). Length follows the **Code** default (**30**) unless documented otherwise. |
+
+Repository ↔ identifier mapping: [naming.md](naming.md) § Application technical identifiers.
+
 ## Script layout (application repos)
 
 Each application repository that owns database objects maintains SQL under:
@@ -86,4 +104,6 @@ Each application that owns business database objects must maintain a **current**
 - Do not document planned tables as if they exist.
 - Point agents and humans to this file for the readable model; scripts remain the executable SSOT.
 
-Database objects for ADM live in [Breeze-On/SYSTEM-ADMIN-ADM](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM) under `sql/` and [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-ADM/blob/main/docs/db-model.md).
+Database objects for EAC live in [Breeze-On/SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) under `sql/` and [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md).
+
+**Seed vs current model (reminder):** `sql/current_model/` is **current-state schema only**. Sample and development data belong only under `sql/seed/`. Do not mix seed inserts into current-model scripts.
