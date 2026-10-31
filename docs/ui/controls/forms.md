@@ -153,6 +153,7 @@ Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory
 ### Search and list
 
 - Search lives in the **expanded panel** as a **fixed first row** (always available — including `DisplayCode` and `AllowMultiple`).
+- Expanded panel is a **fixed** popover via `boPopup` / `bo-popup.js` (same escape path as Date Field): overlays shell cards and dialogs with `overflow: auto` (e.g. Settings); width matches the closed control; options `max-height` grows into available viewport space under (or above) the control, then scrolls inside the options region only when the list is taller than that space.
 - Type filters where **Description contains** the query (case-insensitive). When **`DisplayCode`** is on (Code is shown in the list), also match **Code**.
 - Show at most **100** matches (narrow with search).
 - On open, focus moves to the search box (type without an extra click).
