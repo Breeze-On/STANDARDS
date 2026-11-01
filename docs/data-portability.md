@@ -115,7 +115,7 @@ Envelope for EAC Entity Types import/export. Business key is `code`. Upsert by c
 }
 ```
 
-Configurable max size: EAC `BusinessEntitiesImport:MaxFileSizeMb` (default **10**). All-or-nothing validation; in-memory only.
+Configurable max size: EAC `BusinessEntitiesImport:MaxFileSizeMb` (default **10**). Validate then apply in one database transaction; any failure rolls back the entire import. In-memory only.
 
 ---
 
@@ -172,7 +172,7 @@ Envelope for EAC Business Hierarchy import/export. Business keys only (`code`, `
 - Upsert by current `code` (preserve `BusinessEntityGUID` on update).
 - Validate then apply in **parent-before-child** order.
 - Reject unknown `businessEntityTypeCode`, missing `parentCode`, in-file duplicate codes, and circular relationships.
-- Fail-fast: any failure aborts the entire import.
+- Fail-fast: any failure aborts the entire import and **rolls back** all rows from that import (single database transaction).
 - Max size: `BusinessEntitiesImport:MaxFileSizeMb` (default **10**); in-memory only.
 
 ### Export
