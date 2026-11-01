@@ -79,6 +79,41 @@ See also [navigation.md § Branding ownership](navigation.md#branding-ownership-
 | Announce | `role="alertdialog"` + `aria-modal="true"` + `aria-busy="true"`; message `aria-live="assertive"` |
 | Scroll lock | `html` / `body` / `.bo-theme-root` overflow hidden via `:has(.bo-page-freeze-host:not([hidden]))` |
 
+### When to use
+
+`IBoPageFreezeService` **SHOULD** be used when:
+
+- Database writes occur (create, update, delete)
+- Import or export operations occur
+- Bulk operations occur
+- Synchronization or other background processing is expected to take noticeable time
+- Users might otherwise attempt duplicate actions
+- User interaction should be prevented until completion
+- Loading lookups that hit the backend at a scale users can perceive (e.g. full hierarchy fetch before an edit dialog)
+
+### When not to use
+
+`IBoPageFreezeService` **SHOULD NOT** be used for:
+
+- Grid filtering, sorting, paging, or searching
+- Tab changes
+- Accordion expand/collapse
+- Dialog open/close chrome alone (without backend work)
+- Validation-only actions (e.g. field blur format checks)
+- Local UI state changes
+- Fast in-memory operations
+- Routine navigation / initial page navigation loads that are part of ordinary browsing
+
+### Principle
+
+Page freeze is for **meaningful backend work** or operations users perceive as “loading.” It improves confidence and prevents duplicate actions. It must **not** be used so aggressively that the application feels blocked during normal interaction.
+
+### Messaging
+
+- Pass **already-localized** short contextual gerunds (e.g. “Importing Applications...”, “Saving Changes...”, “Deleting Business Entity...”).
+- Prefer a specific message over the default `PageFreeze_PleaseWait` whenever the operation is known.
+- Keep copy concise; one line under the minimized logo.
+
 ### Usage pattern
 
 ```csharp
@@ -89,12 +124,15 @@ await PageFreeze.RunAsync(L["Import_Busy"], async () =>
 await Toasts.ShowAsync(BoToastVariant.Success, L["Import_Done"]);
 ```
 
+Prefer `RunAsync` so `Hide` always runs in `finally`. Nesting is reference-counted when one long op starts another.
+
 ### Anti-patterns
 
 - Do **not** raise toasts while freeze is active — show outcome toasts **after** `Hide`
 - Do **not** add `IsBusy` / spinner chrome to `BoButton` for long ops — keep the button thin
 - Do **not** mount a second freeze host in product layouts
-- Do **not** use freeze for sub-second work
+- Do **not** use freeze for sub-second work or the “when not to use” cases above
+- Do **not** invent page-local loading overlays — use this shared service only
 
 ### Gallery
 

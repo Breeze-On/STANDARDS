@@ -132,7 +132,7 @@ When the page includes a data grid:
 - [ ] Labels resolved through the **app’s own** `.resx` (Gallery `BoUi` is **not** a shared glossary for EAC or other apps) — [i18n.md](foundations/i18n.md).
 - [ ] `AppTitle` and `Subtitle` localized.
 - [ ] Dialog and toast text localized.
-- [ ] Long-running ops use **`IBoPageFreezeService`** (`RunAsync` preferred); pass already-localized freeze messages; show outcome toasts **after** Hide — [overlays.md](shell/overlays.md).
+- [ ] Long-running ops use **`IBoPageFreezeService`** (`RunAsync` preferred); pass already-localized freeze messages; show outcome toasts **after** Hide; follow when / when-not rules — [overlays.md](shell/overlays.md) § Page freeze.
 - [ ] New user-visible strings added to resources in the **same change set**.
 
 ### Theming
