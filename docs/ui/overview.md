@@ -18,6 +18,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [foundations/i18n.md](foundations/i18n.md) | Culture / timezone cookies; per-app resource libraries; no hardcoded labels |
 | **Shell** | |
 | [shell/shell.md](shell/shell.md) | App shell chrome, footer, header tabs |
+| [shell/overlays.md](shell/overlays.md) | Dialogs, Settings, toasts, page freeze (`IBoPageFreezeService`) |
 | [shell/navigation.md](shell/navigation.md) | Left navigation, route/URL matching |
 | **Layout** | |
 | [layout/sections.md](layout/sections.md) | Main Section / Sub Section |
@@ -49,8 +50,9 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | --- | --- | --- |
 | Design tokens / `BoThemeProvider` | CSS variables and theme options (palette, spacing, radius, typography, shell tokens, warning/info/scrim, z-index, focus ring); dual Light/Dark palettes; `configureTheme` via `IOptions<BoThemeOptions>` | [tokens.md](foundations/tokens.md), [typography.md](foundations/typography.md) |
 | `IBoThemeModeService` | `ThemeMode` + active palette; cookie `bo-theme-mode` restore via `BoProviders` bootstrap | [tokens.md](foundations/tokens.md) |
-| `BoProviders` | Hosts Fluent providers, theme/locale bootstrap, dialog / toast hosts | [tokens.md](foundations/tokens.md), [i18n.md](foundations/i18n.md), [shell.md](shell/shell.md) |
+| `BoProviders` | Hosts Fluent providers, theme/locale bootstrap, dialog / toast / page-freeze hosts | [tokens.md](foundations/tokens.md), [i18n.md](foundations/i18n.md), [shell.md](shell/shell.md), [overlays.md](shell/overlays.md) |
 | `IBoLocaleService` | Culture + IANA timezone; cookies `bo-culture` / `bo-timezone`; `FormatCulture` (en-CA / fr-CA) + `UiCulture`; no process-wide culture mutation | [i18n.md](foundations/i18n.md) |
+| `IBoBrandingService` | Circuit logos (`LogoExpandedSrc` / `LogoMinimizedSrc`); published by `BoNavPane`; page freeze uses minimized | [navigation.md](shell/navigation.md), [overlays.md](shell/overlays.md) |
 | `BoAppShell` | Option B app chrome: full-height nav + header / body / footer column | [shell.md](shell/shell.md) |
 | `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None | [shell.md](shell/shell.md), [tokens.md](foundations/tokens.md) |
 | `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail (labels visually hidden; `BoNavLink.Title` tooltip when collapsed; localized `Chrome_Aria_Nav*`); bottom collapse control; prefer `IconContent` with `BoIcon` | [navigation.md](shell/navigation.md) |
@@ -79,17 +81,18 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoDateField` | Date / DateTime UI; bound type always `DateTime?` (never `DateOnly`); `ReadOnly`; locale (`FormatCulture`) + fixed calendar popover | [forms.md](controls/forms.md) |
 | `BoNumberField` | Number UI; bound type always `decimal?`; integer/decimals; currency/% (mutex); focus raw / blur formatted; `ReadOnly`; alignment default Right; needs host `bo-number-field.js` | [forms.md](controls/forms.md) |
 | `BoButton` | Pill button (primary / secondary / stealth); `HtmlType` (`BoButtonType`); shorter+wider padding; shadow + hover lift; optional icon | [forms.md](controls/forms.md), [tokens.md](foundations/tokens.md) |
-| `BoDialogService` | Message dialog facade (`ShowMessageAsync`) | — |
-| `IBoToastService` / `BoToastHost` | Top-right toasts (Main/Body; Success / Alert / Information / Error; click dismiss) | [shell.md](shell/shell.md) |
+| `BoDialogService` | Message dialog facade (`ShowMessageAsync`) | [overlays.md](shell/overlays.md) |
+| `IBoToastService` / `BoToastHost` | Top-right toasts (Main/Body; Success / Alert / Information / Error; click dismiss) | [shell.md](shell/shell.md), [overlays.md](shell/overlays.md) |
+| `IBoPageFreezeService` / `BoPageFreezeHost` | Full-viewport busy freeze (branded pulse + frosted scrim; `Show`/`Hide`/`RunAsync`; ref-counted) | [overlays.md](shell/overlays.md) |
 | `BoValidationContext` / `IBoSubmitInterceptor` | Deferred validation; `Validate(null)` attempts all groups, `Validate(group)` only that group (`IsAttempted(group)`); live fail badges; Field→Sub→Main→Tab failures | [forms.md](controls/forms.md) |
 | `BoValidationFailBadge` | Red disc + white “!” (tabs + section headers) | [forms.md](controls/forms.md) |
-| `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell/shell.md), [i18n.md](foundations/i18n.md) |
+| `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell/shell.md), [i18n.md](foundations/i18n.md), [overlays.md](shell/overlays.md) |
 | `BoGrid` / `BoGridColumn` / `BoGridCache` | Section-level grid (ReadOnly / RowEdit / InlineEdit / NestedView); optional `EnableSelection` (flat + Nested Scenario 1; cascade select/expand on nested Multiple); typed cache; frozen sort while editing; column `Align` / `Width` (Flex default); Nested View expand/collapse + rails; optional horizontal scroll; host `bo-grid.js` for truncated-cell titles | [grids.md](controls/grids.md) |
 | `BoSectionMain` / `BoSectionSub` `Required` | Optional red asterisk after section title (e.g. mandatory grid) | [sections.md](layout/sections.md), [grids.md](controls/grids.md) |
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Grid** tab replaces Preview with Sub **Grid Control** hosting `BoGrid`; Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Grid** tab replaces Preview with Sub **Grid Control** hosting `BoGrid`; **Page Freeze** tab demos `IBoPageFreezeService.RunAsync` then Success toast; Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
 
 ## Documentation governance
 

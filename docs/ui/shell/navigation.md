@@ -14,6 +14,16 @@ Left navigation and URL path standards. Related: [shell.md](shell.md), [tokens.m
 
 **Per-application customization:** logo image URLs (`LogoExpandedSrc` / `LogoMinimizedSrc`); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; optional `PrimaryColor` / `TertiaryColor` (soft surfaces / primary rail — not selected-nav fill).
 
+### Branding ownership (current)
+
+| Concern | Standard |
+| --- | --- |
+| Configuration surface | Set logos on **`BoNavPane`** (`LogoExpandedSrc` / `LogoMinimizedSrc`) — one place per app layout |
+| Shared state | `BoNavPane` publishes both URLs to scoped **`IBoBrandingService`** (`SetLogos`) |
+| Defaults | Null/whitespace → `BoBrandingDefaults` (`breezeon-wordmark.svg` / `breezeon-icon.svg`) |
+| Page freeze | Consumes **`LogoMinimizedSrc` only** (compact square icon) — [overlays.md](overlays.md) |
+| Do not | Configure a second freeze-specific logo URL; do not use `LogoExpandedSrc` for page freeze |
+
 ### Collapsed nav, tooltips, and accessibility (current)
 
 | Concern | Standard |

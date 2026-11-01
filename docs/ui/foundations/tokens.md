@@ -45,6 +45,7 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 | `color-warning` | `--bo-color-warning` | `#C19C00` | `#C19C00` | Alert toast accent / badge gradient |
 | `color-info` | `--bo-color-info` | `#0078D4` | `#0078D4` | Information accent (Information toasts) |
 | `color-overlay-scrim` | `--bo-color-overlay-scrim` | `rgba(0,0,0,0.35)` | `rgba(0,0,0,0.35)` | Modal / profile-menu scrim |
+| `page-freeze-scrim` | `--bo-page-freeze-scrim` | `rgba(0,0,0,0.28)` | `rgba(0,0,0,0.28)` | Page freeze backdrop tint (`BoThemeOptions.ColorPageFreezeScrim`) |
 | `color-nav-text` | `--bo-color-nav-text` | `#FFFFFF` | `#FFFFFF` | Unselected nav text/icon |
 | `color-nav-text-selected` | `--bo-color-nav-text-selected` | `#000000` | `#000000` | Selected nav text/icon (black on light selected fill) |
 | `color-nav-text-hover` | `--bo-color-nav-text-hover` | `#FFFFFF` | `#FFFFFF` | Unselected nav text on hover |
@@ -63,10 +64,11 @@ Legacy aliases still emitted: `--bo-color-surface` → card-container-background
 | `content-card-margin` | `--bo-space-content-card-margin` | Larger margins for in-body content cards |
 | `row-inset` | `--bo-space-row-inset` | Inside padding for `BoRow` and each field container (default `4px`) — see [layout.md](../layout/layout.md) |
 | `row-gap` | `--bo-space-row-gap` | Gap between field containers in a `BoRow` (default `16px`) — see [layout.md](../layout/layout.md) |
+| `page-freeze-blur` | `--bo-page-freeze-blur` | Page freeze backdrop blur radius (default `6px`; `BoThemeOptions.PageFreezeBlur`) |
 
 ### Layering and focus tokens (current)
 
-Emitted by `BoThemeProvider` (fixed values; not `BoThemeOptions` properties):
+Emitted by `BoThemeProvider` (z-index / focus are fixed values; freeze scrim/blur come from `BoThemeOptions`):
 
 | CSS variable | Value | Used for |
 | --- | --- | --- |
@@ -75,7 +77,8 @@ Emitted by `BoThemeProvider` (fixed values; not `BoThemeOptions` properties):
 | `--bo-z-dialog` | `1000` | Dialog / Settings overlay |
 | `--bo-z-popup-backdrop` | `9998` | `BoDropDownList` / `BoDateField` popup backdrop |
 | `--bo-z-popup` | `10000` | Popup panel (above dialogs) |
-| `--bo-z-toast` | `11000` | Toasts (top layer) |
+| `--bo-z-toast` | `11000` | Toasts |
+| `--bo-z-page-freeze` | `12000` | Page freeze (above toast) — [overlays.md](../shell/overlays.md) |
 | `--bo-focus-ring` | `0 0 0 2px var(--bo-color-primary)` | Shared keyboard focus ring on interactive controls |
 
 ## Theme options (`AddBreezeOnUI(configureTheme)`)

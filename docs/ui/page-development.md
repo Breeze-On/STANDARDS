@@ -24,7 +24,7 @@ Every app host that renders `BreezeOn.UI` must wire the following once (referenc
 | --- | --- |
 | Services | `services.AddBreezeOnUI()` or `AddBreezeOnUI(opts => …)` — registers Fluent internally; `configureTheme` is honored via `IOptions<BoThemeOptions>` ([tokens.md § Theme options](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
 | Localization | Supported cultures `en` / `fr` + `UseRequestLocalization()` — [i18n.md](foundations/i18n.md) |
-| Layout | Render **`BoThemeProvider`** (CSS variables) and **`BoProviders`** (Fluent providers, theme/locale bootstrap, dialog + toast hosts) around the app; pages live inside **`BoAppShell`** |
+| Layout | Render **`BoThemeProvider`** (CSS variables) and **`BoProviders`** (Fluent providers, theme/locale bootstrap, dialog + toast + **page-freeze** hosts) around the app; pages live inside **`BoAppShell`** |
 | CSS (in `<head>`) | `_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css` and `_content/BreezeOn.UI/breezeon-ui.css` |
 | JS (in `<head>`) | `_content/BreezeOn.UI/js/bo-theme-mode.js`, `bo-locale.js`, `bo-popup.js`, `bo-number-field.js`, `bo-grid.js` |
 
@@ -132,6 +132,7 @@ When the page includes a data grid:
 - [ ] Labels resolved through the **app’s own** `.resx` (Gallery `BoUi` is **not** a shared glossary for EAC or other apps) — [i18n.md](foundations/i18n.md).
 - [ ] `AppTitle` and `Subtitle` localized.
 - [ ] Dialog and toast text localized.
+- [ ] Long-running ops use **`IBoPageFreezeService`** (`RunAsync` preferred); pass already-localized freeze messages; show outcome toasts **after** Hide — [overlays.md](shell/overlays.md).
 - [ ] New user-visible strings added to resources in the **same change set**.
 
 ### Theming

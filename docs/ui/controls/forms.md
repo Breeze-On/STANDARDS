@@ -339,3 +339,5 @@ These Number Field rules are **org standards** for every `BoNumberField` usage.
 | `Disabled`, `OnClick`, `IconContent`, `ChildContent`, `Class`, `Style` | Standard button behavior |
 | `BackgroundColor` / `ForegroundColor` | Optional overrides |
 | `AdditionalAttributes` | Unmatched attributes are captured and forwarded |
+
+**Long-running operations:** \BoButton\ stays a button — no \IsBusy\ / embedded spinner API. Blocking UX for multi-second work uses **\IBoPageFreezeService\** from the click handler / workflow — [overlays.md](../shell/overlays.md).

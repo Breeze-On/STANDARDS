@@ -160,6 +160,10 @@ Use for each product app’s **Home** (or equivalent landing hub). This is **not
 
 SYSTEM-SHARED-UI Gallery Home (`/`): three cards (Components, Theme, Google external — excludes Home itself); `LogoSrc="brand/home-hero.svg"`; `ShowFooter` false. Implementation SSOT for CSS: `breezeon-ui.css` (`.bo-nav-hub*`, `.bo-nav-card*`).
 
+## Overlays
+
+Dialogs, Settings, toasts, and **page freeze** (`IBoPageFreezeService`) are hosted once in `BoProviders`. Full overlay SSOT (including BoPageFreeze API, z-index, a11y, nesting): [overlays.md](overlays.md).
+
 ## Toasts (`IBoToastService`)
 
 Top-right toast stack hosted in `BoProviders` (`BoToastHost`).
