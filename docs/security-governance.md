@@ -57,6 +57,8 @@ Always follow this order:
 
 Example (EAC): transitive `System.Security.Cryptography.Pkcs` via EF Core SqlServer → SqlClient was cleared by a direct `Microsoft.Data.SqlClient` servicing upgrade, not by removing Pkcs.
 
+When bumping **`Microsoft.Data.SqlClient` to 7+** on a data-owning hosted app that uses Managed Identity / Entra auth, also add matching **`Microsoft.Data.SqlClient.Extensions.Azure`** and register `ActiveDirectoryAuthenticationProvider` before SQL open — see [hosted-deployment.md](hosted-deployment.md) and [architecture/security.md](../architecture/security.md). A SqlClient-only bump can crash App Service startup and burn Free F1 into **QuotaExceeded**.
+
 ---
 
 ## Repository expectations

@@ -14,6 +14,17 @@ Current conventions for relational databases in Breeze On applications.
 
 Routine local work uses a **SQL Server Docker sandbox** (not Azure SQL). Pattern, templates, and init expectations: [local-database.md](local-database.md). Starter files: [`templates/local-sql/`](../templates/local-sql/). Environment names: [environments.md](environments.md). Decision: [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.md).
 
+## Hosted Azure SQL (Managed Identity)
+
+Data-owning apps on App Service use connection string **`SQLAzureConnection`** with `Authentication=Active Directory Managed Identity` ([architecture/security.md](../architecture/security.md), [hosted-deployment.md](hosted-deployment.md)).
+
+**Required (SqlClient 7+ — do not skip):**
+
+1. NuGet **`Microsoft.Data.SqlClient.Extensions.Azure`** (same major/minor as `Microsoft.Data.SqlClient`)
+2. Register `ActiveDirectoryAuthenticationProvider` **before** any SQL open (including EF `Database.Migrate()`)
+
+MI grant + connection string alone are **not** sufficient. Missing the extension crash-loops container startup and commonly surfaces as Free F1 **QuotaExceeded**.
+
 ## String columns (NVARCHAR)
 
 - Use **NVARCHAR** for variable-length Unicode strings on all standard business columns.

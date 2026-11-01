@@ -46,6 +46,7 @@ Connection strings do not embed SQL passwords for the hosted app. Do not commit 
 | App Service | Environment variables → **Connection strings** → name `SQLAzureConnection`, type SQLAzure |
 | Hosted value shape | `Server=tcp:<sql-server>.database.windows.net,1433;Initial Catalog=<database>;Authentication=Active Directory Managed Identity;Encrypt=True;TrustServerCertificate=False;` |
 | Repo | Empty in `appsettings.json`; local Docker value in `appsettings.Development.json` under the same key |
+| App package (SqlClient 7+) | **`Microsoft.Data.SqlClient.Extensions.Azure`** (same major/minor as `Microsoft.Data.SqlClient`) plus register `ActiveDirectoryAuthenticationProvider` before any SQL open (including EF `Database.Migrate()`). Core SqlClient 7 no longer ships Entra/MI providers; without the extension, App Service startup crashes with `Cannot find an authentication provider for 'ActiveDirectoryManagedIdentity'`. |
 
 Deploy procedure: [hosted-deployment.md](../docs/hosted-deployment.md) § Hosted database connection.
 

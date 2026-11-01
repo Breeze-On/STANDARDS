@@ -53,6 +53,7 @@ Product pages consume **`Bo*`** only. Fluent is an implementation detail of Shar
 5. **Accessibility** — Use shipped `Bo*` chrome and controls; do not invent inaccessible custom widgets when a `Bo*` exists.
 6. **Documentation must stay current** — Same change set as code when behavior, setup, schema, or architecture changes.
 7. **No direct Fluent UI in applications** — Never import or use `Microsoft.FluentUI.*` on product pages.
+8. **Hosted Azure SQL MI (data-owning apps) — required packages** — If the app uses App Service → Azure SQL with `Authentication=Active Directory Managed Identity`, you **MUST** add NuGet **`Microsoft.Data.SqlClient.Extensions.Azure`** (same major/minor as `Microsoft.Data.SqlClient`) **and** register `ActiveDirectoryAuthenticationProvider` before any SQL open (including EF `Database.Migrate()`). Connection string + MI grant alone are **not** enough on SqlClient 7+. SSOT: [hosted-deployment.md](../hosted-deployment.md) § Hosted database connection, [architecture/security.md](../../architecture/security.md).
 
 Also: do not invent standards for placeholder areas (testing, versioning, domain modeling, observability) that are not yet defined. Dependency vulnerability policy is defined: [security-governance.md](../security-governance.md).
 
@@ -160,6 +161,7 @@ Autonomous local verification: `.\scripts\dev-reset.ps1` (requires `.env` from `
 - Leave documentation stale after changing behavior, setup, schema, or architecture
 - Document planned/future work as if it were current reality
 - Point routine Development at Azure SQL when local Docker SQL is the org pattern
+- Ship a data-owning App Service with MI SQL auth **without** `Microsoft.Data.SqlClient.Extensions.Azure` + `ActiveDirectoryAuthenticationProvider` registration (SqlClient 7+); that crash-loops startup and burns Free F1 into **QuotaExceeded**
 - Skip the org local script standard (`scripts/dev-reset.ps1`) or invent alternate startup scripts (`dev-up` / `dev-down` / custom run scripts)
 - Hardcode secrets instead of a gitignored `.env`
 - Add EAC business features into Shared UI (or UI library concerns into EAC)

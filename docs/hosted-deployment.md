@@ -118,6 +118,7 @@ Repo `appsettings.json` keeps **`ConnectionStrings:SQLAzureConnection`** empty. 
 | 2 | App Service → **Settings → Environment variables → Connection strings** (or `az webapp config connection-string set`). |
 | 3 | Add name **`SQLAzureConnection`**, type **SQLAzure**, value: `Server=tcp:<sql-server>.database.windows.net,1433;Initial Catalog=<database>;Authentication=Active Directory Managed Identity;Encrypt=True;TrustServerCertificate=False;` |
 | 4 | Grant the App Service MI as a SQL user (name = App Service name) — template [`templates/azure-sql/grant-app-service-mi.sql`](../templates/azure-sql/grant-app-service-mi.sql). |
+| 5 | **MUST (SqlClient 7+) — not optional:** data-owning apps that use `Authentication=Active Directory Managed Identity` (or other Entra modes) **must** reference **`Microsoft.Data.SqlClient.Extensions.Azure`** at the same major/minor as `Microsoft.Data.SqlClient`, **and** register `ActiveDirectoryAuthenticationProvider` before any SQL open (including EF `Database.Migrate()`). Do not treat the connection string + MI SQL grant as complete without this package. Without it, startup throws `Cannot find an authentication provider for 'ActiveDirectoryManagedIdentity'` and the App Service container exits — on Free F1 that quickly becomes **QuotaExceeded**. |
 
 Equivalent app setting name: `ConnectionStrings__SQLAzureConnection`. Apps without a business database skip this section. Full access model: [architecture/security.md](../architecture/security.md). Environment suffixes: [naming.md](naming.md).
 

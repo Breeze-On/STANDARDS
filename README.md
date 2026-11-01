@@ -148,7 +148,7 @@ Full index: [`decisions/README.md`](decisions/README.md).
 | Path | Covers |
 | --- | --- |
 | [templates/local-sql/](templates/local-sql/) | Starter `docker-compose.yml` and `.env.example` for local SQL Server |
-| [templates/azure-sql/](templates/azure-sql/) | Grant App Service Managed Identity on Azure SQL (`SQLAzureConnection`) |
+| [templates/azure-sql/](templates/azure-sql/) | Grant App Service Managed Identity on Azure SQL (`SQLAzureConnection`); apps also need SqlClient **`Extensions.Azure`** for MI (see [hosted-deployment.md](docs/hosted-deployment.md), [architecture/security.md](architecture/security.md)) |
 
 ### Architecture (`architecture/`)
 

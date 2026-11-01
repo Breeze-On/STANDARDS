@@ -34,7 +34,7 @@ Success criterion for adoption: a separate application runs on Interactive Serve
 8. **Titles:** Per-route localized `BoAppHeader` `AppTitle` / `Subtitle` (empty subtitle omits dash).
 9. **App resources:** Own `.resx` + locale-aware localizer; subscribe to `IBoLocaleService.Changed`.
 10. **CI:** If ProjectReference is used, checkout Shared UI as a sibling (EAC DEV workflow pattern).
-11. **Hosted SQL (data-owning apps):** Connection string key **`SQLAzureConnection`** (empty in repo `appsettings.json`); App Service Environment variables → Connection strings + system-assigned MI; grant via [`templates/azure-sql/`](../../templates/azure-sql/). Procedure: [hosted-deployment.md](../hosted-deployment.md).
+11. **Hosted SQL (data-owning apps) — checklist (all required):** (a) `SQLAzureConnection` empty in repo `appsettings.json`; (b) App Service connection string + system-assigned MI; (c) grant via [`templates/azure-sql/`](../../templates/azure-sql/); (d) **MUST** add NuGet **`Microsoft.Data.SqlClient.Extensions.Azure`** + register `ActiveDirectoryAuthenticationProvider` before `Migrate`/first SQL open (SqlClient 7+). Skipping (d) is a known App Service crash-loop. Procedure: [hosted-deployment.md](../hosted-deployment.md); access model: [architecture/security.md](../../architecture/security.md).
 12. **Docs:** Update product README / README_AI and STANDARDS architecture when the app becomes a Shared UI consumer.
 
 Page construction checklist: [`docs/ui/page-development.md`](../ui/page-development.md).
@@ -70,6 +70,7 @@ Remove when adopting cleanly: default Blazor sidebar/`NavMenu`, Bootstrap-first 
 | Home vs forms | Never use Section→Row→Field as the Home layout |
 | Identity vs shell | Static Account SSR and interactive AppShell do not mix well — separate layouts or defer Identity |
 | EF vs business SQL | EAC keeps SYSADM in `sql/current_model/`; EF `InitialBaseline` only preserves `__EFMigrationsHistory` |
+| SqlClient 7 + MI | `Authentication=Active Directory Managed Identity` needs **`Microsoft.Data.SqlClient.Extensions.Azure`** + provider registration; missing it crash-loops App Service and burns Free F1 into **QuotaExceeded** |
 | Docs are part of Done | Landscape must say the app **does** reference Shared UI once true |
 
 ---
@@ -85,7 +86,7 @@ Remove when adopting cleanly: default Blazor sidebar/`NavMenu`, Bootstrap-first 
 6. Define IA: Home hub cards + left nav routes (URL = page name)
 7. Ship empty or thin destination pages inside BoAppShell
 8. Provide `scripts/dev-reset.ps1` + `.env.example` and document Local Development in README (org [local-development-scripts](../local-development-scripts.md) standard — no `dev-up` / `dev-down`)
-9. If the app owns Azure SQL: enable App Service MI, set `SQLAzureConnection`, run [`templates/azure-sql/grant-app-service-mi.sql`](../../templates/azure-sql/grant-app-service-mi.sql)
+9. If the app owns Azure SQL: enable App Service MI, set `SQLAzureConnection`, run [`templates/azure-sql/grant-app-service-mi.sql`](../../templates/azure-sql/grant-app-service-mi.sql), and wire **`Microsoft.Data.SqlClient.Extensions.Azure`** + MI provider registration (SqlClient 7+)
 10. Update product README_AI + STANDARDS architecture/landscape in the same change set
 11. Verify: `.\scripts\dev-reset.ps1`, theme/locale switch, nav + Home cards — no Fluent imports in product pages
 ```

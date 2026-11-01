@@ -18,6 +18,7 @@ Concise map of org standards for AI agents. **SSOT remains the linked documents*
 | App shape | Expected application repo contents | [application-model.md](../application-model.md) |
 | Environments | Org environment vocabulary | [environments.md](../environments.md) |
 | Hosted deployment | App Service / publish profile / GitHub Environment deploy standard | [hosted-deployment.md](../hosted-deployment.md) |
+| Hosted SQL MI (SqlClient 7+) | **MUST** add `Microsoft.Data.SqlClient.Extensions.Azure` + register `ActiveDirectoryAuthenticationProvider` before SQL open — not optional if using Managed Identity | [hosted-deployment.md](../hosted-deployment.md), [architecture/security.md](../../architecture/security.md) |
 
 Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.md](../../decisions/README.md)).
 

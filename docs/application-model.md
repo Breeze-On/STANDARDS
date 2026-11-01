@@ -67,6 +67,7 @@ As implemented today:
 - Hosted **DEV** on Azure App Service (Linux, .NET 10) for EAC and the Shared UI Gallery; EAC also uses Azure SQL with Managed Identity.
 - Manual `workflow_dispatch` via `.github/workflows/deploy-dev.yml` and GitHub Environment **`DEV`**.
 - Environment naming and meaning: [environments.md](environments.md).
+- **Data-owning apps (required):** with `SQLAzureConnection` + Managed Identity, the app **MUST** reference **`Microsoft.Data.SqlClient.Extensions.Azure`** and register `ActiveDirectoryAuthenticationProvider` before any SQL open (SqlClient 7+). See [hosted-deployment.md](hosted-deployment.md) § Hosted database connection step 5 and [architecture/security.md](../architecture/security.md).
 
 `BreezeOn.UI` is consumed as a library; the Gallery host may be deployed separately for smoke/demo.
 
