@@ -66,8 +66,19 @@ The library **never** talks to SQL or application repositories.
 | `NewItemFactory` | Creates `TItem` for Add New (editable modes) |
 | `ShowAddNew` | Default **true** in editable modes (ignored in Nested View) |
 | `OnSave`, `OnRowDeleted`, `OnChanged` | Host callbacks |
+| `EnableSelection` | Default **false**. When true (flat modes only; not Nested View), shows a compact **first** selection column |
+| `SelectionMode` | `Multiple` (default) or `Single` |
+| `SelectedCacheRowIds` / `SelectedCacheRowIdsChanged` | Two-way bind of selected `CacheRowId` values |
+| `GetSelectedItems()` | Public method — typed items for currently selected cache rows |
 | `Class`, `Style` | Optional host chrome on section or host wrapper |
 | `RefreshSortOrder()` | Public method — rebuild frozen display order from current values |
+
+### Row selection
+
+- **Column UX:** first column; **no header text**; **no labels**; checkbox controls only; minimum practical width (`--bo-grid-selection-col-width`, default `2rem`); header and row checkboxes centered; vertical alignment consistent with other cells.
+- **Select all (Multiple):** selects/deselects **all rows currently loaded in `BoGridCache`**. It does **not** mean all rows in the database. Hosts that page a full in-memory cache still select the entire cache, including rows on other pages.
+- Selection clears on cache `Clear` / `ReplaceAll` (`Reset`).
+- Nested View does not show the selection column.
 
 ### Column (`BoGridColumn<TItem>`)
 

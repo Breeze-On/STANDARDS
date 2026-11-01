@@ -57,6 +57,7 @@ STANDARDS/
 │  ├─ naming.md
 │  ├─ engineering.md
 │  ├─ database.md
+│  ├─ data-portability.md    # JSON import/export (Applications JSON)
 │  ├─ local-database.md
 │  ├─ local-development-scripts.md  # Local Development Script Standard (dev-reset.ps1)
 │  ├─ environments.md
@@ -113,7 +114,8 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [ADR process](docs/adr.md) | When and how to write Architecture Decision Records |
 | [Naming](docs/naming.md) | Org, repos, projects; environment labels `DEV`/`UAT`/`PRD` and Azure suffixes `dev`/`uat`/`prd` |
 | [Engineering](docs/engineering.md) | Stack and repo shape in use |
-| [Database](docs/database.md) | NVARCHAR lengths; NOT NULL rules; sql/current_model; seed; per-app `docs/db-model.md` |
+| [Database](docs/database.md) | NVARCHAR lengths; NOT NULL rules; mandatory audit columns; data access; sql/current_model; seed; per-app `docs/db-model.md` |
+| [Data portability](docs/data-portability.md) | Applications JSON import/export format and rules |
 | [Local database](docs/local-database.md) | SQL Server Docker sandbox for local development |
 | [Local development scripts](docs/local-development-scripts.md) | Single entry: `dev-reset.ps1`; secrets via `.env` |
 | [Environments](docs/environments.md) | Local, DEV, UAT, PRD; hosted seed labels; GitHub Environments; Azure `dev`/`uat`/`prd` tokens |
@@ -140,6 +142,7 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [ADR-002](decisions/ADR-002-blazor-interactive-server.md) | Blazor Interactive Server | Accepted | Platform | Applications, Shared UI gallery |
 | [ADR-003](decisions/ADR-003-azure-sql-with-local-docker-sql.md) | Azure SQL with local Docker SQL | Accepted | Data | Applications with databases, Hosting |
 | [ADR-004](decisions/ADR-004-breezeon-ui-abstraction-layer.md) | BreezeOn.UI abstraction layer | Accepted | UI | Shared UI, Product applications |
+| [ADR-005](decisions/ADR-005-mandatory-transactional-audit-columns.md) | Mandatory transactional audit columns | Accepted | Data | Applications with databases, Transactional business tables |
 
 Full index: [`decisions/README.md`](decisions/README.md).
 

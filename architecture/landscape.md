@@ -64,7 +64,7 @@ Public UI contract: **`BreezeOn.UI`** in `SYSTEM-SHARED-UI` ([ADR-004](../decisi
 | Consumer | Current state |
 | --- | --- |
 | `BreezeOn.UI.Gallery` (in SYSTEM-SHARED-UI) | Interactive Server host; consumes `BreezeOn.UI` locally |
-| EAC (`SYSTEM-ADMIN-EAC`) | Blazor Interactive Server; **ProjectReference** to `BreezeOn.UI` (`BoAppShell` shell, Home `BoNavHub`, Applications `BoGrid`, other destination shells); **no** ASP.NET Core Identity |
+| EAC (`SYSTEM-ADMIN-EAC`) | Blazor Interactive Server; **ProjectReference** to `BreezeOn.UI` (`BoAppShell` shell, Home `BoNavHub`, Applications `BoGrid` + JSON import/export, other destination shells); **no** ASP.NET Core Identity |
 
 UI conventions: [`docs/ui/overview.md`](../docs/ui/overview.md).
 

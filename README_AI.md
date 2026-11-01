@@ -71,6 +71,7 @@ STANDARDS/
 │  ├─ naming.md
 │  ├─ engineering.md
 │  ├─ database.md
+│  ├─ data-portability.md  # JSON import/export (Applications JSON)
 │  ├─ local-database.md
 │  ├─ local-development-scripts.md
 │  ├─ environments.md
@@ -137,7 +138,7 @@ Before planning or implementing in a Breeze On repo:
 5. Read that product repo’s `README_AI.md` for **local** scope only.
 6. If you introduce a lasting convention or a new implemented system, document it here (`docs/` or `architecture/`) as current state — do not invent a one-off undocumented rule.
 7. If you introduce or change a **significant architectural decision**, create or update an ADR in `decisions/` (or supersede an existing one) in the **same change set**.
-8. For database work: follow [`docs/database.md`](docs/database.md). Product apps that own schema must update `sql/current_model/`, `docs/db-model.md`, and `sql/seed/` together.
+8. For database work: follow [`docs/database.md`](docs/database.md), including **mandatory audit columns** on transactional business tables ([ADR-005](decisions/ADR-005-mandatory-transactional-audit-columns.md)). Product apps that own schema must update `sql/current_model/`, `docs/db-model.md`, and `sql/seed/` together. For JSON import/export file formats: [`docs/data-portability.md`](docs/data-portability.md).
 9. For local database work: follow [`docs/local-database.md`](docs/local-database.md); do not point Development at Azure SQL by default. For one-command local bring-up: [`docs/local-development-scripts.md`](docs/local-development-scripts.md) (`.\scripts\dev-reset.ps1` only — do not invent `dev-up` / `dev-down` or alternate startup scripts).
 10. For environment naming: follow [`docs/environments.md`](docs/environments.md) and [`docs/naming.md`](docs/naming.md) § Environments (labels `DEV`/`UAT`/`PRD`, Azure tokens `dev`/`uat`/`prd` — never `dv`/`pp`/`pr`); do not redefine environments independently in product docs.
 11. For hosted deployment: follow [`docs/hosted-deployment.md`](docs/hosted-deployment.md); product repos hold App Service / workflow **metadata** only — do not duplicate deploy procedures.

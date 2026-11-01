@@ -33,12 +33,26 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | Runtime | ASP.NET Core / C# / .NET 10 (App Service stack: `DOTNETCORE|10.0`) |
 | Shared UI | ProjectReference to `SYSTEM-SHARED-UI` / `BreezeOn.UI` (`Bo*` only; [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md)) |
 | Auth | **Not implemented** — ASP.NET Core Identity removed; no login/register; shell pages public |
-| Surfaces | `BoAppShell` + left nav; Home (`BoNavHub`); Applications (ReadOnly `BoGrid` over `System.EACApplications` with create/edit popup); Organisation Entities / App Configuration (public empty bodies) |
+| Surfaces | `BoAppShell` + left nav; Home (`BoNavHub`); Applications (ReadOnly `BoGrid` with selection over `System.EACApplications`; create/edit popup; JSON import/export); Organisation Entities / App Configuration (public empty bodies) |
 | Localization | EAC `EacResources.resx` / `EacResources.fr.resx` via `IEacLocalizer` (not Gallery `BoUi`) |
-| Data access | EF Core + SQL Server provider (empty `ApplicationDbContext` + `InitialBaseline` for `__EFMigrationsHistory`; business schema via SQL scripts) |
-| SQL scripts | `sql/current_model/` (T-SQL): schema `System`, table `System.EACApplications` |
+| Data access | EF Core + SQL Server provider (`ApplicationDbContext` + empty `InitialBaseline` for `__EFMigrationsHistory`; business schema via SQL scripts; audit stamps via `IAuditActorProvider` → interim `LOCAL`) |
+| SQL scripts | `sql/current_model/` (T-SQL): schema `System`, table `System.EACApplications` (includes mandatory audit columns) |
 | DB model doc | [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) |
+| Portability | Applications JSON import/export — [data-portability.md](../docs/data-portability.md) (EAC-owned; not a shared service) |
 | Local database | SQL Server Docker (`BreezeOnLocal`); see [local-database.md](../docs/local-database.md) |
+
+## Applications: selection, import, export
+
+Applications import/export is **owned by EAC** (`SYSTEM-ADMIN-EAC`). It is **not** a shared service. File format: [data-portability.md](../docs/data-portability.md). Audit columns: [database.md](../docs/database.md#mandatory-audit-columns) / [ADR-005](../decisions/ADR-005-mandatory-transactional-audit-columns.md) (interim actor **`LOCAL`**).
+
+| Concern | Behavior |
+| --- | --- |
+| Grid selection | `BoGrid.EnableSelection` — compact unlabeled first column; select-all = all rows in **BoGrid cache**, not the database ([grids.md](../docs/ui/controls/grids.md#row-selection)) |
+| Import | Footer **Import from JSON** → native picker → in-memory validate → batched upsert by current `UniqueCode` → single `SaveChangesAsync` → reload + toast |
+| Export | Footer **Export JSON** (far right) → selected rows only → browser download (`ApplicationGUID` / audit omitted) |
+| Match rule | Found = update; not found = create. No rename detection / aliases / history |
+| Rename example | DB `SYSTEM-ADMIN-EAC` + file `LEGACY-SYSTEM-ADMIN-EAC` → **creates** new application |
+| Size limit | `ApplicationsImport:MaxFileSizeMb` (default 2); uploads never persisted |
 
 ## Local development (current)
 

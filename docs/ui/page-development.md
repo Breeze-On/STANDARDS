@@ -91,6 +91,7 @@ When the page includes a data grid:
 
 - [ ] Uses **`BoGrid`** / **`BoGridColumn`** / **`BoGridCache`** — [grids.md](controls/grids.md).
 - [ ] Treats the grid as a **section-level** surface (not a `BoRow` child; not Section → Row → Field for the grid body).
+- [ ] If multi-select is needed: `EnableSelection` (select-all = all rows in **cache**, not the database) — [grids.md](controls/grids.md#row-selection).
 - [ ] Binds a typed cache with **`CacheId`**; rows expose **`CacheRowId`** + nullable **`PrimaryKey`**.
 - [ ] Chooses **`Mode`**: ReadOnly (default), RowEdit, InlineEdit, or NestedView per requirements.
 - [ ] **`IsPagination`** only when required (default false); sort is over the full cache; display order stays frozen while editing.

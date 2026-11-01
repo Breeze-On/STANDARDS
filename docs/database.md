@@ -47,7 +47,38 @@ Apply `NOT NULL` **only** when:
 
 All other business columns are **NULL**-allowed unless an explicit, documented exception is approved for that column.
 
+**Explicit exception:** the four [mandatory audit columns](#mandatory-audit-columns) on transactional business tables are **always `NOT NULL`**, even though they are not part of the primary key and do not contain `GUID` in their names.
+
 Do not default every column to `NOT NULL`.
+
+## Mandatory audit columns
+
+Every **transactional business table** (tables that hold business records created and changed by users or application processes) must include these four columns:
+
+| Column | Type | Nullability |
+| --- | --- | --- |
+| `CreatedBy` | `NVARCHAR(600)` | `NOT NULL` |
+| `CreatedDate` | `DATETIME2` | `NOT NULL` |
+| `LastUpdatedBy` | `NVARCHAR(600)` | `NOT NULL` |
+| `LastUpdatedDate` | `DATETIME2` | `NOT NULL` |
+
+Rules:
+
+1. **Always `NOT NULL`.** These four columns are an explicit exception to the general [Nullability](#nullability-not-null) rule (`NOT NULL` only on primary key / `GUID` columns).
+2. **Create** populates **all four** columns (`LastUpdatedBy` / `LastUpdatedDate` equal the created values on insert).
+3. **Update** refreshes **only** `LastUpdatedBy` and `LastUpdatedDate`. `CreatedBy` and `CreatedDate` are never changed after insert.
+4. **Actor** (`CreatedBy` / `LastUpdatedBy`) is the **logged-in user** when authentication exists. While a product has no authentication, an interim product stamp may be used: **`LOCAL`**. Replace the interim stamp with the real user when auth is implemented.
+5. **Migrations** that add these columns to an existing table must **backfill** existing rows first, then enforce `NOT NULL`.
+6. **No exceptions** unless formally documented and approved for that table (record the exception in the product `docs/db-model.md` and, if it sets a pattern, an ADR).
+7. Audit values are **system-managed**. They are not part of user-facing import/export file formats ([data-portability.md](data-portability.md)).
+
+Decision record: [ADR-005](../decisions/ADR-005-mandatory-transactional-audit-columns.md). Product `sql/current_model/`, `docs/db-model.md`, and `sql/seed/` must reflect these columns in the same change set.
+
+## Application data access
+
+- **Standard CRUD:** EF Core `SaveChanges` (audit columns stamped by the application layer before save).
+- **Bulk import:** batched EF Core operations (not row-at-a-time round trips where a batch is practical).
+- **No stored-procedure-per-table by default.** Introduce stored procedures only for a specific, documented need.
 
 ## Shared System schema ownership
 
