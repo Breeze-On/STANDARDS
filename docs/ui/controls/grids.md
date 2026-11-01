@@ -75,10 +75,11 @@ The library **never** talks to SQL or application repositories.
 
 ### Row selection
 
-- **Column UX:** first column; **no header text**; **no labels**; checkbox controls only; minimum practical width (`--bo-grid-selection-col-width`, default `2rem`); header and row checkboxes centered; vertical alignment consistent with other cells.
-- **Select all (Multiple):** selects/deselects **all rows currently loaded in `BoGridCache`**. It does **not** mean all rows in the database. Hosts that page a full in-memory cache still select the entire cache, including rows on other pages.
+- **Column UX:** first column; **no header text**; **no labels**; checkbox controls only; minimum practical width (`--bo-grid-selection-col-width`); header and row checkboxes centered; vertical alignment consistent with other cells.
+- **Flat grids:** bind `SelectedCacheRowIds`; select-all (Multiple) = all rows in `BoGridCache` (not the database).
+- **Nested View (same columns):** `EnableSelection` is supported. Bind `SelectedNodeKeys` (`NodeKey` strings). Select-all walks the full tree from cache roots via `ChildrenSelector`. **Cascade (Multiple):** selecting a node expands and selects all descendants; deselecting clears the node and all descendants. Different-columns Nested View does not show selection.
 - Selection clears on cache `Clear` / `ReplaceAll` (`Reset`).
-- Nested View does not show the selection column.
+- `GetSelectedItems()` returns selected flat cache items or nested nodes matched by key.
 
 ### Column (`BoGridColumn<TItem>`)
 

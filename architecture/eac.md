@@ -33,12 +33,12 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | Runtime | ASP.NET Core / C# / .NET 10 (App Service stack: `DOTNETCORE|10.0`) |
 | Shared UI | ProjectReference to `SYSTEM-SHARED-UI` / `BreezeOn.UI` (`Bo*` only; [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md)) |
 | Auth | **Not implemented** — ASP.NET Core Identity removed; no login/register; shell pages public |
-| Surfaces | `BoAppShell` + left nav; Home (`BoNavHub`); Applications (ReadOnly `BoGrid` with selection over `System.EACApplications`; create/edit popup; JSON import/export); Organisation Entities / App Configuration (public empty bodies) |
+| Surfaces | `BoAppShell` + left nav; Home (`BoNavHub`); Applications (ReadOnly `BoGrid` with selection over `System.EACApplications`; create/edit popup; JSON import/export); Business Entities (`/business-entities`: Hierarchy NestedView + Entity Types tabs; SP-backed; JSON I/O); App Configuration (empty body) |
 | Localization | EAC `EacResources.resx` / `EacResources.fr.resx` via `IEacLocalizer` (not Gallery `BoUi`) |
 | Data access | EF Core + SQL Server provider (`ApplicationDbContext` + empty `InitialBaseline` for `__EFMigrationsHistory`; business schema via SQL scripts; audit stamps via `IAuditActorProvider` → interim `LOCAL`) |
-| SQL scripts | `sql/current_model/` (T-SQL): schema `System`, table `System.EACApplications` (includes mandatory audit columns) |
+| SQL scripts | `sql/current_model/` (T-SQL): schema `System`, tables `EACApplications`, `EACBusinessEntitiesTypes`, `EACBusinessEntities` (mandatory audit columns); `P_GET_*` / `P_POST_*` hierarchy/types procedures |
 | DB model doc | [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) |
-| Portability | Applications JSON import/export — [data-portability.md](../docs/data-portability.md) (EAC-owned; not a shared service) |
+| Portability | Applications + Business Entity Types + Business Entities JSON — [data-portability.md](../docs/data-portability.md) (EAC-owned; not a shared service) |
 | Local database | SQL Server Docker (`BreezeOnLocal`); see [local-database.md](../docs/local-database.md) |
 
 ## Applications: selection, import, export
@@ -53,6 +53,10 @@ Applications import/export is **owned by EAC** (`SYSTEM-ADMIN-EAC`). It is **not
 | Match rule | Found = update; not found = create. No rename detection / aliases / history |
 | Rename example | DB `SYSTEM-ADMIN-EAC` + file `LEGACY-SYSTEM-ADMIN-EAC` → **creates** new application |
 | Size limit | `ApplicationsImport:MaxFileSizeMb` (default 2); uploads never persisted |
+
+## Business Entities
+
+Route `/business-entities` (legacy `/organisation-entities` redirects). Header tabs: **Business Hierarchy** (NestedView + cascade `SelectedNodeKeys`) then **Entity Types** (flat ReadOnly grid). Writes use `System.P_GET_*` / `P_POST_*` (hierarchy path, cycle checks, recursive delete). Portability kinds `breezeon.eac.business-entity-types` and `breezeon.eac.business-entities` — [data-portability.md](../docs/data-portability.md). Size limit `BusinessEntitiesImport:MaxFileSizeMb` (default **10**).
 
 ## Local development (current)
 

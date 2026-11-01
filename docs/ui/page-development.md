@@ -91,7 +91,7 @@ When the page includes a data grid:
 
 - [ ] Uses **`BoGrid`** / **`BoGridColumn`** / **`BoGridCache`** — [grids.md](controls/grids.md).
 - [ ] Treats the grid as a **section-level** surface (not a `BoRow` child; not Section → Row → Field for the grid body).
-- [ ] If multi-select is needed: `EnableSelection` (select-all = all rows in **cache**, not the database) — [grids.md](controls/grids.md#row-selection).
+- [ ] If multi-select is needed: `EnableSelection` (flat: select-all = all cache rows; Nested Scenario 1: `SelectedNodeKeys` + cascade select/expand) — [grids.md](controls/grids.md#row-selection).
 - [ ] Binds a typed cache with **`CacheId`**; rows expose **`CacheRowId`** + nullable **`PrimaryKey`**.
 - [ ] Chooses **`Mode`**: ReadOnly (default), RowEdit, InlineEdit, or NestedView per requirements.
 - [ ] **`IsPagination`** only when required (default false); sort is over the full cache; display order stays frozen while editing.
@@ -100,7 +100,7 @@ When the page includes a data grid:
 - [ ] **`EnableHorizontalScroll`** only when many columns truly need a horizontal scrollbar (default false).
 - [ ] Host loads **`_content/BreezeOn.UI/js/bo-grid.js`** when using truncated display cells (hover full-value title).
 - [ ] Cell editors reuse existing **`Bo*`** fields; column / grid **`Required`** follow [grids.md](controls/grids.md).
-- [ ] Nested View: set `NodeKey`; same columns → `ChildrenSelector`; different columns → `ChildRowsHaveDifferentColumns` + `ChildGridTemplate` (nested `BoGrid`, not a new component). Optional `DefaultExpansionState`. See [grids.md Nested View](controls/grids.md#nested-view-locked--shipped).
+- [ ] Nested View: set `NodeKey`; same columns → `ChildrenSelector`; different columns → `ChildRowsHaveDifferentColumns` + `ChildGridTemplate` (nested `BoGrid`, not a new component). Optional `DefaultExpansionState`. Same-column Nested View may use `EnableSelection` with cascade. See [grids.md Nested View](controls/grids.md#nested-view-locked--shipped).
 
 ### Controls
 

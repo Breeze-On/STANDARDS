@@ -38,6 +38,13 @@ MI grant + connection string alone are **not** sufficient. Missing the extension
 | **Code** (column named `Code`, or explicitly designated a code) | **30** | Unless a different length is specified for that column |
 | **Non-Code** strings | **600** | Unless a different length is specified for that column |
 
+**Documented Code length exceptions** (record also in the product `docs/db-model.md`):
+
+| Table / column | Length | Reason |
+| --- | --- | --- |
+| `System.EACBusinessEntitiesTypes.Code` | **250** | Business entity type codes may be longer descriptive identifiers |
+| `System.EACBusinessEntities.Code` | **250** | Hierarchy codes may include geographic / multi-segment business keys |
+
 ## Nullability (NOT NULL)
 
 Apply `NOT NULL` **only** when:
@@ -78,7 +85,29 @@ Decision record: [ADR-005](../decisions/ADR-005-mandatory-transactional-audit-co
 
 - **Standard CRUD:** EF Core `SaveChanges` (audit columns stamped by the application layer before save).
 - **Bulk import:** batched EF Core operations (not row-at-a-time round trips where a batch is practical).
-- **No stored-procedure-per-table by default.** Introduce stored procedures only for a specific, documented need.
+- **No stored-procedure-per-table by default.** Introduce stored procedures only for a specific, documented need (for example hierarchy retrieval with path columns, cycle detection on re-parent, or recursive subtree delete).
+
+### Stored procedure naming (when used)
+
+When a product introduces stored procedures under the EAC-owned **`System`** schema (or another app schema), use:
+
+**Pattern:** `P_GET_<AppCode><PascalName>` or `P_POST_<AppCode><PascalName>`
+
+| Part | Rule |
+| --- | --- |
+| Prefix | `P_GET_` (read) or `P_POST_` (write / delete) — underscore only after `GET` / `POST` |
+| App code | Friendly application code in capitals with no separators (e.g. **`EAC`**, **`HRM`**) immediately after the prefix |
+| Name | PascalCase: capital letter on every word; **no spaces and no underscores** |
+| Delete | Append **`Delete`** to the PascalCase name (not `_Delete`). Example: upsert `P_POST_EACBusinessEntity`, delete `P_POST_EACBusinessEntityDelete` |
+
+| Kind | Example |
+| --- | --- |
+| **Read** | `System.P_GET_EACBusinessEntitiesHierarchy` |
+| **Write (upsert)** | `System.P_POST_EACBusinessEntity` |
+| **Delete** (when separate from upsert) | `System.P_POST_EACBusinessEntityDelete` |
+| **Delete (types)** | `System.P_POST_EACBusinessEntityTypeDelete` |
+
+Prefer one upsert POST plus a dedicated delete procedure when delete semantics differ (for example recursive hierarchy delete). Pass the audit actor as a parameter (for example `@Actor`) so procedures can stamp mandatory audit columns. Document each procedure in the product `docs/db-model.md`. Script file names should match the procedure name (e.g. `System.P_POST_EACBusinessEntityDelete.sql`).
 
 ## Shared System schema ownership
 
@@ -128,6 +157,7 @@ Every application that owns business tables must keep a **local-ready** seed so 
 - Not the schema source of truth; keep scripts **idempotent** when practical.
 - Do **not** apply to hosted DEV / UAT / PRD by default.
 - **Keep in sync:** when `sql/current_model/` or `docs/db-model.md` changes, update `sql/seed/` in the **same change set** so local testing still works.
+- Seed assets are usually T-SQL under `sql/seed/`. Portable JSON payloads (same envelopes as import/export; [data-portability.md](data-portability.md)) are allowed when the app’s local seed scripts apply them to Docker SQL.
 - Ship a seed script (e.g. `scripts/local-db-seed.ps1`) and document it in the app README / README_AI.
 - Local sandbox workflow: [local-database.md](local-database.md).
 

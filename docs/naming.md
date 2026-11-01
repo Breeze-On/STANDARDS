@@ -39,6 +39,10 @@ Current conventions across the organization.
 
 Do not invent alternate technical ids that diverge from the repository name without an explicit org decision and STANDARDS update.
 
+## Stored procedures
+
+When used: `P_GET_` / `P_POST_` + friendly app **Code** (e.g. `EAC`) + PascalCase subject with **no spaces or underscores**. Separate delete procedures append `Delete` (e.g. `P_POST_EACBusinessEntityDelete`, not `…_Delete`). Full rules: [database.md](database.md) § Stored procedure naming.
+
 ## Environments (labels and Azure suffixes)
 
 Hosted environment **labels** (docs, seed rules, GitHub Environments) are always **`DEV`**, **`UAT`**, and **`PRD`** (uppercase). Meaning: [environments.md](environments.md). Deploy binding: [hosted-deployment.md](hosted-deployment.md).

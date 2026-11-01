@@ -79,3 +79,103 @@ Renaming a `UniqueCode` in the UI is an administrative action. Re-importing a fi
 - EAC architecture: [architecture/eac.md](../architecture/eac.md)
 - Audit columns (not in portability files): [database.md](database.md) § Mandatory audit columns
 - Registry identity: [database.md](database.md) § Application registry identity columns
+
+---
+
+## Business entity types JSON (`breezeon.eac.business-entity-types`)
+
+Envelope for EAC Entity Types import/export. Business key is `code`. Upsert by current `code`. GUIDs and audit columns are server-owned.
+
+### Envelope
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `schemaVersion` | Yes | `"1.0"` |
+| `kind` | Yes | `"breezeon.eac.business-entity-types"` |
+| `exportedAt` | No | ISO-8601 UTC on export; import ignores |
+| `types` | Yes | Non-empty array |
+
+### Item fields
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `code` | Yes | Unique business key; uppercase A–Z, 0–9, hyphen, underscore; max 250 |
+| `description` | Yes | Max 250 |
+| `metadata` | No | Max 250 |
+
+### Example
+
+```json
+{
+  "schemaVersion": "1.0",
+  "kind": "breezeon.eac.business-entity-types",
+  "types": [
+    { "code": "REGION", "description": "Geographic region", "metadata": null }
+  ]
+}
+```
+
+Configurable max size: EAC `BusinessEntitiesImport:MaxFileSizeMb` (default **10**). All-or-nothing validation; in-memory only.
+
+---
+
+## Business entities JSON (`breezeon.eac.business-entities`)
+
+Envelope for EAC Business Hierarchy import/export. Business keys only (`code`, `parentCode`, `businessEntityTypeCode`). Hierarchy is reconstructable from `code` + `parentCode`. Do **not** include GUIDs or `HierarchyPath`.
+
+### Envelope
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `schemaVersion` | Yes | `"1.0"` |
+| `kind` | Yes | `"breezeon.eac.business-entities"` |
+| `exportedAt` | No | ISO-8601 UTC on export; import ignores |
+| `entities` | Yes | Non-empty array |
+
+### Item fields
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `code` | Yes | Unique business key; uppercase A–Z, 0–9, hyphen, underscore; max 250 |
+| `description` | Yes | Max 250 |
+| `metadata` | No | Max 250 |
+| `businessEntityTypeCode` | Yes | Must exist in Entity Types (same code format) |
+| `parentCode` | No | Null/omit = root; otherwise must exist (DB or earlier in file) |
+
+### Example
+
+```json
+{
+  "schemaVersion": "1.0",
+  "kind": "breezeon.eac.business-entities",
+  "entities": [
+    {
+      "code": "OPS",
+      "description": "Operations",
+      "metadata": null,
+      "businessEntityTypeCode": "DIVISION",
+      "parentCode": null
+    },
+    {
+      "code": "OPS-CA",
+      "description": "Canada",
+      "metadata": null,
+      "businessEntityTypeCode": "COUNTRY",
+      "parentCode": "OPS"
+    }
+  ]
+}
+```
+
+### Import rules
+
+- Upsert by current `code` (preserve `BusinessEntityGUID` on update).
+- Validate then apply in **parent-before-child** order.
+- Reject unknown `businessEntityTypeCode`, missing `parentCode`, in-file duplicate codes, and circular relationships.
+- Fail-fast: any failure aborts the entire import.
+- Max size: `BusinessEntitiesImport:MaxFileSizeMb` (default **10**); in-memory only.
+
+### Export
+
+- Selected nodes only (cascade selection includes descendants when the user selects a parent).
+- Do not auto-add unselected ancestors; import fails if a referenced parent is missing.

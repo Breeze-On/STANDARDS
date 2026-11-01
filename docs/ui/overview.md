@@ -84,7 +84,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoValidationContext` / `IBoSubmitInterceptor` | Deferred validation; `Validate(null)` attempts all groups, `Validate(group)` only that group (`IsAttempted(group)`); live fail badges; Field→Sub→Main→Tab failures | [forms.md](controls/forms.md) |
 | `BoValidationFailBadge` | Red disc + white “!” (tabs + section headers) | [forms.md](controls/forms.md) |
 | `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell/shell.md), [i18n.md](foundations/i18n.md) |
-| `BoGrid` / `BoGridColumn` / `BoGridCache` | Section-level grid (ReadOnly / RowEdit / InlineEdit / NestedView); optional `EnableSelection` (compact first column; select-all = cache-scoped); typed cache; frozen sort while editing; column `Align` / `Width` (Flex default); Nested View expand/collapse + rails; optional horizontal scroll; host `bo-grid.js` for truncated-cell titles | [grids.md](controls/grids.md) |
+| `BoGrid` / `BoGridColumn` / `BoGridCache` | Section-level grid (ReadOnly / RowEdit / InlineEdit / NestedView); optional `EnableSelection` (flat + Nested Scenario 1; cascade select/expand on nested Multiple); typed cache; frozen sort while editing; column `Align` / `Width` (Flex default); Nested View expand/collapse + rails; optional horizontal scroll; host `bo-grid.js` for truncated-cell titles | [grids.md](controls/grids.md) |
 | `BoSectionMain` / `BoSectionSub` `Required` | Optional red asterisk after section title (e.g. mandatory grid) | [sections.md](layout/sections.md), [grids.md](controls/grids.md) |
 
 ## Local gallery
