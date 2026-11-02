@@ -68,6 +68,7 @@ This guidance is **advisory and pragmatic**. It does **not** create mandatory re
 | --- | --- |
 | `docs/` | Standards and governance (how we work); glossary: [`glossary.md`](glossary.md) |
 | `docs/ai/` | AI onboarding path (mandatory quickstart first); index: [`ai/README.md`](ai/README.md) |
+| `docs/ai-agent-governance.md` | AI agent operational boundaries (development assistant only; deny push/PR/deploy/cloud/secrets/admin by default) |
 | `docs/local-development-scripts.md` | Org Local Development Script Standard (`dev-reset.ps1` only) |
 | `docs/data-portability.md` | File-format standard for JSON import/export (Applications JSON today) |
 | `docs/hosted-deployment.md` | Canonical hosted deploy standard (App Service, publish profile, GitHub Environments) |

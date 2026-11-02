@@ -18,6 +18,14 @@ Related:
 - [adr.md](adr.md)
 - [decisions/README.md](../decisions/README.md)
 
+## AI agent (Breeze On)
+
+An AI coding, planning, or documentation assistant operating in a Breeze-On repository. Treated as a **development assistant** only — not a release manager, cloud operator, or repository administrator. Operational boundaries: [ai-agent-governance.md](ai-agent-governance.md), [ADR-007](../decisions/ADR-007-ai-agent-operational-boundaries.md).
+
+## AI agent operational boundaries
+
+Org-wide deny-by-default limits on agent publish, PR lifecycle, CI/CD triggers, deploy, cloud/infrastructure changes, secrets/permission management, and repository administration. Restricted actions require **explicit authorization in the current prompt**. SSOT: [ai-agent-governance.md](ai-agent-governance.md).
+
 ## Application
 
 A deployable software solution represented by a repository / application code. Defines shared software behavior and deployment. In the EAC registry sense, a row in `System.EACApplications`. Distinct from a shared library or the STANDARDS repo.

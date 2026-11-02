@@ -38,6 +38,17 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 
 ---
 
+## Agent operational governance
+
+| Topic | Rule (short) | SSOT |
+| --- | --- | --- |
+| Agent role | Development assistant — not release manager / cloud / repo admin | [ai-agent-governance.md](../ai-agent-governance.md), [ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md) |
+| Default deny | No push, PR lifecycle, CI/CD trigger, deploy, cloud, secrets, or repo-admin without **current-prompt** authorization | Same |
+| Stop condition | After local work, recommend next steps and return control to the human | Same |
+| Debugging | Local diagnostics only; debug does not authorize publish/deploy | Same |
+
+---
+
 ## Documentation standards
 
 | Rule | SSOT |
@@ -48,6 +59,7 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | ADRs for significant decisions; index Category / Impact Area | [adr.md](../adr.md) |
 | Shared vocabulary | [glossary.md](../glossary.md) |
 | AI onboarding path | [`docs/ai/README.md`](README.md) |
+| AI operational boundaries | [ai-agent-governance.md](../ai-agent-governance.md) |
 
 ---
 

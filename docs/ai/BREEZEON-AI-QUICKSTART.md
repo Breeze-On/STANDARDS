@@ -46,14 +46,15 @@ Product pages consume **`Bo*`** only. Fluent is an implementation detail of Shar
 
 ## Core Rules
 
-1. **Reuse before create** — Prefer existing `Bo*` components, tokens, and STANDARDS patterns.
-2. **Common UI first** — Layout, shell, nav, home hub, forms: use `BreezeOn.UI`, not ad-hoc chrome.
-3. **ADR compliance** — Review `decisions/` before new architecture patterns; update/supersede ADRs in the same change set when decisions change.
-4. **Localization required** — No hardcoded user-visible strings; each app owns its `.resx` library ([i18n.md](../ui/foundations/i18n.md)).
-5. **Accessibility** — Use shipped `Bo*` chrome and controls; do not invent inaccessible custom widgets when a `Bo*` exists.
-6. **Documentation must stay current** — Same change set as code when behavior, setup, schema, or architecture changes.
-7. **No direct Fluent UI in applications** — Never import or use `Microsoft.FluentUI.*` on product pages.
-8. **Hosted Azure SQL MI (data-owning apps) — required packages** — If the app uses App Service → Azure SQL with `Authentication=Active Directory Managed Identity`, you **MUST** add NuGet **`Microsoft.Data.SqlClient.Extensions.Azure`** (same major/minor as `Microsoft.Data.SqlClient`) **and** register `ActiveDirectoryAuthenticationProvider` before any SQL open (including EF `Database.Migrate()`). Connection string + MI grant alone are **not** enough on SqlClient 7+. SSOT: [hosted-deployment.md](../hosted-deployment.md) § Hosted database connection, [architecture/security.md](../../architecture/security.md).
+1. **Development assistant only** — Analyze, implement locally, document, test locally, recommend. Do **not** push, manage PRs, trigger CI/CD, deploy, change Azure/cloud, manage secrets, or administer repos unless the **current prompt** explicitly authorizes that action. SSOT: [ai-agent-governance.md](../ai-agent-governance.md) ([ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md)).
+2. **Reuse before create** — Prefer existing `Bo*` components, tokens, and STANDARDS patterns.
+3. **Common UI first** — Layout, shell, nav, home hub, forms: use `BreezeOn.UI`, not ad-hoc chrome.
+4. **ADR compliance** — Review `decisions/` before new architecture patterns; update/supersede ADRs in the same change set when decisions change.
+5. **Localization required** — No hardcoded user-visible strings; each app owns its `.resx` library ([i18n.md](../ui/foundations/i18n.md)).
+6. **Accessibility** — Use shipped `Bo*` chrome and controls; do not invent inaccessible custom widgets when a `Bo*` exists.
+7. **Documentation must stay current** — Same change set as code when behavior, setup, schema, or architecture changes.
+8. **No direct Fluent UI in applications** — Never import or use `Microsoft.FluentUI.*` on product pages.
+9. **Hosted Azure SQL MI (data-owning apps) — required packages** — If the app uses App Service → Azure SQL with `Authentication=Active Directory Managed Identity`, you **MUST** add NuGet **`Microsoft.Data.SqlClient.Extensions.Azure`** (same major/minor as `Microsoft.Data.SqlClient`) **and** register `ActiveDirectoryAuthenticationProvider` before any SQL open (including EF `Database.Migrate()`). Connection string + MI grant alone are **not** enough on SqlClient 7+. SSOT: [hosted-deployment.md](../hosted-deployment.md) § Hosted database connection, [architecture/security.md](../../architecture/security.md).
 
 Also: do not invent standards for placeholder areas (testing, versioning, domain modeling, observability) that are not yet defined. Dependency vulnerability policy is defined: [security-governance.md](../security-governance.md).
 
@@ -152,6 +153,21 @@ Autonomous local verification: `.\scripts\dev-reset.ps1` (requires `.env` from `
 
 ## Things AI Agents Must Never Do
 
+### Operational boundaries (deny unless current prompt explicitly authorizes)
+
+Full matrix: [ai-agent-governance.md](../ai-agent-governance.md).
+
+- Push commits, force push, create/delete branches
+- Create, approve, merge, or close pull requests
+- Trigger GitHub Actions, Azure DevOps pipelines, deploy/release workflows, or modify release definitions
+- Deploy to any environment or modify Azure / cloud / infrastructure resources
+- Create, modify, delete, or rotate secrets, PATs, or permissions
+- Modify repository/organization settings, branch protections, CODEOWNERS, or access controls
+- Treat prior chats, docs, or inferred urgency as approval for the above
+- Continue into publish/deploy after local debugging — diagnostics stay local; then **stop**
+
+### Product / standards boundaries
+
 - Create new architectural or UI patterns without checking STANDARDS / ADRs first
 - Use `Microsoft.FluentUI.*` types on product pages
 - Duplicate shell, home hub, form chrome, or tokens already in `BreezeOn.UI`
@@ -173,6 +189,7 @@ Autonomous local verification: `.\scripts\dev-reset.ps1` (requires `.env` from `
 | Topic | Document |
 | --- | --- |
 | This AI path index | [`docs/ai/README.md`](README.md) |
+| AI agent operational boundaries | [`ai-agent-governance.md`](../ai-agent-governance.md) · [ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md) |
 | Standards summary (AI) | [`BREEZEON-AI-STANDARDS-SUMMARY.md`](BREEZEON-AI-STANDARDS-SUMMARY.md) |
 | App adoption (AI) | [`BREEZEON-AI-APPLICATION-ADOPTION.md`](BREEZEON-AI-APPLICATION-ADOPTION.md) |
 | Org agent entry (full) | [`README_AI.md`](../../README_AI.md) |

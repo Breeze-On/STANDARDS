@@ -29,6 +29,7 @@ Full rules: [`docs/documentation.md`](docs/documentation.md) (includes lightweig
 | Question | Where |
 | --- | --- |
 | Where should an AI agent start? | [`docs/ai/BREEZEON-AI-QUICKSTART.md`](docs/ai/BREEZEON-AI-QUICKSTART.md) (see [`docs/ai/`](docs/ai/)) |
+| What may AI agents do operationally? | [`docs/ai-agent-governance.md`](docs/ai-agent-governance.md) ([ADR-007](decisions/ADR-007-ai-agent-operational-boundaries.md)) |
 | What exists? | [`architecture/`](architecture/) — start at [landscape](architecture/landscape.md) |
 | How do we work? | [`docs/`](docs/) |
 | Why was this decision made? | [`decisions/`](decisions/) (ADRs) |
@@ -51,6 +52,7 @@ STANDARDS/
 ├─ README_AI.md              # Agents — mandate and how to use this repo
 ├─ docs/                     # Standards, conventions, governance
 │  ├─ ai/                    # AI onboarding (quickstart first)
+│  ├─ ai-agent-governance.md # AI operational boundaries (assistants ≠ release/cloud admin)
 │  ├─ documentation.md
 │  ├─ glossary.md            # Shared vocabulary (current usage)
 │  ├─ adr.md
@@ -80,7 +82,8 @@ STANDARDS/
 ├─ decisions/                # Architecture Decision Records (ADRs)
 ├─ templates/
 │  ├─ local-sql/             # Docker SQL sandbox starter (copy into app repos)
-│  └─ dependabot/            # Dependabot starter (copy into app/library repos)
+│  ├─ dependabot/            # Dependabot starter (copy into app/library repos)
+│  └─ cursor-rules/          # Cursor rule starters (AI agent boundaries)
 └─ architecture/             # Currently implemented systems only
    ├─ README.md
    ├─ landscape.md
@@ -125,6 +128,7 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [Domain modeling](docs/domain-modeling.md) | Placeholder — not yet formally defined |
 | [Testing](docs/testing.md) | Placeholder — not yet formally defined |
 | [Security governance](docs/security-governance.md) | Dependency & vulnerability policy; Dependabot; NuGet audit (see also [architecture/security.md](architecture/security.md)) |
+| [AI agent governance](docs/ai-agent-governance.md) | Operational boundaries: development assistants only; deny push/PR/CI/deploy/cloud/secrets/admin by default ([ADR-007](decisions/ADR-007-ai-agent-operational-boundaries.md)) |
 | [Observability](docs/observability.md) | Placeholder — not yet formally defined |
 | [Versioning](docs/versioning.md) | Placeholder — not yet formally defined |
 
@@ -143,6 +147,8 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [ADR-003](decisions/ADR-003-azure-sql-with-local-docker-sql.md) | Azure SQL with local Docker SQL | Accepted | Data | Applications with databases, Hosting |
 | [ADR-004](decisions/ADR-004-breezeon-ui-abstraction-layer.md) | BreezeOn.UI abstraction layer | Accepted | UI | Shared UI, Product applications |
 | [ADR-005](decisions/ADR-005-mandatory-transactional-audit-columns.md) | Mandatory transactional audit columns | Accepted | Data | Applications with databases, Transactional business tables |
+| [ADR-006](decisions/ADR-006-application-context-ownership.md) | Application Context ownership and lifecycle | Accepted | Data | EAC Application Enablement, entity-specific application configuration |
+| [ADR-007](decisions/ADR-007-ai-agent-operational-boundaries.md) | AI agent operational boundaries | Accepted | Governance | Organization / all repositories / AI agents |
 
 Full index: [`decisions/README.md`](decisions/README.md).
 
@@ -152,6 +158,7 @@ Full index: [`decisions/README.md`](decisions/README.md).
 | --- | --- |
 | [templates/local-sql/](templates/local-sql/) | Starter `docker-compose.yml` and `.env.example` for local SQL Server |
 | [templates/azure-sql/](templates/azure-sql/) | Grant App Service Managed Identity on Azure SQL (`SQLAzureConnection`); apps also need SqlClient **`Extensions.Azure`** for MI (see [hosted-deployment.md](docs/hosted-deployment.md), [architecture/security.md](architecture/security.md)) |
+| [templates/cursor-rules/](templates/cursor-rules/) | Cursor rule starter for AI agent operational boundaries (copy into product `.cursor/rules/`) |
 
 ### Architecture (`architecture/`)
 
@@ -168,6 +175,7 @@ Index: [`architecture/README.md`](architecture/README.md).
 
 - Treat **STANDARDS** as the single source of truth for org-wide rules, current architecture, and ADRs.
 - Review **existing ADRs** before introducing new architecture patterns.
+- Follow [`docs/ai-agent-governance.md`](docs/ai-agent-governance.md): agents are development assistants — local work and recommendations by default; no push/PR/CI/deploy/cloud/secrets/admin unless the **current prompt** explicitly authorizes it.
 - Product repo `README_AI.md` files must **reference** [`STANDARDS/README_AI.md`](README_AI.md), hold **repo-specific** context only, and **avoid duplicating** organization-wide standards.
 
 ## Related
