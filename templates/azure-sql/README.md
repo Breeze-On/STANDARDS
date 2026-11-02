@@ -6,6 +6,17 @@ Idempotent T-SQL: [`grant-app-service-mi.sql`](grant-app-service-mi.sql).
 
 After creating a data-owning App Service with system-assigned Managed Identity and setting connection string **`SQLAzureConnection`** (see [hosted-deployment.md](../../docs/hosted-deployment.md) § Hosted database connection).
 
+## Permission model
+
+| Layer | What |
+| --- | --- |
+| Custom role **`breezeon_app`** | Holds the app runtime permission set. Do **not** customize built-in roles. |
+| Built-in membership | `breezeon_app` ∈ `db_datareader`, `db_datawriter`, `db_ddladmin` |
+| EXECUTE | Database-level `GRANT EXECUTE TO [breezeon_app]` (all schemas, current and future) |
+| App Service MI | `CREATE USER … FROM EXTERNAL PROVIDER`, then member of **`breezeon_app` only** |
+
+Additional App Services / slots share the same role; only create the user and add it to `breezeon_app`.
+
 ## Steps
 
 1. Set `@AppServiceName` in the script to the App Service name (e.g. `breezeon-system-admin-eac-dev`).

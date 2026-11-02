@@ -34,7 +34,7 @@ Local SQL passwords must never be committed or used against Azure SQL. See [loca
 | Principal | How |
 | --- | --- |
 | Operators (e.g. Entra admin) | Microsoft Entra / Azure CLI token; used for scripts and optional Entra Default overrides |
-| App Service `breezeon-system-admin-eac-dev` | System-assigned Managed Identity mapped as SQL user `breezeon-system-admin-eac-dev` with `db_datareader`, `db_datawriter`, `db_ddladmin` |
+| App Service `breezeon-system-admin-eac-dev` | System-assigned Managed Identity mapped as SQL user `breezeon-system-admin-eac-dev`, member of custom role **`breezeon_app`** |
 
 Connection strings do not embed SQL passwords for the hosted app. Do not commit production secrets.
 
@@ -54,7 +54,12 @@ Deploy procedure: [hosted-deployment.md](../docs/hosted-deployment.md) § Hosted
 
 Run as an Azure SQL Entra admin against the **target database**. SQL user name must match the App Service name. Template: [`templates/azure-sql/grant-app-service-mi.sql`](../templates/azure-sql/grant-app-service-mi.sql).
 
-Roles granted today: `db_datareader`, `db_datawriter`, `db_ddladmin`.
+Permission model (template [`grant-app-service-mi.sql`](../templates/azure-sql/grant-app-service-mi.sql)):
+
+- Custom role **`breezeon_app`** (do not customize built-in roles).
+- `breezeon_app` is a member of `db_datareader`, `db_datawriter`, `db_ddladmin`.
+- Database-level `GRANT EXECUTE TO [breezeon_app]` (all schemas; fixed DB roles do not include execute).
+- Each App Service MI user is added only to `breezeon_app`.
 
 ## Secrets and local data
 
