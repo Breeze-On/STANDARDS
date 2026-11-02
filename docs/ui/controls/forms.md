@@ -157,6 +157,8 @@ Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory
 | `Value` / `ValueChanged` | Two-way bind (`string?`) = **Code only** (single); when `AllowMultiple`, Codes joined by **`;`** (empty → null/`""`) |
 | `DisplayCode` | When true, list/selection shows `"{Code} - {Description}"`; default false = Description only |
 | `AllowMultiple` | Multi-select; closed control shows removable **chips** + control-level **Clear all**; open list toggles rows (no checkboxes in the list) |
+| `KeepOpen` | Single-select only: when true, the panel stays open after a selection (repeated-add / picker flows). Multi-select already stays open; ignored when `AllowMultiple` is true |
+| `ClearAfterSelect` | Single-select only: after raising `ValueChanged`, clears the bound Value so the closed control returns to placeholder. Typical with `KeepOpen` for add-pickers; ignored when `AllowMultiple` is true |
 | `ReadOnly` | Single: Description for selected Code. Multi: one checked Description **per line** (`;` → line breaks for UI) |
 | `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_DropDown_Placeholder_Default`** ("Select a value") |
 | `ValidationGroup` | Optional group for scoped Submit validation |
@@ -177,7 +179,7 @@ Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory
 
 Same as Text Field for editable chrome and deferred mandatory validation (invalid = input border only): shared label gap, md corner radius on the closed control. Multi-height fields: `BoRow` uses **`align-items: start`** when any child is multi/tall; single-line controls stay optically centered in their slot. See [layout.md — Row](../layout/layout.md#row-borow).
 
-**Gallery reference:** Components Drop-Down List — Parameters Sub padded to **6** slots (`BoEmptyField`); Preview (DisplayCode / AllowMultiple / Disabled knobs; editable + read-only + Backend Value); Settings dialog Language / Timezone rows.
+**Gallery reference:** Components Drop-Down List — Parameters: Mandatory / Disabled / DisplayCode / AllowMultiple / KeepOpen / ClearAfterSelect / Hide editable; Preview (editable + read-only + Backend Value); Settings dialog Language / Timezone rows. KeepOpen and ClearAfterSelect are disabled in Gallery when AllowMultiple is on.
 
 These Drop-Down List rules are **org standards** for every `BoDropDownList` usage.
 

@@ -25,8 +25,9 @@ Human-readable, versionable envelope supporting **multiple applications** in one
 | `code` | Yes | Short business code; uppercase A–Z, 0–9 |
 | `description` | Yes | Max 250 |
 | `metadata` | No | Max 250 |
+| `BusinessEntitiesEnabled` | No | Array of Business Entity **Code** values (not GUIDs). Portable Application Context links. Omitted when empty on export. |
 
-**Not accepted from files:** `ApplicationGUID`, surrogate ids, audit columns (`CreatedBy`, `CreatedDate`, `LastUpdatedBy`, `LastUpdatedDate`). Those are server-owned.
+**Not accepted from files:** `ApplicationGUID`, `ApplicationEnabledGUID`, `BusinessEntityGUID`, surrogate ids, audit columns (`CreatedBy`, `CreatedDate`, `LastUpdatedBy`, `LastUpdatedDate`). Those are server-owned.
 
 ### Example
 
@@ -39,7 +40,12 @@ Human-readable, versionable envelope supporting **multiple applications** in one
       "uniqueCode": "SYSTEM-ADMIN-EAC",
       "code": "EAC",
       "description": "Enterprise Administration Center",
-      "metadata": null
+      "metadata": null,
+      "BusinessEntitiesEnabled": [
+        "CANADA",
+        "RETAIL",
+        "MONTREAL"
+      ]
     }
   ]
 }
@@ -54,6 +60,7 @@ Upsert rules:
 - Match by **current** `UniqueCode` in the database.
 - Found → **update** `Code`, `Description`, `Metadata` (preserve `ApplicationGUID`).
 - Not found → **create** with a new `ApplicationGUID`.
+- After application upsert: for each Code in `BusinessEntitiesEnabled`, resolve to `BusinessEntityGUID`, create missing Application Contexts; ignore Codes already enabled; skip Codes that do not resolve to an existing Business Entity. Exclusivity `(ApplicationGUID, BusinessEntityGUID)` still applies.
 
 There is **no** rename detection, alias lookup, or historical UniqueCode mapping.
 

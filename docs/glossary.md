@@ -20,7 +20,15 @@ Related:
 
 ## Application
 
-A purpose-built product repository that hosts a runnable Breeze On app (today: EAC pattern — Blazor Web App, Identity when used, optional SQL ownership and DEV hosting). Distinct from a shared library or the STANDARDS repo.
+A deployable software solution represented by a repository / application code. Defines shared software behavior and deployment. In the EAC registry sense, a row in `System.EACApplications`. Distinct from a shared library or the STANDARDS repo.
+
+## Application Context
+
+Application + Business Entity operational instance. Represented by `ApplicationEnabledGUID` in `System.EACApplicationsEnabled`. Root owner of entity-specific application configuration. See [ADR-006](../decisions/ADR-006-application-context-ownership.md).
+
+## ApplicationEnabledGUID
+
+Immutable canonical identifier for an Application Context. Generated once on create; never regenerated, reassigned, or modified. Re-create after delete yields a new GUID; prior values are never reused. See [database.md](database.md), [ADR-006](../decisions/ADR-006-application-context-ownership.md).
 
 ## ApplicationGUID
 
@@ -61,10 +69,16 @@ Related:
 
 ## Business Entity
 
-Term listed for future domain-modeling coverage. **No organization-wide definition or standard exists yet.**
+A node within the organizational hierarchy representing an operational context (corporate unit, geography, department, acquisition unit, and similar). Stored in EAC as `System.EACBusinessEntities`.
 
 Related:
+- [architecture/eac.md](../architecture/eac.md)
 - [domain-modeling.md](domain-modeling.md)
+- EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md)
+
+## Enabled Application
+
+An Application enabled for a specific Business Entity. Stored in `System.EACApplicationsEnabled`. Same as Application Context for that pair. Exclusivity: each Application + Business Entity combination exists at most once.
 
 ## Business Reference Data
 

@@ -33,10 +33,11 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | Runtime | ASP.NET Core / C# / .NET 10 (App Service stack: `DOTNETCORE|10.0`) |
 | Shared UI | ProjectReference to `SYSTEM-SHARED-UI` / `BreezeOn.UI` (`Bo*` only; [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md)) |
 | Auth | **Not implemented** — ASP.NET Core Identity removed; no login/register; shell pages public |
-| Surfaces | `BoAppShell` + left nav; Home (`BoNavHub`); Applications (ReadOnly `BoGrid` with selection over `System.EACApplications`; create/edit popup; JSON import/export); Business Entities (`/business-entities`: Hierarchy NestedView + Entity Types tabs; SP-backed; JSON I/O); App Configuration (empty body) |
+| Surfaces | `BoAppShell` + left nav; Home (`BoNavHub`); Applications (NestedView over `System.EACApplications` with child Enabled Business Entities — no child pagination; expansion preserved on refresh; parent selection; create/edit popup with update-only enablement section; child Delete for Application Contexts; JSON import/export including `BusinessEntitiesEnabled` Codes); Business Entities (`/business-entities`: Hierarchy NestedView + Entity Types tabs; SP-backed; update-only Enabled Applications section; JSON I/O); App Configuration (empty body) |
+| Application Context | `System.EACApplicationsEnabled` — `ApplicationEnabledGUID` owns entity-specific configuration; exclusivity on `(ApplicationGUID, BusinessEntityGUID)`; centralized hard-delete workflow ([ADR-006](../decisions/ADR-006-application-context-ownership.md)) |
 | Localization | EAC `EacResources.resx` / `EacResources.fr.resx` via `IEacLocalizer` (not Gallery `BoUi`) |
 | Data access | EF Core + SQL Server provider (`ApplicationDbContext` + empty `InitialBaseline` for `__EFMigrationsHistory`; business schema via SQL scripts; audit stamps via `IAuditActorProvider` → interim `LOCAL`) |
-| SQL scripts | `sql/current_model/` (T-SQL): schema `System`, tables `EACApplications`, `EACBusinessEntitiesTypes`, `EACBusinessEntities` (mandatory audit columns); `P_GET_*` / `P_POST_*` hierarchy/types procedures |
+| SQL scripts | `sql/current_model/` (T-SQL): schema `System`, tables `EACApplications`, `EACBusinessEntitiesTypes`, `EACBusinessEntities`, `EACApplicationsEnabled` (mandatory audit columns); `P_GET_*` / `P_POST_*` hierarchy/types/enablement procedures |
 | DB model doc | [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) |
 | Portability | Applications + Business Entity Types + Business Entities JSON — [data-portability.md](../docs/data-portability.md) (EAC-owned; not a shared service) |
 | Local database | SQL Server Docker (`BreezeOnLocal`); see [local-database.md](../docs/local-database.md) |
@@ -48,8 +49,8 @@ Applications import/export is **owned by EAC** (`SYSTEM-ADMIN-EAC`). It is **not
 | Concern | Behavior |
 | --- | --- |
 | Grid selection | `BoGrid.EnableSelection` — compact unlabeled first column; select-all = all rows in **BoGrid cache**, not the database ([grids.md](../docs/ui/controls/grids.md#row-selection)) |
-| Import | Footer **Import from JSON** → native picker → in-memory validate → batched upsert by current `UniqueCode` → single `SaveChangesAsync` → reload + toast |
-| Export | Footer **Export JSON** (far right) → selected rows only → browser download (`ApplicationGUID` / audit omitted) |
+| Import | Footer **Import from JSON** → native picker → in-memory validate → batched upsert by current `UniqueCode` → create missing Application Contexts from `BusinessEntitiesEnabled` (Business Entity Codes) → reload + toast |
+| Export | Footer **Export JSON** (far right) → selected rows only → browser download (`ApplicationGUID` / audit omitted; `BusinessEntitiesEnabled` = Business Entity Codes) |
 | Match rule | Found = update; not found = create. No rename detection / aliases / history |
 | Rename example | DB `SYSTEM-ADMIN-EAC` + file `LEGACY-SYSTEM-ADMIN-EAC` → **creates** new application |
 | Size limit | `ApplicationsImport:MaxFileSizeMb` (default 2); uploads never persisted |
@@ -65,8 +66,8 @@ Route `/business-entities` (legacy `/organisation-entities` redirects). Header t
 | Engine | SQL Server 2022 container (`docker-compose.yml` in EAC repo) |
 | Physical database | `BreezeOnLocal` |
 | Auth | SQL `sa` (password via `.env` / `LocalSql:SaPassword` or `MSSQL_SA_PASSWORD`) |
-| Init | `scripts/local-db-init.ps1` applies `sql/current_model/` |
-| Seed | `scripts/local-db-seed.ps1` applies `sql/seed/` (required local fake data; keep in sync with schema) |
+| Init | `scripts/local-db-init.ps1` builds `generated/current-model.sql` from ordered `sql/current_model/` sources → one `sqlcmd` |
+| Seed | `scripts/local-db-seed.ps1` builds `generated/seed.sql` from `sql/seed/` (+ JSON→T-SQL) → one `sqlcmd` (required local fake data; keep in sync with schema) |
 
 Routine local runs do **not** use Azure SQL. Org pattern: [local-database.md](../docs/local-database.md). Human runbook and agent steps: EAC [`README.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README.md) / [`README_AI.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README_AI.md).
 

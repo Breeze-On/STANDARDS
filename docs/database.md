@@ -125,6 +125,14 @@ Conventions for registering applications in the EAC-owned catalog (column semant
 | **UniqueCode** | Application **technical** identifier. Value follows the **GitHub repository name** (e.g. `SYSTEM-ADMIN-EAC`, `SYSTEM-HR-HRM`). Prefer a **UNIQUE** constraint/index. Length follows non-Code string defaults unless the product documents an exception. |
 | **Code** | Short **business** identifier (e.g. `EAC`, `HRM`, `AP`). Length follows the **Code** default (**30**) unless documented otherwise. |
 
+### Application Context identity
+
+| Column / rule | Role |
+| --- | --- |
+| **ApplicationEnabledGUID** | Immutable canonical key for an Application Context (Application enabled for a Business Entity). `GUID` → **NOT NULL**. Generate once; never regenerate, reassign, or modify. Re-create after delete → new GUID; never reuse prior values. Prefer **UNIQUE**. |
+| **Exclusivity** | Unique `(ApplicationGUID, BusinessEntityGUID)` is a **business rule**: many-to-many overall; a specific pair exists at most once. |
+| **Ownership / deletion** | `ApplicationEnabledGUID` owns entity-specific application configuration. Delete via one centralized workflow that removes dependents then the enablement row (clean-data). See [ADR-006](../decisions/ADR-006-application-context-ownership.md). |
+
 Repository ↔ identifier mapping: [naming.md](naming.md) § Application technical identifiers.
 
 ## Script layout (application repos)
@@ -133,12 +141,38 @@ Each application repository that owns database objects maintains SQL under:
 
 ```text
 sql/
-  current_model/          # Source of truth for the current schema (executable T-SQL)
+  current_model/          # Source of truth for the current schema (executable T-SQL; one file per object)
   seed/                   # Required local-only sample data for local-ready testing (not for hosted envs by default)
   migration_scripts/      # Temporary deltas; clean up after applied
+generated/                # Temporary consolidated deployment scripts (gitignored; produced by local scripts)
 docs/
   db-model.md             # Human/agent-readable current DB model (required when the app owns SQL objects)
 ```
+
+## Database Deployment Standard
+
+Org rule for applications that own SQL objects (reference implementation: EAC):
+
+1. **Source stays separated.** Tables, procedures, functions, views, schemas, etc. remain individual files under `sql/current_model/` for maintainability.
+2. **Deploy through one generated script.** Local init / `dev-reset` concatenates ordered sources into a temporary consolidated artifact (e.g. `generated/current-model.sql`) and executes **one** `sqlcmd` against that file.
+3. **Ordering is explicit.** Maintain a deterministic dependency-order list in the app’s local DB helpers whenever objects are added, removed, renamed, or reordered.
+4. **Logging lists sources.** Generation must print (and embed in the consolidated header) which source files were included and in what order.
+5. **Do not hand-maintain the giant file.** Prefer regenerating the consolidated script on each reset/init.
+
+### Definition of Done (schema change)
+
+A database-object change is incomplete unless:
+
+1. The object is implemented under `sql/current_model/` (and `docs/db-model.md` updated).
+2. Deployment aggregation / ordering is updated if required.
+3. Seed aggregation is updated if required (see Seed Maintenance Standard).
+4. Product and STANDARDS documentation reflect current reality.
+
+## Database Seed Maintenance Standard
+
+1. **Seed sources may stay separated** under `sql/seed/` (T-SQL and/or portable JSON that local scripts compile to T-SQL).
+2. **Seed deploy uses one consolidated script** (e.g. `generated/seed.sql`) executed once via `sqlcmd`.
+3. **Any feature that introduces or changes seed data** must update seed sources **and** keep consolidated seed deployment valid in the **same change set**.
 
 ### `sql/current_model/`
 
@@ -148,6 +182,7 @@ docs/
 - Include schema-creation scripts as needed (e.g. `00_schema_*.sql`).
 - Use Transact-SQL idioms appropriate for Azure SQL (`IF OBJECT_ID` / `sys.schemas`, `IDENTITY`, `GO` batches as needed).
 - Nullability must follow the rules above.
+- Local apply path: build consolidated `generated/current-model.sql` → single `sqlcmd` (see Database Deployment Standard).
 
 ### `sql/seed/` (required for apps with owned business schema)
 
@@ -158,6 +193,7 @@ Every application that owns business tables must keep a **local-ready** seed so 
 - Do **not** apply to hosted DEV / UAT / PRD by default.
 - **Keep in sync:** when `sql/current_model/` or `docs/db-model.md` changes, update `sql/seed/` in the **same change set** so local testing still works.
 - Seed assets are usually T-SQL under `sql/seed/`. Portable JSON payloads (same envelopes as import/export; [data-portability.md](data-portability.md)) are allowed when the app’s local seed scripts apply them to Docker SQL.
+- Local apply path: build consolidated `generated/seed.sql` → single `sqlcmd` (see Database Seed Maintenance Standard).
 - Ship a seed script (e.g. `scripts/local-db-seed.ps1`) and document it in the app README / README_AI.
 - Local sandbox workflow: [local-database.md](local-database.md).
 

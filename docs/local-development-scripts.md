@@ -45,7 +45,7 @@ A developer should be able to:
 5. Validate required environment variables (fail fast with clear errors)  
 6. Verify dependencies are available (e.g. .NET SDK, Docker)  
 7. Recreate the local development database (SQL apps)  
-8. Apply schema / seed scripts and EF migrations as configured  
+8. Build consolidated schema/seed SQL from ordered sources, apply each with one sqlcmd, then EF migrations as configured  
 9. Build the solution / host project  
 10. Launch the application  
 11. Display a success / failure summary (URLs, what was reset)  
@@ -70,7 +70,7 @@ Apps with no local secrets today still keep `.env` / `.env.example` so the scrip
 | --- | --- | --- |
 | Docker SQL | Required | Not used |
 | Required `.env` vars | At least `MSSQL_SA_PASSWORD` | None required today |
-| Schema / seed | `sql/current_model/` + `sql/seed/` | N/A |
+| Schema / seed | `sql/current_model/` + `sql/seed/` sources → `generated/*.sql` single sqlcmd | N/A |
 | EF migrations | Apply on recreate as configured | N/A |
 | Launch target | Product web project | `BreezeOn.UI.Gallery` |
 

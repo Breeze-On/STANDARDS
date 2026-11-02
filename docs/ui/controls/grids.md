@@ -181,7 +181,9 @@ Read-only hierarchical mode on the same `BoGrid` surface. No action column; no A
 ### Scenarios
 
 1. **Same columns** (`ChildRowsHaveDifferentColumns = false`): one table, one header; children indented in the **first** data column with chevron + hierarchy guide rails (`.bo-grid--nested`). Children from `ChildrenSelector`.
-2. **Different columns** (`ChildRowsHaveDifferentColumns = true`): parent headers stay; expanded parent inserts a colspan continuation row with `ChildGridTemplate` (host embeds another `BoGrid`, typically ReadOnly). No card wrapper.
+2. **Different columns** (`ChildRowsHaveDifferentColumns = true`): parent headers stay; expanded parent inserts a colspan continuation row with `ChildGridTemplate` (host embeds another `BoGrid`, typically ReadOnly). No card wrapper. Parent `EnableSelection` uses flat `SelectedCacheRowIds` (no cascade into child grids).
+
+`PreserveNestedExpansionOnCacheReset`: when true, Nested View expand/collapse survives cache `ReplaceAll` / Clear (stale keys pruned). Default false reseeds from `DefaultExpansionState`.
 
 ### DefaultExpansionState
 
