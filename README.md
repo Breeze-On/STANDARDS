@@ -149,6 +149,7 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [ADR-005](decisions/ADR-005-mandatory-transactional-audit-columns.md) | Mandatory transactional audit columns | Accepted | Data | Applications with databases, Transactional business tables |
 | [ADR-006](decisions/ADR-006-application-context-ownership.md) | Application Context ownership and lifecycle | Accepted | Data | EAC Application Enablement, entity-specific application configuration |
 | [ADR-007](decisions/ADR-007-ai-agent-operational-boundaries.md) | AI agent operational boundaries | Accepted | Governance | Organization / all repositories / AI agents |
+| [ADR-008](decisions/ADR-008-query-driven-data-retrieval.md) | Query-driven data retrieval | Accepted | UI + Data | Product applications, Shared UI grids / filters, Applications with databases, Planning Agents |
 
 Full index: [`decisions/README.md`](decisions/README.md).
 

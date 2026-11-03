@@ -102,6 +102,20 @@ When the page includes a data grid:
 - [ ] Cell editors reuse existing **`Bo*`** fields; column / grid **`Required`** follow [grids.md](controls/grids.md).
 - [ ] Nested View: set `NodeKey`; same columns → `ChildrenSelector`; different columns → `ChildRowsHaveDifferentColumns` + `ChildGridTemplate` (nested `BoGrid`, not a new component). Optional `DefaultExpansionState`. Same-column Nested View may use `EnableSelection` with cascade. See [grids.md Nested View](controls/grids.md#nested-view-locked--shipped).
 
+### Filters and query-driven datasets
+
+When the page filters, sorts, or pages a dataset — [query-driven-retrieval.md](controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md):
+
+- [ ] Filters live in a dedicated **Filters** section (`BoSectionMain` / `BoSectionSub` + `BoRow`) above the grid; **no Apply button**.
+- [ ] **One primary retrieval contract** per dataset (rows / `TotalCount` / Nested View children / optional metadata); host-owned, never called from `BreezeOn.UI`.
+- [ ] **Challenge secondary contracts** (especially a companion FilterOptions SP); require documented rationale; no generic schema/table/column distinct SPs.
+- [ ] Simple distinct catalogs use **EF / app services**; large drop-down sources use Top-N (default 100, configurable) + server search; small sets may preload.
+- [ ] Uses `BoQuery*` types (`BoQueryFilterOperator`: `In`, `Equals`, `Contains`); sort column **whitelist**; Filter → Sort → Pagination.
+- [ ] Text filters: ~750ms debounce / Enter / blur (skip unchanged); dropdown filters apply on change — [forms.md](controls/forms.md#filter-execution-query-driven).
+- [ ] **Cancellation / latest-wins**; stale responses never update the UI.
+- [ ] Server query grids: Server `QueryMode`, cache = current page, `TotalCount` from the primary contract, select-all = current page — [grids.md](controls/grids.md#server-querymode). Client mode remains the default.
+- [ ] Any exception (full-tree load, secondary contract) is documented.
+
 ### Controls
 
 - [ ] **`BoTextField`** for text entry — [forms.md](controls/forms.md#text-field-botextfield).

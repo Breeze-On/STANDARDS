@@ -118,6 +118,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | `MaxLength` | Maximum characters (enforced on the input). **Default 600** |
 | `ShowCharacterCount` | When true **and not `Disabled`**, shows `current/max` inside the input. **Never shown when `Disabled`**. **Default false** |
 | `Value` / `ValueChanged` | Two-way bind to the working model |
+| `DebounceMilliseconds` | When &gt; 0, defers `ValueChanged` until the user stops typing for that many ms, presses Enter, or leaves the field (whichever first). Default **0** (immediate). Filters typically use **750** — see [Filter execution](#filter-execution-query-driven) |
 | `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_Placeholder_Default`** ("Enter text..."). **Always omitted when `Disabled`** |
 | `ValidationGroup` | Optional group for scoped Submit validation |
 | `Disabled` | Standard disabled chrome |
@@ -182,6 +183,26 @@ Same as Text Field for editable chrome and deferred mandatory validation (invali
 **Gallery reference:** Components Drop-Down List — Parameters: Mandatory / Disabled / DisplayCode / AllowMultiple / KeepOpen / ClearAfterSelect / Hide editable; Preview (editable + read-only + Backend Value); Settings dialog Language / Timezone rows. KeepOpen and ClearAfterSelect are disabled in Gallery when AllowMultiple is on.
 
 These Drop-Down List rules are **org standards** for every `BoDropDownList` usage.
+
+## Filter execution (query-driven)
+
+When Text Fields and Drop-Down Lists act as **filters** for a queryable dataset (typically a Filters section above a grid). Retrieval standard: [query-driven-retrieval.md](query-driven-retrieval.md) · [ADR-008](../../../decisions/ADR-008-query-driven-data-retrieval.md).
+
+| Control | Execution |
+| --- | --- |
+| Text Field | Runs the query after **750ms debounce**, on **Enter**, or on **blur**. **Skip** when the value is unchanged since the last executed query. |
+| Drop-Down List | Applies **on change** (immediately) |
+| Apply button | **None** |
+| Concurrency | **Latest-wins:** a new execution cancels the in-flight one; a stale response never updates the UI |
+
+### Drop-Down data retrieval
+
+| Source size | Standard |
+| --- | --- |
+| Small | **Preload** the full item list |
+| Large | **Top-N** items (default **100**, **configurable** — not a hard constant) plus **server search** as the user types |
+
+Prefer **EF Core / app-service** queries for simple distinct catalogs instead of new stored procedures; do not add a companion FilterOptions procedure by default ([database.md](../../database.md#query-driven-paged-list-stored-procedures)).
 
 ## Checkbox (`BoCheckbox`)
 

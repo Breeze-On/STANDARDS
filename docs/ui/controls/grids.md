@@ -164,6 +164,22 @@ Default off (`IsPagination = false`). When on:
 - Save validates required cell fields (ValidationGroup) + grid `Required`; fail → toast + borders; success → `OnSave`.
 - Sort order remains frozen while cells change (same rules as Sort).
 
+## Server QueryMode
+
+**Client mode remains the default:** the host loads the full dataset into `BoGridCache`; sort and pagination apply to the **full cache** (see Sort / Pagination above).
+
+**Server `QueryMode`** is for datasets too large (or too filter-driven) to cache fully. Retrieval standard: [query-driven-retrieval.md](query-driven-retrieval.md) · [ADR-008](../../../decisions/ADR-008-query-driven-data-retrieval.md). The library still **never** talks to SQL — the host owns the primary retrieval contract.
+
+| Concern | Standard |
+| --- | --- |
+| Cache content | Host fills `BoGridCache` with **only the current page** returned by the primary contract |
+| `TotalCount` | Comes from the **primary contract** (rows matching the filter before pagination); drives the pagination footer total and page count |
+| Pipeline | Server applies **Filter → Sort → Pagination** (in that order); header sort and page changes raise a new host query instead of slicing the cache |
+| Nested View | Server query pages **roots**; children come from the same primary contract; expansion rules unchanged |
+| Select-all | Selects the **current page** only (rows in the cache), not every row matching the filter |
+| Filters | Filter controls follow [forms.md — Filter execution](forms.md#filter-execution-query-driven); no Apply button |
+| Stale responses | Host uses cancellation / latest-wins; a stale response never calls `ReplaceAll` |
+
 ## Extension points (host)
 
 - Column `Display` / `Edit` templates (compose existing `Bo*` fields).

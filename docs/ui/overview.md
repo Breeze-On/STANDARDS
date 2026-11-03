@@ -25,7 +25,8 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [layout/layout.md](layout/layout.md) | Row (`BoRow`), page composition, planning JSON schema |
 | **Controls** | |
 | [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, Date Field, and form controls |
-| [controls/grids.md](controls/grids.md) | Grid (`BoGrid`) — Read-Only / Row Edit / Inline Edit / Nested View |
+| [controls/grids.md](controls/grids.md) | Grid (`BoGrid`) — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode` |
+| [controls/query-driven-retrieval.md](controls/query-driven-retrieval.md) | Query-driven retrieval — one primary contract per dataset; Filter → Sort → Page; debounce, cancellation, Top-N, exceptions ([ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md)) |
 
 Former single file [`docs/ui-components.md`](../ui-components.md) redirects here. Flat paths under `docs/ui/*.md` (e.g. `docs/ui/tokens.md`) redirect to the hierarchical files above.
 

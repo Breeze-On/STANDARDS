@@ -54,6 +54,7 @@ Product pages consume **`Bo*`** only. Fluent is an implementation detail of Shar
 6. **Accessibility** — Use shipped `Bo*` chrome and controls; do not invent inaccessible custom widgets when a `Bo*` exists.
 7. **Documentation must stay current** — Same change set as code when behavior, setup, schema, or architecture changes.
 8. **No direct Fluent UI in applications** — Never import or use `Microsoft.FluentUI.*` on product pages.
+8a. **Planning Agent default for queryable datasets** — **One primary retrieval contract per dataset** (rows / `TotalCount` / Nested View children / optional metadata). **Challenge** companion FilterOptions SPs and any secondary contract; require documented rationale; prefer EF / app services for simple catalogs. SSOT: [query-driven-retrieval.md](../ui/controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md).
 9. **Hosted Azure SQL MI (data-owning apps) — required packages** — If the app uses App Service → Azure SQL with `Authentication=Active Directory Managed Identity`, you **MUST** add NuGet **`Microsoft.Data.SqlClient.Extensions.Azure`** (same major/minor as `Microsoft.Data.SqlClient`) **and** register `ActiveDirectoryAuthenticationProvider` before any SQL open (including EF `Database.Migrate()`). Connection string + MI grant alone are **not** enough on SqlClient 7+. SSOT: [hosted-deployment.md](../hosted-deployment.md) § Hosted database connection, [architecture/security.md](../../architecture/security.md).
 
 Also: do not invent standards for placeholder areas (testing, versioning, domain modeling, observability) that are not yet defined. Dependency vulnerability policy is defined: [security-governance.md](../security-governance.md).
@@ -205,6 +206,7 @@ Full matrix: [ai-agent-governance.md](../ai-agent-governance.md).
 | Hosted deployment | [`docs/hosted-deployment.md`](../hosted-deployment.md) |
 | ADR index | [`decisions/README.md`](../../decisions/README.md) |
 | ADR-002 / ADR-004 | Blazor Interactive Server · BreezeOn.UI abstraction |
+| Query-driven retrieval | [`query-driven-retrieval.md`](../ui/controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md) |
 | Shared UI agents | [SYSTEM-SHARED-UI `README_AI.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README_AI.md) |
 | EAC agents | [SYSTEM-ADMIN-EAC `README_AI.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README_AI.md) |
 

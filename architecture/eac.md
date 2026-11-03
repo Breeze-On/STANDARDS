@@ -55,9 +55,15 @@ Applications import/export is **owned by EAC** (`SYSTEM-ADMIN-EAC`). It is **not
 | Rename example | DB `SYSTEM-ADMIN-EAC` + file `LEGACY-SYSTEM-ADMIN-EAC` → **creates** new application |
 | Size limit | `ApplicationsImport:MaxFileSizeMb` (default 2); uploads never persisted |
 
+## Applications: query-driven list
+
+The Applications page has a **Filters** section and a **server-paged Nested View** (Server `QueryMode`; roots paged, Enabled Business Entities as children). The **primary retrieval contract** is `System.P_GET_EACApplicationsGrid` (rows, `TotalCount`, children). Filter drop-down catalogs come from **EF Core** (app services), not a companion FilterOptions procedure. Standard: [query-driven-retrieval.md](../docs/ui/controls/query-driven-retrieval.md) · [ADR-008](../decisions/ADR-008-query-driven-data-retrieval.md).
+
 ## Business Entities
 
 Route `/business-entities` (legacy `/organisation-entities` redirects). Header tabs: **Business Hierarchy** (NestedView + cascade `SelectedNodeKeys`) then **Entity Types** (flat ReadOnly grid). Writes use `System.P_GET_*` / `P_POST_*` (hierarchy path, cycle checks, recursive delete). Portability kinds `breezeon.eac.business-entity-types` and `breezeon.eac.business-entities` — [data-portability.md](../docs/data-portability.md). Size limit `BusinessEntitiesImport:MaxFileSizeMb` (default **10**).
+
+**Business Hierarchy remains the approved full-load exception** to server-paged retrieval: the whole tree is loaded (hierarchy path, cycle checks, cascade selection) — [ADR-008](../decisions/ADR-008-query-driven-data-retrieval.md) exceptions framework.
 
 ## Local development (current)
 

@@ -109,6 +109,30 @@ When a product introduces stored procedures under the EAC-owned **`System`** sch
 
 Prefer one upsert POST plus a dedicated delete procedure when delete semantics differ (for example recursive hierarchy delete). Pass the audit actor as a parameter (for example `@Actor`) so procedures can stamp mandatory audit columns. Document each procedure in the product `docs/db-model.md`. Script file names should match the procedure name (e.g. `System.P_POST_EACBusinessEntityDelete.sql`).
 
+## Query-driven paged list stored procedures
+
+Standard: [query-driven-retrieval.md](ui/controls/query-driven-retrieval.md) · [ADR-008](../decisions/ADR-008-query-driven-data-retrieval.md).
+
+When a dataset is a filterable / sortable / paged list **and** a stored procedure is justified (a documented need, per [Application data access](#application-data-access)):
+
+- **One primary retrieval contract per dataset.** The procedure returns the page of rows, `TotalCount`, Nested View children when hierarchical, and optional metadata.
+- **Parameter pattern:**
+
+| Parameter | Role |
+| --- | --- |
+| `@Keyword` | Free-text keyword filter |
+| `@FiltersJson` | Typed filters (`In` / `Equals` / `Contains`) as JSON |
+| `@PageNumber` / `@PageSize` | Pagination (applied **after** filter and sort) |
+| `@SortColumn` / `@SortDirection` | Sort request |
+| `@TotalCount` `OUTPUT` | Rows matching the filter before pagination |
+| `@IncludeFilterMetadata` (optional) | Return filter metadata on **initial load** only — not on every query |
+
+- **Pipeline:** Filter → Sort → Pagination.
+- **Sort whitelist:** only known columns sort; an unknown `@SortColumn` / `@SortDirection` falls back to a **safe default** (never concatenated into SQL).
+- **Do not default to a companion FilterOptions procedure.** Prefer `@IncludeFilterMetadata` on the primary contract, or EF Core / app-service queries for simple distinct catalogs.
+- **Forbidden:** generic distinct-values procedures that take schema / table / column names.
+- A documented need is still required to introduce **any** procedure; document it in the product `docs/db-model.md` (secondary contracts and exceptions need a recorded rationale).
+
 ## Shared System schema ownership
 
 - The SQL schema **`System`** holds platform administration / shared catalog tables owned by **EAC** (Enterprise Administration Center).
