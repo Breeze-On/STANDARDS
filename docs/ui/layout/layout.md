@@ -188,7 +188,7 @@ Older SHARED-UI treated every `IsHidden` as a reserved slot. That legacy behavio
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
-| `control` | string | Yes | `"TextField"` → `BoTextField`; `"ReadOnlyField"` → `BoFieldReadOnly`; `"EmptyField"` → `BoEmptyField`; `"DateField"` → `BoDateField`; `"NumberField"` → `BoNumberField` |
+| `control` | string | Yes | `"TextField"` → `BoTextField`; `"ReadOnlyField"` → `BoFieldReadOnly`; `"EmptyField"` → `BoEmptyField`; `"DateField"` → `BoDateField`; `"NumberField"` → `BoNumberField`; `"DropDownList"` → `BoDropDownList`; `"Checkbox"` → `BoCheckbox` |
 | `label` | string | Yes* | Field label (*omit / unused for `EmptyField`) |
 | `fieldKey` | string | Yes* | Stable DTO / working-model property id (*omit for `EmptyField`) |
 | `required` | boolean | No | Default false → `Required` / Mandatory asterisk |
@@ -292,8 +292,8 @@ Expected layout: Row 1 → two equal columns (`Weight` default 1) with 16px gap;
         {
           "fields": [
             { "control": "TextField", "label": "Keyword", "fieldKey": "Keyword", "weight": 3 },
-            { "control": "TextField", "label": "Code", "fieldKey": "CodeFilter" },
-            { "control": "TextField", "label": "Description", "fieldKey": "DescriptionFilter" }
+            { "control": "DropDownList", "label": "Code", "fieldKey": "CodeFilter" },
+            { "control": "DropDownList", "label": "Description", "fieldKey": "DescriptionFilter" }
           ]
         }
       ]

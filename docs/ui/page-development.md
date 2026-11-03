@@ -106,15 +106,20 @@ When the page includes a data grid:
 
 When the page filters, sorts, or pages a dataset — [query-driven-retrieval.md](controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md):
 
+**Canonical host pattern (copy from Gallery):**
+
+Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → primary retrieval contract → `BoGridCache.ReplaceAll` + `TotalCount` → `StateHasChanged`. Nested View keyword: contract or `BoNestedViewKeywordFilter` → `NestedExpandedSeedKeys` / shallow `DefaultExpansionState` (not `PreserveLayoutWhenHidden`).
+
 - [ ] Filters live in a dedicated **Filters** section (`BoSectionMain` / `BoSectionSub` + `BoRow`) above the grid; **no Apply button**.
 - [ ] **One primary retrieval contract** per dataset (rows / `TotalCount` / Nested View children / optional metadata); host-owned, never called from `BreezeOn.UI`.
 - [ ] **Challenge secondary contracts** (especially a companion FilterOptions SP); require documented rationale; no generic schema/table/column distinct SPs.
-- [ ] Simple distinct catalogs use **EF / app services**; large drop-down sources use Top-N (default 100, configurable) + server search; small sets may preload.
-- [ ] Uses `BoQuery*` types (`BoQueryFilterOperator`: `In`, `Equals`, `Contains`); sort column **whitelist**; Filter → Sort → Pagination.
+- [ ] Simple distinct catalogs use **EF / app services** (`*FilterCatalog`); large drop-downs use `ItemsProvider` Top-N + server search; small sets may preload `Items`.
+- [ ] Uses `BoQuery*` types (`BoQueryFilterOperator`: `In`, `Equals`, `Contains`); sort column **whitelist**; Filter → Sort → Pagination; `@FiltersJson` per [database.md](../database.md#filtersjson-schema).
 - [ ] Text filters: ~750ms debounce / Enter / blur (skip unchanged); dropdown filters apply on change — [forms.md](controls/forms.md#filter-execution-query-driven).
-- [ ] **Cancellation / latest-wins**; stale responses never update the UI.
-- [ ] Server query grids: Server `QueryMode`, cache = current page, `TotalCount` from the primary contract, select-all = current page — [grids.md](controls/grids.md#server-querymode). Client mode remains the default.
+- [ ] **`BoLatestWinsQuery`** (or equivalent) for grid queries **and** FilterCatalog loads; stale responses never update the UI.
+- [ ] Server query grids: Server `QueryMode`, cache = current page, `TotalCount` from the primary contract, select-all = current page only — [grids.md](controls/grids.md#server-querymode). Client mode remains the default.
 - [ ] Any exception (full-tree load, secondary contract) is documented.
+- [ ] Gallery working example exists or is explicitly pending ([example-governance.md](example-governance.md)).
 
 ### Controls
 
@@ -125,7 +130,7 @@ When the page filters, sorts, or pages a dataset — [query-driven-retrieval.md]
 - [ ] **`BoNumberField`** for numbers — bind **`decimal?` only**; integer/decimals; `IsCurrency` / `IsPercent` mutually exclusive; percent UI 0–100 → bind ÷100; alignment default Right — [forms.md](controls/forms.md#number-field-bonumberfield).
 - [ ] **`BoFieldReadOnly`** for display-only scalars (host formats `Value`) — [forms.md](controls/forms.md#read-only-field-bofieldreadonly).
 - [ ] **`Weight`** when a field should be wider/narrower than neighbors (default 1) — [layout.md](layout/layout.md).
-- [ ] **`BoEmptyField`** for permanent empty slots; **`IsHidden`** + optional **`PreserveLayoutWhenHidden`** for temporary hide — [layout.md](layout/layout.md).
+- [ ] **`BoEmptyField`** for permanent empty slots; **`IsHidden`** + optional **`PreserveLayoutWhenHidden`** for temporary hide — [layout.md](layout/layout.md). Do **not** confuse with Nested View **`PreserveNestedExpansionOnCacheReset`** ([grids.md](controls/grids.md)).
 - [ ] Sections that participate in Submit validation set **`SectionKey`** — [sections.md](layout/sections.md).
 - [ ] Planning JSON: shipped control names only (`TextField`, `ReadOnlyField`, `EmptyField`, `DateField`, `NumberField`, …; optional `weight` / `hidden` / `preserveLayoutWhenHidden` / `mode` / number flags) — [layout.md](layout/layout.md).
 

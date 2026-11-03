@@ -121,17 +121,52 @@ When a dataset is a filterable / sortable / paged list **and** a stored procedur
 | Parameter | Role |
 | --- | --- |
 | `@Keyword` | Free-text keyword filter |
-| `@FiltersJson` | Typed filters (`In` / `Equals` / `Contains`) as JSON |
+| `@FiltersJson` | Typed filters (`In` / `Equals` / `Contains`) as JSON — see [FiltersJson schema](#filtersjson-schema) |
 | `@PageNumber` / `@PageSize` | Pagination (applied **after** filter and sort) |
 | `@SortColumn` / `@SortDirection` | Sort request |
 | `@TotalCount` `OUTPUT` | Rows matching the filter before pagination |
-| `@IncludeFilterMetadata` (optional) | Return filter metadata on **initial load** only — not on every query |
+| `@IncludeFilterMetadata` (optional / reserved) | Advanced only — filter metadata on **initial load**; most pages use EF FilterCatalog instead |
 
 - **Pipeline:** Filter → Sort → Pagination.
 - **Sort whitelist:** only known columns sort; an unknown `@SortColumn` / `@SortDirection` falls back to a **safe default** (never concatenated into SQL).
-- **Do not default to a companion FilterOptions procedure.** Prefer `@IncludeFilterMetadata` on the primary contract, or EF Core / app-service queries for simple distinct catalogs.
+- **Do not default to a companion FilterOptions procedure.** Prefer EF Core / app-service **FilterCatalog** queries for simple distinct catalogs; `@IncludeFilterMetadata` only for advanced primary contracts.
 - **Forbidden:** generic distinct-values procedures that take schema / table / column names.
 - A documented need is still required to introduce **any** procedure; document it in the product `docs/db-model.md` (secondary contracts and exceptions need a recorded rationale).
+
+### FiltersJson schema
+
+Canonical JSON for `@FiltersJson`, aligned with `BoQueryFilter` / `BoQueryFilterOperator` in `BreezeOn.UI.Query`. **Host owns** serialization; the SP owns whitelist of `Field` values and safe SQL composition.
+
+**Shape:** JSON array of objects:
+
+| Property | Type | Meaning |
+| --- | --- | --- |
+| `Field` | string | Whitelisted filter field name (product-defined) |
+| `Operator` | string | `In` \| `Equals` \| `Contains` (enum name) |
+| `Values` | string array | One or more values; empty clauses are omitted by the host |
+
+**Single filter (Equals):**
+
+```json
+[{ "Field": "Status", "Operator": "Equals", "Values": ["Active"] }]
+```
+
+**Multi-select (In):**
+
+```json
+[{ "Field": "Code", "Operator": "In", "Values": ["APP1", "APP2"] }]
+```
+
+**Multiple filters:**
+
+```json
+[
+  { "Field": "Code", "Operator": "In", "Values": ["APP1", "APP2"] },
+  { "Field": "Description", "Operator": "Contains", "Values": ["pay"] }
+]
+```
+
+**SP expectations:** ignore or reject unknown `Field` / `Operator` per product contract (document in `docs/db-model.md`); never concatenate unchecked values into SQL. Keyword (`@Keyword`) is separate from `@FiltersJson`.
 
 ## Shared System schema ownership
 

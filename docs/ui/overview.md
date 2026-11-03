@@ -11,6 +11,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | Document | Responsibility |
 | --- | --- |
 | [overview.md](overview.md) (this file) | Library contract, shipped inventory, gallery, documentation governance |
+| [example-governance.md](example-governance.md) | Example Governance — normative + AI guidance + Gallery working example DoD |
 | [page-development.md](page-development.md) | Page-construction checklist for humans and AI agents (links to detailed standards) |
 | **Foundations** | |
 | [foundations/tokens.md](foundations/tokens.md) | Design / shell tokens |
@@ -77,7 +78,9 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoFieldReadOnly` | Flat read-only display field (pre-formatted string `Value`; same label chrome as Text Field; `Alignment`) | [forms.md](controls/forms.md) |
 | `BoEmptyField` | Empty `BoRow` alignment slot (no label/value) | [layout.md](layout/layout.md), [forms.md](controls/forms.md) |
 | `BoTextField` | Text input (default Placeholder; `ReadOnly`; deferred mandatory validation; `ErrorText` → invalid) | [forms.md](controls/forms.md) |
-| `BoDropDownList` | Searchable Code/Description Drop-Down (`DisplayCode`, `AllowMultiple` chips, panel search) | [forms.md](controls/forms.md) |
+| `BoDropDownList` | Searchable Code/Description Drop-Down (`Items` or async `ItemsProvider` Top-N; `DisplayCode`, `AllowMultiple` chips, panel search) | [forms.md](controls/forms.md) |
+| `BoLatestWinsQuery` | Host latest-wins / cancel / optional signature skip for queries and FilterCatalog loads | [query-driven-retrieval.md](controls/query-driven-retrieval.md) |
+| `BoNestedViewKeywordFilter` | Client Nested View keyword Rules 1–3 (filtered tree + path-minimal expand keys) | [grids.md](controls/grids.md#nested-view-keyword-filtering-org-standard) |
 | `BoCheckbox` | Boolean (`Required` / `ReadOnly` Yes-No) | [forms.md](controls/forms.md) |
 | `BoDateField` | Date / DateTime UI; bound type always `DateTime?` (never `DateOnly`); `ReadOnly`; locale (`FormatCulture`) + fixed calendar popover | [forms.md](controls/forms.md) |
 | `BoNumberField` | Number UI; bound type always `decimal?`; integer/decimals; currency/% (mutex); focus raw / blur formatted; `ReadOnly`; alignment default Right; needs host `bo-number-field.js` | [forms.md](controls/forms.md) |
@@ -93,11 +96,13 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Grid** tab replaces Preview with Sub **Grid Control** hosting `BoGrid`; **Page Freeze** tab demos `IBoPageFreezeService.RunAsync` then Success toast; Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Grid** tab replaces Preview with Sub **Grid Control** hosting `BoGrid` (including Server `QueryMode`, Filters, Nested View keyword demos where shipped); **Page Freeze** tab demos `IBoPageFreezeService.RunAsync` then Success toast; **Drop-Down List** includes static Items and async `ItemsProvider` demos when shipped; Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
+
+**Ownership:** Gallery is the primary working-example host for library-scoped UI / query patterns. Product pages are product reference only. Full rules: [example-governance.md](example-governance.md).
 
 ## Documentation governance
 
-Documentation is part of **completion criteria** (same change set as code). Current reality only — never document planned components as shipped. Org DoD: [documentation.md](../documentation.md#definition-of-done).
+Documentation is part of **completion criteria** (same change set as code). Current reality only — never document planned components as shipped. Org DoD: [documentation.md](../documentation.md#definition-of-done). UI / query standards also follow [Example Governance](example-governance.md) (normative + AI guidance + Gallery example).
 
 ### When new shared components are introduced
 
@@ -106,7 +111,7 @@ For every new or changed public `Bo*` surface:
 1. Add or update the inventory row in this overview.
 2. Document rules in the appropriate responsibility file under `foundations/`, `shell/`, `layout/`, or `controls/` (create a focused sibling if needed).
 3. Update [page-development.md](page-development.md) when the change affects how pages must be built (checklist living-document rule).
-4. Update the gallery when the component is previewable.
+4. Update the gallery when the component is previewable ([example-governance.md](example-governance.md)).
 5. Update STANDARDS indexes (`README.md`, `README_AI.md`, this overview) and any product README / README_AI links in the same change set.
 6. New feature / parameter / UX or design-standard change / behavior-affecting refactor → documentation in the **same change set** (UI component DoD).
 

@@ -55,7 +55,9 @@ Product pages consume **`Bo*`** only. Fluent is an implementation detail of Shar
 7. **Documentation must stay current** — Same change set as code when behavior, setup, schema, or architecture changes.
 8. **No direct Fluent UI in applications** — Never import or use `Microsoft.FluentUI.*` on product pages.
 8a. **Planning Agent default for queryable datasets** — **One primary retrieval contract per dataset** (rows / `TotalCount` / Nested View children / optional metadata). **Challenge** companion FilterOptions SPs and any secondary contract; require documented rationale; prefer EF / app services for simple catalogs. SSOT: [query-driven-retrieval.md](../ui/controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md).
-8b. **Planning Agent default for BoRow sizing / hidden fields** — Assume **`Weight=1`** (equal shares). Use proportional **`Weight`** when a field should be wider/narrower (not a 12-column grid). **`IsHidden` collapses** by default (Weight ignored); set **`PreserveLayoutWhenHidden`** only when alignment / dynamic visibility / multi-row stability requires reserved space. Challenge custom width CSS and unnecessary preserve. SSOT: [layout.md](../ui/layout/layout.md).
+8b. **Planning Agent default for BoRow sizing / hidden fields** — Assume **`Weight=1`** (equal shares). Use proportional **`Weight`** when a field should be wider/narrower (not a 12-column grid). **`IsHidden` collapses** by default (Weight ignored); set **`PreserveLayoutWhenHidden`** only when alignment / dynamic visibility / multi-row stability requires reserved space. Challenge custom width CSS and unnecessary preserve. SSOT: [layout.md](../ui/layout/layout.md). **Do not confuse** with Nested View **`PreserveNestedExpansionOnCacheReset`** ([grids.md](../ui/controls/grids.md)).
+8c. **Example Governance** — A UI / query standard is fully implemented only when **normative STANDARDS + AI guidance + Gallery working example** all exist. Challenge docs-only standards. Prefer Gallery as the copy source for library patterns. SSOT: [example-governance.md](../ui/example-governance.md).
+8d. **Host helpers** — Use **`BoLatestWinsQuery`** for query / FilterCatalog concurrency; **`BoNestedViewKeywordFilter`** for client Nested View keyword Rules 1–3; large dropdowns use **`ItemsProvider`**.
 9. **Hosted Azure SQL MI (data-owning apps) — required packages** — If the app uses App Service → Azure SQL with `Authentication=Active Directory Managed Identity`, you **MUST** add NuGet **`Microsoft.Data.SqlClient.Extensions.Azure`** (same major/minor as `Microsoft.Data.SqlClient`) **and** register `ActiveDirectoryAuthenticationProvider` before any SQL open (including EF `Database.Migrate()`). Connection string + MI grant alone are **not** enough on SqlClient 7+. SSOT: [hosted-deployment.md](../hosted-deployment.md) § Hosted database connection, [architecture/security.md](../../architecture/security.md).
 
 Also: do not invent standards for placeholder areas (testing, versioning, domain modeling, observability) that are not yet defined. Dependency vulnerability policy is defined: [security-governance.md](../security-governance.md).
@@ -208,7 +210,9 @@ Full matrix: [ai-agent-governance.md](../ai-agent-governance.md).
 | ADR index | [`decisions/README.md`](../../decisions/README.md) |
 | ADR-002 / ADR-004 | Blazor Interactive Server · BreezeOn.UI abstraction |
 | Query-driven retrieval | [`query-driven-retrieval.md`](../ui/controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md) |
+| Example Governance | [`example-governance.md`](../ui/example-governance.md) |
 | BoRow Weight / hidden layout | [`layout.md`](../ui/layout/layout.md) |
+| `@FiltersJson` schema | [`database.md`](../database.md#filtersjson-schema) |
 | Shared UI agents | [SYSTEM-SHARED-UI `README_AI.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README_AI.md) |
 | EAC agents | [SYSTEM-ADMIN-EAC `README_AI.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README_AI.md) |
 

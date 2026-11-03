@@ -171,15 +171,25 @@ Default off (`IsPagination = false`). When on:
 
 **Server `QueryMode`** is for datasets too large (or too filter-driven) to cache fully. Retrieval standard: [query-driven-retrieval.md](query-driven-retrieval.md) · [ADR-008](../../../decisions/ADR-008-query-driven-data-retrieval.md). The library still **never** talks to SQL — the host owns the primary retrieval contract.
 
+### Decision matrix (Planning Agents)
+
+| Choose | When |
+| --- | --- |
+| **Client `QueryMode` (default)** | Dataset fits in memory; client sort/page is enough; small catalogs (e.g. Entity Types) |
+| **Server `QueryMode`** | Large or highly filter-driven lists; need server Filter → Sort → Page + `TotalCount`; Nested View roots paged |
+| **Full-load exception** | Hierarchy correctness needs the whole tree (path, cycles, cascade) — document under [query-driven-retrieval Exceptions](query-driven-retrieval.md#exceptions); apply Nested View keyword Rules **client-side** with `BoNestedViewKeywordFilter` |
+
+Also consider: sorting requirements (server whitelist vs client), future growth (revisit Client preload when size grows), and select-all semantics (below).
+
 | Concern | Standard |
 | --- | --- |
 | Cache content | Host fills `BoGridCache` with **only the current page** returned by the primary contract |
 | `TotalCount` | Comes from the **primary contract** (rows matching the filter before pagination); drives the pagination footer total and page count |
 | Pipeline | Server applies **Filter → Sort → Pagination** (in that order); header sort and page changes raise a new host query instead of slicing the cache |
 | Nested View | Server query pages **roots**; children come from the same primary contract; keyword child selection + search expansion follow [Nested View keyword filtering](#nested-view-keyword-filtering-org-standard) |
-| Select-all | Selects the **current page** only (rows in the cache), not every row matching the filter |
+| Select-all | Selects the **current page only** (rows currently in `BoGridCache`). Under Server `QueryMode`, the cache is the current page — **not** every row matching the filter across all pages |
 | Filters | Filter controls follow [forms.md — Filter execution](forms.md#filter-execution-query-driven); no Apply button |
-| Stale responses | Host uses cancellation / latest-wins; a stale response never calls `ReplaceAll` |
+| Stale responses | Host uses `BoLatestWinsQuery` (or equivalent); a stale response never calls `ReplaceAll` |
 
 ## Extension points (host)
 
@@ -224,7 +234,8 @@ This standard governs **result selection** and **search visibility**. It does no
 | Concern | Owner |
 | --- | --- |
 | Which parents / children appear in the result | **Host retrieval contract** (typically SQL / SP) — service remains pass-through. When an [approved full-load exception](query-driven-retrieval.md#exceptions) keeps the whole tree in memory, the **host page** applies the same Rules 1–2 **client-side** over the loaded tree (do not force a paged SP solely for keyword). |
-| Auto-expand while keyword is active; restore browse expansion when cleared | **Host page** — path-minimal expand keys via `NestedExpandedSeedKeys` (preferred for deep same-column trees) or, for shallow one-level Nested Views, `DefaultExpansionState = Expanded`; always `PreserveNestedExpansionOnCacheReset = false` while keyword is active |
+| Auto-expand while keyword is active; restore browse expansion when cleared | **Host page** — path-minimal expand keys via `NestedExpandedSeedKeys` (preferred for deep same-column trees) or, for shallow one-level Nested Views, `DefaultExpansionState = Expanded`; always `PreserveNestedExpansionOnCacheReset = false` while keyword is active. **Not** `PreserveLayoutWhenHidden` (that is a `BoRow` field-layout flag — [layout.md](../layout/layout.md)) |
+| Client full-load Rules 1–3 | Prefer shared helper **`BoNestedViewKeywordFilter`** (`BreezeOn.UI.Grid`) — host supplies key / children / match / clone delegates |
 | `BoGrid` / NestedView infrastructure | Seed/preserve mechanics + optional `NestedExpandedSeedKeys`; no keyword-matching logic inside `BoGrid` |
 
 #### Rule 1 — Parent match
@@ -265,7 +276,8 @@ When the keyword is **cleared**:
 #### Reference implementation
 
 - EAC **Applications** NestedView (`P_GET_EACApplicationsGrid` RS1/RS2 + `Applications.razor` expansion binding) — server primary contract owns Rules 1–2; shallow one-level shape may use `DefaultExpansionState = Expanded` for Rule 3 — [architecture/eac.md](../../../architecture/eac.md).
-- EAC **Business Entities → Business Hierarchy** NestedView — approved full-load exception; page applies Rules 1–2 client-side and Rule 3 via `NestedExpandedSeedKeys` (ancestors of matches only) — [architecture/eac.md](../../../architecture/eac.md#business-entities).
+- EAC **Business Entities → Business Hierarchy** NestedView — approved full-load exception; page uses **`BoNestedViewKeywordFilter`** + `NestedExpandedSeedKeys` (ancestors of matches only) — [architecture/eac.md](../../../architecture/eac.md#business-entities).
+- Gallery Grid tab — Server QueryMode + Filters (`BoLatestWinsQuery`) and Nested View keyword demo ([example-governance.md](../example-governance.md)).
 
 ### Keyboard (expand control focused)
 

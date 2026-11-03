@@ -34,8 +34,11 @@ Adopt the **Query-Driven Data Retrieval Standard** ([docs/ui/controls/query-driv
 
 - Fewer SQL objects per dataset; one contract to test, document in `docs/db-model.md`, and evolve.
 - Consistent UX across apps: same filter execution, sort, pagination, and cancellation behavior.
-- Simple catalogs stay in EF / app services; stored procedures remain for justified needs (consistent with [database.md](../docs/database.md)).
+- Simple catalogs stay in EF / app services (**FilterCatalog** naming preferred); stored procedures remain for justified needs (consistent with [database.md](../docs/database.md)).
 - Pages with full-tree or small preloaded datasets remain valid when documented as exceptions or as small-set preloads.
 - Existing companion FilterOptions procedures in products are migration candidates; new work must not introduce them by default.
 - `BoGrid` Client mode (full cache) remains the default; Server `QueryMode` is documented in [grids.md](../docs/ui/controls/grids.md#server-querymode).
-- Planning Agents get a short default rule in [BREEZEON-AI-QUICKSTART.md](../docs/ai/BREEZEON-AI-QUICKSTART.md) and [README_AI.md](../README_AI.md).
+- Host reuse: **`BoLatestWinsQuery`** (cancellation / latest-wins / optional signature skip) and **`BoNestedViewKeywordFilter`** (client Rules 1–3) live in `BreezeOn.UI` without SQL awareness (ADR-004). Large dropdowns use **`ItemsProvider`**.
+- Working examples follow [Example Governance](../docs/ui/example-governance.md) (Gallery for library patterns).
+- Canonical `@FiltersJson` schema is published in [database.md](../docs/database.md#filtersjson-schema).
+- Planning Agents get short defaults in [BREEZEON-AI-QUICKSTART.md](../docs/ai/BREEZEON-AI-QUICKSTART.md) (rules 8a–8d) and [README_AI.md](../README_AI.md).

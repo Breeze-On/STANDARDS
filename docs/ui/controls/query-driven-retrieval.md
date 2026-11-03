@@ -33,15 +33,19 @@ Prefer in this order:
 | # | Approach | Rule |
 | --- | --- | --- |
 | 1 | **Primary contract** | Rows / `TotalCount` / Nested View children / optional metadata |
-| 2 | **`@IncludeFilterMetadata`** (optional) | Request filter metadata on the **initial load** only — not on every query |
-| 3 | **App service / EF Core** | Preferred for **simple distinct catalogs** (drop-down sources) instead of new stored procedures |
+| 2 | **`@IncludeFilterMetadata`** (optional / reserved) | Advanced scenarios only — filter metadata on the **initial load** only, not on every query. **Not required** for most pages. Prefer tier 3 for typical filter dropdowns |
+| 3 | **App service / EF Core FilterCatalog** | Preferred for **simple distinct catalogs** (drop-down sources) instead of new stored procedures. Prefer type names like `*FilterCatalog` / `*FilterDistinctValues` — not `*FilterOptions` |
 | 4 | **Dedicated secondary contract** | Only when **justified and documented** (rationale in product docs; see [Exceptions](#exceptions)) |
+
+### `@IncludeFilterMetadata` (optional)
+
+Reserved for advanced primary contracts that can return filter metadata in the same round trip as the first page. Most pages should use an EF / app-service **FilterCatalog** (tier 3). Do not invent a companion FilterOptions SP to “complete” tier 2.
 
 ## Anti-pattern
 
 **Do not default to:** Dataset = **Grid stored procedure + FilterOptions stored procedure**.
 
-A companion FilterOptions procedure is not the default shape of a dataset. Challenge it; use the hierarchy above first.
+A companion FilterOptions procedure is not the default shape of a dataset. Challenge it; use the hierarchy above first. Prefer **FilterCatalog** naming for host EF/app-service catalog DTOs so agents do not revive the companion-SP pattern by analogy.
 
 **Forbidden:** generic dynamic filter-options procedures that take a schema, table, and column name and return distinct values. They bypass the typed contract, resist review, and are an injection / permission risk.
 
@@ -85,17 +89,22 @@ Control detail: [forms.md — Filter execution](forms.md#filter-execution-query-
 
 - A new query **cancels** the in-flight query (cancellation token).
 - **Latest wins:** only the response for the newest request may update UI state.
-- A **stale** response **never** updates the UI (grid cache, total count, dropdown items).
+- A **stale** response **never** updates the UI (grid cache, total count, **filter catalogs**, dropdown items).
+
+**Approved host helper:** `BoLatestWinsQuery` in `BreezeOn.UI.Query` — cancel previous run, optional signature skip, generation gate. Host pages must use it (or equivalent) for primary retrieval **and** FilterCatalog / distinct-value loads. Gallery demos the pattern; do not reimplement ad-hoc CTS counters per page.
 
 ## Top-N and preload
 
 | Dataset size | Behavior |
 | --- | --- |
-| Small catalog | May **preload** fully |
-| Large catalog | **Top-N** rows plus **server search** as the user types |
+| Small catalog | May **preload** fully into `BoDropDownList.Items` |
+| Large catalog | **`ItemsProvider`** — Top-N + server search as the user types in the panel |
 
-- Default Top-N recommendation: **100**.
-- Top-N is **configurable**, not a hard constant in shared code.
+- Default Top-N recommendation: **100** (`ProviderMaxItems` / `BoDropDownItemsRequest.MaxItems`) — configurable per control instance.
+- Panel display cap for **static** `Items` (client filter Take) is a separate UX concern from retrieval Top-N.
+- Small vs large is a planning judgment; challenge full Distinct preload when catalogs grow.
+
+Detail: [forms.md — Drop-Down data retrieval](forms.md#drop-down-data-retrieval).
 
 ## Exceptions
 
@@ -116,10 +125,23 @@ Planning Agents (and build agents) must:
 3. **Require a rationale** for any secondary contract or exception.
 4. **Document exceptions** (see above).
 5. Prefer EF / app services for simple distinct catalogs; never propose generic schema / table / column distinct procedures.
-6. For Nested View keyword filters, default to [Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) (parent match → full child context; child match → matching branches only; path-minimal expand = ancestors of matches only) unless a documented exception exists.
+6. For Nested View keyword filters, default to [Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard); for **client** full-load trees use `BoNestedViewKeywordFilter` unless a documented exception exists.
+7. Prefer `BoLatestWinsQuery` for host query / catalog concurrency.
+8. Challenge standards that lack a Gallery working example ([example-governance.md](../example-governance.md)).
 
-Page checklist: [page-development.md](../page-development.md).
+Page checklist / canonical pattern: [page-development.md](../page-development.md). `@FiltersJson` schema: [database.md](../../database.md#filtersjson-schema).
 
 ## Documentation governance
 
-Update this file, [grids.md](grids.md), [forms.md](forms.md), [database.md](../../database.md), [page-development.md](../page-development.md), and [ADR-008](../../../decisions/ADR-008-query-driven-data-retrieval.md) in the same change set when the standard changes. Current reality only.
+| File | Update when |
+| --- | --- |
+| This file | Retrieval policy changes |
+| [grids.md](grids.md) | Server QueryMode / Nested View keyword |
+| [forms.md](forms.md) | Filter execution / dropdown retrieval |
+| [database.md](../../database.md) | SP params / `@FiltersJson` |
+| [page-development.md](../page-development.md) | Checklist / canonical page pattern |
+| [ADR-008](../../../decisions/ADR-008-query-driven-data-retrieval.md) | Decision / consequences |
+| [example-governance.md](../example-governance.md) + Gallery | Working examples |
+| Quickstart / AI SUMMARY / README_AI | Agent pointers |
+
+Current reality only. Same change set.

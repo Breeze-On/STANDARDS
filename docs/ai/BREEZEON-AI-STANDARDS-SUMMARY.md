@@ -73,6 +73,11 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Navigation | Left nav locked; URL = page name | [ui/shell/navigation.md](../ui/shell/navigation.md) |
 | Home | `BoNavHub` + `BoNavCardStyleHyperlink` only | Shell Home section |
 | Forms layout | Section → Row → Field; `BoStack Gap="0"`; `Weight` (default 1); `IsHidden` collapses unless `PreserveLayoutWhenHidden` | [ui/layout/](../ui/layout/) |
+| Preserve* | `PreserveLayoutWhenHidden` = field layout; `PreserveNestedExpansionOnCacheReset` = Nested View expand — **unrelated** | [layout.md](../ui/layout/layout.md), [grids.md](../ui/controls/grids.md) |
+| Query-driven retrieval | One primary contract per dataset; Filter → Sort → Page; `BoLatestWinsQuery`; FilterCatalog (not FilterOptions SP) | [query-driven-retrieval.md](../ui/controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md) |
+| Nested View keyword | Rules 1–3; client helper `BoNestedViewKeywordFilter` | [grids.md](../ui/controls/grids.md#nested-view-keyword-filtering-org-standard) |
+| Drop-Down retrieval | Small → `Items`; large → `ItemsProvider` Top-N + search | [forms.md](../ui/controls/forms.md) |
+| Example Governance | Normative + AI guidance + Gallery example required | [example-governance.md](../ui/example-governance.md) |
 | Controls | Shipped `Bo*` field types only | [ui/controls/forms.md](../ui/controls/forms.md) |
 | Tokens / type | Semantic CSS vars; Calibri | [ui/foundations/tokens.md](../ui/foundations/tokens.md), [typography.md](../ui/foundations/typography.md) |
 

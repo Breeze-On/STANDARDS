@@ -54,7 +54,7 @@ Details: [`docs/documentation.md`](docs/documentation.md). ADR process: [`docs/a
 | How do we deploy hosted apps? | [`docs/hosted-deployment.md`](docs/hosted-deployment.md) — canonical; product repos hold metadata only |
 | What are the UI standards? | [`docs/ui/overview.md`](docs/ui/overview.md) |
 | How do I build a compliant page? | [`docs/ui/page-development.md`](docs/ui/page-development.md) — checklist; then detailed `docs/ui/*` |
-| How do I retrieve a filterable / sortable / paged dataset? | [`docs/ui/controls/query-driven-retrieval.md`](docs/ui/controls/query-driven-retrieval.md) ([ADR-008](decisions/ADR-008-query-driven-data-retrieval.md)) — **Planning Agent default:** one primary retrieval contract per dataset; challenge companion FilterOptions SPs and secondary contracts |
+| How do I retrieve a filterable / sortable / paged dataset? | [`docs/ui/controls/query-driven-retrieval.md`](docs/ui/controls/query-driven-retrieval.md) ([ADR-008](decisions/ADR-008-query-driven-data-retrieval.md)) — one primary contract; `BoLatestWinsQuery`; FilterCatalog; `@FiltersJson` in [`database.md`](docs/database.md#filtersjson-schema); Gallery examples; [Example Governance](docs/ui/example-governance.md) |
 | Is testing / observability / versioning / domain modeling standardized? | Placeholder `docs/*.md` files — **not yet formally defined**; do not invent rules |
 | How do we handle dependency vulnerabilities? | [`docs/security-governance.md`](docs/security-governance.md) |
 | Where are operational runbooks? | [`runbooks/README.md`](runbooks/README.md) |

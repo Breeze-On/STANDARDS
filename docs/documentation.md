@@ -16,7 +16,7 @@ Documentation must represent **CURRENT REALITY ONLY**.
 4. Do **not** document planned features **as if they are shipped**.
 5. Do **not** document future architecture **as current**.
 6. Do **not** document roadmap items or intended behavior as if they exist.
-7. **Exception (structure only):** a clearly labeled **Planned / not shipped** section may reserve headings for an upcoming capability (example: Nested View under [`docs/ui/controls/grids.md`](ui/controls/grids.md)). It must not imply API availability or product usage.
+7. **Exception (structure only):** a clearly labeled **Planned / not shipped** section may reserve headings for an upcoming capability (example: a future control mode under [`docs/ui/controls/`](ui/controls/) while Nested View itself is **shipped**). It must not imply API availability or product usage.
 8. Whenever code, architecture, standards, ADRs, or behavior change, update documentation in the **same change set**.
 9. `README.md`, `README_AI.md`, and Architecture Decision Records (ADRs) are living documents and must remain synchronized with the current implementation state.
 
@@ -72,7 +72,7 @@ This guidance is **advisory and pragmatic**. It does **not** create mandatory re
 | `docs/local-development-scripts.md` | Org Local Development Script Standard (`dev-reset.ps1` only) |
 | `docs/data-portability.md` | File-format standard for JSON import/export (Applications JSON today) |
 | `docs/hosted-deployment.md` | Canonical hosted deploy standard (App Service, publish profile, GitHub Environments) |
-| `docs/ui/` | Hierarchical UI standards (entry: [`ui/overview.md`](ui/overview.md); page checklist: [`ui/page-development.md`](ui/page-development.md)); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
+| `docs/ui/` | Hierarchical UI standards (entry: [`ui/overview.md`](ui/overview.md); page checklist: [`ui/page-development.md`](ui/page-development.md); Example Governance: [`ui/example-governance.md`](ui/example-governance.md)); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
 | `runbooks/` | Operational procedures (sparse today); index: [`../runbooks/README.md`](../runbooks/README.md) — deploy **standard** lives in `hosted-deployment.md` |
 | `architecture/` | Descriptions of systems that exist now (what exists); landscape map: [`../architecture/landscape.md`](../architecture/landscape.md) |
 | `decisions/` | Architecture Decision Records (why decisions were made); index with Category / Impact Area: [`../decisions/README.md`](../decisions/README.md) |
@@ -156,6 +156,8 @@ A change is incomplete until **all affected documentation reflects current reali
 - Indexes and cross-references kept accurate
 
 Updates must occur in the **same change set** as the implementation change. Documentation maintenance is part of **Definition of Done**.
+
+UI / query-driven standards also follow **[Example Governance](ui/example-governance.md)**: normative standard + AI guidance + Gallery working example (unless an approved exception applies).
 
 ### UI / shared component DoD (BreezeOn.UI)
 

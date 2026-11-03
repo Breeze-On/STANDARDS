@@ -187,11 +187,39 @@ Related:
 
 ## Row
 
-UI layout display name for `BoRow` — one horizontal band of equal-width field slots inside a Section. Every form field must be a direct child of a Row.
+UI layout display name for `BoRow` — one horizontal band of proportional field slots inside a Section (default equal shares via `Weight=1`). Every form field must be a direct child of a Row. See **Weight**.
 
 Related:
 - [ui/layout/layout.md](ui/layout/layout.md)
 - [ui/layout/sections.md](ui/layout/sections.md)
+
+## Weight
+
+Relative `BoRow` width share for a field (default **1**). Share = Weight ÷ sum of layout-participating Weights. Not a 12-column grid. SSOT: [ui/layout/layout.md](ui/layout/layout.md).
+
+## PreserveLayoutWhenHidden
+
+When `IsHidden` is true on a form field, keep the field's Weight share (`visibility: hidden`) so siblings do not reflow. Default **false** (hidden fields collapse). **Unrelated** to Nested View `PreserveNestedExpansionOnCacheReset`. SSOT: [ui/layout/layout.md](ui/layout/layout.md).
+
+## PreserveNestedExpansionOnCacheReset
+
+`BoGrid` Nested View flag: when true, expand/collapse survives cache `ReplaceAll`. Used with keyword search (`false` while searching) and `NestedExpandedSeedKeys`. **Unrelated** to `PreserveLayoutWhenHidden`. SSOT: [ui/controls/grids.md](ui/controls/grids.md).
+
+## Query-driven retrieval
+
+Org standard: one queryable dataset = one primary retrieval contract; Filter → Sort → Page; typed `BoQuery*`; latest-wins; Top-N dropdowns via `ItemsProvider` when large. [ADR-008](../decisions/ADR-008-query-driven-data-retrieval.md) · [ui/controls/query-driven-retrieval.md](ui/controls/query-driven-retrieval.md).
+
+## FilterCatalog
+
+Preferred name for host EF / app-service distinct filter dropdown sources. Avoid `*FilterOptions` type names (echoes the forbidden companion FilterOptions SP anti-pattern). SSOT: [ui/controls/query-driven-retrieval.md](ui/controls/query-driven-retrieval.md).
+
+## Server QueryMode
+
+`BoGrid` mode where the host loads only the current page into cache and re-queries on filter/sort/page. Select-all = current page only. Default remains Client mode. SSOT: [ui/controls/grids.md](ui/controls/grids.md#server-querymode).
+
+## Example Governance
+
+A UI / query standard is fully implemented only when normative STANDARDS + AI guidance + Gallery working example all exist. SSOT: [ui/example-governance.md](ui/example-governance.md).
 
 ## System (SQL schema)
 

@@ -174,7 +174,7 @@ Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory
 - Search lives in the **expanded panel** as a **fixed first row** (always available — including `DisplayCode` and `AllowMultiple`).
 - Expanded panel is a **fixed** popover via `boPopup` / `bo-popup.js` (same escape path as Date Field): overlays shell cards and dialogs with `overflow: auto` (e.g. Settings); width matches the closed control; options `max-height` grows into available viewport space under (or above) the control, then scrolls inside the options region only when the list is taller than that space.
 - Type filters where **Description contains** the query (case-insensitive). When **`DisplayCode`** is on (Code is shown in the list), also match **Code**.
-- Show at most **100** matches (narrow with search).
+- Static `Items` only: show at most **100** client-filtered matches in the panel (display cap — narrow with search). Large catalogs use **`ItemsProvider`** retrieval Top-N instead (see Drop-Down data retrieval).
 - On open, focus moves to the search box (type without an extra click).
 - Clear: single-select control **×** clears Value; multi-select keeps per-chip × plus a control **×** that clears all Codes.
 - Selected rows: bold + soft elevated/shadow highlight; left accent bar **1.5px**, soft-rounded (not full corner wrap); no list checkboxes for multi.
@@ -201,12 +201,15 @@ When Text Fields and Drop-Down Lists act as **filters** for a queryable dataset 
 
 ### Drop-Down data retrieval
 
-| Source size | Standard |
-| --- | --- |
-| Small | **Preload** the full item list |
-| Large | **Top-N** items (default **100**, **configurable** — not a hard constant) plus **server search** as the user types |
+| Source size | Standard | `BoDropDownList` API |
+| --- | --- | --- |
+| Small | **Preload** the full item list | `Items` |
+| Large | **Top-N** + **server search** as the user types | **`ItemsProvider`** (`BoDropDownItemsRequest.SearchText` / `MaxItems`; default MaxItems **100**, configurable via `ProviderMaxItems`) |
 
-Prefer **EF Core / app-service** queries for simple distinct catalogs instead of new stored procedures; do not add a companion FilterOptions procedure by default ([database.md](../../database.md#query-driven-paged-list-stored-procedures)).
+- When `ItemsProvider` is non-null, it **wins** over `Items`. Panel search is debounced (`SearchDebounceMilliseconds`, default 300) and cancels in-flight provider calls (latest-wins).
+- Static `Items` panel search remains **client-side** (display Take cap in `BoDropDownSelection` — separate from retrieval Top-N).
+- Prefer **EF Core / app-service FilterCatalog** queries for simple distinct catalogs; do not add a companion FilterOptions procedure by default ([database.md](../../database.md#query-driven-paged-list-stored-procedures)).
+- Filter catalog loads must use latest-wins (`BoLatestWinsQuery`) so stale responses never replace dropdown items.
 
 ## Checkbox (`BoCheckbox`)
 
