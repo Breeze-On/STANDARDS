@@ -55,7 +55,7 @@ Server query execution order is fixed:
 
 `TotalCount` is the count after Filter, before Pagination.
 
-**Nested View + keyword:** parent/child result selection and search auto-expand follow the org standard in [grids.md — Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) (primary contract owns child selection; host page owns expansion while keyword is active).
+**Nested View + keyword:** parent/child result selection and path-minimal search expansion follow the org standard in [grids.md — Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) (primary contract owns child selection; host page owns expand keys = ancestors required to reveal matching rows while keyword is active). Under an approved **full-load** Nested View exception, apply the same Rules 1–2 **client-side** over the loaded tree — do not introduce a paged keyword SP solely to satisfy this standard.
 
 ### Typed filter operators
 
@@ -105,7 +105,7 @@ An exception to the One Dataset standard (for example a justified secondary cont
 2. The rationale is **documented** (product `docs/db-model.md` / architecture doc; ADR if it sets a pattern);
 3. The primary-contract default was **challenged** first.
 
-**Known approved exception:** EAC **Business Entities → Business Hierarchy** loads the **full tree** (hierarchy path, cycle checks, cascade selection require it). See [architecture/eac.md](../../../architecture/eac.md#business-entities).
+**Known approved exception:** EAC **Business Entities → Business Hierarchy** loads the **full tree** (hierarchy path, cycle checks, cascade selection require it). Keyword filtering on that tab still follows [Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) with **client-side** result selection over the loaded tree (no server-paged Hierarchy contract). See [architecture/eac.md](../../../architecture/eac.md#business-entities).
 
 ## Planning Agent rules
 
@@ -116,7 +116,7 @@ Planning Agents (and build agents) must:
 3. **Require a rationale** for any secondary contract or exception.
 4. **Document exceptions** (see above).
 5. Prefer EF / app services for simple distinct catalogs; never propose generic schema / table / column distinct procedures.
-6. For Nested View keyword filters, default to [Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) (parent match → full child context; child match → matching branches only; auto-expand while keyword active) unless a documented exception exists.
+6. For Nested View keyword filters, default to [Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) (parent match → full child context; child match → matching branches only; path-minimal expand = ancestors of matches only) unless a documented exception exists.
 
 Page checklist: [page-development.md](../page-development.md).
 

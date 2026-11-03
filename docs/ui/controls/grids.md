@@ -59,6 +59,7 @@ The library **never** talks to SQL or application repositories.
 | `Columns` | Child `BoGridColumn<TItem>` definitions |
 | `ChildRowsHaveDifferentColumns` | Nested View only. Default **false** (same columns / indented tree). **true** → expanded parents render `ChildGridTemplate` |
 | `DefaultExpansionState` | Nested View only. `Collapsed` (default) or `Expanded` — seeds initial expand set; then per-node toggles own state |
+| `NestedExpandedSeedKeys` | Nested View only. When non-null, reseeds from these node keys instead of `DefaultExpansionState` (path-minimal keyword expand) |
 | `ChildrenSelector` | Nested View same-columns: `Func<TItem, IEnumerable<TItem>?>` recursive children |
 | `NodeKey` | Nested View: stable string id for expand state (**required** when Mode is NestedView) |
 | `ChildGridTemplate` | Nested View different-columns: `RenderFragment<TItem>` — host embeds another `BoGrid` (typically ReadOnly) |
@@ -199,7 +200,7 @@ Read-only hierarchical mode on the same `BoGrid` surface. No action column; no A
 1. **Same columns** (`ChildRowsHaveDifferentColumns = false`): one table, one header; children indented in the **first** data column with chevron + hierarchy guide rails (`.bo-grid--nested`). Children from `ChildrenSelector`.
 2. **Different columns** (`ChildRowsHaveDifferentColumns = true`): parent headers stay; expanded parent inserts a colspan continuation row with `ChildGridTemplate` (host embeds another `BoGrid`, typically ReadOnly). No card wrapper. Parent `EnableSelection` uses flat `SelectedCacheRowIds` (no cascade into child grids).
 
-`PreserveNestedExpansionOnCacheReset`: when true, Nested View expand/collapse survives cache `ReplaceAll` / Clear (stale keys pruned). Default false reseeds from `DefaultExpansionState`.
+`PreserveNestedExpansionOnCacheReset`: when true, Nested View expand/collapse survives cache `ReplaceAll` / Clear (stale keys pruned). Default false reseeds from `DefaultExpansionState` (or from `NestedExpandedSeedKeys` when that parameter is non-null).
 
 ### DefaultExpansionState
 
@@ -209,6 +210,8 @@ Read-only hierarchical mode on the same `BoGrid` surface. No action column; no A
 | `Expanded` | All expandable nodes expanded | Permission matrices, small nav / reference trees |
 
 After seed, per-node toggles own the expansion set. Cache `Reset` / `ReplaceAll` re-seeds (unless preserve is on).
+
+**`NestedExpandedSeedKeys`:** when non-null, Nested View reseeds from this explicit key set (pruned to nodes present in the tree) instead of `DefaultExpansionState`. Use for **path-minimal keyword expansion** (Rule 3). Null restores enum-based seeding. Empty collection = all collapsed under an explicit override.
 
 ### Nested View keyword filtering (org standard)
 
@@ -220,9 +223,9 @@ This standard governs **result selection** and **search visibility**. It does no
 
 | Concern | Owner |
 | --- | --- |
-| Which parents / children the primary contract returns | **Host retrieval contract** (typically SQL / SP) — service remains pass-through |
-| Auto-expand while keyword is active; restore browse expansion when cleared | **Host page** (`DefaultExpansionState` + `PreserveNestedExpansionOnCacheReset`) |
-| `BoGrid` / NestedView infrastructure | Seed/preserve mechanics only — **no** keyword-specific BoGrid API required for v1 |
+| Which parents / children appear in the result | **Host retrieval contract** (typically SQL / SP) — service remains pass-through. When an [approved full-load exception](query-driven-retrieval.md#exceptions) keeps the whole tree in memory, the **host page** applies the same Rules 1–2 **client-side** over the loaded tree (do not force a paged SP solely for keyword). |
+| Auto-expand while keyword is active; restore browse expansion when cleared | **Host page** — path-minimal expand keys via `NestedExpandedSeedKeys` (preferred for deep same-column trees) or, for shallow one-level Nested Views, `DefaultExpansionState = Expanded`; always `PreserveNestedExpansionOnCacheReset = false` while keyword is active |
+| `BoGrid` / NestedView infrastructure | Seed/preserve mechanics + optional `NestedExpandedSeedKeys`; no keyword-matching logic inside `BoGrid` |
 
 #### Rule 1 — Parent match
 
@@ -230,7 +233,7 @@ When the keyword matches the **parent** row (parent identity / description / met
 
 - Return the parent.
 - Return **all** child context for that parent (full enablement / child set — do not prune siblings).
-- Host page **auto-expands** the parent so the full child context is visible immediately.
+- Host page expands using **Rule 3** (matching node + required ancestors only). Descendants included solely because of Rule 1 stay **collapsed** until the user expands them.
 
 #### Rule 2 — Child match
 
@@ -239,24 +242,30 @@ When the keyword matches one or more **children** (and the parent is included be
 - Return the parent.
 - Return **matching child branches only**.
 - Hide non-matching sibling branches.
-- Host page **auto-expands** the parent so matches are visible immediately.
+- Host page expands using **Rule 3** so matching paths are visible immediately.
 
 If both parent fields and child fields match the same keyword, **Rule 1 wins** (full child context).
 
-#### Rule 3 — Search visibility
+#### Rule 3 — Search visibility (path-minimal expansion)
 
 While a keyword filter is **active**:
 
 - Matching results must be immediately visible — users must **never** need to manually expand to discover a match.
-- Host binds search mode typically as: `DefaultExpansionState = Expanded` and `PreserveNestedExpansionOnCacheReset = false` so each keyword-driven `ReplaceAll` reseeds expanded parents that have children.
+- Expansion is **path-minimal**:
+  - **Expand** = ancestors required to make each matching **row** visible (including intermediate nodes that themselves match when they sit above a deeper match).
+  - **Do not expand** the match row itself solely because it matches — that would dump non-matching children preserved by Rule 1 (e.g. cost centres under a matching subdivision).
+  - **Do not expand** non-matching descendants.
+- Host typically binds `NestedExpandedSeedKeys` to that expand set and `PreserveNestedExpansionOnCacheReset = false` so each keyword-driven `ReplaceAll` reseeds from the keys.
+- `DefaultExpansionState = Expanded` remains acceptable only for **shallow** Nested Views where “expand all returned parents” equals path-minimal (e.g. one-level parent/child such as EAC Applications). Do **not** use blanket `Expanded` on deep same-column hierarchy trees.
 
 When the keyword is **cleared**:
 
-- Restore the normal browse experience (page default — commonly `Collapsed` + `PreserveNestedExpansionOnCacheReset = true`).
+- Clear `NestedExpandedSeedKeys` (null) and restore the normal browse experience (page default — commonly `Collapsed` + `PreserveNestedExpansionOnCacheReset = true`).
 
 #### Reference implementation
 
-EAC **Applications** NestedView (`P_GET_EACApplicationsGrid` RS1/RS2 + `Applications.razor` expansion binding) — [architecture/eac.md](../../../architecture/eac.md).
+- EAC **Applications** NestedView (`P_GET_EACApplicationsGrid` RS1/RS2 + `Applications.razor` expansion binding) — server primary contract owns Rules 1–2; shallow one-level shape may use `DefaultExpansionState = Expanded` for Rule 3 — [architecture/eac.md](../../../architecture/eac.md).
+- EAC **Business Entities → Business Hierarchy** NestedView — approved full-load exception; page applies Rules 1–2 client-side and Rule 3 via `NestedExpandedSeedKeys` (ancestors of matches only) — [architecture/eac.md](../../../architecture/eac.md#business-entities).
 
 ### Keyboard (expand control focused)
 
