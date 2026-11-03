@@ -15,7 +15,7 @@ Page → Body (BoAppShell body) → Section (BoSectionMain / BoSectionSub) → R
 | Layer | Component / concept | Role |
 | --- | --- | --- |
 | Section | `BoSectionMain` / `BoSectionSub` | Group related content; optional header — see [sections.md](sections.md) |
-| Row | `BoRow` | One horizontal band of fields; equal-width slots; owns horizontal field layout |
+| Row | `BoRow` | One horizontal band of fields; **proportional Weight** slots; owns horizontal field layout |
 | Field container | Direct child of `BoRow` (`.bo-row > *`) | Slot around one field (padding + separator target) |
 | Field | `BoTextField` / `BoFieldReadOnly` (etc.) | Editable control chrome + `@bind-Value`, or read-only pre-formatted `Value` — see [forms.md](../controls/forms.md) |
 
@@ -26,27 +26,53 @@ Page → Body (BoAppShell body) → Section (BoSectionMain / BoSectionSub) → R
 3. Stack multiple Rows inside a Section with `BoStack Gap="0"` when vertical spacing should come only from section/row rules (not double gaps).
 4. Stack multiple Sections with `BoStack Gap="0"` so section outside-bottom margins are not doubled.
 
-**Do not** invent alternate per-page CSS grids or free-floating fields when this composition applies.
+**Do not** invent alternate per-page CSS grids or free-floating fields when this composition applies. Prefer `Weight` / `IsHidden` / `PreserveLayoutWhenHidden` over page-specific width CSS.
 
 ## Row (`BoRow`)
 
 **Display name:** Row.  
 **Component:** `BoRow` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
 
-A **Row** is a layout container for one or more fields in a section. It standardizes **equal horizontal spread**: N **direct children** → N equal-width field containers. Each field fills its container (`width: 100%` of the slot).
+A **Row** is a layout container for one or more fields in a section. Horizontal sizing uses **proportional Weight** on each layout-participating direct child. Each field fills its container (`width: 100%` of the slot).
 
-**Default slot width = 1 / N**, where N is the number of **direct** children of the `BoRow` (CSS `1fr` columns). Examples: Row with 3 fields → each **1/3**; Row with 1 field → **1/1** (full row width). Do **not** pad a single full-width field with `BoEmptyField` siblings — that shrinks the field to 1/(1+empties).
+### Weight (organization standard)
+
+Approved field API (on every BoRow field-slot control):
+
+```csharp
+public int Weight { get; set; } = 1;
+```
+
+- **Default `Weight = 1`** → equal distribution when no weights are overridden.
+- **Share** = `Weight ÷ Sum(Weights of layout-participating children)`.
+- **Not a 12-column grid.** `Weight = 4` means “four relative shares,” not “4 of 12 fixed columns.”
+- **Approved name:** `Weight`. Do **not** invent `Span`, `ColumnSpan`, `Width`, `WidthPercentage`, or `GridColumn` for BoRow sizing.
+
+Examples:
+
+| Weights | Shares |
+| --- | --- |
+| 1 + 1 + 1 | 33.33% / 33.33% / 33.33% |
+| 2 + 1 | 66.67% / 33.33% |
+| 3 + 2 + 1 | 50% / 33.33% / 16.67% |
+| 4 + 1 + 1 | 66.67% / 16.67% / 16.67% |
+| 4 + 2 + 2 | 50% / 25% / 25% |
+
+Implementation (SHARED-UI): flex row; each child sets `--bo-row-weight`; `flex: var(--bo-row-weight, 1) 1 0%`.
+
+Do **not** pad a single full-width field with `BoEmptyField` siblings — that shrinks the field by those Weights. Put that field alone in the `BoRow`.
 
 | Concern | Standard |
 | --- | --- |
 | API | `ChildContent` (Option A) — not a `Fields` collection parameter |
 | Children | Form fields (`BoTextField`, future `Bo*`) as **direct** children of `BoRow` |
-| Columns | CSS grid: `grid-auto-flow: column`; `grid-auto-columns: 1fr` — slot width **1/N** (1 child = full width; 3 children = three equal columns) |
+| Columns | CSS flex: proportional `--bo-row-weight` shares (default 1 → equal) |
 | Field container | Each direct child of `BoRow` (`.bo-row > *`) |
+| Field `Weight` | Default **1**; clamp below 1 → 1 |
 | Row + container inside padding | **`--bo-space-row-inset`** (default **4px**) on all four sides — see [tokens.md](../foundations/tokens.md) |
-| Field container outside spacing | **`--bo-space-row-gap`** (default **16px**) `column-gap` between adjacent containers (no vertical separator between containers) |
+| Field container outside spacing | **`--bo-space-row-gap`** (default **16px**) `column-gap` between adjacent containers |
 | Field width | Control fills the field container width (`max-width` overridden inside a row; input stretches 100%) |
-| Vertical align | Default: middle-align field containers. When any child is a **multi-select or tall** Drop-Down List (`AllowMultiple` / multi read-only), the Row uses **`align-items: start`** so chips/lines top-align; single-line siblings remain optically centered within their own slot |
+| Vertical align | Default: start-align field containers. When any child is a **multi-select or tall** Drop-Down List (`AllowMultiple` / multi read-only), the Row keeps **`align-items: start`** so chips/lines top-align |
 
 ### Spacing tokens (change once, applies to Row + field container)
 
@@ -57,27 +83,75 @@ A **Row** is a layout container for one or more fields in a section. It standard
 
 To change inset globally (e.g. to `6px` or `8px`), set `BoThemeOptions.SpaceRowInset` / `--bo-space-row-inset` — do not hardcode per page.
 
-**Gallery reference:** Theme (`/theme`) — Primary Color (Light Theme) / (Dark Theme) sections: Row 1 = Hex Code + Internal Code; Row 2 = Description (`BoFieldReadOnly`).
+**Gallery reference:** Theme (`/theme`) — Primary Color rows; Components Text Field → **Row layout (Weight)** demos (`4+1+1`, `2+1`, collapse vs preserve).
 
-### Reserved / empty slots (shipped)
+### Hidden fields and layout preservation (organization standard)
+
+Approved field API:
+
+```csharp
+public bool IsHidden { get; set; }
+public bool PreserveLayoutWhenHidden { get; set; } = false;
+```
+
+**Approved name:** `PreserveLayoutWhenHidden` (UX intent: alignment / stability). Do **not** prefer KeepWeightWhenHidden / PreserveWeight / RetainWeight / KeepSpace.
+
+| Mode | Parameters | Layout | Weight |
+| --- | --- | --- | --- |
+| **Default (org standard)** | `IsHidden=true`, `PreserveLayoutWhenHidden=false` | Collapses (`display: none`); siblings redistribute | **Ignored** (not in sum) |
+| **Exception** | `IsHidden=true`, `PreserveLayoutWhenHidden=true` | Reserved (`visibility: hidden`); siblings do not shift | **Participates** |
+| Visible | `IsHidden=false` | Normal | Participates |
+
+**Example A — collapse (default):** `Weight=4`, `IsHidden=true`, `PreserveLayoutWhenHidden=false` → Weight removed from calculations; remaining controls redistribute.
+
+**Example B — preserve:** `Weight=4`, `IsHidden=true`, `PreserveLayoutWhenHidden=true` → Weight kept; layout remains stable when visibility toggles.
+
+**Use preserve when:** multi-row column alignment, dynamic/conditional controls, or any case where reflow would be disruptive.
+
+**Prefer default collapse** otherwise. Challenge unnecessary `PreserveLayoutWhenHidden`. Document intentional exceptions.
 
 | Surface | Standard |
 | --- | --- |
-| `IsHidden` on form fields | Field **still occupies** a `BoRow` column; chrome not shown (`.bo-row-item--hidden` — **not** `display: none`). Siblings do **not** reflow. Skips required validation while hidden. |
-| `BoEmptyField` | Alignment-only empty slot (no label/value); one equal-width column — use only when you **intentionally** reserve a column for alignment with another row |
+| `IsHidden` (default) | Chrome hidden; layout collapses; Weight ignored; skips required validation |
+| `PreserveLayoutWhenHidden` | Only meaningful while `IsHidden`; reserves slot + Weight |
+| `BoEmptyField` | Permanent empty alignment slot (no label/value); still has `Weight` (default 1). Prefer for structural holes; prefer preserve-hidden for temporary hide |
 
-Do **not** use `display: none` to hide a row child — that collapses columns. Prefer `IsHidden` or `BoEmptyField`. Do **not** use `BoEmptyField` merely to “fill” a row when a single field should span the full width (put that field alone in the `BoRow`).
+Components stay mounted while hidden (state / binding / validation). Do **not** invent page CSS for hide/width when these APIs apply.
 
-### Not shipped yet (do not invent)
+### Migration (from pre-Weight / always-reserve IsHidden)
 
-- `columnCount` as a separate `BoRow` parameter (use `IsHidden` / `BoEmptyField` instead)
-- Separate `BoRowContainer` component type (container = direct child of `BoRow` today)
+Older SHARED-UI treated every `IsHidden` as a reserved slot. That legacy behavior is **removed** from the framework (no compatibility mode).
+
+1. Ship default collapse immediately.
+2. Audit all `IsHidden` call sites.
+3. Where reserved space is intentional, set `PreserveLayoutWhenHidden="true"`.
+4. Confirm screens still behave as intended after migration.
+
+### Not shipped / not approved
+
+- `columnCount` as a separate `BoRow` parameter
+- Separate `BoRowContainer` / `BoRowItem` wrapper (container = direct child of `BoRow` today)
+- Fixed 12-column Span naming for BoRow
+
+### Developer guidance
+
+- Omit `Weight` when equal shares are fine (default 1).
+- Map “twice as wide” / “large search field” / “4 items wide” (relative) to proportional `Weight`.
+- Do not use custom CSS widths for BoRow children.
+
+### Planning Agent guidance
+
+- Assume `Weight=1` and `PreserveLayoutWhenHidden=false` when unspecified.
+- Use proportional Weight whenever a field should be wider/narrower than neighbors.
+- Prefer collapse for hidden fields; recommend `PreserveLayoutWhenHidden` only when alignment, visual stability, dynamic visibility, or multi-row consistency requires reserved space.
+- Challenge custom CSS and unnecessary preserve flags; document approved exceptions.
+- If a requirement conflicts with this standard: challenge → explain tradeoffs → if overridden, implement and document the deviation.
 
 ## Page composition JSON (planning-agent input)
 
 **Purpose:** Humans and planning agents submit **structured page requirements** in JSON. Agents translate that JSON into Dev prompts / Razor that follow Breeze On UI standards (this file + sections + forms).
 
-**Runtime note:** This JSON is a **requirements / planning** shape. It is **not** the Blazor working-model cache. Apps bind fields with `@bind-Value` to a **typed DTO / entity**. Each field’s `fieldKey` is mapping metadata for that property. Persistence JSON (if any) is an application concern outside SHARED-UI.
+**Runtime note:** This JSON is a **requirements / planning** shape. It is **not** the Blazor working-model cache. Apps bind fields with `@bind-Value` to a typed DTO / entity. Each field’s `fieldKey` is mapping metadata for that property. Persistence JSON (if any) is an application concern outside SHARED-UI.
 
 ### Schema version
 
@@ -108,7 +182,7 @@ Do **not** use `display: none` to hide a row child — that collapses columns. P
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
-| `fields` | array | Yes | Ordered fields; **length N** → N equal `BoRow` columns / containers |
+| `fields` | array | Yes | Ordered fields; each may set `weight` (default 1) for proportional shares |
 
 ### Field object (schemaVersion 1)
 
@@ -122,7 +196,9 @@ Do **not** use `display: none` to hide a row child — that collapses columns. P
 | `showCharacterCount` | boolean | No | Default false |
 | `placeholder` | string | No | Optional |
 | `disabled` | boolean | No | Default false |
-| `hidden` | boolean | No | Default false → `IsHidden` (reserved slot; no reflow) |
+| `hidden` | boolean | No | Default false → `IsHidden` (collapses layout unless preserve) |
+| `preserveLayoutWhenHidden` | boolean | No | Default false → `PreserveLayoutWhenHidden` |
+| `weight` | number | No | Default **1** → `Weight` (proportional share) |
 | `mode` | string | No | Date Field only: `"Date"` (default) or `"DateTime"` → `BoDateField.Mode` |
 | `isInteger` | boolean | No | Number Field only: blocks decimals |
 | `numberOfDecimals` | number | No | Number Field only: scale when not integer (default 0) |
@@ -130,8 +206,6 @@ Do **not** use `display: none` to hide a row child — that collapses columns. P
 | `currencyIsoCode` | string | No | Number Field only: `CAD` / `USD` / `GBP` when `isCurrency` |
 | `isPercent` | boolean | No | Number Field only; UI 0–100, bind ÷100; mutually exclusive with `isCurrency` |
 | `alignment` | string | No | Number Field only: `"Left"` \| `"Center"` \| `"Right"` (default `"Right"`) |
-
-Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount` as a separate BoRow parameter.
 
 ### Translation rules (JSON → Razor)
 
@@ -141,13 +215,15 @@ Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount` a
 | `sections[].sectionKey` | `SectionKey` (validation ancestry / fail badge) |
 | `sections[].title` / `icon` | `Title` + optional `IconContent` (`BoIcon`) |
 | `sections[].rows[]` | one `BoRow` **inside that Section** each |
-| `rows[].fields[]` length N | N **direct** children of that `BoRow` (each child = field container + field) |
+| `rows[].fields[]` | **direct** children of that `BoRow` (each child = field container + field) |
 | `control: "TextField"` | `BoTextField` with `Label`, `FieldKey`, `Required`, `MaxLength`, `ShowCharacterCount`, … + `@bind-Value` to the typed property for `fieldKey` |
 | `control: "ReadOnlyField"` | `BoFieldReadOnly` with `Label`, `FieldKey`, pre-formatted `Value` (host formats; no Required/validation) |
 | `control: "EmptyField"` | `BoEmptyField` (alignment slot only) |
 | `control: "DateField"` | `BoDateField` with `Label`, `FieldKey`, `Required`, optional `Mode` (`Date` / `DateTime`) + `@bind-Value` (**`DateTime?` only** — never `DateOnly`; Date mode → midnight) |
 | `control: "NumberField"` | `BoNumberField` with `Label`, `FieldKey`, `Required`, optional `isInteger` / `numberOfDecimals` / `isCurrency` / `currencyIsoCode` / `isPercent` / `alignment` + `@bind-Value` (**`decimal?` only**; percent UI 0–100 → bind ÷100) |
-| `hidden: true` | `IsHidden="true"` on the field (reserved column) |
+| `weight` (when ≠ 1) | `Weight="N"` on the field |
+| `hidden: true` | `IsHidden="true"` (collapses unless preserve) |
+| `preserveLayoutWhenHidden: true` | `PreserveLayoutWhenHidden="true"` |
 | Multiple sections | Wrap in `BoStack Gap="0"` |
 | Multiple rows in a section | Wrap rows in `BoStack Gap="0"` inside the Section body |
 
@@ -200,7 +276,33 @@ Future (not in v1 — do not emit until STANDARDS says shipped): `columnCount` a
 }
 ```
 
-Expected layout: Row 1 → two equal columns with 16px gap + separator; Row 2 → one full-width field. Both Rows inside the Identification Section.
+Expected layout: Row 1 → two equal columns (`Weight` default 1) with 16px gap; Row 2 → one full-width field. Both Rows inside the Identification Section.
+
+### Example — Filters with Weight 3+1+1
+
+```json
+{
+  "schemaVersion": "1",
+  "page": { "route": "/applications", "title": "Applications" },
+  "sections": [
+    {
+      "kind": "main",
+      "title": "Filters",
+      "rows": [
+        {
+          "fields": [
+            { "control": "TextField", "label": "Keyword", "fieldKey": "Keyword", "weight": 3 },
+            { "control": "TextField", "label": "Code", "fieldKey": "CodeFilter" },
+            { "control": "TextField", "label": "Description", "fieldKey": "DescriptionFilter" }
+          ]
+        }
+      ]
+    }
+  ]
+}
+```
+
+Expected: Keyword ≈ 60%; Code / Description ≈ 20% each.
 
 ### Example — Theme Primary Color Light (gallery)
 

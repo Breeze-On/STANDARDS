@@ -72,7 +72,7 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Shell | `BoAppShell` required; locked header actions | [ui/shell/shell.md](../ui/shell/shell.md) |
 | Navigation | Left nav locked; URL = page name | [ui/shell/navigation.md](../ui/shell/navigation.md) |
 | Home | `BoNavHub` + `BoNavCardStyleHyperlink` only | Shell Home section |
-| Forms layout | Section → Row → Field; `BoStack Gap="0"` | [ui/layout/](../ui/layout/) |
+| Forms layout | Section → Row → Field; `BoStack Gap="0"`; `Weight` (default 1); `IsHidden` collapses unless `PreserveLayoutWhenHidden` | [ui/layout/](../ui/layout/) |
 | Controls | Shipped `Bo*` field types only | [ui/controls/forms.md](../ui/controls/forms.md) |
 | Tokens / type | Semantic CSS vars; Calibri | [ui/foundations/tokens.md](../ui/foundations/tokens.md), [typography.md](../ui/foundations/typography.md) |
 

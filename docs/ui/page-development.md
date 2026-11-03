@@ -81,9 +81,9 @@ When the page is a **Home** (or equivalent landing hub):
 - [ ] Every **`BoRow` is inside a Section**.
 - [ ] Every form field is a **direct child of a `BoRow`**.
 - [ ] Stack Sections/Rows with **`BoStack Gap="0"`** so outside margins are not doubled.
-- [ ] Do not invent free-floating fields or custom grids. For reserved columns use **`IsHidden`** or **`BoEmptyField`** — not `display: none` / not a separate `columnCount` parameter.
+- [ ] Do not invent free-floating fields or custom width CSS. Use **`Weight`** for proportional sizing; **`IsHidden`** collapses by default; **`PreserveLayoutWhenHidden`** only when reserved space is justified; **`BoEmptyField`** for permanent alignment holes — [layout.md](layout/layout.md).
 
-Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout.md#page-composition-json-planning-agent-input); nest Sub Sections in Razor even when flat JSON is used.
+Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout.md#page-composition-json-planning-agent-input) (optional `weight` / `preserveLayoutWhenHidden`); nest Sub Sections in Razor even when flat JSON is used.
 
 ### Grid (section-level)
 
@@ -100,7 +100,7 @@ When the page includes a data grid:
 - [ ] **`EnableHorizontalScroll`** only when many columns truly need a horizontal scrollbar (default false).
 - [ ] Host loads **`_content/BreezeOn.UI/js/bo-grid.js`** when using truncated display cells (hover full-value title).
 - [ ] Cell editors reuse existing **`Bo*`** fields; column / grid **`Required`** follow [grids.md](controls/grids.md).
-- [ ] Nested View: set `NodeKey`; same columns → `ChildrenSelector`; different columns → `ChildRowsHaveDifferentColumns` + `ChildGridTemplate` (nested `BoGrid`, not a new component). Optional `DefaultExpansionState`. Same-column Nested View may use `EnableSelection` with cascade. See [grids.md Nested View](controls/grids.md#nested-view-locked--shipped).
+- [ ] Nested View: set `NodeKey`; same columns → `ChildrenSelector`; different columns → `ChildRowsHaveDifferentColumns` + `ChildGridTemplate` (nested `BoGrid`, not a new component). Optional `DefaultExpansionState`. Same-column Nested View may use `EnableSelection` with cascade. Keyword filters: follow [Nested View keyword filtering](controls/grids.md#nested-view-keyword-filtering-org-standard) unless a documented exception. See [grids.md Nested View](controls/grids.md#nested-view-locked--shipped).
 
 ### Filters and query-driven datasets
 
@@ -124,9 +124,10 @@ When the page filters, sorts, or pages a dataset — [query-driven-retrieval.md]
 - [ ] **`BoDateField`** for date / date-time — bind **`DateTime?` only** (never `DateOnly`); `Mode` Date or DateTime is UI-only; Date mode still persists midnight — [forms.md](controls/forms.md#date-field-bodatefield).
 - [ ] **`BoNumberField`** for numbers — bind **`decimal?` only**; integer/decimals; `IsCurrency` / `IsPercent` mutually exclusive; percent UI 0–100 → bind ÷100; alignment default Right — [forms.md](controls/forms.md#number-field-bonumberfield).
 - [ ] **`BoFieldReadOnly`** for display-only scalars (host formats `Value`) — [forms.md](controls/forms.md#read-only-field-bofieldreadonly).
-- [ ] **`BoEmptyField`** / **`IsHidden`** for reserved alignment slots — [layout.md](layout/layout.md).
+- [ ] **`Weight`** when a field should be wider/narrower than neighbors (default 1) — [layout.md](layout/layout.md).
+- [ ] **`BoEmptyField`** for permanent empty slots; **`IsHidden`** + optional **`PreserveLayoutWhenHidden`** for temporary hide — [layout.md](layout/layout.md).
 - [ ] Sections that participate in Submit validation set **`SectionKey`** — [sections.md](layout/sections.md).
-- [ ] Planning JSON: shipped control names only (`TextField`, `ReadOnlyField`, `EmptyField`, `DateField`, `NumberField`, …; optional `hidden` / `mode` / number flags) — [layout.md](layout/layout.md).
+- [ ] Planning JSON: shipped control names only (`TextField`, `ReadOnlyField`, `EmptyField`, `DateField`, `NumberField`, …; optional `weight` / `hidden` / `preserveLayoutWhenHidden` / `mode` / number flags) — [layout.md](layout/layout.md).
 
 ### Validation
 

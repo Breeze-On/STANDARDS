@@ -175,7 +175,7 @@ Default off (`IsPagination = false`). When on:
 | Cache content | Host fills `BoGridCache` with **only the current page** returned by the primary contract |
 | `TotalCount` | Comes from the **primary contract** (rows matching the filter before pagination); drives the pagination footer total and page count |
 | Pipeline | Server applies **Filter → Sort → Pagination** (in that order); header sort and page changes raise a new host query instead of slicing the cache |
-| Nested View | Server query pages **roots**; children come from the same primary contract; expansion rules unchanged |
+| Nested View | Server query pages **roots**; children come from the same primary contract; keyword child selection + search expansion follow [Nested View keyword filtering](#nested-view-keyword-filtering-org-standard) |
 | Select-all | Selects the **current page** only (rows in the cache), not every row matching the filter |
 | Filters | Filter controls follow [forms.md — Filter execution](forms.md#filter-execution-query-driven); no Apply button |
 | Stale responses | Host uses cancellation / latest-wins; a stale response never calls `ReplaceAll` |
@@ -208,7 +208,55 @@ Read-only hierarchical mode on the same `BoGrid` surface. No action column; no A
 | `Collapsed` (default) | All expandable nodes collapsed | Org charts, category / process trees |
 | `Expanded` | All expandable nodes expanded | Permission matrices, small nav / reference trees |
 
-After seed, per-node toggles own the expansion set. Cache `Reset` / `ReplaceAll` re-seeds.
+After seed, per-node toggles own the expansion set. Cache `Reset` / `ReplaceAll` re-seeds (unless preserve is on).
+
+### Nested View keyword filtering (org standard)
+
+**Planning Agent default** for Nested View datasets that support a free-text **keyword** filter. Document a product exception only when justified (see [query-driven-retrieval.md — Exceptions](query-driven-retrieval.md#exceptions)).
+
+This standard governs **result selection** and **search visibility**. It does not change Nested View scenarios (same-columns vs different-columns) or require a new grid component.
+
+#### Ownership
+
+| Concern | Owner |
+| --- | --- |
+| Which parents / children the primary contract returns | **Host retrieval contract** (typically SQL / SP) — service remains pass-through |
+| Auto-expand while keyword is active; restore browse expansion when cleared | **Host page** (`DefaultExpansionState` + `PreserveNestedExpansionOnCacheReset`) |
+| `BoGrid` / NestedView infrastructure | Seed/preserve mechanics only — **no** keyword-specific BoGrid API required for v1 |
+
+#### Rule 1 — Parent match
+
+When the keyword matches the **parent** row (parent identity / description / metadata fields owned by that root):
+
+- Return the parent.
+- Return **all** child context for that parent (full enablement / child set — do not prune siblings).
+- Host page **auto-expands** the parent so the full child context is visible immediately.
+
+#### Rule 2 — Child match
+
+When the keyword matches one or more **children** (and the parent is included because of those matches):
+
+- Return the parent.
+- Return **matching child branches only**.
+- Hide non-matching sibling branches.
+- Host page **auto-expands** the parent so matches are visible immediately.
+
+If both parent fields and child fields match the same keyword, **Rule 1 wins** (full child context).
+
+#### Rule 3 — Search visibility
+
+While a keyword filter is **active**:
+
+- Matching results must be immediately visible — users must **never** need to manually expand to discover a match.
+- Host binds search mode typically as: `DefaultExpansionState = Expanded` and `PreserveNestedExpansionOnCacheReset = false` so each keyword-driven `ReplaceAll` reseeds expanded parents that have children.
+
+When the keyword is **cleared**:
+
+- Restore the normal browse experience (page default — commonly `Collapsed` + `PreserveNestedExpansionOnCacheReset = true`).
+
+#### Reference implementation
+
+EAC **Applications** NestedView (`P_GET_EACApplicationsGrid` RS1/RS2 + `Applications.razor` expansion binding) — [architecture/eac.md](../../../architecture/eac.md).
 
 ### Keyboard (expand control focused)
 

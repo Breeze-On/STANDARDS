@@ -10,10 +10,12 @@ Form control standards. Related: [layout.md](../layout/layout.md) (Row + page co
 
 | Surface | Standard |
 | --- | --- |
-| `IsHidden` | On form fields: still occupies a `BoRow` column (`.bo-row-item--hidden`); chrome not shown; **do not** use `display: none`. Skips required validation while hidden. |
-| `BoEmptyField` | Empty alignment slot (no label/value); one equal-width column |
+| `Weight` | Proportional `BoRow` width share (default **1**). Not a 12-column span — see [layout.md](../layout/layout.md) |
+| `IsHidden` | Chrome not shown; **default collapses** layout (Weight ignored). Skips required validation while hidden. |
+| `PreserveLayoutWhenHidden` | When hidden, keep Weight share / reserved slot (`visibility: hidden`). Default **false**. |
+| `BoEmptyField` | Empty alignment slot (no label/value); has `Weight` (default 1) |
 
-See [layout.md — Reserved / empty slots](../layout/layout.md#reserved--empty-slots-shipped).
+See [layout.md — Hidden fields and layout preservation](../layout/layout.md#hidden-fields-and-layout-preservation-organization-standard).
 
 ## Deferred mandatory validation (locked)
 
@@ -25,7 +27,7 @@ See [layout.md — Reserved / empty slots](../layout/layout.md#reserved--empty-s
 | Required message | Universal resource string — English **"This field is required"** (`Validation_FieldRequired`). Same for every control; never field-label-specific |
 | Invalid border | Danger color (`--bo-color-danger`) on the **control edge only** (same as Text Field input border) when the required-empty rule fails after attempt — **not** a wash/outline on the BoRow item container |
 | Disabled | A `Disabled` field **never** shows the mandatory asterisk, **never** shows character count, and **never** participates in required validation (Submit ignores it for mandatory checks) |
-| Hidden (`IsHidden`) | Same as Disabled for mandatory participation — reserved slot only; no asterisk / required fail while hidden |
+| Hidden (`IsHidden`) | Same as Disabled for mandatory participation — no asterisk / required fail while hidden; layout collapses unless `PreserveLayoutWhenHidden` |
 | Mechanism | Cascading `BoValidationContext`; fields register via `IBoValidatableField`; pages gate Submit with `IBoSubmitInterceptor` |
 | Scope | Gallery Submit validates **all** registered groups (`Validate(null)`), not only the active tab |
 | Group scoping | `BoValidationContext.IsAttempted(group)` drives field chrome. `Validate(group)` attempts **only** that group — fields in other groups do not show required chrome or fail badges. `Validate(null)` attempts all groups. Fields with no `ValidationGroup` participate only in a `Validate(null)` attempt |
@@ -83,7 +85,9 @@ Flat **display-only** companion for read views. Always shows **already-formatted
 | `Label` | Field label text — **same chrome as Text Field** (10px bold uppercase, field-label color) |
 | `Value` | Pre-formatted display string; null/whitespace → blank |
 | `FieldKey` | Stable typed DTO / entity property identifier (mapping metadata only) |
-| `IsHidden` | Reserved row slot; chrome hidden |
+| `IsHidden` | Chrome hidden; layout collapses by default |
+| `PreserveLayoutWhenHidden` | Keep Weight share while hidden (default false) |
+| `Weight` | Proportional BoRow share (default 1) |
 | `Alignment` | `BoNumberFieldAlignment` Left (default) / Center / Right — use Right/Center for numeric companions (same `bo-field--align-*` modifiers as Number Field) |
 | `Class` / `Style` | Optional (use `bo-field--section-flush` in section rows like other fields) |
 

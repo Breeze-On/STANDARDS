@@ -22,7 +22,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [shell/navigation.md](shell/navigation.md) | Left navigation, route/URL matching |
 | **Layout** | |
 | [layout/sections.md](layout/sections.md) | Main Section / Sub Section |
-| [layout/layout.md](layout/layout.md) | Row (`BoRow`), page composition, planning JSON schema |
+| [layout/layout.md](layout/layout.md) | Row (`BoRow`) Weight + hidden/preserve layout, page composition, planning JSON schema |
 | **Controls** | |
 | [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, Date Field, and form controls |
 | [controls/grids.md](controls/grids.md) | Grid (`BoGrid`) — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode` |
@@ -71,7 +71,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoNavCardStyleHyperlink` | Home destination card (internal SPA or external new-tab); locked chrome | [shell.md](shell/shell.md#home--navigation-hub-locked-platform-pattern) |
 | `BoSectionMain` | **Main Section** — optional header; `SectionKey` for validation fail badge / ancestry | [sections.md](layout/sections.md) |
 | `BoSectionSub` | **Sub Section** — nested grouping; `SectionKey` + cascaded Main/Sub keys to fields | [sections.md](layout/sections.md) |
-| `BoRow` | **Row** — equal-width field slots inside a section | [layout.md](layout/layout.md) |
+| `BoRow` | **Row** — proportional `Weight` field slots inside a section (default equal) | [layout.md](layout/layout.md) |
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](layout/sections.md) |
 | `BoPageHeader` | Page title and description | — |
 | `BoFieldReadOnly` | Flat read-only display field (pre-formatted string `Value`; same label chrome as Text Field; `Alignment`) | [forms.md](controls/forms.md) |

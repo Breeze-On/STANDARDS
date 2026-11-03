@@ -55,6 +55,8 @@ Server query execution order is fixed:
 
 `TotalCount` is the count after Filter, before Pagination.
 
+**Nested View + keyword:** parent/child result selection and search auto-expand follow the org standard in [grids.md — Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) (primary contract owns child selection; host page owns expansion while keyword is active).
+
 ### Typed filter operators
 
 Filters are typed (`BoQueryFilterOperator`):
@@ -114,6 +116,7 @@ Planning Agents (and build agents) must:
 3. **Require a rationale** for any secondary contract or exception.
 4. **Document exceptions** (see above).
 5. Prefer EF / app services for simple distinct catalogs; never propose generic schema / table / column distinct procedures.
+6. For Nested View keyword filters, default to [Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) (parent match → full child context; child match → matching branches only; auto-expand while keyword active) unless a documented exception exists.
 
 Page checklist: [page-development.md](../page-development.md).
 
