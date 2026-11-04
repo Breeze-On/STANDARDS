@@ -13,6 +13,7 @@ Breeze On applications need end-user authentication against Microsoft Entra ID. 
 - Phase 1 uses ASP.NET Core **OpenIdConnect + Cookies**, not Microsoft.Identity.Web. App-only Graph sync or delegated Graph may add MSAL/Identity.Web later **without** replacing the cookie login path.
 - Configuration: `AUTHENTICATION__AUTHORITY`, `AUTHENTICATION__CLIENTID`, `AUTHENTICATION__CLIENTSECRET` (no hard-coded authority; no `AUTHENTICATION__TENANTID`).
 - Tenant who may sign in is controlled by **Entra App Registration** configuration, not application allowlists.
+- Cookie attributes, idle/absolute lifetimes, logout vs Entra sign-out, and Data Protection hosting assumptions are the platform session policy in [ADR-012](ADR-012-cookie-session-management.md) and [session-management-standard.md](../architecture/identity-and-authentication/session-management-standard.md).
 
 ## Consequences
 

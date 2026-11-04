@@ -159,7 +159,7 @@ Updates must occur in the **same change set** as the implementation change. Docu
 
 ### Identity & Authentication DoD (platform)
 
-Any change affecting **authentication architecture**, **Identity schema**, **App Registration strategy**, **tenant strategy**, **authentication environment variables**, **local development authentication**, or **customer onboarding authentication** is incomplete until [`architecture/identity-and-authentication/`](../architecture/identity-and-authentication/README.md) and related ADR(s) (ADR-009 / ADR-010 / ADR-011 or successors) are updated in the **same change set**. This is a mandatory BreezeOn platform standard.
+Any change affecting **authentication architecture**, **Identity schema**, **App Registration strategy**, **tenant strategy**, **authentication environment variables**, **local development authentication**, **cookie/session policy**, or **customer onboarding authentication** is incomplete until [`architecture/identity-and-authentication/`](../architecture/identity-and-authentication/README.md) and related ADR(s) (ADR-009 / ADR-010 / ADR-011 / ADR-012 or successors) are updated in the **same change set**. This is a mandatory BreezeOn platform standard.
 
 UI / query-driven standards also follow **[Example Governance](ui/example-governance.md)**: normative standard + AI guidance + Gallery working example (unless an approved exception applies).
 

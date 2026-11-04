@@ -49,7 +49,7 @@ Org pattern: [local-database.md](local-database.md). Decision context: [ADR-003]
 | **Hosting model (EAC)** | Azure App Service Linux Free F1 (`breezeon-system-admin-eac-dev`), resource group `RG-BREEZEON-DEV`, stack `DOTNETCORE\|10.0` |
 | **Hosting model (Shared UI Gallery)** | Azure App Service Linux (`breezeon-system-shared-ui-dev`), resource group `RG-BREEZEON-DEV`, stack .NET 10 |
 | **Authentication model (EAC)** | End-user Entra OIDC + cookies via shared platform ([Identity & Authentication](../architecture/identity-and-authentication/README.md)); App Service `AUTHENTICATION__*` settings; App Service → Azure SQL via **system-assigned Managed Identity**; operators may use Entra Default for scripts |
-| **Database model (EAC)** | Azure SQL `sql-breezeon-dev.database.windows.net` / database `BreezeOnDV` (legacy physical name; new DBs should use `{Logical}Dev` / `Uat` / `Prd` per [naming.md](naming.md)); platform `Identity.*` + business schema under `System`; no `AspNet*` tables |
+| **Database model (EAC)** | Azure SQL `sql-breezeon-dev.database.windows.net` / database `BreezeOnDV` (legacy physical name; new DBs should use `{Logical}Dev` / `Uat` / `Prd` per [naming.md](naming.md)); customer catalog holds platform `Identity.*` + business schema under `System` (future products share this customer DB); no `AspNet*` tables |
 | **Intended usage** | Deployed smoke and shared hosted development; CI via GitHub Environment **`DEV`** |
 
 Details: [architecture/eac.md](../architecture/eac.md), [architecture/security.md](../architecture/security.md), [architecture/landscape.md](../architecture/landscape.md).

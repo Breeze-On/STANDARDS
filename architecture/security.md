@@ -15,9 +15,10 @@ End-user authentication is a **BreezeOn platform capability**. SSOT:
 | Mechanism | Microsoft Entra ID OIDC Authorization Code Flow + cookie session |
 | Framework owner | SYSTEM-SHARED-UI (`BreezeOn.UI`) |
 | First product host | EAC (`SYSTEM-ADMIN-EAC`) |
-| User store | Platform `Identity.Users` / `Identity.UsersLogins` (not AspNet Identity) |
+| User store | Platform `Identity.Users` / `Identity.UsersLogins` in the **customer** database (not AspNet Identity) |
+| Session policy | [session-management-standard.md](identity-and-authentication/session-management-standard.md) |
 
-Do not document auth as EAC-only. Cross-app SSO productization beyond shared library reuse is not a separate product yet — see [future-roadmap.md](identity-and-authentication/future-roadmap.md).
+Do not document auth as EAC-only. Shared Identity directory across products in a customer database is **not** cross-app SSO (each product keeps its own host-only cookie). SSO productization beyond shared library reuse is not shipped — see [future-roadmap.md](identity-and-authentication/future-roadmap.md).
 
 ## Authorization (current)
 

@@ -6,9 +6,10 @@ Owner: Architecture
 
 Approved hosting and identity binding:
 
-- **One App Registration per customer-environment.**
-- **One application deployment per customer-environment.**
-- Each environment has its **own** authentication configuration (`AUTHENTICATION__AUTHORITY`, `AUTHENTICATION__CLIENTID`, `AUTHENTICATION__CLIENTSECRET`).
+- **One App Registration per customer-environment** (product-scoped naming, e.g. `CustomerA-EAC-DEV`).
+- **One product application deployment per customer-environment** (e.g. EAC-DEV and VMR-DEV are separate deployments).
+- **One customer database per customer-environment**, shared by all product applications in that environment (Identity schema + business schemas). See [identity-schema-standard.md](identity-schema-standard.md) and [ADR-010](../../decisions/ADR-010-platform-identity-schema.md).
+- Each **product deployment** has its **own** authentication configuration (`AUTHENTICATION__AUTHORITY`, `AUTHENTICATION__CLIENTID`, `AUTHENTICATION__CLIENTSECRET`) and its own application cookie (host-only). Shared Identity directory ≠ shared SSO cookie.
 
 Illustrative naming:
 
@@ -40,4 +41,5 @@ Distinguish **customer-environment registrations** from **internal BreezeOn regi
 
 - [Configuration standard](configuration-standard.md)
 - [Local development standard](local-development-standard.md)
+- [Session management standard](session-management-standard.md)
 - [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md)
