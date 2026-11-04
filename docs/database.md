@@ -207,10 +207,11 @@ Each application repository that owns database objects maintains SQL under:
 
 ```text
 sql/
-  current_model/          # Source of truth for the current schema (executable T-SQL; one file per object)
+  current_model/          # Editable source of truth (executable T-SQL; one file per object)
+  current_model.sql       # Committed consolidated reset script (regenerated from current_model/; never hand-edit)
   seed/                   # Required local-only sample data for local-ready testing (not for hosted envs by default)
   migration_scripts/      # Temporary deltas; clean up after applied
-generated/                # Temporary consolidated deployment scripts (gitignored; produced by local scripts)
+generated/                # Temporary local deploy copies (gitignored; produced by local scripts)
 docs/
   db-model.md             # Human/agent-readable current DB model (required when the app owns SQL objects)
 ```
@@ -220,10 +221,10 @@ docs/
 Org rule for applications that own SQL objects (reference implementation: EAC):
 
 1. **Source stays separated.** Tables, procedures, functions, views, schemas, etc. remain individual files under `sql/current_model/` for maintainability.
-2. **Deploy through one generated script.** Local init / `dev-reset` concatenates ordered sources into a temporary consolidated artifact (e.g. `generated/current-model.sql`) and executes **one** `sqlcmd` against that file.
-3. **Ordering is explicit.** Maintain a deterministic dependency-order list in the app’s local DB helpers whenever objects are added, removed, renamed, or reordered.
-4. **Logging lists sources.** Generation must print (and embed in the consolidated header) which source files were included and in what order.
-5. **Do not hand-maintain the giant file.** Prefer regenerating the consolidated script on each reset/init.
+2. **Maintain a committed single-file reset script.** Every schema-owning app keeps **`sql/current_model.sql`**: the concatenation of ordered `sql/current_model/` sources. Regenerate it whenever sources or deploy order change; **never edit `sql/current_model.sql` by hand**. Commit it in the **same change set** as the source edits (for SSMS / review / one-file apply).
+3. **Deploy through one consolidated script.** Local init / `dev-reset` regenerates the consolidated artifact (refreshing `sql/current_model.sql` and a gitignored `generated/current-model.sql` copy) and executes **one** `sqlcmd` against that file.
+4. **Ordering is explicit.** Maintain a deterministic dependency-order list in the app’s local DB helpers whenever objects are added, removed, renamed, or reordered. **CREATE order** is dependency order (parents before children). **DROP order** inside each table script must remove **dependents first** (children / FK referencers before the table being recreated) so Msg 3726 cannot occur when re-applying against a populated database.
+5. **Logging lists sources.** Generation must print (and embed in the consolidated header) which source files were included and in what order.
 
 ### Definition of Done (schema change)
 
@@ -231,8 +232,9 @@ A database-object change is incomplete unless:
 
 1. The object is implemented under `sql/current_model/` (and `docs/db-model.md` updated).
 2. Deployment aggregation / ordering is updated if required.
-3. Seed aggregation is updated if required (see Seed Maintenance Standard).
-4. Product and STANDARDS documentation reflect current reality.
+3. **`sql/current_model.sql` is regenerated** from sources (never hand-patched) and included in the same change set.
+4. Seed aggregation is updated if required (see Seed Maintenance Standard).
+5. Product and STANDARDS documentation reflect current reality.
 
 ## Database Seed Maintenance Standard
 
@@ -240,15 +242,15 @@ A database-object change is incomplete unless:
 2. **Seed deploy uses one consolidated script** (e.g. `generated/seed.sql`) executed once via `sqlcmd`.
 3. **Any feature that introduces or changes seed data** must update seed sources **and** keep consolidated seed deployment valid in the **same change set**.
 
-### `sql/current_model/`
+### `sql/current_model/` and `sql/current_model.sql`
 
-- Represents the **current** database model only.
+- `sql/current_model/` represents the **current** database model only (editable SSOT).
 - One script per table or discrete object.
-- Each table script must be maintainable as a full recreate: **drop if exists, then create** (safe to apply against an empty database when run in documented order).
+- Each table script must be maintainable as a full recreate: **drop dependents if they exist, drop if exists, then create** (safe when re-applied in documented CREATE order against a database that already has the model).
 - Include schema-creation scripts as needed (e.g. `00_schema_*.sql`).
 - Use Transact-SQL idioms appropriate for Azure SQL (`IF OBJECT_ID` / `sys.schemas`, `IDENTITY`, `GO` batches as needed).
 - Nullability must follow the rules above.
-- Local apply path: build consolidated `generated/current-model.sql` → single `sqlcmd` (see Database Deployment Standard).
+- **`sql/current_model.sql`** is the **committed** single-file reset script regenerated from those sources (see Database Deployment Standard). Local apply may also write a gitignored `generated/current-model.sql` copy for `sqlcmd`.
 
 ### `sql/seed/` (required for apps with owned business schema)
 
