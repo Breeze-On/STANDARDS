@@ -32,19 +32,19 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | UI framework | Blazor Web App, Interactive Server (global interactivity) |
 | Runtime | ASP.NET Core / C# / .NET 10 (App Service stack: `DOTNETCORE|10.0`) |
 | Shared UI | ProjectReference to `SYSTEM-SHARED-UI` / `BreezeOn.UI` (`Bo*` only; [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md)) |
-| Auth | **Not implemented** — ASP.NET Core Identity removed; no login/register; shell pages public |
+| Auth | Entra OIDC + cookies via SYSTEM-SHARED-UI; platform `Identity.*` in EAC DB; see [Identity & Authentication](identity-and-authentication/README.md) |
 | Surfaces | `BoAppShell` + left nav; Home (`BoNavHub`); Applications (NestedView over `System.EACApplications` with child Enabled Business Entities — no child pagination; keyword Nested View filtering per [grids.md](../docs/ui/controls/grids.md#nested-view-keyword-filtering-org-standard): parent match → all children, child match → matching branches; **shallow** one-level Rule 3 uses `DefaultExpansionState=Expanded` while keyword active / collapsed+preserve when cleared; parent selection; create/edit popup with update-only enablement section; child Delete for Application Contexts; JSON import/export including `BusinessEntitiesEnabled` Codes); Business Entities (`/business-entities`: Hierarchy NestedView + Entity Types tabs; Filters/Keyword on both tabs — Hierarchy client Nested View keyword on full-load tree with path-minimal `NestedExpandedSeedKeys`; Types client keyword; SP-backed; update-only Enabled Applications section; JSON I/O); App Configuration (empty body) |
 | Application Context | `System.EACApplicationsEnabled` — `ApplicationEnabledGUID` owns entity-specific configuration; exclusivity on `(ApplicationGUID, BusinessEntityGUID)`; centralized hard-delete workflow ([ADR-006](../decisions/ADR-006-application-context-ownership.md)) |
 | Localization | EAC `EacResources.resx` / `EacResources.fr.resx` via `IEacLocalizer` (not Gallery `BoUi`) |
-| Data access | EF Core + SQL Server provider (`ApplicationDbContext` + empty `InitialBaseline` for `__EFMigrationsHistory`; business schema via SQL scripts; audit stamps via `IAuditActorProvider` → interim `LOCAL`) |
-| SQL scripts | `sql/current_model/` (T-SQL): schema `System`, tables `EACApplications`, `EACBusinessEntitiesTypes`, `EACBusinessEntities`, `EACApplicationsEnabled` (mandatory audit columns); `P_GET_*` / `P_POST_*` hierarchy/types/enablement procedures |
+| Data access | EF Core + SQL Server provider (`ApplicationDbContext` + empty `InitialBaseline` for `__EFMigrationsHistory`; business schema via SQL scripts; audit stamps via `IAuditActorProvider` → authenticated actor (UPN/oid)) |
+| SQL scripts | Platform Identity from SHARED-UI `sql/identity/` + EAC `sql/current_model/` (`System` tables/procedures) |
 | DB model doc | [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) |
 | Portability | Applications + Business Entity Types + Business Entities JSON — [data-portability.md](../docs/data-portability.md) (EAC-owned; not a shared service) |
 | Local database | SQL Server Docker (`BreezeOnLocal`); see [local-database.md](../docs/local-database.md) |
 
 ## Applications: selection, import, export
 
-Applications import/export is **owned by EAC** (`SYSTEM-ADMIN-EAC`). It is **not** a shared service. File format: [data-portability.md](../docs/data-portability.md). Audit columns: [database.md](../docs/database.md#mandatory-audit-columns) / [ADR-005](../decisions/ADR-005-mandatory-transactional-audit-columns.md) (interim actor **`LOCAL`**).
+Applications import/export is **owned by EAC** (`SYSTEM-ADMIN-EAC`). It is **not** a shared service. File format: [data-portability.md](../docs/data-portability.md). Audit columns: [database.md](../docs/database.md#mandatory-audit-columns) / [ADR-005](../decisions/ADR-005-mandatory-transactional-audit-columns.md) (actor = logged-in user).
 
 | Concern | Behavior |
 | --- | --- |

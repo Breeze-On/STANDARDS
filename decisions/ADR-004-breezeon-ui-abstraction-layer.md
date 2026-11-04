@@ -11,7 +11,7 @@ Multiple Breeze On Blazor applications need consistent branding, layout, and con
 - **`BreezeOn.UI`** is the permanent public UI contract for the ecosystem (`Bo*` components, tokens, `AddBreezeOnUI`, theme/providers).
 - **Fluent UI Blazor** is an **internal** implementation detail of `BreezeOn.UI`. Product application pages must not import or use `Microsoft.FluentUI.*` types.
 - Shared UI capabilities are added or evolved through `BreezeOn.UI` and documented under [`docs/ui/`](../docs/ui/overview.md) (entry: [overview.md](../docs/ui/overview.md)).
-- The Shared UI repository owns the library and gallery only — not ADM business domains or databases.
+- The Shared UI repository owns the library, gallery, **authentication framework**, and **platform Identity SQL definitions** — not product business domains or a hosted database. End-user auth: [ADR-009](ADR-009-entra-oidc-cookie-authentication.md), [ADR-010](ADR-010-platform-identity-schema.md).
 
 ## Consequences
 

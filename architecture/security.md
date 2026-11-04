@@ -4,21 +4,25 @@ Owner: Architecture
 
 Current-state security posture for implemented Breeze On applications.
 
-## EAC application authentication
+## EAC application authentication (end users)
+
+End-user authentication is a **BreezeOn platform capability**. SSOT:
+
+**[Identity & Authentication](identity-and-authentication/README.md)**
 
 | | |
 | --- | --- |
-| Mechanism | **Not implemented** (ASP.NET Core Identity removed from EAC) |
-| App | EAC (`SYSTEM-ADMIN-EAC` / `BreezeOn.Eac`) |
-| UI access | Shell pages are public (Home + destination pages) |
-| User store | None — no `AspNet*` tables |
+| Mechanism | Microsoft Entra ID OIDC Authorization Code Flow + cookie session |
+| Framework owner | SYSTEM-SHARED-UI (`BreezeOn.UI`) |
+| First product host | EAC (`SYSTEM-ADMIN-EAC`) |
+| User store | Platform `Identity.Users` / `Identity.UsersLogins` (not AspNet Identity) |
 
-End-user authentication and authorization will be introduced in a future milestone once Identity / security requirements are defined.
+Do not document auth as EAC-only. Cross-app SSO productization beyond shared library reuse is not a separate product yet — see [future-roadmap.md](identity-and-authentication/future-roadmap.md).
 
 ## Authorization (current)
 
-- No `[Authorize]` attributes on EAC product pages.
-- No login redirect for shell routes.
+- Product hosts require authenticated users for application routes (shared framework + host `[Authorize]` / authorize route view).
+- Role-based authorization and Entra group mapping are **not** shipped (future roadmap).
 
 ## Local SQL access
 
@@ -65,10 +69,9 @@ Permission model (template [`grant-app-service-mi.sql`](../templates/azure-sql/g
 
 - Do not commit credentials or production secrets (including `.env`).
 - App Service stores **`SQLAzureConnection`** as a connection string setting (Managed Identity auth).
+- End-user auth secrets: `AUTHENTICATION__*` in App Service application settings ([configuration-standard.md](identity-and-authentication/configuration-standard.md)); local via User Secrets ([local-development-standard.md](identity-and-authentication/local-development-standard.md)).
 - Local Development defaults to Docker SQL with password substitution (`__FROM_ENV__` → `LocalSql:SaPassword` or `MSSQL_SA_PASSWORD`).
 
 ## Scope note
 
-This document describes only what is implemented today. Cross-app SSO and Microsoft Entra External ID for end users are not implemented.
-
-Organization-wide **dependency and vulnerability governance** lives in [`docs/security-governance.md`](../docs/security-governance.md). Do not confuse that governance standard with this architecture document.
+Organization-wide **dependency and vulnerability governance** lives in [`docs/security-governance.md`](../docs/security-governance.md). Do not confuse that governance standard with this architecture document or with Identity & Authentication.

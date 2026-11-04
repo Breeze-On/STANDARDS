@@ -13,4 +13,5 @@ Current reality only — do not place planned or speculative designs here. How w
 | [Landscape](landscape.md) | Ecosystem map: repos, UI dependency position, Azure hosting, SQL relationships, boundaries |
 | [Ecosystem](ecosystem.md) | Org identity and existing repositories |
 | [EAC](eac.md) | Enterprise Administration Center (current) |
-| [Security](security.md) | Auth and access as implemented (dependency/vuln governance: [`docs/security-governance.md`](../docs/security-governance.md)) |
+| [Identity & Authentication](identity-and-authentication/README.md) | **Start here** for end-user OIDC, Identity schema, App Registrations, config, local auth (platform standard) |
+| [Security](security.md) | SQL access / MI and secrets posture; end-user auth points to Identity & Authentication (dependency/vuln governance: [`docs/security-governance.md`](../docs/security-governance.md)) |

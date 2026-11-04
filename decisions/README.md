@@ -28,3 +28,6 @@ Categories are discoverability labels for the index; they do not replace reading
 | [ADR-006](ADR-006-application-context-ownership.md) | Application Context ownership and lifecycle | Accepted | Data | EAC Application Enablement, entity-specific application configuration |
 | [ADR-007](ADR-007-ai-agent-operational-boundaries.md) | AI agent operational boundaries | Accepted | Governance | Organization / all repositories / AI agents |
 | [ADR-008](ADR-008-query-driven-data-retrieval.md) | Query-driven data retrieval | Accepted | UI + Data | Product applications, Shared UI grids / filters, Applications with databases, Planning Agents |
+| [ADR-009](ADR-009-entra-oidc-cookie-authentication.md) | Entra OIDC cookie authentication (SHARED-UI) | Accepted | Authentication | All product applications, SYSTEM-SHARED-UI |
+| [ADR-010](ADR-010-platform-identity-schema.md) | Platform Identity schema | Accepted | Identity / Data | All application databases, SYSTEM-SHARED-UI |
+| [ADR-011](ADR-011-app-registration-per-customer-environment.md) | App Registration per customer-environment | Accepted | Hosting / Identity | Azure App Service, Entra, local development |

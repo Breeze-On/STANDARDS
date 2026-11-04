@@ -119,7 +119,7 @@ No reverse dependency of Shared UI on EAC domains/databases. Apps do not own the
 | Navigation | Left `BoNavPane` / `BoNavLink` + `BoIcon`; URLs match page name (lowercase, hyphenated) |
 | Branding | Library logos `_content/BreezeOn.UI/brand/*`; per-app Home hero under `wwwroot/brand/` |
 
-Auth/Identity is **not** part of current EAC shell adoption (deferred). Business schema remains `sql/current_model/` (SYSADM); EF keeps migration infrastructure without Identity tables.
+End-user auth / platform Identity: **[architecture/identity-and-authentication/](../../architecture/identity-and-authentication/README.md)** (ADR-009–011). EAC consumes SYSTEM-SHARED-UI auth; business schema remains `sql/current_model/` (`System`); platform `Identity.*` scripts come from SHARED-UI `sql/identity/`.
 
 ---
 

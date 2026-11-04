@@ -103,8 +103,10 @@ STANDARDS/
    ├─ landscape.md
    ├─ ecosystem.md
    ├─ eac.md
-   └─ security.md
+   ├─ security.md
+   └─ identity-and-authentication/  # platform auth/identity SSOT (start here for Entra/OIDC)
 ```
+
 
 | Path | Purpose |
 | --- | --- |
@@ -120,6 +122,7 @@ STANDARDS/
 | `decisions/` | ADRs (why decisions were made); index includes Category and Impact Area |
 | `templates/` | Copy-paste starters for apps (e.g. local SQL Docker, Dependabot) |
 | `architecture/` | Currently implemented systems, landscape map, platform structure, application responsibilities, security architecture (`architecture/security.md` ≠ `docs/security-governance.md`) |
+| `architecture/identity-and-authentication/` | **Start here** for Entra OIDC, Identity schema, App Registrations, config, local auth (ADR-009–011) |
 
 If you add or remove files under `docs/`, `decisions/`, or `architecture/`, update **this** `README_AI.md` and the root `README.md` in the same change set.
 

@@ -38,6 +38,10 @@ Application + Business Entity operational instance. Represented by `ApplicationE
 
 Immutable canonical identifier for an Application Context. Generated once on create; never regenerated, reassigned, or modified. Re-create after delete yields a new GUID; prior values are never reused. See [database.md](database.md), [ADR-006](../decisions/ADR-006-application-context-ownership.md).
 
+## AUTHENTICATION__* (environment variables)
+
+Required end-user authentication settings: `AUTHENTICATION__AUTHORITY`, `AUTHENTICATION__CLIENTID`, `AUTHENTICATION__CLIENTSECRET`. See [configuration-standard.md](../architecture/identity-and-authentication/configuration-standard.md).
+
 ## ApplicationGUID
 
 Immutable relationship key for an application (and for future cross-entity links). Column name contains `GUID` → **NOT NULL**; generate once; never regenerate on update. See [database.md](database.md).
@@ -69,7 +73,15 @@ Related:
 
 ## BreezeOn.UI
 
-Public shared UI library (`Bo*` components) in `SYSTEM-SHARED-UI`. Fluent UI Blazor is an internal implementation detail; product apps must not take a direct Fluent dependency.
+Public shared UI library (`Bo*` components) in `SYSTEM-SHARED-UI`, including the **authentication framework** and platform Identity SQL definitions. Fluent UI Blazor is an internal implementation detail; product apps must not take a direct Fluent dependency. Auth SSOT: [Identity & Authentication](../architecture/identity-and-authentication/README.md).
+
+## BreezeOn-LOCAL
+
+Shared Microsoft Entra App Registration for **local development** of all BreezeOn applications. Same OIDC flow as hosted; no auth bypass. See [local-development-standard.md](../architecture/identity-and-authentication/local-development-standard.md).
+
+## Identity (SQL schema)
+
+Platform schema for `Identity.Users` and `Identity.UsersLogins`. Definitions owned by SYSTEM-SHARED-UI; physical tables in each application database. Permanent key `(TenantId, ExternalObjectId)`. See [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md).
 
 Related:
 - [ui/overview.md](ui/overview.md)

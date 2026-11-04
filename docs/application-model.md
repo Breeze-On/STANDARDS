@@ -81,7 +81,9 @@ Applications that own business tables:
 | `docs/db-model.md` | Human-readable business model |
 | `sql/seed/` | Local-only sample data (required; not default-applied to hosted Azure SQL) |
 
-Identity/`AspNet*` tables (when used) are owned by ASP.NET Core Identity / EF migrations and are out of scope for `db-model.md`.
+Platform **`Identity.*`** tables are **not** ASP.NET Core Identity. Definitions are owned by SYSTEM-SHARED-UI; physical tables live in each app database. Product `db-model.md` should reference platform Identity as applied from SHARED-UI. Do not revive `AspNet*` user stores for this purpose. SSOT: [Identity & Authentication](../architecture/identity-and-authentication/README.md).
+
+End-user authentication: product apps **consume** the SYSTEM-SHARED-UI authentication framework ([authentication-standard.md](../architecture/identity-and-authentication/authentication-standard.md)); they must not independently redesign OIDC.
 
 Shared **System** schema ownership (EAC catalog) and application identity columns: [database.md](database.md). Repository-as-technical-id: [naming.md](naming.md).
 
@@ -100,7 +102,7 @@ When behavior, setup, schema, or architecture changes:
 | Repository | Owns |
 | --- | --- |
 | Application repo (e.g. EAC) | That app’s UI, Identity wiring, business schema, local sandbox, deploy for that app |
-| SYSTEM-SHARED-UI | `BreezeOn.UI` and gallery only |
+| SYSTEM-SHARED-UI | `BreezeOn.UI` (design system + **authentication framework** + Identity SQL definitions); gallery test host; no hosted database |
 | STANDARDS | How we work, what exists org-wide, ADRs |
 | `.github` profile | Vision / mission / ecosystem messaging only |
 

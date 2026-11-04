@@ -174,6 +174,13 @@ Canonical JSON for `@FiltersJson`, aligned with `BoQueryFilter` / `BoQueryFilter
 - Other applications **consume** those registry values (for example via `ApplicationGUID`); they must **not** fork duplicate application-catalog tables.
 - Concrete table inventory lives in the EAC product [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) and `sql/current_model/` — not in this file.
 
+## Platform Identity schema ownership
+
+- The SQL schema **`Identity`** (`Identity.Users`, `Identity.UsersLogins`) is a **BreezeOn platform** directory model — not EAC-specific and not ASP.NET Core Identity / `AspNet*`.
+- **Definitions** (T-SQL current model + seed placeholders) are owned by **SYSTEM-SHARED-UI** (`sql/identity/`). SHARED-UI does not host a database.
+- **Physical tables** exist in **each** application database. Adopting apps apply the SHARED-UI scripts in local init / deploy order and must not fork competing user masters.
+- Permanent key: `(TenantId, ExternalObjectId)`. SSOT: [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md).
+
 ## Application registry identity columns
 
 Conventions for registering applications in the EAC-owned catalog (column semantics are org-wide; physical table is EAC-owned):
