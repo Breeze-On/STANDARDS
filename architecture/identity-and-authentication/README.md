@@ -17,7 +17,7 @@ This is a **BreezeOn platform standard**. It applies to all current and future B
 | Document | Covers |
 | --- | --- |
 | [Business vision](business-vision.md) | SaaS hosting, customer Entra tenants, OIDC, shared platform capability |
-| [Cloud architecture](cloud-architecture.md) | App Registration + product deployment per customer-environment; shared customer database |
+| [Cloud architecture](cloud-architecture.md) | One App Registration per customer-environment (shared by all products); product deployments + shared customer database |
 | [Authentication standard](authentication-standard.md) | OIDC Authorization Code, SHARED-UI ownership, login/logout |
 | [Session management standard](session-management-standard.md) | Cookie attributes, idle/absolute lifetimes, Data Protection hosting, logout vs Entra sign-out |
 | [Identity schema standard](identity-schema-standard.md) | `Identity.Users` / `Identity.UsersLogins`, permanent key, customer-DB topology |

@@ -37,14 +37,14 @@ Configuration knobs for these security attributes are **not** exposed on `BoAuth
 | `Identity.Users.IsEnabled = 0` | Blocks **new** authenticated sessions at login. Existing cookies remain valid until idle or absolute expiry. Immediate mid-session revocation is **not** implemented |
 | Application restart | Depends on Data Protection key persistence (see below) |
 | Multiple App Service instances (same slot) | Cookies remain decryptable via the shared App Service key folder |
-| Separate product apps (e.g. EAC vs VMR) | Separate cookies and key rings — expected. Shared Identity directory ≠ shared SSO cookie |
+| Separate product apps (e.g. EAC vs VMR) | Separate cookies and key rings — expected. Same customer-environment App Registration and shared Identity directory ≠ shared SSO cookie |
 | Blazor Interactive Server circuit | Auth state follows the cookie on HTTP. A long-lived circuit may briefly outlive a rejected cookie until the next HTTP/circuit reconnect |
 
 ### Local application session vs Entra session
 
 - Clearing `BreezeOn.Auth` ends the **application** session only.
 - OIDC sign-out ends the Entra session for that sign-out flow.
-- Other BreezeOn product apps (different hosts / App Registrations) keep their own cookies unless the user signs out of those apps or Entra SSO state no longer satisfies a new challenge.
+- Other BreezeOn product apps (different hosts; typically the **same** customer-environment App Registration) keep their own cookies unless the user signs out of those apps or Entra SSO state no longer satisfies a new challenge.
 
 ## Data Protection (hosting requirements)
 

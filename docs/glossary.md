@@ -77,7 +77,7 @@ Public shared UI library (`Bo*` components) in `SYSTEM-SHARED-UI`, including the
 
 ## BreezeOn-LOCAL
 
-Shared Microsoft Entra App Registration for **local development** of all BreezeOn applications. Same OIDC flow as hosted; no auth bypass. See [local-development-standard.md](../architecture/identity-and-authentication/local-development-standard.md).
+Shared Microsoft Entra App Registration for **local development** of all BreezeOn applications (local instance of one registration shared by every product in an environment). Same OIDC flow as hosted; no auth bypass. See [local-development-standard.md](../architecture/identity-and-authentication/local-development-standard.md) and [cloud-architecture.md](../architecture/identity-and-authentication/cloud-architecture.md).
 
 ## Identity (SQL schema)
 

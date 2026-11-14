@@ -15,6 +15,7 @@ Use **uppercase** names for consistency across Azure App Service, local developm
 - Authority is **required configuration**. Do **not** hard-code authority URLs in SYSTEM-SHARED-UI or product applications.
 - Use the **`/v2.0`** Authority form. Multi-tenant Authority (`organizations` / `common`) publishes issuer `.../{tenantid}/v2.0`; the shared framework validates the concrete tenant GUID issuer from the ID token (IDX10205 otherwise).
 - There is **no** `AUTHENTICATION__TENANTID` in Phase 1.
+- All product hosts in the **same customer-environment** **must** use the **same** `AUTHENTICATION__AUTHORITY`, `AUTHENTICATION__CLIENTID`, and `AUTHENTICATION__CLIENTSECRET` (one App Registration per customer-environment — [cloud-architecture.md](cloud-architecture.md), [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md)).
 - Never commit secrets to source control.
 - Never log secret values (or full connection strings that embed secrets).
 
@@ -34,17 +35,28 @@ Preserve client-secret credentials for the current architecture. Certificate-bas
 | --- | --- |
 | Expiration monitoring | Track App Registration secret expiry in Entra; alert operators before expiry |
 | Rotation responsibility | BreezeOn platform operators own rotation for BreezeOn-managed registrations |
-| Rotation procedure | Create a **new** secret on the App Registration; update App Service `AUTHENTICATION__CLIENTSECRET` (or local User Secrets); verify login; remove the old secret after overlap |
+| Rotation procedure | Create a **new** secret on the App Registration; update `AUTHENTICATION__CLIENTSECRET` on **every** product App Service in that customer-environment (and local User Secrets when applicable); verify login on each product; remove the old secret after overlap |
 | Overlapping credentials | Keep old and new secrets valid during cutover so in-flight instances are not interrupted |
-| Emergency revocation | Delete/disable the compromised secret in Entra; deploy a replacement secret immediately; force users to re-authenticate as needed |
+| Emergency revocation | Delete/disable the compromised secret in Entra; deploy a replacement secret immediately on all product hosts in that customer-environment; force users to re-authenticate as needed |
 | Log exposure | Do not write `ClientSecret` to logs, diagnostics dumps, or source control |
 
 ## Redirect URIs
 
-Register on the App Registration (exact paths match the shared endpoint mapper):
+Register **all** product host base URLs on the **single** customer-environment App Registration (exact paths match the shared endpoint mapper). Entra allows many redirect URIs on one registration.
+
+For each product base URL `{base}`:
 
 - `{base}/signin-oidc`
 - `{base}/signout-callback-oidc`
+
+Example (Customer A DEV with EAC + VMR):
+
+- `https://eac-customer-a-dev.example/signin-oidc`
+- `https://eac-customer-a-dev.example/signout-callback-oidc`
+- `https://vmr-customer-a-dev.example/signin-oidc`
+- `https://vmr-customer-a-dev.example/signout-callback-oidc`
+
+Local multi-app redirects on `BreezeOn-LOCAL` follow the same pattern (one registration, many localhost bases) — see [local-development-standard.md](local-development-standard.md).
 
 ## Related
 

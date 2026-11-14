@@ -4,7 +4,7 @@ Owner: Architecture
 
 ## Principles
 
-- **`BreezeOn-LOCAL`** is the shared local-development App Registration for **all** BreezeOn applications.
+- **`BreezeOn-LOCAL`** is the shared local-development App Registration for **all** BreezeOn applications. It is the local instance of the platform rule: **one App Registration shared by every product** in an environment ([cloud-architecture.md](cloud-architecture.md), [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md)).
 - Local development uses the **same OIDC Authorization Code Flow** as hosted environments.
 - **No authentication bypass** and no fake/local-only login that skips Entra.
 
@@ -24,12 +24,12 @@ Owner: Architecture
 
 ## Redirect URIs
 
-On **BreezeOn-LOCAL**, register HTTPS localhost callbacks for each app port (from `launchSettings.json`), for example EAC:
+On **BreezeOn-LOCAL**, register HTTPS localhost callbacks for **each** product app port (from `launchSettings.json`) on the **same** App Registration — the same multi-URI pattern as hosted customer-environment registrations. For example EAC:
 
 - `https://localhost:7261/signin-oidc`
 - `https://localhost:7261/signout-callback-oidc`
 
-Trust the ASP.NET Core HTTPS development certificate (`dotnet dev-certs https --trust`).
+Add the corresponding pair for every other local product host (Gallery, future VMR, etc.). Trust the ASP.NET Core HTTPS development certificate (`dotnet dev-certs https --trust`).
 
 ## Verification workflow
 

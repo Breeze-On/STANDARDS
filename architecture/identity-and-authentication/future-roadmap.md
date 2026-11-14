@@ -17,6 +17,6 @@ The following are **not** part of the current platform implementation. Headings 
 | Key Vault for `AUTHENTICATION__*` | Would require a superseding ADR; App Service settings remain approved |
 | Mid-session revocation / DB recheck of `IsEnabled` | Login-time gate only today; cookie remains valid until idle/absolute expiry ([session-management-standard.md](session-management-standard.md)) |
 | External Data Protection key ring (Blob / Redis) | Needed only for slot-independent keys or non–App Service farms; would require a superseding ADR |
-| Cross-app SSO productization | Shared Identity directory is **not** cross-app SSO. Separate product hosts keep separate cookies. Productized SSO beyond shared library reuse is not shipped |
+| Cross-app SSO productization | Products in a customer-environment already **share one App Registration** ([cloud-architecture.md](cloud-architecture.md), [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md)), which enables Entra-level silent re-auth. Shared Identity directory and shared ClientId are still **not** a shared application cookie. Separate product hosts keep separate `BreezeOn.Auth` cookies. Productized cross-app **application-cookie** / navigation SSO beyond shared library reuse is not shipped |
 
 When any item ships, update the relevant Identity & Authentication documents and ADR(s) in the **same change set**, and remove or narrow the corresponding row here.

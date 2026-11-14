@@ -18,7 +18,7 @@ End-user authentication is a **BreezeOn platform capability**. SSOT:
 | User store | Platform `Identity.Users` / `Identity.UsersLogins` in the **customer** database (not AspNet Identity) |
 | Session policy | [session-management-standard.md](identity-and-authentication/session-management-standard.md) |
 
-Do not document auth as EAC-only. Shared Identity directory across products in a customer database is **not** cross-app SSO (each product keeps its own host-only cookie). SSO productization beyond shared library reuse is not shipped — see [future-roadmap.md](identity-and-authentication/future-roadmap.md).
+Do not document auth as EAC-only. Products in a customer-environment share **one** App Registration and the customer Identity directory ([cloud-architecture.md](identity-and-authentication/cloud-architecture.md)); that is **not** cross-app application-cookie SSO (each product keeps its own host-only cookie). Application-cookie / navigation SSO productization beyond shared library reuse and Entra-level silent re-auth is not shipped — see [future-roadmap.md](identity-and-authentication/future-roadmap.md).
 
 ## Authorization (current)
 

@@ -6,23 +6,23 @@ Owner: Architecture
 
 Approved hosting and identity binding:
 
-- **One App Registration per customer-environment** (product-scoped naming, e.g. `CustomerA-EAC-DEV`).
-- **One product application deployment per customer-environment** (e.g. EAC-DEV and VMR-DEV are separate deployments).
+- **One App Registration per customer-environment**, named `{Customer}-{ENV}` (e.g. `CustomerA-DEV`). Product tokens do **not** appear in the registration name.
+- **One product application deployment per product** in that customer-environment (e.g. EAC-DEV and VMR-DEV are separate App Services). Product deployment ≠ product App Registration.
 - **One customer database per customer-environment**, shared by all product applications in that environment (Identity schema + business schemas). See [identity-schema-standard.md](identity-schema-standard.md) and [ADR-010](../../decisions/ADR-010-platform-identity-schema.md).
-- Each **product deployment** has its **own** authentication configuration (`AUTHENTICATION__AUTHORITY`, `AUTHENTICATION__CLIENTID`, `AUTHENTICATION__CLIENTSECRET`) and its own application cookie (host-only). Shared Identity directory ≠ shared SSO cookie.
+- All product deployments in the same customer-environment **share** `AUTHENTICATION__AUTHORITY`, `AUTHENTICATION__CLIENTID`, and `AUTHENTICATION__CLIENTSECRET` (the shared App Registration). Each deployment keeps its **own** host-only application cookie. Shared Identity directory and shared App Registration ≠ shared SSO cookie. See [ADR-012](../../decisions/ADR-012-cookie-session-management.md).
 
 Illustrative naming:
 
 | Example App Registration | Meaning |
 | --- | --- |
-| `CustomerA-EAC-DEV` | Customer A, EAC, DEV |
-| `CustomerA-EAC-UAT` | Customer A, EAC, UAT |
-| `CustomerA-EAC-PRD` | Customer A, EAC, PRD |
-| `CustomerB-EAC-DEV` | Customer B, EAC, DEV |
-| `CustomerB-EAC-UAT` | Customer B, EAC, UAT |
-| `CustomerB-EAC-PRD` | Customer B, EAC, PRD |
+| `CustomerA-DEV` | Customer A, DEV (all products in that environment) |
+| `CustomerA-UAT` | Customer A, UAT |
+| `CustomerA-PRD` | Customer A, PRD |
+| `CustomerB-DEV` | Customer B, DEV |
+| `CustomerB-UAT` | Customer B, UAT |
+| `CustomerB-PRD` | Customer B, PRD |
 
-BreezeOn owns the App Registration. Customer admin consent creates an Enterprise Application in the customer tenant.
+BreezeOn owns the App Registration. Customer admin consent creates an Enterprise Application in the customer tenant (one consent relationship per customer-environment).
 
 Which home tenants may sign in (for example BreezeOn + Customer A) is configured **on the App Registration in Microsoft Entra**, not in application code. There is no `AUTHENTICATION__TENANTID` and no `Identity.AllowedTenants` table.
 
@@ -30,12 +30,24 @@ Which home tenants may sign in (for example BreezeOn + Customer A) is configured
 
 | App Registration | Purpose |
 | --- | --- |
-| `BreezeOn-LOCAL` | Shared local development for **all** BreezeOn applications |
+| `BreezeOn-LOCAL` | Shared local development for **all** BreezeOn applications (same shared-registration pattern) |
 | `BreezeOn-DEV` | BreezeOn-operated shared DEV when used |
 | `BreezeOn-UAT` | BreezeOn-operated shared UAT when used |
 | `BreezeOn-PRD` | BreezeOn-operated shared PRD when used |
 
 Distinguish **customer-environment registrations** from **internal BreezeOn registrations**. Do not reuse a customer-environment ClientId for local development; use `BreezeOn-LOCAL`.
+
+## Implications
+
+| Concern | Practice |
+| --- | --- |
+| Secret blast radius | One client secret compromise affects all products in that customer-environment. Rotate once on the App Registration; update `AUTHENTICATION__CLIENTSECRET` on **every** product App Service (and local User Secrets when applicable). |
+| Redirect URI sprawl | Every product base URL registers `{base}/signin-oidc` and `{base}/signout-callback-oidc` on the shared App Registration. Entra supports many redirect URIs on one registration. |
+| Logout coupling | Entra end-session for that client ends IdP SSO for all products on the registration. Other products’ application cookies remain until idle/absolute expiry or the next challenge. |
+| Cookie SSO | Shared ClientId enables Entra-level silent re-auth across products. It does **not** share `BreezeOn.Auth` across hosts. Cross-app application-cookie SSO remains [future roadmap](future-roadmap.md). |
+| Migration | Consolidate any product-scoped registrations (e.g. historical `*-EAC-*` names) into `{Customer}-{ENV}`. Point all product hosts at the shared ClientId/Secret; register all redirect URIs; retire old registrations after cutover. |
+
+Per-product App Registrations within a customer-environment are **not** the platform standard. Exceptions require a superseding ADR (see [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md)).
 
 ## Related
 
