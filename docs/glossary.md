@@ -81,7 +81,7 @@ Shared Microsoft Entra App Registration for **local development** of all BreezeO
 
 ## Identity (SQL schema)
 
-Platform schema for `Identity.Users` and `Identity.UsersLogins`. Definitions owned by SYSTEM-SHARED-UI; physical tables in the **customer database** (shared by all products in that customer-environment). Permanent key `(TenantId, ExternalObjectId)`. See [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md).
+Platform schema for `Identity.Users`, `Identity.UsersLogins`, `Identity.Tenants`, and `Identity.UserPhotos`. Definitions owned by SYSTEM-SHARED-UI; physical tables in the **customer database** (shared by all products in that customer-environment). Permanent key `(TenantId, ExternalObjectId)`. `Identity.Tenants` is a sync/metadata registry — not a login allowlist. See [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md) and [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
 
 Related:
 - [ui/overview.md](ui/overview.md)

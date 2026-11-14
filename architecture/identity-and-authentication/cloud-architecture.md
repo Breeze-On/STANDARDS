@@ -26,6 +26,8 @@ BreezeOn owns the App Registration. Customer admin consent creates an Enterprise
 
 Which home tenants may sign in (for example BreezeOn + Customer A) is configured **on the App Registration in Microsoft Entra**, not in application code. There is no `AUTHENTICATION__TENANTID` and no `Identity.AllowedTenants` table.
 
+**`Identity.Tenants` is not a login allowlist.** It is a platform registry of Entra tids observed in the customer database (login discovery) plus explicit directory-sync enablement (`IsSyncEnabled`). Sign-in eligibility remains Entra App Registration configuration only. See [directory-synchronization-standard.md](directory-synchronization-standard.md) and [ADR-013](../../decisions/ADR-013-microsoft-graph-directory-synchronization.md). Application permission `User.Read.All` (admin consent) on the same App Registration enables Graph directory sync and login-time profile photo refresh.
+
 ## Internal BreezeOn registrations
 
 | App Registration | Purpose |

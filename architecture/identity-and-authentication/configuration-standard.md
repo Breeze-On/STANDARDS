@@ -14,12 +14,21 @@ Use **uppercase** names for consistency across Azure App Service, local developm
 
 - Authority is **required configuration**. Do **not** hard-code authority URLs in SYSTEM-SHARED-UI or product applications.
 - Use the **`/v2.0`** Authority form. Multi-tenant Authority (`organizations` / `common`) publishes issuer `.../{tenantid}/v2.0`; the shared framework validates the concrete tenant GUID issuer from the ID token (IDX10205 otherwise).
-- There is **no** `AUTHENTICATION__TENANTID` in Phase 1.
+- There is **no** `AUTHENTICATION__TENANTID`. Sync target selection uses `Identity.Tenants.IsSyncEnabled`, not an authentication env var ([directory-synchronization-standard.md](directory-synchronization-standard.md)).
 - All product hosts in the **same customer-environment** **must** use the **same** `AUTHENTICATION__AUTHORITY`, `AUTHENTICATION__CLIENTID`, and `AUTHENTICATION__CLIENTSECRET` (one App Registration per customer-environment — [cloud-architecture.md](cloud-architecture.md), [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md)).
+- The same ClientId/Secret are used for **app-only** Microsoft Graph tokens (`https://login.microsoftonline.com/{enabledTenantId}/.default`) for directory sync and login-time profile photos. Grant application permission `User.Read.All` and obtain admin consent.
 - Never commit secrets to source control.
 - Never log secret values (or full connection strings that embed secrets).
 
 Configuration section binding: `AUTHENTICATION` → `Authority`, `ClientId`, `ClientSecret`.
+
+### Local-only Identity seed (not authentication)
+
+| Variable | Scope | Format | Behavior |
+| --- | --- | --- | --- |
+| `IDENTITY__SEEDTENANTIDS` | Local `.env` / process env only | Comma-separated Entra tenant GUIDs | EAC seed upserts `Identity.Tenants` only; **every** id `IsSyncEnabled = 1`; no users seeded |
+
+Do **not** set `IDENTITY__SEEDTENANTIDS` on hosted App Services. It is not a login allowlist.
 
 ## Hosted storage (approved)
 

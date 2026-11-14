@@ -176,10 +176,10 @@ Canonical JSON for `@FiltersJson`, aligned with `BoQueryFilter` / `BoQueryFilter
 
 ## Platform Identity schema ownership
 
-- The SQL schema **`Identity`** (`Identity.Users`, `Identity.UsersLogins`) is a **BreezeOn platform** directory model — not EAC-specific and not ASP.NET Core Identity / `AspNet*`.
-- **Definitions** (T-SQL current model + seed placeholders) are owned by **SYSTEM-SHARED-UI** (`sql/identity/`). SHARED-UI does not host a database.
+- The SQL schema **`Identity`** (`Identity.Users`, `Identity.UsersLogins`, `Identity.Tenants`, `Identity.UserPhotos`) is a **BreezeOn platform** directory model — not EAC-specific and not ASP.NET Core Identity / `AspNet*`.
+- **Definitions** (T-SQL current model + local seed) are owned by **SYSTEM-SHARED-UI** (`sql/identity/`). SHARED-UI does not host a database.
 - **Physical tables** live in the **customer database** (one catalog per customer-environment, shared by all product applications in that environment). Adopting apps apply the SHARED-UI scripts idempotently in local init / deploy order and must not fork competing user masters or create a second Identity catalog for the same customer.
-- Permanent key: `(TenantId, ExternalObjectId)`. SSOT: [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md).
+- Permanent key: `(TenantId, ExternalObjectId)`. SSOT: [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md), [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
 
 ## Application registry identity columns
 

@@ -29,7 +29,7 @@ Order left → right:
 | --- | --- | --- |
 | Light / Dark theme | `BoThemeSwitch` | Apple-style switch; `BrightnessLow` (Regular) icon left of track; toggles `IBoThemeModeService` (persists `bo-theme-mode` cookie; see [tokens.md](../foundations/tokens.md)) |
 | Settings | Settings icon button in `BoHeaderActions` | Opens centered `BoSettingsDialogHost`: one Main Section **Settings**, two `BoRow`s with `BoDropDownList` (Language, Timezone); apply-on-change via `IBoLocaleService` |
-| Profile | `BoProfileMenu` | Circular avatar placeholder; menu with **Sign out** (design only — no auth) |
+| Profile | `BoProfileMenu` | Circular avatar (initials fallback; platform stores login-refreshed photos in `Identity.UserPhotos`); menu with **Sign out** via SHARED-UI Account endpoints |
 
 Theme mode / dual palettes: [tokens.md](../foundations/tokens.md). Locale prefs: [i18n.md](../foundations/i18n.md).
 

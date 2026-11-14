@@ -277,7 +277,7 @@ Single-value date (or date+time) control. Public API is `Bo*` only; calendar pop
 | Date mode storage | Still a `DateTime`; control **normalizes time to midnight** (`00:00:00`, `DateTimeKind.Unspecified`) on every write |
 | DateTime mode storage | `DateTime` with hour + minute (seconds cleared); `DateTimeKind.Unspecified` |
 | Database | Prefer a datetime / datetime2 (nullable) column that matches the entity — do not use a date-only column for `BoDateField` bindings |
-| Read-only display | Host may format a **short date** string for `BoFieldReadOnly` when the UX is date-only; that is display-only |
+| Read-only display | Host may format a **short date** string for `BoFieldReadOnly` when the UX is date-only; that is display-only. Prefer **`BoDateDisplay.Format`** / **`FormatUtc`** with `Locale.FormatCulture` (+ timezone for UTC instants) — see [i18n.md](../foundations/i18n.md) |
 | Backend Value (gallery) | Always shown as **date + time** (`g` / culture general) to prove the typed value is `DateTime?` even when `Mode` is Date |
 
 Planning JSON: `control: "DateField"`; optional `mode: "Date"` \| `"DateTime"`. The generated property remains `DateTime?`.

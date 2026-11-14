@@ -33,12 +33,19 @@ Add the corresponding pair for every other local product host (Gallery, future V
 
 ## Verification workflow
 
-1. Apply local SQL (`dev-reset.ps1`) including platform Identity scripts from SYSTEM-SHARED-UI.
+1. Apply local SQL (`dev-reset.ps1`) including platform Identity **schema + seed** from SYSTEM-SHARED-UI (sample `Identity.Tenants` / `Identity.Users` for Users page without Graph).
 2. Set the three `AUTHENTICATION__*` values (User Secrets).
 3. Confirm BreezeOn-LOCAL redirect URIs match the app HTTPS URL.
 4. Run the product app; browse a protected route → Entra challenge → callback.
-5. Confirm `Identity.Users` upsert, `LastLoginUtc`, and `Identity.UsersLogins` success row in local SQL.
+5. Confirm `Identity.Users` upsert, `Identity.Tenants` discovery (without auto-enabling sync), `LastLoginUtc`, and `Identity.UsersLogins` success row in local SQL.
 6. Sign out via profile menu → cookie cleared + Entra end-session → re-challenge on next request.
+
+### Directory sync (local)
+
+- Optional `.env` `IDENTITY__SEEDTENANTIDS=<guid>[,<guid>…]` — comma-separated **real** Entra tids. EAC `local-db-seed` / `dev-reset` upserts one `Identity.Tenants` row per id with **`IsSyncEnabled = 1` for every configured id**. **No** `Identity.Users` seed.
+- Users grid fills from login and/or Graph Sync Now (avoids fake ObjectIds / duplicate rows).
+- **Sync Now** remains visible; without a sync-enabled real tenant, app-only `User.Read.All` consent, or reachable Graph it fails with a clear toast.
+- Never set `IDENTITY__SEEDTENANTIDS` for hosted environments; never default-apply Identity seed to Azure SQL.
 
 No Azure App Service and no Azure SQL are required for routine local auth testing.
 

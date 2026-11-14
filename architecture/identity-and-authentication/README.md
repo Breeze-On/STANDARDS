@@ -9,7 +9,7 @@ This is a **BreezeOn platform standard**. It applies to all current and future B
 | Document type | Location |
 | --- | --- |
 | **What** (this tree) | `architecture/identity-and-authentication/` |
-| **Why** | [ADR-009](../../decisions/ADR-009-entra-oidc-cookie-authentication.md), [ADR-010](../../decisions/ADR-010-platform-identity-schema.md), [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md), [ADR-012](../../decisions/ADR-012-cookie-session-management.md) |
+| **Why** | [ADR-009](../../decisions/ADR-009-entra-oidc-cookie-authentication.md), [ADR-010](../../decisions/ADR-010-platform-identity-schema.md), [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md), [ADR-012](../../decisions/ADR-012-cookie-session-management.md), [ADR-013](../../decisions/ADR-013-microsoft-graph-directory-synchronization.md) |
 | **How** (related) | [database.md](../../docs/database.md), [environments.md](../../docs/environments.md), [hosted-deployment.md](../../docs/hosted-deployment.md) |
 
 ## Index
@@ -20,10 +20,11 @@ This is a **BreezeOn platform standard**. It applies to all current and future B
 | [Cloud architecture](cloud-architecture.md) | One App Registration per customer-environment (shared by all products); product deployments + shared customer database |
 | [Authentication standard](authentication-standard.md) | OIDC Authorization Code, SHARED-UI ownership, login/logout |
 | [Session management standard](session-management-standard.md) | Cookie attributes, idle/absolute lifetimes, Data Protection hosting, logout vs Entra sign-out |
-| [Identity schema standard](identity-schema-standard.md) | `Identity.Users` / `Identity.UsersLogins`, permanent key, customer-DB topology |
+| [Identity schema standard](identity-schema-standard.md) | `Identity.Users` / `UsersLogins` / `Tenants` / `UserPhotos`, permanent key, customer-DB topology |
+| [Directory synchronization standard](directory-synchronization-standard.md) | Manual Sync Now, full Graph sync, explicit `IsSyncEnabled`, soft-disable |
 | [Configuration standard](configuration-standard.md) | `AUTHENTICATION__AUTHORITY` / `CLIENTID` / `CLIENTSECRET`; secret lifecycle |
-| [Local development standard](local-development-standard.md) | `BreezeOn-LOCAL`, no bypass, same OIDC flow as hosted |
-| [Future roadmap](future-roadmap.md) | **Planned / not shipped** — Graph, SCIM, roles, certificates, mid-session revoke, SSO |
+| [Local development standard](local-development-standard.md) | `BreezeOn-LOCAL`, no bypass, same OIDC flow as hosted; Identity seed |
+| [Future roadmap](future-roadmap.md) | **Planned / not shipped** — delta, schedule, Blob photos, Tenants UI, roles, SCIM, SSO |
 
 SQL Managed Identity for Azure SQL is **orthogonal** and remains in [security.md](../security.md).
 
@@ -31,7 +32,7 @@ SQL Managed Identity for Azure SQL is **orthogonal** and remains in [security.md
 
 | Concern | Owner |
 | --- | --- |
-| Authentication framework (OIDC + cookies + Identity directory writer) | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BreezeOn.UI`) |
+| Authentication framework (OIDC + cookies + Identity directory + Graph sync/photo) | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BreezeOn.UI`) |
 | Identity schema T-SQL definitions / seed placeholders | SYSTEM-SHARED-UI (`sql/identity/`) |
 | Physical `Identity.*` tables | Customer database (shared by all products in that customer-environment) |
 | First product host | EAC (`SYSTEM-ADMIN-EAC`) — consumes shared framework; does not own the platform standard |

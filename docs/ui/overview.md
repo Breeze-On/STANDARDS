@@ -62,7 +62,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoAppHeader` | Top header card; titles + trailing actions; optional `TabsContent` / `ActionsContent` | [shell.md](shell/shell.md) |
 | `BoHeaderActions` | Theme switch + Settings + Profile cluster | [shell.md](shell/shell.md) |
 | `BoThemeSwitch` | Apple-style Light/Dark switch (`BrightnessLow` icon) | [shell.md](shell/shell.md), [tokens.md](foundations/tokens.md) |
-| `BoProfileMenu` | Avatar placeholder + Sign out menu (design only) | [shell.md](shell/shell.md) |
+| `BoProfileMenu` | Avatar (initials; photo store via Identity) + Sign out via Account endpoints | [shell.md](shell/shell.md) |
 | `BoTabs` / `BoTab` | Optional page-section tabs under the header title row | [shell.md](shell/shell.md) |
 | `BoTabPanels` / `BoTabPanel` | Keep-alive body sections keyed to tabs (`SelectedTab`) | [shell.md](shell/shell.md) |
 | `BoAppBody` | Scrollable body region content host (scrolls inside body card) | [shell.md](shell/shell.md) |
@@ -83,6 +83,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoNestedViewKeywordFilter` | Client Nested View keyword Rules 1–3 (filtered tree + path-minimal expand keys) | [grids.md](controls/grids.md#nested-view-keyword-filtering-org-standard) |
 | `BoCheckbox` | Boolean (`Required` / `ReadOnly` Yes-No) | [forms.md](controls/forms.md) |
 | `BoDateField` | Date / DateTime UI; bound type always `DateTime?` (never `DateOnly`); `ReadOnly`; locale (`FormatCulture`) + fixed calendar popover | [forms.md](controls/forms.md) |
+| `BoDateDisplay` | Format culture for wall-clock values (`Format`); UTC→user timezone + culture for instants (`FormatUtc`) — standard for grids / read-only datetime text | [i18n.md](foundations/i18n.md) |
 | `BoNumberField` | Number UI; bound type always `decimal?`; integer/decimals; currency/% (mutex); focus raw / blur formatted; `ReadOnly`; alignment default Right; needs host `bo-number-field.js` | [forms.md](controls/forms.md) |
 | `BoButton` | Pill button (primary / secondary / stealth); `HtmlType` (`BoButtonType`); shorter+wider padding; shadow + hover lift; optional icon | [forms.md](controls/forms.md), [tokens.md](foundations/tokens.md) |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`) | [overlays.md](shell/overlays.md) |

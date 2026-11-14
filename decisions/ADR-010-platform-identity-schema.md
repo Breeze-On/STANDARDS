@@ -8,20 +8,27 @@ Users may authenticate into multiple Breeze On applications (EAC, future VMR, bi
 
 Earlier wording described physical tables as living in “each application database.” The verified platform topology is **one customer database per customer-environment**, shared by all product applications in that environment.
 
+Directory synchronization and login-time profile photos require additional Identity tables beyond the original Users / UsersLogins pair ([ADR-013](ADR-013-microsoft-graph-directory-synchronization.md)).
+
 ## Decision
 
-- Platform schema **`Identity`** with tables **`Identity.Users`** and **`Identity.UsersLogins`**.
+- Platform schema **`Identity`** with tables:
+  - **`Identity.Users`** — authoritative user directory
+  - **`Identity.UsersLogins`** — login history
+  - **`Identity.Tenants`** — observed Entra tenant registry + sync enablement/status (not a login allowlist)
+  - **`Identity.UserPhotos`** — profile photo storage (V1 SQL bytes; migration-ready for external object store)
 - Permanent identity key: **`(TenantId, ExternalObjectId)`** (Entra `tid` + `oid`). Email and UPN are attributes only.
-- **SYSTEM-SHARED-UI** owns T-SQL definitions (`sql/identity/`) and the default SQL directory writer. SHARED-UI does **not** own a database.
+- **SYSTEM-SHARED-UI** owns T-SQL definitions (`sql/identity/`), the default SQL directory writer, directory synchronizer, photo service, and user query helpers. SHARED-UI does **not** own a database.
 - Physical tables live in the **customer database** (shared by EAC, VMR, and other products for that customer-environment). Products must not create competing identity masters or a second Identity catalog for the same customer.
 - `UsersId` is shared across applications within that customer database. Different customers have independent directories; the same Entra identity may map to separate rows across customers.
-- Login path: upsert user, enforce `IsEnabled` (disabled users do not receive a cookie), set `LastLoginUtc` and insert login row when enabled via `IBoIdentityDirectory` (default SQL implementation); hosts only register a connection factory to the customer database.
+- Login path: upsert user, enforce `IsEnabled` (disabled users do not receive a cookie), set `LastLoginUtc` and insert login row when enabled via `IBoIdentityDirectory` (default SQL implementation); discover `Identity.Tenants` without setting `IsSyncEnabled`; hosts only register a connection factory to the customer database.
 - Concurrent first logins are serialized with `UPDLOCK, HOLDLOCK` plus the unique `(TenantId, ExternalObjectId)` constraint.
-- These tables are **excepted** from ADR-005 mandatory transactional audit columns (directory / append-only login history).
+- These Identity tables are **excepted** from ADR-005 mandatory transactional audit columns (directory / login history / sync metadata / photo cache).
+- `Department`, `JobTitle`, and `ManagerExternalObjectId` are **not** part of V1 Users schema (deferred until a business consumer exists).
 
 ## Consequences
 
 - Adopting apps apply SHARED-UI Identity scripts idempotently into the customer DB init/deploy order.
-- Future Graph sync targets `Identity.Users` without changing the permanent key.
+- Graph sync targets `Identity.Users` without changing the permanent key ([ADR-013](ADR-013-microsoft-graph-directory-synchronization.md)).
 - Schema changes require SHARED-UI scripts + [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md) + this ADR update in the same change set.
 - Cookie/session behaviour remains per product host ([ADR-012](ADR-012-cookie-session-management.md)); shared Identity ≠ cross-app SSO cookie.
