@@ -4,9 +4,25 @@ Owner: Operations
 
 Operational runbooks document repeatable procedures for deploying, recovering, troubleshooting, and maintaining running systems.
 
-## Current state
+## Current runbooks
 
-The organization currently maintains little operational documentation in this repository. This folder is the intended home for runbooks as they are written from real procedures.
+| Runbook | Covers |
+| --- | --- |
+| [Customer Onboarding Master Flow](customer-onboarding-master-flow.md) | **Primary** end-to-end customer-environment onboarding (intake → provisioning → Entra → consent → tenant registration → sync → admin bootstrap → go-live) |
+
+### Related slice procedures (architecture)
+
+| Document | Covers |
+| --- | --- |
+| [Customer authentication onboarding](../architecture/identity-and-authentication/customer-onboarding-authentication.md) | Workflows A–F detail |
+| [Customer onboarding — authorization](../architecture/authorization/customer-onboarding-authorization.md) | Workflow G detail |
+
+### Operator templates
+
+| Template | Covers |
+| --- | --- |
+| [validate-onboarding-readiness.sql](../templates/onboarding/validate-onboarding-readiness.sql) | Read-only SQL checks for schema, tenants, sync, admin membership |
+| [README — onboarding templates](../templates/onboarding/README.md) | How to run validation; consent URL copy-paste; App Service config checklist |
 
 **Hosted deployment standard** (App Service stack, publish profile, GitHub Environment secrets, workflow convention): [`docs/hosted-deployment.md`](../docs/hosted-deployment.md). Do not fork that procedure into product repos or into ad-hoc runbooks without updating the standard first.
 

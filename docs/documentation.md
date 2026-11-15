@@ -73,7 +73,7 @@ This guidance is **advisory and pragmatic**. It does **not** create mandatory re
 | `docs/data-portability.md` | File-format standard for JSON import/export (Applications JSON today) |
 | `docs/hosted-deployment.md` | Canonical hosted deploy standard (App Service, publish profile, GitHub Environments) |
 | `docs/ui/` | Hierarchical UI standards (entry: [`ui/overview.md`](ui/overview.md); page checklist: [`ui/page-development.md`](ui/page-development.md); Example Governance: [`ui/example-governance.md`](ui/example-governance.md)); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
-| `runbooks/` | Operational procedures (sparse today); index: [`../runbooks/README.md`](../runbooks/README.md) — deploy **standard** lives in `hosted-deployment.md` |
+| `runbooks/` | Operational procedures; index: [`../runbooks/README.md`](../runbooks/README.md) — includes [Customer Onboarding Master Flow](../runbooks/customer-onboarding-master-flow.md); deploy **standard** lives in `hosted-deployment.md` |
 | `architecture/` | Descriptions of systems that exist now (what exists); landscape map: [`../architecture/landscape.md`](../architecture/landscape.md) |
 | `decisions/` | Architecture Decision Records (why decisions were made); index with Category / Impact Area: [`../decisions/README.md`](../decisions/README.md) |
 
@@ -159,11 +159,11 @@ Updates must occur in the **same change set** as the implementation change. Docu
 
 ### Identity & Authentication DoD (platform)
 
-Any change affecting **authentication architecture**, **Identity schema**, **App Registration strategy**, **tenant strategy**, **authentication environment variables**, **local development authentication**, **cookie/session policy**, or **customer onboarding authentication** is incomplete until [`architecture/identity-and-authentication/`](../architecture/identity-and-authentication/README.md) (including the mandatory [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md) runbook when onboarding steps change) and related ADR(s) (ADR-009 / ADR-010 / ADR-011 / ADR-012 / ADR-013 or successors) are updated in the **same change set**. This is a mandatory BreezeOn platform standard.
+Any change affecting **authentication architecture**, **Identity schema**, **App Registration strategy**, **tenant strategy**, **authentication environment variables**, **local development authentication**, **cookie/session policy**, or **customer onboarding authentication** is incomplete until [`architecture/identity-and-authentication/`](../architecture/identity-and-authentication/README.md) (including the mandatory [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md) runbook when A–F steps change) and related ADR(s) (ADR-009 / ADR-010 / ADR-011 / ADR-012 / ADR-013 or successors) are updated in the **same change set**. When the **end-to-end** onboarding sequence or checkpoints change, also update [`runbooks/customer-onboarding-master-flow.md`](../runbooks/customer-onboarding-master-flow.md). This is a mandatory BreezeOn platform standard.
 
 ### Authorization DoD (platform)
 
-Any change affecting **authorization architecture**, **Security schema**, **page security**, **`IBoAuthorizationService`**, or **authorization onboarding (Workflow G)** is incomplete until [`architecture/authorization/`](../architecture/authorization/README.md) and related ADR(s) (ADR-014 or successors) are updated in the **same change set**.
+Any change affecting **authorization architecture**, **Security schema**, **page security**, **`IBoAuthorizationService`**, or **authorization onboarding (Workflow G)** is incomplete until [`architecture/authorization/`](../architecture/authorization/README.md) and related ADR(s) (ADR-014 or successors) are updated in the **same change set**. When Workflow G or end-to-end onboarding checkpoints change, also update [`runbooks/customer-onboarding-master-flow.md`](../runbooks/customer-onboarding-master-flow.md).
 
 UI / query-driven standards also follow **[Example Governance](ui/example-governance.md)**: normative standard + AI guidance + Gallery working example (unless an approved exception applies).
 

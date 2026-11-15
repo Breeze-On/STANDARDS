@@ -24,8 +24,9 @@ This is a **BreezeOn platform standard**. It applies to all current and future B
 | [Directory synchronization standard](directory-synchronization-standard.md) | Manual Sync Now, full Graph sync, explicit `IsSyncEnabled`, soft-disable |
 | [Configuration standard](configuration-standard.md) | `AUTHENTICATION__AUTHORITY` / `CLIENTID` / `CLIENTSECRET`; secret lifecycle |
 | [Local development standard](local-development-standard.md) | `BreezeOn-LOCAL`, no bypass, same OIDC flow as hosted; Identity seed |
-| [Customer authentication onboarding](customer-onboarding-authentication.md) | **Mandatory** operator runbook — App Registration, consent, first login, optional Graph sync |
-| [Future roadmap](future-roadmap.md) | **Planned / not shipped** — delta, schedule, Blob photos, Tenants UI, roles, SCIM, SSO |
+| [Customer authentication onboarding](customer-onboarding-authentication.md) | **Mandatory** slice runbook — Workflows A–F (App Registration, consent, first login, optional Graph sync) |
+| [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) | **End-to-end** operator SSOT — intake → provisioning → A–G → go-live (runbooks/) |
+| [Future roadmap](future-roadmap.md) | **Planned / not shipped** — delta, schedule, Blob photos, Tenants UI, onboarding automation, roles, SCIM, SSO |
 
 SQL Managed Identity for Azure SQL is **orthogonal** and remains in [security.md](../security.md).
 
@@ -40,4 +41,4 @@ SQL Managed Identity for Azure SQL is **orthogonal** and remains in [security.md
 
 ## Definition of Done (mandatory)
 
-Any change affecting authentication architecture, Identity schema, App Registration strategy, tenant strategy, authentication environment variables, local development authentication, session/cookie policy, or customer onboarding authentication **must** update this tree and related ADR(s) in the **same change set**. See [documentation.md](../../docs/documentation.md) § Definition of Done.
+Any change affecting authentication architecture, Identity schema, App Registration strategy, tenant strategy, authentication environment variables, local development authentication, session/cookie policy, or customer onboarding authentication **must** update this tree and related ADR(s) in the **same change set**. When the **end-to-end** onboarding sequence or checkpoints change, also update the [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md). See [documentation.md](../../docs/documentation.md) § Definition of Done.

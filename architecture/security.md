@@ -8,7 +8,7 @@ Current-state security posture for implemented Breeze On applications.
 
 End-user authentication is a **BreezeOn platform capability**. SSOT:
 
-**[Identity & Authentication](identity-and-authentication/README.md)**
+**[Identity & Authentication](identity-and-authentication/README.md)** · Customer cutover: **[Customer Onboarding Master Flow](../runbooks/customer-onboarding-master-flow.md)**
 
 | | |
 | --- | --- |

@@ -1,0 +1,40 @@
+# Onboarding validation templates
+
+Owner: Operations
+
+Read-only operator aids for the [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md). These are **not** product features and must not be applied as hosted seed.
+
+## validate-onboarding-readiness.sql
+
+Run against the **customer** database (Azure SQL or local Docker) with a read-capable principal.
+
+1. Set `@ExpectedTenantId` to the customer Entra tid (or leave NULL to skip tid match checks).
+2. Set `@ExpectGraphSync = 1` when intake Graph = Yes; `0` when Graph = No (F-N/A).
+3. Review each result set: schema presence, tenant counts, sync flags/status, GSA member count.
+
+Interpret failures using the Master Flow failure catalog. Do not enable `IsSyncEnabled` or bootstrap admins from this script — it is validation only.
+
+## Admin consent URL (copy-paste)
+
+```text
+https://login.microsoftonline.com/{customer-tid}/v2.0/adminconsent?client_id={application-client-id}&redirect_uri={url-encoded-redirect-uri}&scope=.default
+```
+
+Full guidance: Master Flow Step 5 and [customer-onboarding-authentication.md](../../architecture/identity-and-authentication/customer-onboarding-authentication.md) Workflow D.
+
+## App Service configuration checklist
+
+Confirm **every** product App Service in the customer-environment has the **same**:
+
+| Setting | Expected |
+| --- | --- |
+| `AUTHENTICATION__AUTHORITY` | `https://login.microsoftonline.com/organizations/v2.0` |
+| `AUTHENTICATION__CLIENTID` | Shared App Registration client ID |
+| `AUTHENTICATION__CLIENTSECRET` | Shared client secret (value not logged) |
+
+Confirm `IDENTITY__SEEDTENANTIDS` is **absent** on hosted App Services.
+
+## Related
+
+- [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md)
+- [hosted-deployment.md](../../docs/hosted-deployment.md)

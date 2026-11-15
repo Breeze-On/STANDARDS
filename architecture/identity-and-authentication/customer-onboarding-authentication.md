@@ -4,16 +4,19 @@ Owner: Architecture
 
 **Audience:** BreezeOn platform operators onboarding a **customer-environment** (DEV / UAT / PRD).
 
-This is an **operational runbook**. Architecture and policy remain in the linked standards and ADRs — do not treat this document as a second SSOT for those topics.
+This is the **detailed procedure SSOT for Workflows A–F** (App Registration through optional Graph sync). For the end-to-end sequence (intake → provisioning → A–G → go-live), use the **[Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md)**.
+
+Architecture and policy remain in the linked standards and ADRs — do not treat this document as a second SSOT for those topics.
 
 **Out of scope**
 
 - Local developer setup with `BreezeOn-LOCAL` → [local-development-standard.md](local-development-standard.md)
 - Azure SQL Managed Identity / App Service deploy mechanics → [hosted-deployment.md](../../docs/hosted-deployment.md)
+- Authorization bootstrap (Workflow G) → [customer-onboarding-authorization.md](../authorization/customer-onboarding-authorization.md) (Master Flow Step 8)
 
 ## Customer Information Required
 
-Collect **before** starting. Do not create App Registrations or App Service settings until this checklist is complete.
+Collect **before** starting. Do not create App Registrations or App Service settings until this checklist is complete. The Master Flow expands this table (go-live window, secret-expiry owner).
 
 | Input | Required | Notes |
 | --- | --- | --- |
@@ -24,7 +27,7 @@ Collect **before** starting. Do not create App Registrations or App Service sett
 | Product list + public HTTPS base URLs | Yes | Every product host in this customer-environment (redirect URI set) |
 | Graph directory synchronization required? | Yes | `Yes` / `No` — drives Phase 2 (`User.Read.All`, `IsSyncEnabled`, Sync Now) |
 | BreezeOn support tenant access needed? | No | If BreezeOn users must sign into this customer-environment, allowlist that home tenant on the App Registration |
-| Customer database / Identity schema ready? | Yes | Catalog exists; platform `Identity.*` scripts applied ([identity-schema-standard.md](identity-schema-standard.md)) |
+| Customer database / Identity schema ready? | Yes | Catalog exists; platform `Identity.*` scripts applied ([identity-schema-standard.md](identity-schema-standard.md)). **Identity schema readiness** is Master Flow Step 1 (provisioning) — distinct from tenant **discovery** on first login (Workflow E / Master Flow Step 6). Security schema is also required before Workflow G. |
 
 ## Ownership boundaries
 
@@ -74,11 +77,22 @@ Never commit secrets to source control. Do not use a different ClientId per prod
 
 ## Workflow D — Customer admin consent (interactive / Phase 1)
 
-1. Send the customer Entra administrator the consent request for this App Registration (interactive OIDC / delegated sign-in as required by Entra).
-2. Confirm an **Enterprise Application** appears in the **customer** tenant after consent ([business-vision.md](business-vision.md), [cloud-architecture.md](cloud-architecture.md)).
+**Purpose:** Establish the customer trust relationship so interactive OIDC sign-in works. The **Enterprise Application** appears in the **customer** tenant as a **result of customer admin consent** — BreezeOn does not create the EA object directly.
+
+1. Send the customer Entra administrator the admin consent request for this App Registration.
+
+   **Admin consent URL template** (replace placeholders; `redirect_uri` must be registered on the App Registration — typically a product `{base}/signin-oidc` until a dedicated consent-complete page exists):
+
+   ```text
+   https://login.microsoftonline.com/{customer-tid}/v2.0/adminconsent?client_id={application-client-id}&redirect_uri={url-encoded-redirect-uri}&scope=.default
+   ```
+
+2. Confirm an **Enterprise Application** appears in the **customer** tenant after consent ([business-vision.md](business-vision.md), [cloud-architecture.md](cloud-architecture.md)). Record consent timestamp and EA evidence for audit (Master Flow Step 5).
 3. Attempt interactive sign-in to one product host; complete Entra challenge and OIDC callback.
 
-**Checkpoint D:** Login reaches the product host callback without redirect/consent errors.
+**Phase 1 vs Phase 2:** This workflow covers interactive / delegated consent for sign-in. Application permission `User.Read.All` consent for Graph is **Workflow F** (Phase 2) and requires **customer** Entra admin consent for app-only tokens against the customer tid.
+
+**Checkpoint D:** Login reaches the product host callback without redirect/consent errors; EA present in customer tenant.
 
 ## Workflow E — First login validation
 
@@ -91,17 +105,20 @@ After a successful interactive login, verify in the **customer** database:
 | `Identity.Tenants` | Row for claim `tid` (**discovered**); `IsSyncEnabled` remains `0` unless Workflow F ran |
 | Application cookie | Session established; protected routes work |
 
+`Identity.Tenants` registration is a platform registry + sync flag — **not** a login allowlist (Entra App Registration owns allowlisting).
+
 Login behaviour SSOT: [authentication-standard.md](authentication-standard.md). Session policy: [session-management-standard.md](session-management-standard.md), [ADR-012](../../decisions/ADR-012-cookie-session-management.md).
 
 **Checkpoint E:** User, login history, and tenant discovery rows exist; cookie session works.
 
 ## Workflow F — Optional Graph enablement (Phase 2)
 
-Run **only** when Customer Information lists Graph synchronization = **Yes**.
+Run **only** when Customer Information lists Graph synchronization = **Yes**. If Graph = No, skip this workflow and record **Checkpoint F-N/A** on the Master Flow go-live sheet.
 
-1. On the App Registration, add application permission **`User.Read.All`** and obtain **admin consent** (customer and/or BreezeOn as required by your consent model) — [configuration-standard.md](configuration-standard.md), [directory-synchronization-standard.md](directory-synchronization-standard.md), [ADR-013](../../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
-2. Confirm platform Identity schema (including `Identity.Tenants`) is present in the customer database.
-3. Enable sync for the known customer tid (hosted — explicit SQL only):
+1. On the App Registration, add application permission **`User.Read.All`**.
+2. Obtain **admin consent in the customer tenant** for those application permissions (Customer Entra administrator). BreezeOn owns App Registration configuration; the customer grants app-only Graph access against their tid — [configuration-standard.md](configuration-standard.md), [directory-synchronization-standard.md](directory-synchronization-standard.md), [ADR-013](../../decisions/ADR-013-microsoft-graph-directory-synchronization.md). Re-use the adminconsent URL pattern from Workflow D after the permission is added.
+3. Confirm platform Identity schema (including `Identity.Tenants`) is present in the customer database (Master Flow Step 1).
+4. Enable sync for the known customer tid (hosted — explicit SQL only):
 
 ```sql
 UPDATE [Identity].[Tenants]
@@ -109,9 +126,9 @@ SET [IsSyncEnabled] = 1
 WHERE [TenantId] = '<entra-tid>';
 ```
 
-4. If the tenant row does not exist yet, either obtain the tid and insert/enable after first login (Workflow E), or insert the tenant row then set `IsSyncEnabled = 1` per directory-sync standard.
-5. In EAC (or future admin surface), run **Sync Now**; confirm status Succeeded and users reflect Graph `accountEnabled` → `IsEnabled`.
-6. Do **not** set `IDENTITY__SEEDTENANTIDS` on hosted App Services.
+5. If the tenant row does not exist yet, either obtain the tid and insert/enable after first login (Workflow E), or insert the tenant row then set `IsSyncEnabled = 1` per directory-sync standard.
+6. In EAC (or future admin surface), run **Sync Now**; confirm status Succeeded and users reflect Graph `accountEnabled` → `IsEnabled`.
+7. Do **not** set `IDENTITY__SEEDTENANTIDS` on hosted App Services.
 
 **Checkpoint F:** Consent granted; enabled tenant syncs; Users grid shows directory users; SoftDisable / mid-session `IsEnabled` behaviour understood ([session-management-standard.md](session-management-standard.md)).
 
@@ -119,17 +136,20 @@ WHERE [TenantId] = '<entra-tid>';
 
 ## Verification checklist
 
-Use as a final sign-off for the customer-environment:
+Use as a final sign-off for authentication cutover. Prefer the full Master Flow go-live checklist when declaring the environment live (includes Workflow G).
 
 - [ ] Customer Information Required complete
 - [ ] Checkpoint A — App Registration + secret
 - [ ] Checkpoint B — All product redirect URIs
 - [ ] Checkpoint C — Shared `AUTHENTICATION__*` on all products
-- [ ] Checkpoint D — Customer consent + interactive login
+- [ ] Checkpoint D — Customer consent + Enterprise Application + interactive login
 - [ ] Checkpoint E — Identity Users / UsersLogins / Tenants
-- [ ] Checkpoint F — Graph sync (if required) + Sync Now
+- [ ] Checkpoint F — Graph sync (if required) + Sync Now **or** F-N/A
+- [ ] Continue to [Workflow G](../authorization/customer-onboarding-authorization.md) (admin bootstrap) before go-live
 - [ ] Optional: second product host login with same ClientId
 - [ ] Optional: login-time profile photo best-effort (does not block login)
+
+Operator SQL checks: [templates/onboarding/validate-onboarding-readiness.sql](../../templates/onboarding/validate-onboarding-readiness.sql).
 
 ## Troubleshooting
 
@@ -140,8 +160,8 @@ Use as a final sign-off for the customer-environment:
 | IDX / authority / issuer errors | Wrong Authority or non-`/v2.0` form | Use `organizations/v2.0` per configuration-standard |
 | Wrong tenant blocked at Entra | Home tenant not allowed on App Registration | Adjust Entra allowlisting (not app code) |
 | Login fails: `IsEnabled = 0` | Soft-disable or disabled directory user | Check `Identity.Users`; re-sync or correct Graph `accountEnabled`; mid-session rejection within ~60s after disable |
-| Sync Now Graph 403 | Missing `User.Read.All` or consent | Workflow F step 1 |
-| Sync Now “no sync-enabled tenant” | `IsSyncEnabled = 0` for all rows | Workflow F step 3 |
+| Sync Now Graph 403 | Missing `User.Read.All` or customer app consent | Workflow F steps 1–2 |
+| Sync Now “no sync-enabled tenant” | `IsSyncEnabled = 0` for all rows | Workflow F step 4 |
 | Hosted seed confusion | `IDENTITY__SEEDTENANTIDS` on App Service | Remove; use SQL enablement only |
 
 ## Ongoing operations
@@ -152,6 +172,8 @@ Use as a final sign-off for the customer-environment:
 
 ## Related
 
+- [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) (end-to-end Steps 0–9)
+- [Customer onboarding — authorization](../authorization/customer-onboarding-authorization.md) (Workflow G)
 - [Business vision](business-vision.md)
 - [Cloud architecture](cloud-architecture.md)
 - [Configuration standard](configuration-standard.md)

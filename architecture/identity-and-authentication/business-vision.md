@@ -18,6 +18,7 @@ BreezeOn administrators may access customer environments when the environment’
 
 ## Related
 
-- [Customer authentication onboarding](customer-onboarding-authentication.md) (operator runbook)
+- [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) (end-to-end operator SSOT)
+- [Customer authentication onboarding](customer-onboarding-authentication.md) (Workflows A–F)
 - [Cloud architecture](cloud-architecture.md)
 - [Authentication standard](authentication-standard.md)

@@ -61,7 +61,9 @@ Enable each tenant that should be synchronized. Login discovery never enables sy
 
 ## Related
 
+- [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) (Step 7)
 - [Customer authentication onboarding](customer-onboarding-authentication.md) (Phase 2 Graph consent + `IsSyncEnabled`)
+- Soft readiness: SHARED-UI `IBoOnboardingReadinessQueries` (EAC `/users` indicators; does not block login)
 - [identity-schema-standard.md](identity-schema-standard.md)
 - [authentication-standard.md](authentication-standard.md)
 - [cloud-architecture.md](cloud-architecture.md)
