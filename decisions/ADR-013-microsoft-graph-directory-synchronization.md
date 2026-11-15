@@ -18,7 +18,7 @@ Login-time upsert only creates `Identity.Users` for people who sign in. Business
 - Missing directory users after a successful full sync are **soft-disabled** (`IsEnabled = 0`), never deleted.
 - **Profile photos** refresh on successful login only (not during directory sync). V1 stores bytes in `Identity.UserPhotos` (`VARBINARY(MAX)`, `StorageProvider = Sql`). Failure never blocks login; prior photo is kept. Schema is migration-ready for a future Azure Blob (or other) store behind SHARED-UI photo APIs.
 - **Deferred from V1 schema:** `Department`, `JobTitle`, `ManagerExternalObjectId` (no consumer yet).
-- **V1 authorization:** any authenticated user may open Users and run Sync Now. Role-based authorization is separate future platform work.
+- **Authorization:** Users Security and Sync Now require `GLOBAL-SYSTEM-ADMINISTRATORS` ([ADR-014](ADR-014-platform-authorization.md)).
 - Org attributes and delta/scheduling/Tenants UI/Blob photos/authZ remain future; Sync Now remains when scheduling is added.
 
 ## Consequences
@@ -27,3 +27,7 @@ Login-time upsert only creates `Identity.Users` for people who sign in. Business
 - [future-roadmap.md](../architecture/identity-and-authentication/future-roadmap.md) removes shipped Graph sync / login photos from “not shipped” and lists deferred items (delta, schedule, Blob, Tenants UI, authZ, org attributes).
 - Customer onboarding Phase 2 (application consent + explicit `IsSyncEnabled` SQL): [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md).
 - Cookie login path stays OIDC + cookies; Graph is app-only for sync and login photo.
+
+## Amendment — targeted UPN upsert for local bootstrap (2026-11-15)
+
+Full Sync Now remains the product directory sync. SHARED-UI also exposes `UpsertUsersByPrincipalNamesAsync` for **local tooling** (EAC `LocalDirectoryBootstrap`): resolve listed UPNs via Graph get-by-UPN, upsert those rows only, and **do not** soft-disable the rest of the tenant or mark a full sync as succeeded. Hosted onboarding still uses Workflow G / Sync Now as documented.

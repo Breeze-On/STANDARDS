@@ -39,16 +39,15 @@ A developer should be able to:
 `dev-reset.ps1` performs all environment preparation the application needs, including where applicable:
 
 1. Stop existing application processes for this repo  
-2. Stop existing Docker resources owned by this repo (then start what is required)  
-3. Start required Docker containers  
-4. Load `.env` configuration  
-5. Validate required environment variables (fail fast with clear errors)  
-6. Verify dependencies are available (e.g. .NET SDK, Docker)  
-7. Recreate the local development database (SQL apps)  
-8. Build consolidated schema/seed SQL from ordered sources, apply each with one sqlcmd, then EF migrations as configured  
-9. Build the solution / host project  
-10. Launch the application  
-11. Display a success / failure summary (URLs, what was reset)  
+2. Ensure required Docker containers are up (prefer leaving a healthy SQL container running; do not stop/start unnecessarily)  
+3. Load `.env` configuration  
+4. Validate required environment variables (fail fast with clear errors)  
+5. Verify dependencies are available (e.g. .NET SDK, Docker)  
+6. Recreate the local development database (SQL apps)  
+7. Build consolidated schema/seed SQL from ordered sources into `generated/`, apply each with one sqlcmd (committed SQL export is a separate maintenance script when used)  
+8. Run any local bootstrap required by the product (e.g. targeted directory upsert)  
+9. Launch the application (`dotnet run` / host start; prefer app-startup migrate over a separate `dotnet ef database update` when the host already migrates)  
+10. Display a success / failure summary (URLs, what was reset)  
 
 Steps that do not apply to a host (e.g. no SQL for Shared UI Gallery) are skipped with clear script output.
 

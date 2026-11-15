@@ -23,8 +23,11 @@ Do not document auth as EAC-only. Products in a customer-environment share **one
 
 ## Authorization (current)
 
-- Product hosts require authenticated users for application routes (shared framework + host `[Authorize]` / authorize route view).
-- Role-based authorization and Entra group mapping are **not** shipped (future roadmap).
+SSOT: **[Authorization](authorization/README.md)** · [ADR-014](../decisions/ADR-014-platform-authorization.md).
+
+- Product hosts require authenticated users for application routes (shared framework + `BoAuthorizeRouteView`).
+- Platform **Security Groups** (`Security.Groups` / `GroupsMembers`) and code-based page security via **`IBoAuthorizationService`**.
+- Entra directory group / app-role mapping into BreezeOn groups is **not** shipped (future roadmap).
 
 ## Local SQL access
 

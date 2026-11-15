@@ -39,6 +39,39 @@ Current conventions across the organization.
 
 Do not invent alternate technical ids that diverge from the repository name without an explicit org decision and STANDARDS update.
 
+## Database primary keys
+
+**Format:** `TableName` + `Id` (the full table name stem, then `Id`).
+
+| Table | Primary key |
+| --- | --- |
+| `Users` | `UsersId` |
+| `UsersLogins` | `UsersLoginsId` |
+| `UserPhotos` | `UserPhotosId` |
+| `Tenants` | `TenantsId` |
+| `Groups` | `GroupsId` |
+| `GroupsMembers` | `GroupsMembersId` |
+| `EACApplications` | `EACApplicationsId` |
+
+Integer `*Id` primary keys are **physical** clustered keys (storage / indexing). They are **not** logical relationship keys and must not be used as cross-product or authorization identifiers.
+
+## Database GUID columns
+
+**Format:** singular entity name + `GUID` (uppercase `GUID`).
+
+| Correct | Incorrect |
+| --- | --- |
+| `UserGUID` | `UsersGuid`, `UsersGUID` |
+| `UserLoginGUID` | `UsersLoginsGuid` |
+| `UserPhotoGUID` | — |
+| `TenantGUID` | `TenantsGUID` |
+| `GroupGUID` | `GroupsGuid` |
+| `GroupMemberGUID` | — |
+| `ApplicationGUID` | `ApplicationsGUID` |
+| `BusinessEntityGUID` | — |
+
+**Canonical user identifier:** `UserGUID` is the BreezeOn platform user id. Hierarchy: Entra `(TenantId, ExternalObjectId)` → `UserGUID` → physical `UsersId`. Full rules: [database.md](database.md).
+
 ## Stored procedures
 
 When used: `P_GET_` / `P_POST_` + friendly app **Code** (e.g. `EAC`) + PascalCase subject with **no spaces or underscores**. Separate delete procedures append `Delete` (e.g. `P_POST_EACBusinessEntityDelete`, not `…_Delete`). Full rules: [database.md](database.md) § Stored procedure naming.

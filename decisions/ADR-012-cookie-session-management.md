@@ -15,7 +15,7 @@ Login-only enforcement of `Identity.Users.IsEnabled` left disabled users with va
 - OIDC correlation/nonce cookies remain ASP.NET Core defaults (`SameSite=None; Secure`) — do not force them to `Lax`.
 - Logout clears the application cookie and performs OIDC/Entra sign-out. Local logout is not promised to revoke other product apps’ cookies.
 - **Login-time validation:** `Identity.Users.IsEnabled = 0` blocks **new** sessions at OIDC login (no application cookie).
-- **Ongoing session validation:** `OnValidatePrincipal` enforces absolute lifetime, then `IBoIdentitySessionGate`. A missing Identity row or `IsEnabled = 0` rejects the principal and clears the application cookie. Process-local in-memory cache TTL is **60 seconds** (revocation latency bound per App Service instance). Middleware consumes only Valid/Invalid — not why the session was rejected. No security stamp column and no server-side session store.
+- **Ongoing session validation:** `OnValidatePrincipal` enforces absolute lifetime, then `IBoIdentitySessionGate`. A missing Identity row or `IsEnabled = 0` rejects the principal and clears the application cookie. Process-local in-memory cache TTL is **60 seconds** (revocation latency bound per App Service instance). When Valid, the gate returns the current `Identity.Users.UserGUID` for `(tid, oid)`. If the cookie `breezeon_userguid` claim is missing or differs, middleware reconciles the claim (`ReplacePrincipal` + `ShouldRenew`); if reconciliation fails, the principal is rejected (challenge). No security stamp column and no server-side session store.
 - Data Protection: Azure App Service default key folder within a deployment slot is approved; no Blob/Redis/Key Vault requirement for the current hosting model. Separate apps and slots have separate key rings. Product hosts set `AddDataProtection().SetApplicationName("BreezeOn.<Product>")`.
 - Normative detail: [session-management-standard.md](../architecture/identity-and-authentication/session-management-standard.md).
 
@@ -42,3 +42,14 @@ Promoted from the Identity & Authentication future roadmap into current platform
 | Limits | Per-instance memory cache; no cross-app cookie clear; circuit caveat; fail-closed on recheck errors |
 
 Implementation: SYSTEM-SHARED-UI (`BoCookieAuthenticationDefaults`, `IBoIdentitySessionGate`). Operator onboarding: [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md).
+
+## Amendment — UserGUID cookie reconciliation (2026-11-15)
+
+Local Identity rebuilds (and any recreate of `Identity.Users` rows) mint a new `UserGUID` for the same `(TenantId, ExternalObjectId)`. A still-valid `BreezeOn.Auth` cookie can carry a stale `breezeon_userguid`, which breaks authorization membership lookups while the session gate still passes on `(tid, oid)`.
+
+| Topic | Current platform behaviour |
+| --- | --- |
+| Gate result | Valid evaluations include current `UserGUID` |
+| Cookie claim | Missing or mismatched `breezeon_userguid` → heal + renew ticket |
+| Fallback | Heal failure → reject principal (re-authenticate) |
+| AuthZ cache | Stale UserGUID invalidated when present and replaced |

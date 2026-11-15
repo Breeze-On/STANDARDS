@@ -63,7 +63,7 @@ Optional: override the connection string with User Secrets to point at Azure SQL
 3. Create the physical database if it does not exist.
 4. Regenerate the **committed** consolidated reset script `sql/current_model.sql` (and a local `generated/` copy) from ordered `sql/current_model/` sources (schema first, then tables, then procedures / other objects) and apply it with **one** `sqlcmd` execution ([database.md](database.md) § Database Deployment Standard). Table DROP scripts must clear FK dependents before parents.
 5. Build a **consolidated** seed deployment script from `sql/seed/` sources (and any JSON→T-SQL generation) and apply it with **one** `sqlcmd` execution ([database.md](database.md) § Database Seed Maintenance Standard). Never default-apply seed to hosted Azure SQL.
-6. Configure the app’s local SA password (`LocalSql:SaPassword` user-secrets and/or `MSSQL_SA_PASSWORD`) and run the application via `.\scripts\dev-reset.ps1`. EF migrations (if used) apply via the script (and/or on startup) as configured by the app.
+6. Configure the app’s local SA password (`LocalSql:SaPassword` user-secrets and/or `MSSQL_SA_PASSWORD`) and run the application via `.\scripts\dev-reset.ps1`. Prefer applying empty/history EF migrations on app startup rather than a separate `dotnet ef database update` in every reset when the host already calls `Database.Migrate()`.
 
 Apps that own business schema **must** maintain `sql/seed/` and update it in the same change set as schema changes (see [database.md](database.md)).
 
@@ -77,7 +77,7 @@ Apps that own business schema **must** maintain `sql/seed/` and update it in the
 
 ### Agents
 
-Product apps with SQL must use the org script standard ([local-development-scripts.md](local-development-scripts.md)): `.\scripts\dev-reset.ps1` (Docker → drop/recreate → init → seed → migrate → build → launch). Never commit or print `.env` passwords.
+Product apps with SQL must use the org script standard ([local-development-scripts.md](local-development-scripts.md)): `.\scripts\dev-reset.ps1` (ensure Docker SQL → drop/recreate → init → seed/bootstrap → launch). Never commit or print `.env` passwords.
 
 ## What belongs where
 

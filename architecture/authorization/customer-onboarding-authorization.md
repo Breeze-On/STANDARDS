@@ -13,4 +13,4 @@ Prerequisites: authentication onboarding complete ([customer-onboarding-authenti
 
 Do **not** seed users or memberships into product seed by default for hosted environments. Do **not** auto-promote the first login. Later membership management is in-app (EAC).
 
-**Local sandbox exception:** EAC `local-db-seed` / `dev-reset` may run Graph Sync Now then grant `GLOBAL-SYSTEM-ADMINISTRATORS` to documented local bootstrap UPNs (`sql/seed/BootstrapGlobalSystemAdministrators.sql`) after `IDENTITY__SEEDTENANTIDS` tenants are seeded. That path is local-only and must never be applied to hosted DEV/UAT/PRD by default.
+**Local sandbox exception:** EAC `local-db-seed` / `dev-reset` may run a **targeted** Graph UPN upsert (`BootstrapAdminUpns.json` via `UpsertUsersByPrincipalNamesAsync` — not full Sync Now) then grant `GLOBAL-SYSTEM-ADMINISTRATORS` (`sql/seed/BootstrapGlobalSystemAdministrators.sql`) after `IDENTITY__SEEDTENANTIDS` tenants are seeded. That path is local-only and must never be applied to hosted DEV/UAT/PRD by default.

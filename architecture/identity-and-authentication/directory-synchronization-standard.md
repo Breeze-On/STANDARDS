@@ -25,8 +25,9 @@ Normative rules for Microsoft Graph → `Identity.Users` synchronization. Decisi
 | Missing users | Soft-disable (`IsEnabled = 0`); never delete. Soft-disable watermark is the sync’s `@SyncStartUtc` compared to `Users.LastSyncUtc`; both must use **`datetime2`** (not legacy `datetime`) so just-upserted rows are not falsely treated as missing |
 | `accountEnabled` | Graph `accountEnabled` → `Identity.Users.IsEnabled` on upsert; login path does **not** mutate `IsEnabled` |
 | Photos | Not during sync — login-time only ([identity-schema-standard.md](identity-schema-standard.md) `UserPhotos`) |
-| Authorization | Any authenticated user may Sync Now |
+| Authorization | Sync Now requires `GLOBAL-SYSTEM-ADMINISTRATORS` (Users Security page catalog) — [authorization/](../authorization/README.md) |
 | Org attributes | Department / JobTitle / Manager **not** synced (deferred) |
+| Targeted upsert | `IBoDirectorySynchronizer.UpsertUsersByPrincipalNamesAsync` — Graph get-by-UPN for listed accounts only; **no** soft-disable; does **not** mark a full-tenant sync succeeded. Local bootstrap / tooling only — never a substitute for Sync Now |
 
 ### Sync Now preconditions
 
@@ -55,7 +56,7 @@ Enable each tenant that should be synchronized. Login discovery never enables sy
 - Optional scheduled caller of the same synchronizer API (Sync Now remains)
 - Optional Tenants administration UI
 - Optional delta synchronization
-- Optional authorization for Users / Sync Now
+- ~~Optional authorization for Users / Sync Now~~ — shipped via Security Groups / page security
 - Optional org attribute columns when a consumer exists
 
 ## Related

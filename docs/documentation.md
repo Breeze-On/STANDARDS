@@ -161,6 +161,10 @@ Updates must occur in the **same change set** as the implementation change. Docu
 
 Any change affecting **authentication architecture**, **Identity schema**, **App Registration strategy**, **tenant strategy**, **authentication environment variables**, **local development authentication**, **cookie/session policy**, or **customer onboarding authentication** is incomplete until [`architecture/identity-and-authentication/`](../architecture/identity-and-authentication/README.md) (including the mandatory [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md) runbook when onboarding steps change) and related ADR(s) (ADR-009 / ADR-010 / ADR-011 / ADR-012 / ADR-013 or successors) are updated in the **same change set**. This is a mandatory BreezeOn platform standard.
 
+### Authorization DoD (platform)
+
+Any change affecting **authorization architecture**, **Security schema**, **page security**, **`IBoAuthorizationService`**, or **authorization onboarding (Workflow G)** is incomplete until [`architecture/authorization/`](../architecture/authorization/README.md) and related ADR(s) (ADR-014 or successors) are updated in the **same change set**.
+
 UI / query-driven standards also follow **[Example Governance](ui/example-governance.md)**: normative standard + AI guidance + Gallery working example (unless an approved exception applies).
 
 ### UI / shared component DoD (BreezeOn.UI)

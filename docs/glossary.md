@@ -81,7 +81,19 @@ Shared Microsoft Entra App Registration for **local development** of all BreezeO
 
 ## Identity (SQL schema)
 
-Platform schema for `Identity.Users`, `Identity.UsersLogins`, `Identity.Tenants`, and `Identity.UserPhotos`. Definitions owned by SYSTEM-SHARED-UI; physical tables in the **customer database** (shared by all products in that customer-environment). Permanent key `(TenantId, ExternalObjectId)`. `Identity.Tenants` is a sync/metadata registry — not a login allowlist. See [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md) and [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
+Platform schema for `Identity.Users`, `Identity.UsersLogins`, `Identity.Tenants`, and `Identity.UserPhotos`. Definitions owned by SYSTEM-SHARED-UI; physical tables in the **customer database** (shared by all products in that customer-environment). Authoritative Entra resolution key `(TenantId, ExternalObjectId)`. Canonical BreezeOn user identifier: **`UserGUID`** (`UsersId` is physical PK only). `Identity.Tenants` is a sync/metadata registry — not a login allowlist. See [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md), and [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
+
+## UserGUID
+
+Canonical BreezeOn platform user identifier (`Identity.Users.UserGUID`). Hierarchy: Entra `(TenantId, ExternalObjectId)` → `UserGUID` → physical `UsersId`. Used for authorization, relationships, and integrations.
+
+## Security (SQL schema)
+
+Platform authorization schema (`Security.Groups`, `Security.GroupsMembers`) owned by SYSTEM-SHARED-UI; physical tables in the customer database. Relationships use `GroupGUID` / `UserGUID`. See [architecture/authorization/](../architecture/authorization/README.md) and [ADR-014](../decisions/ADR-014-platform-authorization.md).
+
+## Page security
+
+Code-based product page catalog (`BoPageDefinition`) driving nav, Home cards, routes, and Access Denied via `IBoAuthorizationService`. Not database-configurable.
 
 Related:
 - [ui/overview.md](ui/overview.md)

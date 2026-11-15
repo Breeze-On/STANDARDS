@@ -14,8 +14,9 @@ The following are **not** part of the current platform implementation. Headings 
 | Azure Blob (or external) profile photo storage | Migrate behind SHARED-UI photo APIs; `Identity.UserPhotos` already migration-ready |
 | `Department` / `JobTitle` / `ManagerExternalObjectId` on `Identity.Users` | Deferred until a business consumer exists |
 | SCIM provisioning | Not designed |
-| Role management / authorization beyond authenticated | Not designed (Users / Sync Now are any-authenticated in V1) |
+| Role management / authorization beyond authenticated | Shipped as platform Security Groups + page security — see [authorization/](../authorization/README.md), [ADR-014](../../decisions/ADR-014-platform-authorization.md) |
 | Entra group / claims mapping | Not designed |
+| Application Context–scoped permissions | Future; hang off `ApplicationEnabledGUID` ([ADR-006](../../decisions/ADR-006-application-context-ownership.md)) |
 | Certificate-based App Registration credentials | Not designed; secrets remain current ([configuration-standard.md](configuration-standard.md)) |
 | Microsoft.Identity.Web for delegated Graph | Optional future layer beside cookie auth |
 | Key Vault for `AUTHENTICATION__*` | Would require a superseding ADR; App Service settings remain approved |

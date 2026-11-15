@@ -35,6 +35,7 @@ Configuration knobs for these security attributes are **not** exposed on `BoAuth
 | Explicit logout | Clear application cookie, then OIDC sign-out (Entra end-session / `signout-callback-oidc`) |
 | Expired / invalid ticket | Challenge → login |
 | `Identity.Users.IsEnabled = 0` | Blocks **new** sessions at login **and** ongoing sessions: `OnValidatePrincipal` calls `IBoIdentitySessionGate`. Missing Identity row or `IsEnabled = 0` → reject principal and clear cookie. Process-local cache TTL **60 seconds** (revocation SLO per App Service instance). Fail closed on recheck errors. No security stamp / server session store ([ADR-012](../../decisions/ADR-012-cookie-session-management.md)) |
+| `breezeon_userguid` reconciliation | When the gate returns Valid, it includes the current `Identity.Users.UserGUID` for `(tid, oid)`. If the cookie claim is missing or differs, middleware heals the principal and renews the ticket (`ShouldRenew`). Heal failure rejects the session (challenge). Prevents Access Denied after Identity rebuilds that mint a new `UserGUID` while Entra `(tid, oid)` is unchanged. |
 | Application restart | Depends on Data Protection key persistence (see below) |
 | Multiple App Service instances (same slot) | Cookies remain decryptable via the shared App Service key folder |
 | Separate product apps (e.g. EAC vs VMR) | Separate cookies and key rings — expected. Same customer-environment App Registration and shared Identity directory ≠ shared SSO cookie |
