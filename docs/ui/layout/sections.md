@@ -2,9 +2,26 @@
 
 Owner: UI
 
-Main Section and Sub Section content grouping. Related: [layout.md](layout.md) (Row + page composition), [forms.md](../controls/forms.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md).
+Main Section and Sub Section content grouping. Related: [layout.md](layout.md) (Row + page composition), [forms.md](../controls/forms.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [expandable-section.md](expandable-section.md) (disclosure vs form collapse).
 
 **Composition (hard standard):** Form fields **must** be inside a [`BoRow`](layout.md#row-borow); every `BoRow` **must** be inside a Section. Full rules: [layout.md — Page composition](layout.md#page-composition-locked--hard-standard).
+
+## Optional collapse (`IsCollapsible`)
+
+Form Sections may opt into collapse without changing default behavior:
+
+| Parameter | Default | Notes |
+| --- | --- | --- |
+| `IsCollapsible` | **`false`** | When false, behavior/visuals match legacy always-open sections (zero migration) |
+| `Expanded` / `ExpandedChanged` | **`true`** | Bindable; when unbound, default **true** so content is not hidden by surprise |
+
+When `IsCollapsible=true`, the section header becomes a WAI-ARIA disclosure control; the body uses the **same disclosure engine** as [`BoExpandableSection`](expandable-section.md) (animation, reduced-motion, DOM retention, `inert`/`aria-hidden` when collapsed). Main/Sub typography, header rule, validation badge, `Required`, and `HeaderActions` are retained. `HeaderActions` clicks must not toggle collapse.
+
+**Hard rules:**
+
+- Collapsed content **remains mounted** (visibility only — never `@if (Expanded)` unmount).
+- Error Message Pages use **`BoExpandableSection`**, not collapsible Main/Sub.
+- Do not invent custom expand/collapse on form pages — use `IsCollapsible` or `BoExpandableSection` as appropriate.
 
 ## Main Section (`BoSectionMain`)
 
@@ -31,7 +48,7 @@ Header is **optional**. When omitted, only the body content is rendered.
 | Icon | Optional; to the **left** of the label; ~13px; tight ~4px gap to label; **vertically center-aligned** with the label; same color as label (prefer `BoIcon` in `IconContent`) |
 | Rule | Grey horizontal line **directly under** the header text/icon row; almost no gap (~2px); uses `--bo-color-card-container-border` |
 | Flush to body | Content container sits **immediately under** the header rule — **no gap** |
-| API | `SectionKey` (stable id for validation ancestry / fail badge); `Title` and/or `TitleContent`; optional `Required` (red asterisk after title — e.g. mandatory [grid](../controls/grids.md)); optional `IconContent`; optional `HeaderActions` (inline after title — e.g. grid Add New / Save); body via `ChildContent` |
+| API | `SectionKey` (stable id for validation ancestry / fail badge); `Title` and/or `TitleContent`; optional `Required` (red asterisk after title — e.g. mandatory [grid](../controls/grids.md)); optional `IconContent`; optional `HeaderActions` (inline after title — e.g. grid Add New / Save); optional `IsCollapsible` / `Expanded` (see above); body via `ChildContent` |
 | HeaderActions spacing | When `HeaderActions` is present, the section root gets `bo-section--with-header-actions`: slightly taller header row, rule margin, and **8px** body `padding-top`. Applied only on the section that owns the actions — **not** on ancestors that merely nest a grid |
 | Validation fail | After Submit attempt, if `SectionKey` is in `BoValidationContext.FailedSectionMains`, show `BoValidationFailBadge` in the **left icon slot** (replaces `IconContent` while failed) — [forms.md](../controls/forms.md#deferred-mandatory-validation-locked) |
 

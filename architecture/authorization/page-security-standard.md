@@ -29,4 +29,4 @@ UI Gallery does not apply page-security group restrictions (anonymous component 
 
 ## Access Denied
 
-SHARED-UI provides a styled Access Denied experience via `BoAuthorizeRouteView` (replacing bare “Not authorized” text).
+SHARED-UI provides the styled Access Denied experience via `BoAccessDenied` (localized lead/body, Access Details + minimal Support Details, `.bo-error-message*` foundation), rendered by `BoAuthorizeRouteView` when a catalog route is denied. Context is built with **best-effort** page-catalog resolution (omit Page on miss; never block). Gallery showcase: `/error-message-page` hosts the **same** component. Full UI standard: [docs/ui/shell/error-messages.md](../../docs/ui/shell/error-messages.md). Footer suppression (`ShowFooter = false`) and product adoption (e.g. EAC) are Phase 2 host concerns.

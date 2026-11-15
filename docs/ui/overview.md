@@ -19,6 +19,8 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [foundations/i18n.md](foundations/i18n.md) | Culture / timezone cookies; per-app resource libraries; no hardcoded labels |
 | **Shell** | |
 | [shell/shell.md](shell/shell.md) | App shell chrome, footer, header tabs |
+| [shell/error-messages.md](shell/error-messages.md) | Error Message Pages framework (Access Denied + future scenarios) |
+| [layout/expandable-section.md](layout/expandable-section.md) | `BoExpandableSection` + shared disclosure engine; Section `IsCollapsible` |
 | [shell/overlays.md](shell/overlays.md) | Dialogs, Settings, toasts, page freeze (`IBoPageFreezeService`) |
 | [shell/navigation.md](shell/navigation.md) | Left navigation, route/URL matching |
 | **Layout** | |
@@ -67,11 +69,13 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoTabPanels` / `BoTabPanel` | Keep-alive body sections keyed to tabs (`SelectedTab`) | [shell.md](shell/shell.md) |
 | `BoAppBody` | Scrollable body region content host (scrolls inside body card) | [shell.md](shell/shell.md) |
 | `BoAppFooter` | Bottom footer card (optional per page via `ShowFooter`; shorter inside padding) | [shell.md](shell/shell.md) |
+| `BoAccessDenied` | Styled Access Denied body (`.bo-error-message*` foundation; Access/Support Details; localized); used by `BoAuthorizeRouteView` and Gallery Error Message Page | [error-messages.md](shell/error-messages.md) |
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` | [tokens.md](foundations/tokens.md) |
 | `BoNavHub` | Home hub host (~33%·67%, gradient + dots, brand logo `80cqmin`) | [shell.md](shell/shell.md#home--navigation-hub-locked-platform-pattern) |
 | `BoNavCardStyleHyperlink` | Home destination card (internal SPA or external new-tab); locked chrome | [shell.md](shell/shell.md#home--navigation-hub-locked-platform-pattern) |
-| `BoSectionMain` | **Main Section** — optional header; `SectionKey` for validation fail badge / ancestry | [sections.md](layout/sections.md) |
-| `BoSectionSub` | **Sub Section** — nested grouping; `SectionKey` + cascaded Main/Sub keys to fields | [sections.md](layout/sections.md) |
+| `BoSectionMain` | **Main Section** — optional header; `SectionKey` for validation fail badge / ancestry; optional `IsCollapsible` / `Expanded` | [sections.md](layout/sections.md) |
+| `BoSectionSub` | **Sub Section** — nested grouping; `SectionKey` + cascaded Main/Sub keys to fields; optional `IsCollapsible` / `Expanded` | [sections.md](layout/sections.md) |
+| `BoExpandableSection` | Disclosure expand/collapse (Error Message, filters, support blocks); shared engine with Section collapse | [expandable-section.md](layout/expandable-section.md) |
 | `BoRow` | **Row** — proportional `Weight` field slots inside a section (default equal) | [layout.md](layout/layout.md) |
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](layout/sections.md) |
 | `BoPageHeader` | Page title and description | — |
@@ -98,7 +102,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Grid** tab replaces Preview with Sub **Grid Control** hosting `BoGrid` (including Server `QueryMode`, Filters, Nested View keyword demos where shipped); **Page Freeze** tab demos `IBoPageFreezeService.RunAsync` then Success toast; **Drop-Down List** includes static Items and async `ItemsProvider` demos when shipped; **People Picker** tab demos Mandatory / Disabled / AllowMultiple / Loading with an in-memory fake provider (no database); Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Grid** tab replaces Preview with Sub **Grid Control** hosting `BoGrid` (including Server `QueryMode`, Filters, Nested View keyword demos where shipped); **Page Freeze** tab demos `IBoPageFreezeService.RunAsync` then Success toast; **Drop-Down List** includes static Items and async `ItemsProvider` demos when shipped; **People Picker** tab demos Mandatory / Disabled / AllowMultiple / Loading with an in-memory fake provider (no database); Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation); Error Message Page (`/error-message-page` — Access Denied tab hosts shared `BoAccessDenied` with Access/Support Details; footer off; tab framework retained for future error scenarios; SSOT [error-messages.md](shell/error-messages.md)). Nav: Home / Components / Theme / Error Message Page (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
 
 **Ownership:** Gallery is the primary working-example host for library-scoped UI / query patterns. Product pages are product reference only. Full rules: [example-governance.md](example-governance.md).
 

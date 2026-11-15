@@ -12,7 +12,7 @@ App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.
 | --- | --- | --- |
 | Left nav | `BoNavPane` / `BoNavLink` | Platform navigation — see [navigation.md](navigation.md) |
 | Header | `BoAppHeader` | Top header card; **per-page** `AppTitle` / `Subtitle` (host-localized); trailing actions; optional `TabsContent` |
-| Body | `BoAppBody` | Body region inside a floating card; card **fills** the available shell viewport slot; when content exceeds the slot, scroll **inside** the body (`overflow: auto` on `BoAppBody`). Home / nav hub: card fills the slot with **no** body scrollbar |
+| Body | `BoAppBody` | Body region inside a floating card; card **fills** the available shell viewport slot; when content exceeds the slot, scroll **inside** the body (`overflow: auto` on `BoAppBody`). **Platform rule:** containers must provide scrollbars when content exceeds their bounds — do not use `overflow: hidden` on `BoAppBody` except intentional exceptions (e.g. Home / nav hub). Home / nav hub: card fills the slot with **no** body scrollbar |
 | Footer | `BoAppFooter` | Optional per page (`ShowFooter`); when shown, fixed bottom footer card |
 
 `BoShellCard` provides floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None. Token names: [tokens.md](../foundations/tokens.md).
@@ -45,11 +45,15 @@ Theme mode / dual palettes: [tokens.md](../foundations/tokens.md). Locale prefs:
 
 ## App shell footer (optional per page)
 
-Footer is **optional per page** via `BoAppShell.ShowFooter` (default `true`). When `ShowFooter` is true, use the fixed bottom footer shell region (`BoAppFooter` / `FooterContent`) — same floating-card chrome family as the header. When false, omit the footer region (gallery: Home has no footer; Components / Theme keep it).
+Footer is **optional per page** via `BoAppShell.ShowFooter` (default `true`). When `ShowFooter` is true, use the fixed bottom footer shell region (`BoAppFooter` / `FooterContent`) — same floating-card chrome family as the header. When false, omit the footer region (gallery: Home and Error Message Page have no footer; Components / Theme keep it).
+
+**Error Message Pages** (Access Denied and future standardized error states) **must** use `ShowFooter = false` to keep focus on the error experience. Product hosts that render `BoAccessDenied` via `BoAuthorizeRouteView` should suppress the footer for that layout as well (EAC and other apps: Phase 2 — document now, wire later).
 
 ## Header tabs (optional page sections)
 
 Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTabs` / `BoTab` and body `BoTabPanels` / `BoTabPanel`. Tabs are page sections, not left-nav routes.
+
+**Gallery Error Message Page:** uses the same tab architecture as Components / Theme **even when only one tab exists** (Access Denied today). This is intentional so future error scenarios are added as tabs on `/error-message-page`, not as separate showcase pages.
 
 | Concern | Standard |
 | --- | --- |
@@ -158,7 +162,13 @@ Use for each product app’s **Home** (or equivalent landing hub). This is **not
 
 ### Gallery reference
 
-SYSTEM-SHARED-UI Gallery Home (`/`): three cards (Components, Theme, Google external — excludes Home itself); `LogoSrc="brand/home-hero.svg"`; `ShowFooter` false. Implementation SSOT for CSS: `breezeon-ui.css` (`.bo-nav-hub*`, `.bo-nav-card*`).
+SYSTEM-SHARED-UI Gallery Home (`/`): four cards (Components, Theme, Error Message Page, Google external — excludes Home itself); `LogoSrc="brand/home-hero.svg"`; `ShowFooter` false. Implementation SSOT for CSS: `breezeon-ui.css` (`.bo-nav-hub*`, `.bo-nav-card*`).
+
+## Error Message Pages
+
+**SSOT:** [error-messages.md](error-messages.md) — framework purpose, enforceable rules (best-effort route metadata, minimal Support Details, application-agnostic shared components, footer off, showcase ≡ production), Access Denied content standard, Access/Support Details, lifecycle for new error types.
+
+SHARED-UI owns `BoAccessDenied` + `.bo-error-message*` foundation; Gallery `/error-message-page` is the authoritative showcase. Do not invent speculative shared base components until a second scenario needs a shared Blazor API.
 
 ## Overlays
 

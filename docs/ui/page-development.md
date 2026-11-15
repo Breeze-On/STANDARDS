@@ -58,7 +58,8 @@ Every new or changed Breeze On page should validate the following.
 - [ ] **Per-page** localized `AppTitle` provided — [shell.md § Header titles](shell/shell.md#header-titles-per-page).
 - [ ] `Subtitle` provided when appropriate; empty/whitespace subtitle **omits** the title dash.
 - [ ] Header actions remain platform-standard (`BoHeaderActions`: Theme → Settings → Profile) unless the host intentionally overrides `ActionsContent`.
-- [ ] Footer behavior follows standards (`ShowFooter`; Home typically **false**) — [shell.md](shell/shell.md).
+- [ ] Footer behavior follows standards (`ShowFooter`; Home typically **false**; Error Message Pages **must** be **false**) — [shell.md](shell/shell.md), [error-messages.md](shell/error-messages.md).
+- [ ] Error Message Pages follow the Error Message framework (shared `Bo*` + foundation CSS; no product-specific remediation in shared components; showcase ≡ production) — [error-messages.md](shell/error-messages.md).
 
 ### Home pages
 
