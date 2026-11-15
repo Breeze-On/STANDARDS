@@ -8,7 +8,7 @@ Operational runbooks document repeatable procedures for deploying, recovering, t
 
 | Runbook | Covers |
 | --- | --- |
-| [Customer Onboarding Master Flow](customer-onboarding-master-flow.md) | **Primary** end-to-end customer-environment onboarding (intake → provisioning → Entra → consent → tenant registration → sync → admin bootstrap → go-live) |
+| [Customer Onboarding Master Flow](customer-onboarding-master-flow.md) | **Primary** end-to-end SSOT (intake + go-live checklist): intake → provisioning → Entra → consent → first login / tenant discovery → admin bootstrap (G) → Sync Now if Graph (F) → go-live |
 
 ### Related slice procedures (architecture)
 

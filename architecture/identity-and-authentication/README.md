@@ -25,7 +25,7 @@ This is a **BreezeOn platform standard**. It applies to all current and future B
 | [Configuration standard](configuration-standard.md) | `AUTHENTICATION__AUTHORITY` / `CLIENTID` / `CLIENTSECRET`; secret lifecycle |
 | [Local development standard](local-development-standard.md) | `BreezeOn-LOCAL`, no bypass, same OIDC flow as hosted; Identity seed |
 | [Customer authentication onboarding](customer-onboarding-authentication.md) | **Mandatory** slice runbook — Workflows A–F (App Registration, consent, first login, optional Graph sync) |
-| [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) | **End-to-end** operator SSOT — intake → provisioning → A–G → go-live (runbooks/) |
+| [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) | **End-to-end** operator SSOT — intake + go-live checklist; sequence: A–E → G → F → go-live (runbooks/) |
 | [Future roadmap](future-roadmap.md) | **Planned / not shipped** — delta, schedule, Blob photos, Tenants UI, onboarding automation, roles, SCIM, SSO |
 
 SQL Managed Identity for Azure SQL is **orthogonal** and remains in [security.md](../security.md).

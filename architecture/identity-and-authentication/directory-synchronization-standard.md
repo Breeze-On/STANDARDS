@@ -47,7 +47,7 @@ SET [IsSyncEnabled] = 1
 WHERE [TenantId] = '<entra-tid>';
 ```
 
-Enable each tenant that should be synchronized. Login discovery never enables sync.
+Enable each **discovered** tenant that should be synchronized (row created by login discovery). Login discovery never enables sync. Hosted onboarding does **not** manually insert `Identity.Tenants` rows — see Master Flow Step 6 / Recovery appendix.
 
 **Local development:** prefer `.env` `IDENTITY__SEEDTENANTIDS=<guid>[,<guid>…]` so EAC `local-db-seed` / `dev-reset` seeds `Identity.Tenants` only with **`IsSyncEnabled = 1` for every configured id**. Do not seed users or placeholder/fake tenant GUIDs. Hosted remains explicit SQL enablement only (no Identity seed).
 
@@ -61,7 +61,7 @@ Enable each tenant that should be synchronized. Login discovery never enables sy
 
 ## Related
 
-- [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) (Step 7)
+- [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) (Step 8 — after Workflow G)
 - [Customer authentication onboarding](customer-onboarding-authentication.md) (Phase 2 Graph consent + `IsSyncEnabled`)
 - Soft readiness: SHARED-UI `IBoOnboardingReadinessQueries` (EAC `/users` indicators; does not block login)
 - [identity-schema-standard.md](identity-schema-standard.md)

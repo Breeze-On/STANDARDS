@@ -4,6 +4,8 @@ Owner: Operations
 
 Read-only operator aids for the [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md). These are **not** product features and must not be applied as hosted seed.
 
+Typical run order after cutover steps: schema (Step 1) → tenant discovery (Checkpoint E) → admin bootstrap (Checkpoint G / Step 7) → sync readiness (Checkpoint F or F-N/A / Step 8). Do **not** manually insert `Identity.Tenants` as part of normal validation — login discovery is required.
+
 ## validate-onboarding-readiness.sql
 
 Run against the **customer** database (Azure SQL or local Docker) with a read-capable principal.
@@ -30,7 +32,7 @@ Confirm **every** product App Service in the customer-environment has the **same
 | --- | --- |
 | `AUTHENTICATION__AUTHORITY` | `https://login.microsoftonline.com/organizations/v2.0` |
 | `AUTHENTICATION__CLIENTID` | Shared App Registration client ID |
-| `AUTHENTICATION__CLIENTSECRET` | Shared client secret (value not logged) |
+| `AUTHENTICATION__CLIENTSECRET` | Shared client secret (presence only; value not logged — Master Flow secret handling) |
 
 Confirm `IDENTITY__SEEDTENANTIDS` is **absent** on hosted App Services.
 

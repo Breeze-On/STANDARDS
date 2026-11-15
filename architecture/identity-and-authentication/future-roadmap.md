@@ -10,7 +10,7 @@ The following are **not** part of the current platform implementation. Headings 
 | --- | --- |
 | Scheduled directory synchronization | Optional timer/host calling the same SHARED-UI synchronizer; Sync Now remains |
 | Delta Graph synchronization | `/users/delta` + cursor persistence when directory size/frequency justifies it |
-| Tenants administration UI | Replaces V1 SQL `IsSyncEnabled` onboarding step (Master Flow Step 7) |
+| Tenants administration UI | Replaces V1 SQL `IsSyncEnabled` onboarding step (Master Flow Step 8) |
 | Automated onboarding validation job | Hosted health check evolving from [templates/onboarding/validate-onboarding-readiness.sql](../../templates/onboarding/validate-onboarding-readiness.sql) (schema, tid, sync, admin membership) |
 | Self-service tenant onboarding / consent wizard | Customer-facing UX; requires Master Flow stabilization + ADR |
 | Automated consent verification | Graph app-only token probe + Enterprise Application Graph APIs |

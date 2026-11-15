@@ -87,5 +87,5 @@ Local `sql/seed/` is for the **Local** sandbox only. Do **not** apply seed scrip
 - Describe environment-specific URLs, connection settings, and **product deploy metadata** (App Service name, resource group) in the **product** README / README_AI.
 - Use this document for shared meaning of Local vs hosted **DEV** / **UAT** / **PRD** and for the hosted seed-exclusion labels.
 - Use [hosted-deployment.md](hosted-deployment.md) for deploy procedures and conventions; do not duplicate them in product repos.
-- Customer-environment Entra / App Registration cutover: [Customer Onboarding Master Flow](../runbooks/customer-onboarding-master-flow.md) · [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md) (Workflows A–F).
+- Customer-environment Entra / App Registration cutover: [Customer Onboarding Master Flow](../runbooks/customer-onboarding-master-flow.md) · [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md) (Workflows A–F) · [customer-onboarding-authorization.md](../architecture/authorization/customer-onboarding-authorization.md) (Workflow G).
 - Do not duplicate full environment matrices in every product README.

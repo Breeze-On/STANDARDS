@@ -14,7 +14,7 @@ Authentication / Identity remain under [Identity & Authentication](../identity-a
 | [Security schema standard](security-schema-standard.md) | `Security.Groups` / `GroupsMembers` |
 | [Page security standard](page-security-standard.md) | Code-based page catalog; nav / home / route / Access Denied |
 | [Customer onboarding — authorization](customer-onboarding-authorization.md) | Workflow G bootstrap administrator (slice detail) |
-| [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) | End-to-end onboarding (Step 8 = Workflow G) |
+| [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) | End-to-end onboarding (Step 7 = Workflow G; Step 8 = optional Sync Now) |
 
 Decision: [ADR-014](../../decisions/ADR-014-platform-authorization.md).
 

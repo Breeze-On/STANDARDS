@@ -2,10 +2,13 @@
   BreezeOn — Customer onboarding readiness validation (READ-ONLY)
 
   Run against the customer database after Master Flow checkpoints.
+  Typical order: Step 1 schema → Checkpoint E (login discovery) →
+  Checkpoint G (Step 7 bootstrap) → Checkpoint F / F-N/A (Step 8 sync).
   Docs: runbooks/customer-onboarding-master-flow.md
         templates/onboarding/README.md
 
   Does NOT modify data. Does NOT enable sync or bootstrap admins.
+  Does NOT create Identity.Tenants rows (login discovery is required).
 */
 
 DECLARE @ExpectedTenantId uniqueidentifier = NULL; /* set to customer Entra tid when known */
@@ -123,7 +126,7 @@ SELECT
             FROM [Security].[GroupsMembers] AS m
             INNER JOIN [Security].[Groups] AS g ON g.[GroupGUID] = m.[GroupGUID]
             WHERE g.[Code] = N'GLOBAL-SYSTEM-ADMINISTRATORS'
-        ) THEN N'FAIL: no GSA members — Workflow G / Master Flow Step 8'
+        ) THEN N'FAIL: no GSA members — Workflow G / Master Flow Step 7'
         ELSE N'PASS: at least one GLOBAL-SYSTEM-ADMINISTRATORS member'
     END AS [AdminBootstrapReadiness];
 
