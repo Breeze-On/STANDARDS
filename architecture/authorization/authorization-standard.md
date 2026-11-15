@@ -18,16 +18,26 @@ SHARED-UI owns **`IBoAuthorizationService`**. Products must not implement parall
 
 | Capability | Behavior |
 | --- | --- |
-| Resolve group Codes for a `UserGUID` | SQL read with short TTL cache |
+| Resolve group Codes for a `UserGUID` | SQL read with short TTL cache (~60s; `SqlBoAuthorizationService.CacheTtl`) |
 | `IsInGroupAsync` | Membership test |
 | `CanAccessPageAsync` | Page catalog `RequiredGroupCodes` vs membership (empty ⇒ any authenticated) |
-| Invalidation | After membership changes; TTL aligned with session gate (~60s) |
+| Invalidation | `InvalidateUser(UserGUID)` after membership add/remove |
 
 Future capabilities (app-scoped permissions, business-entity permissions) evolve **behind the same abstraction**.
 
 ## Evaluation
 
 Hybrid: load memberships by `UserGUID` (login and/or first check), cache in-process with short TTL, evaluate page access in memory. **Do not** round-trip the database on every Blazor page render.
+
+## Membership changes and authorization cache
+
+When a user is added to or removed from a Security Group (for example via EAC **Manage Members**):
+
+1. The membership row is **persisted immediately** to `Security.GroupsMembers`.
+2. Authorization cache invalidation runs through the existing infrastructure (`IBoAuthorizationService.InvalidateUser` for the affected `UserGUID`) so the next authorization check on that process instance reloads group Codes from SQL.
+3. **Existing authenticated sessions are not forcibly terminated.** Cookie/session validity is separate from authorization membership cache (session revocation follows Identity session-gate rules, not membership edits).
+4. Permission changes become effective according to the current cache model: in-process TTL **~60 seconds**, with immediate effect on the same App Service instance after `InvalidateUser` for subsequent cache misses.
+5. On multi-instance hosts, other instances may continue serving cached Codes until their local entry expires or is invalidated. **Delayed permission visibility is expected platform behavior, not a defect.** Administrators and support should not treat non-instantaneous page-access updates after membership edits as a bug when they fall within this model.
 
 ## Page vs data security
 
