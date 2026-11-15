@@ -188,6 +188,44 @@ Same as Text Field for editable chrome and deferred mandatory validation (invali
 
 These Drop-Down List rules are **org standards** for every `BoDropDownList` usage.
 
+## People Picker (`BoPeoplePicker`)
+
+**Display name:** People Picker.  
+**Component:** `BoPeoplePicker` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+
+Platform-standard **user** selector for BreezeOn applications (group membership, ownership, approvers, assignees). Visually and behaviorally a specialized Drop-Down List (same sizing, label gap, mandatory asterisk, validation chrome, disabled/read-only, chips, popup, debounce). Composes `BoDropDownList`; public API remains `Bo*` only.
+
+| Parameter | Role |
+| --- | --- |
+| `Label` / `FieldKey` | Same as Drop-Down List |
+| `Value` / `ValueChanged` | `string?` — **UserGUID** (`"D"` format) single; when `AllowMultiple`, UserGUIDs joined by **`;`**. No typed `Guid` / collection bind API in V1 |
+| `Required` / `Disabled` / `ReadOnly` / `AllowMultiple` | Same as Drop-Down List (`Required` = Mandatory; `AllowMultiple` = multi-select) |
+| `Placeholder` | Default resource **`Field_PeoplePicker_Placeholder_Default`** ("Select a person") |
+| `SearchDebounceMilliseconds` / `ProviderMaxItems` | Default 300 / **100** |
+| `ItemsProvider` | Optional override (Gallery fake / host custom). When null, uses `IBoPeoplePickerQueries` |
+| `ExcludeUserGuids` | Optional GUIDs excluded from search (serialized as JSON for the procedure) |
+| `TenantId` | Optional Entra tenant filter for the default provider |
+| `IsHidden` / `PreserveLayoutWhenHidden` / `Weight` / `ErrorText` / `ValidationGroup` | Standard field |
+
+**Bound value rules**
+
+- Persist **`UserGUID` only**. Never bind `UsersId`, Email, UPN, or `ExternalObjectId`.
+- Display text: **`DisplayName (Email)`** with null-safe fallback (DisplayName → Email → UPN → GUID string).
+- Search fields: DisplayName, Email, UserPrincipalName.
+- **Active users only** (`Identity.Users.IsEnabled = 1`). The picker model does **not** expose `IsEnabled`. Disabled users are never returned; a bound GUID that is no longer enabled falls back to showing the raw GUID string.
+- **No photos / avatars** in V1.
+
+**Data contract**
+
+- Procedure: `Identity.P_GET_UsersComponentValues` in SHARED-UI `sql/identity/current_model/` (applied into the customer database).
+- This is a **documented one-off** platform exception for reusable user selection — **not** a `*ComponentValues` procedure family. Future lookup procedures are evaluated independently.
+- Hard **TOP 100** at the database layer (`@MaxItems` clamped 1..100).
+- `@ExcludeUserGuids` / `@ResolveUserGuids`: **JSON array of GUID strings only** (no CSV). Invalid JSON fails the call.
+- C# adapter: `IBoPeoplePickerQueries` (`SearchAsync` / `ResolveAsync`) registered by `AddBreezeOnAuthentication`. Admin grid search (`IBoIdentityUserQueries`) remains separate.
+- Gallery demos use an in-memory fake `ItemsProvider` (no database) — [example-governance.md](../example-governance.md).
+
+**Gallery reference:** Components → People Picker — Parameters: Mandatory / Disabled / AllowMultiple / Hide editable; Preview (editable \| read-only \| Backend Value); Loading Sub with delayed fake provider.
+
 ## Filter execution (query-driven)
 
 When Text Fields and Drop-Down Lists act as **filters** for a queryable dataset (typically a Filters section above a grid). Retrieval standard: [query-driven-retrieval.md](query-driven-retrieval.md) · [ADR-008](../../../decisions/ADR-008-query-driven-data-retrieval.md).
@@ -206,10 +244,11 @@ When Text Fields and Drop-Down Lists act as **filters** for a queryable dataset 
 | Small | **Preload** the full item list | `Items` |
 | Large | **Top-N** + **server search** as the user types | **`ItemsProvider`** (`BoDropDownItemsRequest.SearchText` / `MaxItems`; default MaxItems **100**, configurable via `ProviderMaxItems`) |
 
-- When `ItemsProvider` is non-null, it **wins** over `Items`. Panel search is debounced (`SearchDebounceMilliseconds`, default 300) and cancels in-flight provider calls (latest-wins).
+- When `ItemsProvider` is non-null, it **wins** over `Items` for panel options. Static `Items` remain available for **selection display hydration** (lookup of preselected Codes not in the last Top-N page). Panel search is debounced (`SearchDebounceMilliseconds`, default 300) and cancels in-flight provider calls (latest-wins). While a provider call is in flight, the panel shows **Loading…** (`Field_DropDown_Loading`).
 - Static `Items` panel search remains **client-side** (display Take cap in `BoDropDownSelection` — separate from retrieval Top-N).
 - Prefer **EF Core / app-service FilterCatalog** queries for simple distinct catalogs; do not add a companion FilterOptions procedure by default ([database.md](../../database.md#query-driven-paged-list-stored-procedures)).
 - Filter catalog loads must use latest-wins (`BoLatestWinsQuery`) so stale responses never replace dropdown items.
+- Optional `EmptyText` overrides the empty-panel message (default em dash).
 
 ## Checkbox (`BoCheckbox`)
 

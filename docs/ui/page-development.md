@@ -34,7 +34,7 @@ JS file roles:
 | --- | --- |
 | `bo-theme-mode.js` | Theme-mode cookie helpers; sets `document.documentElement.dataset.boThemeMode` |
 | `bo-locale.js` | Locale cookie helpers for `bo-culture` / `bo-timezone` |
-| `bo-popup.js` | Fixed-position panels for `BoDropDownList` and `BoDateField` |
+| `bo-popup.js` | Fixed-position panels for `BoDropDownList`, `BoPeoplePicker`, and `BoDateField` |
 | `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge to the Fluent input, select-all, display sync). Without it number entry does not behave per standard |
 | `bo-grid.js` | `BoGrid` truncated-cell hover titles |
 
@@ -125,6 +125,7 @@ Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → 
 
 - [ ] **`BoTextField`** for text entry — [forms.md](controls/forms.md#text-field-botextfield).
 - [ ] **`BoDropDownList`** for Code/Description selection (panel search; `DisplayCode` / `AllowMultiple` as needed) — [forms.md](controls/forms.md#drop-down-list-bodropdownlist).
+- [ ] **`BoPeoplePicker`** for BreezeOn **user** selection (Value = `UserGUID` / `;`-joined; active users only; Top-N 100) — [forms.md](controls/forms.md#people-picker-bopeoplepicker).
 - [ ] **`BoCheckbox`** for boolean values (`Required` / `ReadOnly` Yes-No) — [forms.md](controls/forms.md#checkbox-bocheckbox).
 - [ ] **`BoDateField`** for date / date-time — bind **`DateTime?` only** (never `DateOnly`); `Mode` Date or DateTime is UI-only; Date mode still persists midnight — [forms.md](controls/forms.md#date-field-bodatefield).
 - [ ] **`BoNumberField`** for numbers — bind **`decimal?` only**; integer/decimals; `IsCurrency` / `IsPercent` mutually exclusive; percent UI 0–100 → bind ÷100; alignment default Right — [forms.md](controls/forms.md#number-field-bonumberfield).

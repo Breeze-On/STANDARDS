@@ -188,7 +188,7 @@ Older SHARED-UI treated every `IsHidden` as a reserved slot. That legacy behavio
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
-| `control` | string | Yes | `"TextField"` → `BoTextField`; `"ReadOnlyField"` → `BoFieldReadOnly`; `"EmptyField"` → `BoEmptyField`; `"DateField"` → `BoDateField`; `"NumberField"` → `BoNumberField`; `"DropDownList"` → `BoDropDownList`; `"Checkbox"` → `BoCheckbox` |
+| `control` | string | Yes | `"TextField"` → `BoTextField`; `"ReadOnlyField"` → `BoFieldReadOnly`; `"EmptyField"` → `BoEmptyField`; `"DateField"` → `BoDateField`; `"NumberField"` → `BoNumberField`; `"DropDownList"` → `BoDropDownList`; `"PeoplePicker"` → `BoPeoplePicker`; `"Checkbox"` → `BoCheckbox` |
 | `label` | string | Yes* | Field label (*omit / unused for `EmptyField`) |
 | `fieldKey` | string | Yes* | Stable DTO / working-model property id (*omit for `EmptyField`) |
 | `required` | boolean | No | Default false → `Required` / Mandatory asterisk |
@@ -221,6 +221,7 @@ Older SHARED-UI treated every `IsHidden` as a reserved slot. That legacy behavio
 | `control: "EmptyField"` | `BoEmptyField` (alignment slot only) |
 | `control: "DateField"` | `BoDateField` with `Label`, `FieldKey`, `Required`, optional `Mode` (`Date` / `DateTime`) + `@bind-Value` (**`DateTime?` only** — never `DateOnly`; Date mode → midnight) |
 | `control: "NumberField"` | `BoNumberField` with `Label`, `FieldKey`, `Required`, optional `isInteger` / `numberOfDecimals` / `isCurrency` / `currencyIsoCode` / `isPercent` / `alignment` + `@bind-Value` (**`decimal?` only**; percent UI 0–100 → bind ÷100) |
+| `control: "PeoplePicker"` | `BoPeoplePicker` with `Label`, `FieldKey`, `Required`, optional `AllowMultiple` + `@bind-Value` (**UserGUID** `string?` / `;`-joined) |
 | `weight` (when ≠ 1) | `Weight="N"` on the field |
 | `hidden: true` | `IsHidden="true"` (collapses unless preserve) |
 | `preserveLayoutWhenHidden: true` | `PreserveLayoutWhenHidden="true"` |

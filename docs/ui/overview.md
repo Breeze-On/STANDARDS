@@ -25,7 +25,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [layout/sections.md](layout/sections.md) | Main Section / Sub Section |
 | [layout/layout.md](layout/layout.md) | Row (`BoRow`) Weight + hidden/preserve layout, page composition, planning JSON schema |
 | **Controls** | |
-| [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, Date Field, and form controls |
+| [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, People Picker, Date Field, and form controls |
 | [controls/grids.md](controls/grids.md) | Grid (`BoGrid`) — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode` |
 | [controls/query-driven-retrieval.md](controls/query-driven-retrieval.md) | Query-driven retrieval — one primary contract per dataset; Filter → Sort → Page; debounce, cancellation, Top-N, exceptions ([ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md)) |
 
@@ -79,6 +79,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoEmptyField` | Empty `BoRow` alignment slot (no label/value) | [layout.md](layout/layout.md), [forms.md](controls/forms.md) |
 | `BoTextField` | Text input (default Placeholder; `ReadOnly`; deferred mandatory validation; `ErrorText` → invalid) | [forms.md](controls/forms.md) |
 | `BoDropDownList` | Searchable Code/Description Drop-Down (`Items` or async `ItemsProvider` Top-N; `DisplayCode`, `AllowMultiple` chips, panel search) | [forms.md](controls/forms.md) |
+| `BoPeoplePicker` | Platform user selector (composes Drop-Down List; Value = `UserGUID` / `;`-joined; active users only; Top-N 100) | [forms.md](controls/forms.md) |
 | `BoLatestWinsQuery` | Host latest-wins / cancel / optional signature skip for queries and FilterCatalog loads | [query-driven-retrieval.md](controls/query-driven-retrieval.md) |
 | `BoNestedViewKeywordFilter` | Client Nested View keyword Rules 1–3 (filtered tree + path-minimal expand keys) | [grids.md](controls/grids.md#nested-view-keyword-filtering-org-standard) |
 | `BoCheckbox` | Boolean (`Required` / `ReadOnly` Yes-No) | [forms.md](controls/forms.md) |
@@ -97,7 +98,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Grid** tab replaces Preview with Sub **Grid Control** hosting `BoGrid` (including Server `QueryMode`, Filters, Nested View keyword demos where shipped); **Page Freeze** tab demos `IBoPageFreezeService.RunAsync` then Success toast; **Drop-Down List** includes static Items and async `ItemsProvider` demos when shipped; Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Grid** tab replaces Preview with Sub **Grid Control** hosting `BoGrid` (including Server `QueryMode`, Filters, Nested View keyword demos where shipped); **Page Freeze** tab demos `IBoPageFreezeService.RunAsync` then Success toast; **Drop-Down List** includes static Items and async `ItemsProvider` demos when shipped; **People Picker** tab demos Mandatory / Disabled / AllowMultiple / Loading with an in-memory fake provider (no database); Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation). Nav: Home / Components / Theme (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
 
 **Ownership:** Gallery is the primary working-example host for library-scoped UI / query patterns. Product pages are product reference only. Full rules: [example-governance.md](example-governance.md).
 

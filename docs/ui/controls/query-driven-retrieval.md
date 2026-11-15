@@ -103,6 +103,7 @@ Control detail: [forms.md — Filter execution](forms.md#filter-execution-query-
 - Default Top-N recommendation: **100** (`ProviderMaxItems` / `BoDropDownItemsRequest.MaxItems`) — configurable per control instance.
 - Panel display cap for **static** `Items` (client filter Take) is a separate UX concern from retrieval Top-N.
 - Small vs large is a planning judgment; challenge full Distinct preload when catalogs grow.
+- **People Picker:** platform user directory uses `BoPeoplePicker` + `Identity.P_GET_UsersComponentValues` (active users only; hard TOP 100 at the database). This is a **documented one-off** Identity procedure for reusable user selection — **not** a generalized `*ComponentValues` family. Detail: [forms.md — People Picker](forms.md#people-picker-bopeoplepicker).
 
 Detail: [forms.md — Drop-Down data retrieval](forms.md#drop-down-data-retrieval).
 

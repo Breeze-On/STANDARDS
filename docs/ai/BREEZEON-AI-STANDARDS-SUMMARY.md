@@ -77,6 +77,7 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Query-driven retrieval | One primary contract per dataset; Filter → Sort → Page; `BoLatestWinsQuery`; FilterCatalog (not FilterOptions SP) | [query-driven-retrieval.md](../ui/controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md) |
 | Nested View keyword | Rules 1–3; client helper `BoNestedViewKeywordFilter` | [grids.md](../ui/controls/grids.md#nested-view-keyword-filtering-org-standard) |
 | Drop-Down retrieval | Small → `Items`; large → `ItemsProvider` Top-N + search | [forms.md](../ui/controls/forms.md) |
+| People Picker | `BoPeoplePicker`; Value = `UserGUID` / `;`-joined; active only; Top-N 100; no photos V1 | [forms.md](../ui/controls/forms.md#people-picker-bopeoplepicker) |
 | Example Governance | Normative + AI guidance + Gallery example required | [example-governance.md](../ui/example-governance.md) |
 | Controls | Shipped `Bo*` field types only | [ui/controls/forms.md](../ui/controls/forms.md) |
 | Tokens / type | Semantic CSS vars; Calibri | [ui/foundations/tokens.md](../ui/foundations/tokens.md), [typography.md](../ui/foundations/typography.md) |

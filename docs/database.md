@@ -50,7 +50,7 @@ MI grant + connection string alone are **not** sufficient. Missing the extension
 Apply `NOT NULL` **only** when:
 
 1. The column is part of the **primary key**, or
-2. The column **name contains `GUID`** (case-insensitive match, e.g. `ApplicationsGUID`).
+2. The column **name contains `GUID`** (case-insensitive match, e.g. `ApplicationGUID`).
 
 All other business columns are **NULL**-allowed unless an explicit, documented exception is approved for that column.
 
@@ -108,6 +108,17 @@ When a product introduces stored procedures under the EAC-owned **`System`** sch
 | **Delete (types)** | `System.P_POST_EACBusinessEntityTypeDelete` |
 
 Prefer one upsert POST plus a dedicated delete procedure when delete semantics differ (for example recursive hierarchy delete). Pass the audit actor as a parameter (for example `@Actor`) so procedures can stamp mandatory audit columns. Document each procedure in the product `docs/db-model.md`. Script file names should match the procedure name (e.g. `System.P_POST_EACBusinessEntityDelete.sql`).
+
+### Platform Identity procedure (People Picker — one-off)
+
+`Identity.P_GET_UsersComponentValues` (SYSTEM-SHARED-UI `sql/identity/current_model/`) is a **documented one-off** exception for the platform `BoPeoplePicker` control:
+
+- Active users only (`IsEnabled = 1`); result projection does **not** include `IsEnabled`.
+- Hard **TOP 100** (`@MaxItems` clamped 1..100).
+- `@ExcludeUserGuids` / `@ResolveUserGuids`: **JSON array of GUID strings only** (no CSV / dual formats).
+- Returns `UserGUID`, `DisplayName`, `Email`, `UserPrincipalName`, `DisplayText` — never `UsersId` as a selectable key.
+
+Do **not** treat this name as the start of a `P_GET_*ComponentValues` family across schemas. Any future lookup procedure requires its own justified need (this section / [query-driven-retrieval.md](ui/controls/query-driven-retrieval.md)).
 
 ## Query-driven paged list stored procedures
 
@@ -174,12 +185,31 @@ Canonical JSON for `@FiltersJson`, aligned with `BoQueryFilter` / `BoQueryFilter
 - Other applications **consume** those registry values (for example via `ApplicationGUID`); they must **not** fork duplicate application-catalog tables.
 - Concrete table inventory lives in the EAC product [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) and `sql/current_model/` — not in this file.
 
+## Primary keys, GUID columns, and relationships
+
+Standing platform rules (also summarized in [naming.md](naming.md)):
+
+| Concept | Rule |
+| --- | --- |
+| **Primary key** | `TableName` + `Id` (e.g. `UsersId`, `GroupsMembersId`). Physical clustered key only. |
+| **GUID column** | Singular entity + `GUID` (e.g. `UserGUID`, `GroupMemberGUID`). Never plural table stem (`UsersGuid` is forbidden). |
+| **Logical relationships** | Use immutable GUID columns only (`UserGUID`, `GroupGUID`, `ApplicationGUID`, `BusinessEntityGUID`, `ApplicationEnabledGUID`, …). Integer `*Id` columns must not be used for logical relationships, cross-product contracts, authorization, or integrations. |
+| **Canonical user id** | **`UserGUID`**. Hierarchy: Entra `(TenantId, ExternalObjectId)` → `UserGUID` → physical `UsersId`. |
+| **Identity / Security GUID type** | `UNIQUEIDENTIFIER` (typically `NEWSEQUENTIALID()` default). |
+| **EAC catalog GUID type** | `NVARCHAR(600)` today (type convergence with `UNIQUEIDENTIFIER` is a separate future decision). |
+
 ## Platform Identity schema ownership
 
 - The SQL schema **`Identity`** (`Identity.Users`, `Identity.UsersLogins`, `Identity.Tenants`, `Identity.UserPhotos`) is a **BreezeOn platform** directory model — not EAC-specific and not ASP.NET Core Identity / `AspNet*`.
 - **Definitions** (T-SQL current model + local seed) are owned by **SYSTEM-SHARED-UI** (`sql/identity/`). SHARED-UI does not host a database.
-- **Physical tables** live in the **customer database** (one catalog per customer-environment, shared by all product applications in that environment). Adopting apps apply the SHARED-UI scripts idempotently in local init / deploy order and must not fork competing user masters or create a second Identity catalog for the same customer.
-- Permanent key: `(TenantId, ExternalObjectId)`. SSOT: [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md), [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
+- **Physical tables** live in the **customer database** (one catalog per customer-environment, shared by all product applications in that environment). Adopting apps apply the SHARED-UI scripts in local init / deploy order and must not fork competing user masters or create a second Identity catalog for the same customer.
+- Authoritative Entra resolution key: `(TenantId, ExternalObjectId)`. Canonical BreezeOn user identifier: **`UserGUID`**. SSOT: [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md), [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
+
+## Platform Security schema ownership
+
+- The SQL schema **`Security`** (`Security.Groups`, `Security.GroupsMembers`) is the **BreezeOn platform** authorization store — not EAC-only business data.
+- **Definitions** are owned by **SYSTEM-SHARED-UI** (`sql/security/`). Physical tables live in the customer database beside `Identity`.
+- Relationships use `GroupGUID` and `UserGUID` only. SSOT: [architecture/authorization/](../architecture/authorization/README.md), [ADR-014](../decisions/ADR-014-platform-authorization.md).
 
 ## Application registry identity columns
 
