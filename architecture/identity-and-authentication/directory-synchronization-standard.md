@@ -60,6 +60,7 @@ Enable each tenant that should be synchronized. Login discovery never enables sy
 
 ## Related
 
+- [Customer authentication onboarding](customer-onboarding-authentication.md) (Phase 2 Graph consent + `IsSyncEnabled`)
 - [identity-schema-standard.md](identity-schema-standard.md)
 - [authentication-standard.md](authentication-standard.md)
 - [cloud-architecture.md](cloud-architecture.md)

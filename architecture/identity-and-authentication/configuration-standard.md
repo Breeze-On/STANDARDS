@@ -69,6 +69,7 @@ Local multi-app redirects on `BreezeOn-LOCAL` follow the same pattern (one regis
 
 ## Related
 
+- [Customer authentication onboarding](customer-onboarding-authentication.md) (operator runbook for customer-environment cutover)
 - [Cloud architecture](cloud-architecture.md)
 - [Local development standard](local-development-standard.md)
 - [Session management standard](session-management-standard.md)

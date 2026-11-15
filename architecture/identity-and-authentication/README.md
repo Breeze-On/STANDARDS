@@ -24,6 +24,7 @@ This is a **BreezeOn platform standard**. It applies to all current and future B
 | [Directory synchronization standard](directory-synchronization-standard.md) | Manual Sync Now, full Graph sync, explicit `IsSyncEnabled`, soft-disable |
 | [Configuration standard](configuration-standard.md) | `AUTHENTICATION__AUTHORITY` / `CLIENTID` / `CLIENTSECRET`; secret lifecycle |
 | [Local development standard](local-development-standard.md) | `BreezeOn-LOCAL`, no bypass, same OIDC flow as hosted; Identity seed |
+| [Customer authentication onboarding](customer-onboarding-authentication.md) | **Mandatory** operator runbook — App Registration, consent, first login, optional Graph sync |
 | [Future roadmap](future-roadmap.md) | **Planned / not shipped** — delta, schedule, Blob photos, Tenants UI, roles, SCIM, SSO |
 
 SQL Managed Identity for Azure SQL is **orthogonal** and remains in [security.md](../security.md).

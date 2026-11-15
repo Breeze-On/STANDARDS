@@ -25,5 +25,5 @@ Login-time upsert only creates `Identity.Users` for people who sign in. Business
 
 - Identity schema expands with `Identity.Tenants` and `Identity.UserPhotos`; ADR-010 and [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md) update in the same change set.
 - [future-roadmap.md](../architecture/identity-and-authentication/future-roadmap.md) removes shipped Graph sync / login photos from “not shipped” and lists deferred items (delta, schedule, Blob, Tenants UI, authZ, org attributes).
-- Customer onboarding documents Phase 2 application consent and explicit `IsSyncEnabled` SQL.
+- Customer onboarding Phase 2 (application consent + explicit `IsSyncEnabled` SQL): [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md).
 - Cookie login path stays OIDC + cookies; Graph is app-only for sync and login photo.

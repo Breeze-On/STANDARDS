@@ -23,7 +23,7 @@ Earlier wording used product-scoped registration names (for example `CustomerA-E
 
 ## Consequences
 
-- Naming, onboarding, redirect URI lists, and implications follow [cloud-architecture.md](../architecture/identity-and-authentication/cloud-architecture.md) and [configuration-standard.md](../architecture/identity-and-authentication/configuration-standard.md).
+- Naming, onboarding, redirect URI lists, and implications follow [cloud-architecture.md](../architecture/identity-and-authentication/cloud-architecture.md) and [configuration-standard.md](../architecture/identity-and-authentication/configuration-standard.md). Operator cutover checklist: [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md).
 - Local work always uses `BreezeOn-LOCAL` and the same OIDC flow as hosted ([local-development-standard.md](../architecture/identity-and-authentication/local-development-standard.md)).
 - Shared App Registration enables Entra-level SSO (silent re-auth across products). It does **not** create a shared `BreezeOn.Auth` cookie across hosts; cookie SSO productization remains future work ([future-roadmap.md](../architecture/identity-and-authentication/future-roadmap.md)).
 - Per-product App Registrations within a customer-environment are **not** the platform standard. Exceptions (independent consent, separate secret blast radius, or a product outside the shared customer database) require a superseding ADR.

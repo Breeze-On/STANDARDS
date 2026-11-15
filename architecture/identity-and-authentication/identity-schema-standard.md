@@ -40,7 +40,7 @@ Master user directory and Microsoft Graph synchronization target.
 | `DisplayName` | `NVARCHAR(256)` NULL | |
 | `GivenName` | `NVARCHAR(128)` NULL | |
 | `Surname` | `NVARCHAR(128)` NULL | |
-| `IsEnabled` | `BIT` NOT NULL | Default 1. Directory enablement: when `0`, login fails and no application cookie is issued. Does **not** immediately revoke existing cookies (see [session-management-standard.md](session-management-standard.md)). Login path does not mutate this column. Sync path may set from Graph `accountEnabled` / soft-disable. |
+| `IsEnabled` | `BIT` NOT NULL | Default 1. Directory enablement: when `0`, login fails (no cookie) **and** ongoing sessions are rejected via `IBoIdentitySessionGate` within the 60s cache SLO ([session-management-standard.md](session-management-standard.md), [ADR-012](../../decisions/ADR-012-cookie-session-management.md)). Login path does not mutate this column. Sync path may set from Graph `accountEnabled` / soft-disable. |
 | `LastSyncUtc` | `DATETIME2` NULL | Last time this row was refreshed by Graph sync; null until sync |
 | `LastLoginUtc` | `DATETIME2` NULL | Denormalized last successful login |
 

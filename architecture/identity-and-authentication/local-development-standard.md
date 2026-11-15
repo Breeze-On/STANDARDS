@@ -33,12 +33,14 @@ Add the corresponding pair for every other local product host (Gallery, future V
 
 ## Verification workflow
 
-1. Apply local SQL (`dev-reset.ps1`) including platform Identity **schema + seed** from SYSTEM-SHARED-UI (sample `Identity.Tenants` / `Identity.Users` for Users page without Graph).
+1. Apply local SQL (`dev-reset.ps1`) including platform Identity **schema** from SYSTEM-SHARED-UI and optional tenant seed (`IDENTITY__SEEDTENANTIDS` → `Identity.Tenants` only; **no** `Identity.Users` seed).
 2. Set the three `AUTHENTICATION__*` values (User Secrets).
 3. Confirm BreezeOn-LOCAL redirect URIs match the app HTTPS URL.
 4. Run the product app; browse a protected route → Entra challenge → callback.
-5. Confirm `Identity.Users` upsert, `Identity.Tenants` discovery (without auto-enabling sync), `LastLoginUtc`, and `Identity.UsersLogins` success row in local SQL.
+5. Confirm `Identity.Users` upsert, `Identity.Tenants` discovery (without auto-enabling sync unless seeded), `LastLoginUtc`, and `Identity.UsersLogins` success row in local SQL.
 6. Sign out via profile menu → cookie cleared + Entra end-session → re-challenge on next request.
+
+Customer-environment (hosted) onboarding is **not** this document — use [customer-onboarding-authentication.md](customer-onboarding-authentication.md).
 
 ### Directory sync (local)
 

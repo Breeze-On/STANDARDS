@@ -34,7 +34,7 @@ Configuration knobs for these security attributes are **not** exposed on `BoAuth
 | Absolute expiry | Ticket older than 24 hours from issue is rejected; user is challenged again |
 | Explicit logout | Clear application cookie, then OIDC sign-out (Entra end-session / `signout-callback-oidc`) |
 | Expired / invalid ticket | Challenge → login |
-| `Identity.Users.IsEnabled = 0` | Blocks **new** authenticated sessions at login. Existing cookies remain valid until idle or absolute expiry. Immediate mid-session revocation is **not** implemented |
+| `Identity.Users.IsEnabled = 0` | Blocks **new** sessions at login **and** ongoing sessions: `OnValidatePrincipal` calls `IBoIdentitySessionGate`. Missing Identity row or `IsEnabled = 0` → reject principal and clear cookie. Process-local cache TTL **60 seconds** (revocation SLO per App Service instance). Fail closed on recheck errors. No security stamp / server session store ([ADR-012](../../decisions/ADR-012-cookie-session-management.md)) |
 | Application restart | Depends on Data Protection key persistence (see below) |
 | Multiple App Service instances (same slot) | Cookies remain decryptable via the shared App Service key folder |
 | Separate product apps (e.g. EAC vs VMR) | Separate cookies and key rings — expected. Same customer-environment App Registration and shared Identity directory ≠ shared SSO cookie |
@@ -70,6 +70,7 @@ Rely on supported ASP.NET Core OpenIdConnect middleware:
 
 ## Related
 
+- [Customer authentication onboarding](customer-onboarding-authentication.md)
 - [Configuration standard](configuration-standard.md)
 - [Identity schema standard](identity-schema-standard.md)
 - [Future roadmap](future-roadmap.md)

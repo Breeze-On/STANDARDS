@@ -17,7 +17,7 @@ Owner: Architecture
 
 ## Ownership
 
-- **SYSTEM-SHARED-UI** owns the authentication framework: OIDC registration helpers, cookie/session policy, middleware/endpoint helpers, current-user/claims helpers, login/logout, profile menu sign-out integration, the default Identity directory SQL writer, tenant discovery, directory synchronizer, and login-time profile photo refresh.
+- **SYSTEM-SHARED-UI** owns the authentication framework: OIDC registration helpers, cookie/session policy (including mid-session `IBoIdentitySessionGate`), middleware/endpoint helpers, current-user/claims helpers, login/logout, profile menu sign-out integration, the default Identity directory SQL writer, tenant discovery, directory synchronizer, and login-time profile photo refresh.
 - **Product applications** call the shared registration helpers and supply a database connection factory to the **customer** database. They must **not** independently redesign OIDC, cookies, Identity upsert, or Graph sync logic.
 
 ## Successful login behaviour
@@ -31,19 +31,25 @@ Owner: Architecture
 7. Best-effort refresh of `Identity.UserPhotos` via Microsoft Graph. Failure must **never** fail sign-in; keep any existing photo.
 8. Establish the authenticated cookie session per [session-management-standard.md](session-management-standard.md).
 
+## Ongoing session validation
+
+After the cookie is issued, `OnValidatePrincipal` continues to enforce absolute lifetime and **`IBoIdentitySessionGate`** (SHARED-UI). A disabled or missing `Identity.Users` row ends the application session within the platform cache SLO (60 seconds per host instance). Login path does not mutate `IsEnabled`; directory sync / operators own enablement. Details: [session-management-standard.md](session-management-standard.md), [ADR-012](../../decisions/ADR-012-cookie-session-management.md).
+
 ## Logout
 
 Clear the application cookie and redirect to Entra end-session (`signout-callback-oidc`). Wire through `BoProfileMenu`. Local application logout and Entra sign-out are distinct — see session standard.
 
 ## Persistence seam
 
-- `IBoIdentityDirectory` + default `SqlIdentityDirectory` in SYSTEM-SHARED-UI.
+- `IBoIdentityDirectory` + default `SqlIdentityDirectory` in SYSTEM-SHARED-UI (login upsert / tenant discovery).
+- `IBoIdentitySessionGate` + default `SqlIdentitySessionGate` for mid-session validity (Valid/Invalid only; not directory write APIs).
 - Host registers `IBoIdentityConnectionFactory` (connection to the **customer** database where `Identity.*` physically lives, shared by all products in that customer-environment).
 - No product `DbContext` or repository types inside SHARED-UI.
-- Directory sync and photo services also use the same connection factory and authentication options.
+- Directory sync, session gate, and photo services also use the same connection factory and authentication options.
 
 ## Related
 
+- [Customer authentication onboarding](customer-onboarding-authentication.md)
 - [Session management standard](session-management-standard.md)
 - [Identity schema standard](identity-schema-standard.md)
 - [Directory synchronization standard](directory-synchronization-standard.md)

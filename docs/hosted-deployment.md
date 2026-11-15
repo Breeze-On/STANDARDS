@@ -29,7 +29,7 @@ Current Reality Only: documents the **approved implementation in use today**. Fu
 **Out of scope**
 
 - Local development (`dev-reset.ps1`, Docker SQL) — see [local-development-scripts.md](local-development-scripts.md), [local-database.md](local-database.md)
-- Application data model and end-user Identity auth — see [architecture/](../architecture/) and product `docs/`
+- Application data model and end-user Identity auth / Entra customer onboarding — see [architecture/](../architecture/), [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md), and product `docs/` (this document is App Service / SQL MI deploy, not Entra cutover)
 - UAT / PRD Azure resource inventories (those hosts are not documented as implemented yet) — naming pattern only
 
 **In this document for data-owning apps:** App Service connection string name **`SQLAzureConnection`** and how to set it. SQL Managed Identity **grant script** lives under [`templates/azure-sql/`](../templates/azure-sql/); access model: [architecture/security.md](../architecture/security.md).

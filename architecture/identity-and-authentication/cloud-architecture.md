@@ -53,6 +53,7 @@ Per-product App Registrations within a customer-environment are **not** the plat
 
 ## Related
 
+- [Customer authentication onboarding](customer-onboarding-authentication.md) (operator runbook)
 - [Configuration standard](configuration-standard.md)
 - [Local development standard](local-development-standard.md)
 - [Session management standard](session-management-standard.md)
