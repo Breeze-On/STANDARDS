@@ -47,6 +47,9 @@ A user may hold Application and Business Entity administrator membership for dif
 | Modify Application Enabled (create/update/remove) | Yes | No | No | No |
 | View Group Membership (`APP_*` via Manage Members) | Yes | No (action disabled) | No | No |
 | Modify Group Membership (`APP_*`) | Yes | No | No | No |
+| View Group Membership (`APPENA_*` via child-grid Manage Members) | Yes | No (action disabled) | No | No |
+| Modify Group Membership (`APPENA_*`) | Yes | No | No | No |
+| APPENA membership grants visibility / edit / page access | No (not evaluated today) | No | No | No |
 
 ## Business Entities
 
