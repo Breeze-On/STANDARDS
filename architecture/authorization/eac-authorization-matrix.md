@@ -21,7 +21,7 @@ Capability × persona for Enterprise Administration Center (Applications, Busine
 | **Business Entity Administrator** | Member of that Business Entity’s associated `BUSENT_*` group only |
 | **Authenticated user** | Signed in, not in the relevant admin groups |
 
-A user may hold Application and Business Entity administrator membership for different objects; rights do not cross domains.
+A user may hold Application and Business Entity administrator membership for different objects; rights do not cross domains. There is **no** current Application Configuration Administrator persona: `APPENA_*` groups exist for lifecycle ownership only and grant no authorization today ([ADR-015](../../decisions/ADR-015-object-owned-administrator-groups.md)).
 
 ## Legend
 
@@ -29,8 +29,10 @@ A user may hold Application and Business Entity administrator membership for dif
 | --- | --- |
 | **Yes** | Allowed |
 | **No** | Denied |
-| **Scoped** | Only for objects whose admin `GroupGUID` includes the user |
-| **Ancestor** | Visible for navigation only; no mutating actions |
+| **Scoped** | Only for objects whose admin `GroupGUID` includes the user (direct membership) |
+| **Ancestor** | Parent (or higher) of an authorized entity: visible for navigation only; not editable |
+| **Descendant** | Child (or deeper) of an authorized Business Entity: visible and editable (`CanManage`) |
+| **CanManage** | Row may be edited for allowed business metadata fields (see Notes) |
 | **View-context** | Read-only within that page context |
 
 ## Applications
@@ -56,8 +58,9 @@ A user may hold Application and Business Entity administrator membership for dif
 | Capability | GSA | Application Administrator | Business Entity Administrator | Authenticated (no admin groups) |
 | --- | --- | --- | --- | --- |
 | Open BE Hierarchy | Yes | Access Denied if no BE membership | Yes if ≥1 BE else Access Denied | Access Denied if zero BEs |
-| View Business Entity | Yes (all) | No | Scoped (+ Ancestor + Descendants) | No |
-| Edit BE business metadata | Yes | No | Scoped (`CanManage` on membership + descendants) | No |
+| View Business Entity | Yes (all) | No | Scoped + Descendants + Ancestors (ancestors view-only) | No |
+| Edit BE business metadata (Code, Description, Metadata) | Yes | No | Scoped + Descendants (`CanManage`); not Ancestors | No |
+| Change BE Type / Parent | Yes | No | No | No |
 | Create Business Entity | Yes | No | No | No |
 | Delete Business Entity | Yes | No | No | No |
 | Reassign GroupGUID | Yes (lifecycle/provisioning) | No | No | No |
@@ -83,7 +86,9 @@ A user may hold Application and Business Entity administrator membership for dif
 
 ## Notes
 
-- System group **Code** (`APP_*` / `BUSENT_*`) is a create-time snapshot; editing Application UniqueCode or BE Code does not rename the group. **`GroupGUID`** remains the stable link.
+- System group **Code** (`APP_*` / `BUSENT_*` / `APPENA_*`) is a create-time snapshot; editing Application UniqueCode or BE Code does not rename the group. **`GroupGUID`** remains the stable link. Reserved prefixes (create-time collision defense): [security-schema-standard.md](security-schema-standard.md).
 - Empty administrator groups are valid until GSA assigns members.
-- Ancestor visibility does not grant access to siblings, descendants, or related objects.
-- Page vs data security: [authorization-standard.md](authorization-standard.md). Product behavior: [architecture/eac.md](../eac.md).
+- **Business Entity forest (current):** Membership on a BE admin group grants view + edit (`CanManage`) for that entity and **all descendants**. **Ancestors** of authorized entities are visible for navigation only (not editable). Membership does **not** grant siblings or unrelated branches.
+- **Business Entity administrators** may edit Code / Description / Metadata on `CanManage` rows. They may **not** change Type, Parent, Application Enabled relationships, or security membership / `GroupGUID`. Those remain GSA.
+- **APPENA:** Groups are lifecycle-owned security artifacts. Membership is GSA-managed but **not evaluated** by authorization (no visibility, edit, or page access). Application Configuration authorization is future work; revisit docs when that module ships. Do not invent Configuration capabilities here.
+- Page vs data security: [authorization-standard.md](authorization-standard.md). Architecture: [ADR-015](../../decisions/ADR-015-object-owned-administrator-groups.md). Product surface: [architecture/eac.md](../eac.md).
