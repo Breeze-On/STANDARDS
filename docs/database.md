@@ -210,7 +210,8 @@ Standing platform rules (also summarized in [naming.md](naming.md)):
 
 - The SQL schema **`Security`** (`Security.Groups`, `Security.GroupsMembers`) is the **BreezeOn platform** authorization store — not EAC-only business data.
 - **Definitions** are owned by **SYSTEM-SHARED-UI** (`sql/security/`). Physical tables live in the customer database beside `Identity`.
-- Relationships use `GroupGUID` and `UserGUID` only. SSOT: [architecture/authorization/](../architecture/authorization/README.md), [ADR-014](../decisions/ADR-014-platform-authorization.md).
+- Relationships use `GroupGUID` and `UserGUID` only. SSOT: [architecture/authorization/](../architecture/authorization/README.md), [ADR-014](../decisions/ADR-014-platform-authorization.md), [ADR-015](../decisions/ADR-015-object-owned-administrator-groups.md).
+- **`Security.Groups.Code`** is **`NVARCHAR(700)`** (documented column exception to the org Code default of 30) so system-generated Codes such as `APP_{UniqueCode}` fit without capping business UniqueCode fields; uniqueness is on Code only.
 
 ## Application registry identity columns
 

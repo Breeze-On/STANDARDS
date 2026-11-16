@@ -58,9 +58,9 @@ Import and export use the **same** shape. Unknown properties on read are ignored
 Upsert rules:
 
 - Match by **current** `UniqueCode` in the database.
-- Found → **update** `Code`, `Description`, `Metadata` (preserve `ApplicationGUID`).
-- Not found → **create** with a new `ApplicationGUID`.
-- After application upsert: for each Code in `BusinessEntitiesEnabled`, resolve to `BusinessEntityGUID`, create missing Application Contexts; ignore Codes already enabled; skip Codes that do not resolve to an existing Business Entity. Exclusivity `(ApplicationGUID, BusinessEntityGUID)` still applies.
+- Found → **update** `Code`, `Description`, `Metadata` (preserve `ApplicationGUID` and `GroupGUID`; never reassign the administrator group).
+- Not found → **create** with a new `ApplicationGUID` and provision/reuse administrator group `APP_{UniqueCode}` via the same central provisioner as UI create (reuse existing group by Code without renaming, description overwrite, membership, or metadata changes; no auto-members).
+- After application upsert: for each Code in `BusinessEntitiesEnabled`, resolve to `BusinessEntityGUID`, create missing Application Contexts; ignore Codes already enabled; skip Codes that do not resolve to an existing Business Entity. Exclusivity `(ApplicationGUID, BusinessEntityGUID)` still applies. Application Enabled mutations on import are **Global System Administrator** only ([eac-authorization-matrix.md](../architecture/authorization/eac-authorization-matrix.md)).
 
 There is **no** rename detection, alias lookup, or historical UniqueCode mapping.
 
@@ -176,10 +176,11 @@ Envelope for EAC Business Hierarchy import/export. Business keys only (`code`, `
 
 ### Import rules
 
-- Upsert by current `code` (preserve `BusinessEntityGUID` on update).
+- Upsert by current `code` (preserve `BusinessEntityGUID` and `GroupGUID` on update; never reassign the administrator group).
+- Create provisions/reuses `BUSENT_{Code}` via the same central provisioner as UI create (reuse by Code without mutation; no auto-members).
 - Validate then apply in **parent-before-child** order.
 - Reject unknown `businessEntityTypeCode`, missing `parentCode`, in-file duplicate codes, and circular relationships.
-- Fail-fast: any failure aborts the entire import and **rolls back** all rows from that import (single database transaction).
+- Fail-fast: any failure aborts the entire import and **rolls back** all rows from that import (single database transaction). Import is **Global System Administrator** only.
 - Max size: `BusinessEntitiesImport:MaxFileSizeMb` (default **10**); in-memory only.
 
 ### Export
