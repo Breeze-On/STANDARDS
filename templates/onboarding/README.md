@@ -1,10 +1,16 @@
-# Onboarding validation templates
+# Onboarding operator templates
 
 Owner: Operations
 
-Read-only operator aids for the [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md). These are **not** product features and must not be applied as hosted seed.
+Operator aids for the [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md). These are **not** product features and must not be applied as hosted product seed.
 
-Typical run order after cutover steps: schema (Step 1) → tenant discovery (Checkpoint E) → admin bootstrap (Checkpoint G / Step 7) → sync readiness (Checkpoint F or F-N/A / Step 8). Do **not** manually insert `Identity.Tenants` as part of normal validation — login discovery is required.
+Typical run order after cutover steps: schema (Step 1) → tenant discovery / first login (Checkpoint E / Step 6) → **admin + sync-enable bootstrap** (Checkpoint G / Step 7) → **Sync Now** when Graph = Yes (Checkpoint F / Step 8).
+
+## bootstrap-global-system-administrators.sql
+
+**Master Flow Step 7 / Workflow G apply script.** Edit `@TenantAdminPairs` (`{entra-tid}|{admin-upn}` semicolon-separated; **≥1 admin per tenant**), apply to the customer database, then proceed to Sync Now (Step 8) when Graph = Yes. Detail: [customer-onboarding-authorization.md](../../architecture/authorization/customer-onboarding-authorization.md).
+
+Same script body is maintained for EAC local bootstrap at `SYSTEM-ADMIN-EAC/sql/seed/BootstrapGlobalSystemAdministrators.sql`.
 
 ## validate-onboarding-readiness.sql
 
