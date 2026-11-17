@@ -409,4 +409,6 @@ These Number Field rules are **org standards** for every `BoNumberField` usage.
 | `BackgroundColor` / `ForegroundColor` | Optional overrides |
 | `AdditionalAttributes` | Unmatched attributes are captured and forwarded |
 
+**Label wrapping (platform rule):** button labels stay on **one line**. `.bo-button` / `.bo-button__label` use `white-space: nowrap`; the control uses `width: max-content` (+ `align-self: flex-start`) so it **hugs the label** and does not stretch to the `BoRow` / `BoField` slot. When placing a button in a narrow slot, raise `Weight` (or reduce competing columns) so the label is not clipped by `max-width: 100%`.
+
 **Long-running operations:** \BoButton\ stays a button — no \IsBusy\ / embedded spinner API. Blocking UX for multi-second work uses **\IBoPageFreezeService\** from the click handler / workflow — [overlays.md](../shell/overlays.md).

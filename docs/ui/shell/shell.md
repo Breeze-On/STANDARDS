@@ -12,7 +12,7 @@ App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.
 | --- | --- | --- |
 | Left nav | `BoNavPane` / `BoNavLink` | Platform navigation — see [navigation.md](navigation.md) |
 | Header | `BoAppHeader` | Top header card; **per-page** `AppTitle` / `Subtitle` (host-localized); trailing actions; optional `TabsContent` |
-| Body | `BoAppBody` | Body region inside a floating card; card **fills** the available shell viewport slot; when content exceeds the slot, scroll **inside** the body (`overflow: auto` on `BoAppBody`). **Platform rule:** containers must provide scrollbars when content exceeds their bounds — do not use `overflow: hidden` on `BoAppBody` except intentional exceptions (e.g. Home / nav hub). Home / nav hub: card fills the slot with **no** body scrollbar |
+| Body | `BoAppBody` | Body region inside a floating card; card **fills** the available shell viewport slot; when content exceeds the slot, scroll **inside** the body (`overflow: auto` on `BoAppBody`). **Platform rule:** containers must provide scrollbars when content exceeds their bounds — do not use `overflow: hidden` on `BoAppBody` except intentional exceptions (e.g. Home / nav hub; **visible** workspace `BoPanelHost` — see [panels.md](../layout/panels.md)). Home / nav hub / visible panel host: card fills the slot with **no** body scrollbar (panels scroll independently). Hosts inside **hidden** keep-alive tab panels must not disable body scroll for other tabs |
 | Footer | `BoAppFooter` | Optional per page (`ShowFooter`); when shown, fixed bottom footer card |
 
 `BoShellCard` provides floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None. Token names: [tokens.md](../foundations/tokens.md).
@@ -51,7 +51,7 @@ Footer is **optional per page** via `BoAppShell.ShowFooter` (default `true`). Wh
 
 ## Header tabs (optional page sections)
 
-Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTabs` / `BoTab` and body `BoTabPanels` / `BoTabPanel`. Tabs are page sections, not left-nav routes.
+Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTabs` / `BoTab` and body `BoTabPanels` / `BoTabPanel`. Tabs are page sections, not left-nav routes. For large multi-section **workspace** navigation (App Config, onboarding, admin), use `BoPanelNavigation` + `BoKeepAlivePanels` instead — [panels.md](../layout/panels.md). Do not conflate header tabs with workspace panel navigation.
 
 **Gallery Error Message Page:** uses the same tab architecture as Components / Theme **even when only one tab exists** (Access Denied today). This is intentional so future error scenarios are added as tabs on `/error-message-page`, not as separate showcase pages.
 

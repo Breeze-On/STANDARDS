@@ -26,6 +26,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | **Layout** | |
 | [layout/sections.md](layout/sections.md) | Main Section / Sub Section |
 | [layout/layout.md](layout/layout.md) | Row (`BoRow`) Weight + hidden/preserve layout, page composition, planning JSON schema |
+| [layout/panels.md](layout/panels.md) | Workspace panels (`BoPanelHost` / `BoPanel` / `BoPanelNavigation` / `BoKeepAlivePanels`) |
 | **Controls** | |
 | [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, People Picker, Date Field, and form controls |
 | [controls/grids.md](controls/grids.md) | Grid (`BoGrid`) — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode` |
@@ -67,6 +68,9 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoProfileMenu` | Avatar (initials; photo store via Identity) + Sign out via Account endpoints | [shell.md](shell/shell.md) |
 | `BoTabs` / `BoTab` | Optional page-section tabs under the header title row | [shell.md](shell/shell.md) |
 | `BoTabPanels` / `BoTabPanel` | Keep-alive body sections keyed to tabs (`SelectedTab`) | [shell.md](shell/shell.md) |
+| `BoPanelHost` / `BoPanel` | Independently scrolling workspace layout regions (`Dock` Left/Right/Fill); not coupled to `BoAppBody` | [panels.md](layout/panels.md) |
+| `BoPanelNavigation` | Navigator-only workspace section list (card chrome + validation badges); 10–30 items | [panels.md](layout/panels.md) |
+| `BoKeepAlivePanels` / `BoKeepAlivePanel` | Generic keyed keep-alive content host (pair with panel nav; not a second Tabs framework) | [panels.md](layout/panels.md) |
 | `BoAppBody` | Scrollable body region content host (scrolls inside body card) | [shell.md](shell/shell.md) |
 | `BoAppFooter` | Bottom footer card (optional per page via `ShowFooter`; shorter inside padding) | [shell.md](shell/shell.md) |
 | `BoAccessDenied` | Styled Access Denied body (`.bo-error-message*` foundation; Access/Support Details; localized); used by `BoAuthorizeRouteView` and Gallery Error Message Page | [error-messages.md](shell/error-messages.md) |
@@ -102,7 +106,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Grid** tab replaces Preview with Sub **Grid Control** hosting `BoGrid` (including Server `QueryMode`, Filters, Nested View keyword demos where shipped); **Page Freeze** tab demos `IBoPageFreezeService.RunAsync` then Success toast; **Drop-Down List** includes static Items and async `ItemsProvider` demos when shipped; **People Picker** tab demos Mandatory / Disabled / AllowMultiple / Loading with an in-memory fake provider (no database); Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation); Error Message Page (`/error-message-page` — Access Denied tab hosts shared `BoAccessDenied` with Access/Support Details; footer off; tab framework retained for future error scenarios; SSOT [error-messages.md](shell/error-messages.md)). Nav: Home / Components / Theme / Error Message Page (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — header tabs Text Field / Drop-Down List / People Picker / Checkbox / Date Field / Number Field / **Other**; Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Other** tab demos workspace `BoPanelHost` + `BoPanelNavigation` + `BoKeepAlivePanels` with Grid and Page Freeze as nav items (demo vehicle for [panels.md](layout/panels.md) — not the design target); Grid demos include Server `QueryMode`, Filters, Nested View keyword where shipped; Page Freeze demos `IBoPageFreezeService.RunAsync` then Success toast; **Drop-Down List** includes static Items and async `ItemsProvider` demos when shipped; **People Picker** tab demos Mandatory / Disabled / AllowMultiple / Loading with an in-memory fake provider (no database); Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation); Error Message Page (`/error-message-page` — Access Denied tab hosts shared `BoAccessDenied` with Access/Support Details; footer off; tab framework retained for future error scenarios; SSOT [error-messages.md](shell/error-messages.md)). Nav: Home / Components / Theme / Error Message Page (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
 
 **Ownership:** Gallery is the primary working-example host for library-scoped UI / query patterns. Product pages are product reference only. Full rules: [example-governance.md](example-governance.md).
 

@@ -86,6 +86,16 @@ When the page is a **Home** (or equivalent landing hub):
 
 Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout.md#page-composition-json-planning-agent-input) (optional `weight` / `preserveLayoutWhenHidden`); nest Sub Sections in Razor even when flat JSON is used.
 
+### Workspace panels (App Config / onboarding / admin)
+
+When the page is a large multi-section **workspace** (not short header-tab page sections) — [panels.md](layout/panels.md):
+
+- [ ] Chooses **`BoPanelNavigation`** (not header `BoTabs`) for 10–30 workspace sections.
+- [ ] Uses **`BoPanelHost`** + **`BoPanel`** (`Dock` Left/Fill/Right) for independently scrolling regions.
+- [ ] Pairs navigator with **`BoKeepAlivePanels` / `BoKeepAlivePanel`** (always mounted). **Do not** use `@if (SelectedItem == …)` for validated / long-lived sections.
+- [ ] Sets nav item `Key` ≡ field `ValidationGroup` ≡ keep-alive `Key`.
+- [ ] Does **not** invent a second Tabs framework or put content ownership on `BoPanelNavigation`.
+
 ### Grid (section-level)
 
 When the page includes a data grid:
@@ -142,11 +152,11 @@ Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → 
 - [ ] Deferred mandatory validation pattern respected (asterisk immediately; error chrome **after** attempt) — [forms.md § Deferred mandatory validation](controls/forms.md#deferred-mandatory-validation-locked).
 - [ ] Required fields use standard behavior; **Disabled** fields skip required validation.
 - [ ] Universal required message (`Validation_FieldRequired`); never field-label-specific.
-- [ ] Fields expose `FieldKey` + `ValidationGroup` (tab); sections set `SectionKey` so failures report Field → Sub → Main → Tab.
-- [ ] Submit integrates with **`BoValidationContext`** / **`IBoSubmitInterceptor`**. Prefer `Validate(null)` (all keep-alive groups).
+- [ ] Fields expose `FieldKey` + `ValidationGroup` (header tab **or** workspace panel-nav key); sections set `SectionKey` so failures report Field → Sub → Main → Tab/Panel.
+- [ ] Submit integrates with **`BoValidationContext`** / **`IBoSubmitInterceptor`**. Prefer `Validate(null)` (all keep-alive groups, including inactive panel-nav sections).
 - [ ] `Validate(group)` attempts only that group (unrelated groups show no required chrome); `Validate(null)` attempts all — [forms.md](controls/forms.md#deferred-mandatory-validation-locked). Host `ErrorText` marks a field invalid.
 - [ ] Format numbers/dates with `IBoLocaleService.FormatCulture`, not ambient `CurrentCulture` — [i18n.md](foundations/i18n.md).
-- [ ] Fail badges (`BoValidationFailBadge`) on failed tabs + Main/Sub headers in the **left icon slot** (replaces normal icon while failed); clear live when fields are fixed.
+- [ ] Fail badges (`BoValidationFailBadge`) on failed tabs **or** `BoPanelNavigation` items + Main/Sub headers in the **left icon slot** (replaces normal icon while failed); clear live when fields are fixed.
 - [ ] Validation fail → **Alert** toast (Main + Body resources); do not open success Submit dialog on fail.
 - [ ] New/changed field controls: follow [forms.md § Field component checklist](controls/forms.md#field-component-checklist).
 

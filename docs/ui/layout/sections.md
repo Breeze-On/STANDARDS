@@ -45,7 +45,7 @@ Header is **optional**. When omitted, only the body content is rendered.
 | Concern | Standard |
 | --- | --- |
 | Label | Bold, **13px**, **uppercase**; color `--bo-color-section-tab-label` (alias of `color-semantic-black`, default `#000000`); top-left aligned — see [tokens.md](../foundations/tokens.md) |
-| Icon | Optional; to the **left** of the label; ~13px; tight ~4px gap to label; **vertically center-aligned** with the label; same color as label (prefer `BoIcon` in `IconContent`) |
+| Icon | Optional; to the **left** of the label; ~13px; tight **2px** gap to label; **vertically center-aligned** with the label; same color as label (prefer `BoIcon` in `IconContent`) |
 | Rule | Grey horizontal line **directly under** the header text/icon row; almost no gap (~2px); uses `--bo-color-card-container-border` |
 | Flush to body | Content container sits **immediately under** the header rule — **no gap** |
 | API | `SectionKey` (stable id for validation ancestry / fail badge); `Title` and/or `TitleContent`; optional `Required` (red asterisk after title — e.g. mandatory [grid](../controls/grids.md)); optional `IconContent`; optional `HeaderActions` (inline after title — e.g. grid Add New / Save); optional `IsCollapsible` / `Expanded` (see above); body via `ChildContent` |
@@ -76,7 +76,7 @@ A **Sub Section** is for nested/subordinate groupings inside a Main Section. It 
 | Validation fail | Same badge as Main when `SectionKey` ∈ `FailedSectionSubs`; cascades Main + Sub keys to child fields |
 | Content body padding | **6px** equal on all four sides (same as Main) |
 | Label | Bold, **11px** (Main 13px − 2), **not uppercase** (sentence / title case as provided); color `--bo-color-section-tab-label` |
-| Icon (when present) | ~11px; same alignment rules as Main |
+| Icon (when present) | ~11px; **2px** gap to label; same alignment rules as Main |
 | Outside left / right margin | **6px** each (indent vs Main) |
 | Outside top margin | **8px** |
 | Outside bottom margin | **4px** (tighter than Main’s 16px) |
