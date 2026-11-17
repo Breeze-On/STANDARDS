@@ -29,6 +29,11 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 | `color-section-tab-label` | `--bo-color-section-tab-label` | `#000000` | `#F2F5F3` | Section headers; header-tab default text/icon |
 | `color-text-field-label` | `--bo-color-text-field-label` | `#757575` | `#A8B2AC` | Text Field label (10px bold uppercase) |
 | `color-field-background` | `--bo-color-field-background` | `#FFFFFF` | `#252D29` | Text Field input fill |
+| `color-caret` | `--bo-color-caret` | `#224D3A` | `#EEF2EF` | Native input `caret-color` (Text / Number / Date) |
+| `color-selection-bg` | `--bo-color-selection-bg` | `color-mix(… primary 22%, white)` | `color-mix(… primary-hover 45%, field-bg)` | Native `::selection` background |
+| `color-selection-fg` | `--bo-color-selection-fg` | `#242424` | `#EEF2EF` | Native `::selection` foreground |
+| `color-field-border-hover` | `--bo-color-field-border-hover` | `color-mix(… primary 40%, border)` | `color-mix(… primary-hover 35%, border)` | Editable field border on hover |
+| `color-field-border-focus` | `--bo-color-field-border-focus` | `#224D3A` | `#3A6F56` | Editable field **full** border on focus (Dark uses brighter stroke than primary for contrast on field fill) |
 | `color-background` | `--bo-color-background` | `#F6F7F8` | `#121614` | Page/canvas behind shell cards |
 | `color-card-container-background` | `--bo-color-card-container-background` | `#FFFFFF` | `#1E2622` | Shell and content card fill |
 | `color-card-container-border` | `--bo-color-card-container-border` | `#E8EDF1` | `#4A5650` | Card / divider borders |
@@ -79,7 +84,9 @@ Emitted by `BoThemeProvider` (z-index / focus are fixed values; freeze scrim/blu
 | `--bo-z-popup` | `10000` | Popup panel (above dialogs) |
 | `--bo-z-toast` | `11000` | Toasts |
 | `--bo-z-page-freeze` | `12000` | Page freeze (above toast) — [overlays.md](../shell/overlays.md) |
-| `--bo-focus-ring` | `0 0 0 2px var(--bo-color-primary)` | Shared keyboard focus ring on interactive controls |
+| `--bo-focus-ring` | `0 0 0 2px var(--bo-color-primary)` | Shared keyboard focus ring on interactive controls (buttons, tabs, nav — not the editable field full-border focus) |
+
+**Editable field editing chrome (Concept A):** Text / Number / Date (and DDL closed box) use `--bo-color-field-border-hover` / `--bo-color-field-border-focus` for a **full 1px border** focus model, plus `--bo-color-caret` and `--bo-color-selection-*` for native caret/selection styling. Do not introduce custom caret or selection engines. See [forms.md](../controls/forms.md#editing-visuals-and-native-interaction-locked).
 
 ## Theme options (`AddBreezeOnUI(configureTheme)`)
 

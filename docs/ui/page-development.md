@@ -35,7 +35,7 @@ JS file roles:
 | `bo-theme-mode.js` | Theme-mode cookie helpers; sets `document.documentElement.dataset.boThemeMode` |
 | `bo-locale.js` | Locale cookie helpers for `bo-culture` / `bo-timezone` |
 | `bo-popup.js` | Fixed-position panels for `BoDropDownList`, `BoPeoplePicker`, and `BoDateField` |
-| `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge to the Fluent input, select-all, display sync). Without it number entry does not behave per standard |
+| `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge to the Fluent input, display sync). Caret/selection stay native (no select-all on focus). Without it number entry does not behave per standard |
 | `bo-grid.js` | `BoGrid` truncated-cell hover titles |
 
 Include **all five** scripts even if a page does not use every control — shell chrome and future pages depend on them. Note: the early scripts reduce theme/locale flash only partly; CSS variables are still emitted by `BoThemeProvider` after the circuit renders (see [tokens.md](foundations/tokens.md)).

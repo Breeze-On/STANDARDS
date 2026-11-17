@@ -138,9 +138,24 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Input typed text | **Calibri** (`--bo-font-family`); **14px** — see [typography.md](../foundations/typography.md) |
 | Mandatory mark | When `Required` and not `Disabled`: bold red `*` after the label; modest gap before the star (`margin-left` ~0.2em); color `--bo-color-danger` |
 | Rest border / outline | Grey using `--bo-color-card-container-border`; **fully rounded** control corners via `--bo-radius-md` (same as Drop-Down List closed box) |
-| Focus | Recolor Fluent’s **native** bottom focus border to **primary** (`--bo-color-primary`) so it stays on the control edge and keeps rounded corners; not Fluent blue; do **not** add a separate underline below the field |
+| Hover | Subtle border only (`--bo-color-field-border-hover`); **no** fill change, glow, or lift |
+| Focus | **Full 1px border** in `--bo-color-field-border-focus` (Light = primary; Dark = brighter focus stroke for contrast on field fill). Same geometry for Text / Number / Date / DDL closed box. Fluent Text/Number: paint the border on **`::part(root)` only** — never also on `::part(control)`; suppress Fluent’s `::part(root)::after` bottom accent (that pair doubles/misaligns chrome). Not Fluent bottom-edge-only; not Fluent blue; do **not** add a separate underline, glow, or focus-ring stroke |
+| Caret | Themed via native CSS `caret-color` (`--bo-color-caret`) only — **no** custom caret widgets or JS caret rendering |
+| Selection | Branded via native `::selection` / `::-moz-selection` (`--bo-color-selection-bg` / `--bo-color-selection-fg`) only — **no** custom selection engines |
 | Character count | Optional (`ShowCharacterCount`, default false); format `current/max` (no brackets); **inside** the input (Fluent `EndTemplate`), trailing/right; italic **10px**; muted. Denominator = `MaxLength` (**default 600**). **Hidden when `Disabled`** |
 | Disabled | Hide Placeholder; hide character count; hide mandatory asterisk; skip required validation; greyer fill (`--bo-color-background`) so the field reads as non-editable; muted text |
+
+### Editing visuals and native interaction (locked)
+
+Premium enterprise chrome (Concept A — Confident Outline): calm focus/hover/caret/selection tokens. **Preserve browser-native editing behavior** — do not replace with custom engines:
+
+- Caret placement on click
+- Drag selection
+- Double-click / triple-click selection
+- Ctrl+A / Cmd+A
+- Keyboard navigation and platform accessibility behavior
+
+Visual polish enhances presentation only. Tokens: [tokens.md](../foundations/tokens.md).
 
 **Gallery reference:** Theme (`/theme`) Attributes rows (`BoFieldReadOnly` Light + Dark); Components Text Field — Parameters Sub padded to **6** slots (`BoEmptyField`); Preview (editable \| read-only \| Backend Value).
 
@@ -151,7 +166,7 @@ These Text Field rules are **org standards** for every `BoTextField` usage.
 **Display name:** Drop-Down List.  
 **Component:** `BoDropDownList` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
 
-Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory asterisk, grey rest border, **`--bo-radius-md` rounded** closed box, primary focus, `--bo-color-field-background` fill — including Dark). Public API is `Bo*`; searchable list is owned by BreezeOn (Fluent is not the public surface).
+Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory asterisk, grey rest border, **`--bo-radius-md` rounded** closed box, hover border, **full-border** focus via `--bo-color-field-border-focus`, `--bo-color-field-background` fill — including Dark). Public API is `Bo*`; searchable list is owned by BreezeOn (Fluent is not the public surface).
 
 | Parameter | Role |
 | --- | --- |
@@ -334,7 +349,7 @@ Planning JSON: `control: "DateField"`; optional `mode: "Date"` \| `"DateTime"`. 
 
 | Concern | Standard |
 | --- | --- |
-| Label gap / corners / focus | Same as Text Field / DDL: **`--bo-field-label-gap`**, **`--bo-radius-md`**, primary focus border, field fill |
+| Label gap / corners / focus | Same as Text Field / DDL: **`--bo-field-label-gap`**, **`--bo-radius-md`**, hover + **full-border** focus (`--bo-color-field-border-focus`), themed caret/selection on the text input, field fill |
 | Invalid border | Control edge only after validation attempt |
 | Picker | Modern popover calendar: **fixed** placement (`boPopup` / `bo-popup.js`) so it overlays shell card / section overflow; rounded panel, soft elevation, tertiary/primary accents, today ring, selected primary fill |
 | Month nav (Dark) | Prev/next arrow glyphs are **white** (`--bo-color-semantic-white`) on the nav chip so they stay visible |
@@ -384,7 +399,7 @@ Planning JSON: `control: "NumberField"`; optional `isInteger`, `numberOfDecimals
 
 | Concern | Standard |
 | --- | --- |
-| Focus | Raw digits (+ `.` when decimals allowed); no thousand separators / affixes while editing; **first click / focus selects the whole value** so typing replaces it (second click places the caret) |
+| Focus | Raw digits (+ `.` when decimals allowed); no thousand separators / affixes while editing; **native caret / selection** (same as Text Field — click places caret; drag / double-click / triple-click / Ctrl+A unchanged). Do **not** select-all on focus |
 | Blur / unfocused | Culture number format (group separators + scale); currency symbol or `%` before/after per culture / catalog |
 | Keystrokes | Non-numeric rejected; `IsInteger` blocks `.`; decimals clamped to `NumberOfDecimals` |
 | Required | Asterisk immediate; red border + 10px error **after** validation attempt; live clear via `NotifyFieldChanged` |
