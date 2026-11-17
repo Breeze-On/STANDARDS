@@ -86,7 +86,7 @@ The library **never** talks to SQL or application repositories.
 
 | Parameter | Role |
 | --- | --- |
-| `Title` | Header label — **same chrome as `BoTextField` label** (10px / 700 / uppercase / `--bo-color-text-field-label`) |
+| `Title` | Header label — **same chrome as `BoTextField` label** (10px / 700 / uppercase / `--bo-color-text-field-label`). **Action / icon columns (Hug row actions):** always empty — never show a header label (use `Title=""`). Icon buttons keep `title` / `aria-label` for accessibility. Built-in Row Edit / Inline Edit action chrome already uses an unlabeled header. |
 | `FieldKey` | Stable column / property id |
 | `Required` | Red asterisk on header; Edit cells should set `Required` on `Bo*` fields |
 | `Align` | Cell **value** alignment only — Left (default) / Center / Right. **Headers always left.** Framework defaults: text & date **Left**; number & currency **Right** |
@@ -109,7 +109,8 @@ Changing a column's `Title`, `FieldKey`, `Required`, `Align`, `Width`, or `Width
 ## Visual / UX (locked)
 
 - **Philosophy:** less table / more surface. Typography + whitespace + soft elevation over lines. Flush into the page (no outer card / container border). Eye path: **label → actions → headers → data**.
-- **Header labels:** `BoTextField` label chrome; always **left-aligned**.
+- **Header labels:** `BoTextField` label chrome; always **left-aligned**. **Exception — action/icon columns:** no header text (`Title=""`).
+
 - **Header separator:** **primary-tinted** gradient under headers (soft edge fade, reduced opacity, 1px) — branded anchor, not a grey table border. Transparent header band (no fill).
 - **Section rule:** standard section header rule **remains** when a section hosts a grid.
 - **Column width:** `table-layout: fixed` + `<colgroup>`; Flex = `100%/n`; Compact ≈12%; action Hug = CSS `--bo-grid-action-col-width` (default `4.75rem`; never `1px` — that clips Edit/Delete). Flex `%` + rem action together fill the table; avoid `calc()` on `<col>`. Table **always 100%** of container.

@@ -98,6 +98,7 @@ When the page includes a data grid:
 - [ ] **`IsPagination`** only when required (default false); sort is over the full cache; display order stays frozen while editing.
 - [ ] Column **`Align`**: text/date Left; number/currency Right unless the design requires otherwise. Headers always left.
 - [ ] Column **`Width`**: leave default **Flex** unless Compact/Hug is intentional; do not invent custom table layouts.
+- [ ] **Action / icon columns** (`Hug` row actions): `Title=""` — never a header label; keep `title` / `aria-label` on icon buttons — [grids.md](controls/grids.md).
 - [ ] **`EnableHorizontalScroll`** only when many columns truly need a horizontal scrollbar (default false).
 - [ ] Host loads **`_content/BreezeOn.UI/js/bo-grid.js`** when using truncated display cells (hover full-value title).
 - [ ] Cell editors reuse existing **`Bo*`** fields; column / grid **`Required`** follow [grids.md](controls/grids.md).

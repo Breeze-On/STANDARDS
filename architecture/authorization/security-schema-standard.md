@@ -31,7 +31,7 @@ Owner: Architecture
 
 **System Code prefixes:** Reserve `APPENA_` (check before `APP_`), `APP_`, `BUSENT_`, and the exact Code `GLOBAL-SYSTEM-ADMINISTRATORS` against manual group create (`allowSystemOwnedCode`). That gate is independent of `IsManuallyCreated`. Membership changes remain Global System Administrator only ([ADR-015](../../decisions/ADR-015-object-owned-administrator-groups.md), [eac-authorization-matrix.md](eac-authorization-matrix.md)).
 
-**Migration (existing DBs):** add `IsManuallyCreated` with DEFAULT `1`, then set `0` where Code is GSA or `APP_%` / `BUSENT_%` / `APPENA_%` (one-time classifier; APPENA rows are created with `0`). SHARED-UI script: `sql/security/migration_scripts/20261116_add_Groups_IsManuallyCreated.sql`. EAC enablement `GroupGUID`: `SYSTEM-ADMIN-EAC/sql/migration_scripts/20261116_add_EACApplicationsEnabled_GroupGUID.sql`.
+**Migration (existing DBs):** add `IsManuallyCreated` with DEFAULT `1`, then set `0` where Code is GSA or literal prefixes `APP_*` / `BUSENT_*` / `APPENA_*` using escaped LIKE (`APP[_]%`, etc. — unescaped `_` is a wildcard). SHARED-UI: `sql/security/migration_scripts/20261116_add_Groups_IsManuallyCreated.sql`. If an earlier run used unescaped `LIKE`, apply corrective `20261116_correct_Groups_IsManuallyCreated_prefix_classifier.sql` (do not re-run the original). EAC hosted GroupGUID: Applications / Business Entities / enablement scripts under `SYSTEM-ADMIN-EAC/sql/migration_scripts/` (order: IsManuallyCreated → App → BE → APPENA).
 
 ## `Security.GroupsMembers`
 
