@@ -13,17 +13,64 @@ Related: [shell.md](shell.md), [tokens.md](../foundations/tokens.md), [i18n.md](
 | Theme | Under `BoThemeProvider` so Light/Dark tokens apply |
 | Stack | profile `900/901` → dialog `1000` → popup `9998/10000` → toast `11000` → **page freeze `12000`** |
 
-## Message dialog (`BoDialogService`)
+## Dialog (`BoDialog`) — platform product dialogs (locked)
+
+Presentational shell for Create / Edit / Confirm / management dialogs. Product apps **must** compose `BoDialog` — do **not** copy local host/backdrop/footer chrome.
+
+| Concern | Standard |
+| --- | --- |
+| Ownership | `BreezeOn.UI` (`Overlays/BoDialog`); keyboard + focus lifecycle owned by the shell |
+| Host JS | `_content/BreezeOn.UI/js/bo-dialog.js` required (initial focus + focus restore + Enter suppress checks) |
+| Size | `BoDialogSize.Default` (~52rem form/management) or `Compact` (~28rem message/confirm) |
+| Close (X) | Place `BoDialogCloseButton` in `BoSectionMain` `HeaderActions` so X shares `OnClose` with Escape / backdrop |
+| Primary / Secondary | Footer buttons via `PrimaryActionLabel` / `PrimaryAction` and optional Secondary; no duplicate business paths for keyboard |
+| Error | `ErrorText` (or `FooterError`) under actions |
+
+### Keyboard
+
+| Key | Behavior |
+| --- | --- |
+| **Enter** / **NumpadEnter** | Invokes `PrimaryAction` when configured, enabled, and not suppressed |
+| **Escape** | Invokes the **same** `OnClose` path as Close (X) and backdrop (when `CloseOnBackdropClick`) |
+| Nested popups | Open `BoDropDownList` / Date / People Picker consume Escape first |
+| `SuppressEnterPrimary` | Required when there is no meaningful primary (members / view-only) |
+| Multiline / editors | `textarea`, `contenteditable`, and `[data-bo-suppress-enter]` never submit on Enter |
+
+### Initial focus (`InitialFocusFieldKey`)
+
+| Concern | Standard |
+| --- | --- |
+| Purpose | Immediate typing on Create/Edit (e.g. New Data Entity → Code) |
+| API | Optional `InitialFocusFieldKey` matching a child field `FieldKey` (`[data-bo-field-key]`) |
+| Lifecycle | Applied after open render (Blazor `OnAfterRender`); retries for Fluent upgrade timing |
+| Fallback | Missing / non-focusable key → focus dialog panel; never throw |
+| When unset | Focus moves to the dialog panel (a11y baseline); no silent “first field” heuristic |
+| Anti-pattern | Product-local autofocus JS (e.g. former EAC `eacFocusFieldByKey`) |
+
+### Focus restoration
+
+| Concern | Standard |
+| --- | --- |
+| Default | `RestoreFocusOnClose=true` — capture opener on open; restore on any close path |
+| Rationale | Keyboard round-trip: trigger → dialog → back to trigger |
+| Soft fail | Opener detached / not focusable → no-op |
+| Escape hatch | `RestoreFocusOnClose=false` only when a consumer proves need |
+
+### Gallery validation (gate)
+
+Before adopting `BoDialog` in a product app, Gallery **Components → Other → Dialog** must demonstrate: Enter primary, Escape close, disabled primary, confirm Proceed, `SuppressEnterPrimary`, `InitialFocusFieldKey`, and focus restoration.
+
+### Message dialog (`BoDialogService`)
 
 | Concern | Standard |
 | --- | --- |
 | API | `ShowMessageAsync(message, closeLabel?)` — awaits until Close; default close label `Dialog_Close` |
-| UI | Centered card + scrim (`--bo-color-overlay-scrim`); backdrop click closes |
-| A11y | `role="dialog"` + `aria-modal="true"` + `Chrome_Aria_Message` |
+| UI | Implemented via `BoDialog` (`Compact`); backdrop + Primary Close; Enter/Escape → `Close()` |
+| A11y | `role="dialog"` + `aria-modal="true"` + `Chrome_Aria_Message`; focus restore to opener |
 
-## Settings dialog (`BoSettingsDialogService`)
+### Settings dialog (`BoSettingsDialogService`)
 
-Centered Language / Timezone dialog opened from header Settings. Details: [shell.md](shell.md), [i18n.md](../foundations/i18n.md).
+Centered Language / Timezone dialog opened from header Settings — hosted via `BoDialog` (`Compact`, `InitialFocusFieldKey=Language`). Details: [shell.md](shell.md), [i18n.md](../foundations/i18n.md).
 
 ## Toasts (`IBoToastService`)
 

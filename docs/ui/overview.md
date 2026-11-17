@@ -21,7 +21,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [shell/shell.md](shell/shell.md) | App shell chrome, footer, header tabs |
 | [shell/error-messages.md](shell/error-messages.md) | Error Message Pages framework (Access Denied + future scenarios) |
 | [layout/expandable-section.md](layout/expandable-section.md) | `BoExpandableSection` + shared disclosure engine; Section `IsCollapsible` |
-| [shell/overlays.md](shell/overlays.md) | Dialogs, Settings, toasts, page freeze (`IBoPageFreezeService`) |
+| [shell/overlays.md](shell/overlays.md) | `BoDialog` (Enter/Escape, initial focus, focus restore), Settings, toasts, page freeze (`IBoPageFreezeService`) |
 | [shell/navigation.md](shell/navigation.md) | Left navigation, route/URL matching |
 | **Layout** | |
 | [layout/sections.md](layout/sections.md) | Main Section / Sub Section |
@@ -95,7 +95,8 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoDateDisplay` | Format culture for wall-clock values (`Format`); UTC→user timezone + culture for instants (`FormatUtc`) — standard for grids / read-only datetime text | [i18n.md](foundations/i18n.md) |
 | `BoNumberField` | Number UI; bound type always `decimal?`; integer/decimals; currency/% (mutex); focus raw / blur formatted; `ReadOnly`; alignment default Right; needs host `bo-number-field.js` | [forms.md](controls/forms.md) |
 | `BoButton` | Pill button (primary / secondary / stealth); `HtmlType` (`BoButtonType`); shorter+wider padding; shadow + hover lift; optional icon | [forms.md](controls/forms.md), [tokens.md](foundations/tokens.md) |
-| `BoDialogService` | Message dialog facade (`ShowMessageAsync`) | [overlays.md](shell/overlays.md) |
+| `BoDialog` / `BoDialogCloseButton` | Product dialog shell (Enter/Escape, `InitialFocusFieldKey`, focus restore) | [overlays.md](shell/overlays.md) |
+| `BoDialogService` | Message dialog facade (`ShowMessageAsync`; hosted via `BoDialog`) | [overlays.md](shell/overlays.md) |
 | `IBoToastService` / `BoToastHost` | Top-right toasts (Main/Body; Success / Alert / Information / Error; click dismiss) | [shell.md](shell/shell.md), [overlays.md](shell/overlays.md) |
 | `IBoPageFreezeService` / `BoPageFreezeHost` | Full-viewport busy freeze (branded pulse + frosted scrim; `Show`/`Hide`/`RunAsync`; ref-counted) | [overlays.md](shell/overlays.md) |
 | `BoValidationContext` / `IBoSubmitInterceptor` | Deferred validation; `Validate(null)` attempts all groups, `Validate(group)` only that group (`IsAttempted(group)`); live fail badges; Field→Sub→Main→Tab failures | [forms.md](controls/forms.md) |

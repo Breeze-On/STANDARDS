@@ -26,7 +26,7 @@ Every app host that renders `BreezeOn.UI` must wire the following once (referenc
 | Localization | Supported cultures `en` / `fr` + `UseRequestLocalization()` — [i18n.md](foundations/i18n.md) |
 | Layout | Render **`BoThemeProvider`** (CSS variables) and **`BoProviders`** (Fluent providers, theme/locale bootstrap, dialog + toast + **page-freeze** hosts) around the app; pages live inside **`BoAppShell`** |
 | CSS (in `<head>`) | `_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css` and `_content/BreezeOn.UI/breezeon-ui.css` |
-| JS (in `<head>`) | `_content/BreezeOn.UI/js/bo-theme-mode.js`, `bo-locale.js`, `bo-popup.js`, `bo-number-field.js`, `bo-grid.js` |
+| JS (in `<head>`) | `_content/BreezeOn.UI/js/bo-theme-mode.js`, `bo-locale.js`, `bo-popup.js`, `bo-number-field.js`, `bo-grid.js`, `bo-dialog.js` (**required for `BoDialog`**) |
 
 JS file roles:
 
@@ -37,8 +37,9 @@ JS file roles:
 | `bo-popup.js` | Fixed-position panels for `BoDropDownList`, `BoPeoplePicker`, and `BoDateField` |
 | `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge to the Fluent input, display sync). Caret/selection stay native (no select-all on focus). Without it number entry does not behave per standard |
 | `bo-grid.js` | `BoGrid` truncated-cell hover titles |
+| `bo-dialog.js` | **Required for `BoDialog`** (Enter suppress checks, `InitialFocusFieldKey`, focus restore) |
 
-Include **all five** scripts even if a page does not use every control — shell chrome and future pages depend on them. Note: the early scripts reduce theme/locale flash only partly; CSS variables are still emitted by `BoThemeProvider` after the circuit renders (see [tokens.md](foundations/tokens.md)).
+Include **all six** scripts even if a page does not use every control — shell chrome and future pages depend on them. Note: the early scripts reduce theme/locale flash only partly; CSS variables are still emitted by `BoThemeProvider` after the circuit renders (see [tokens.md](foundations/tokens.md)).
 
 ## New page development checklist
 
@@ -165,6 +166,7 @@ Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → 
 - [ ] Labels resolved through the **app’s own** `.resx` (Gallery `BoUi` is **not** a shared glossary for EAC or other apps) — [i18n.md](foundations/i18n.md).
 - [ ] `AppTitle` and `Subtitle` localized.
 - [ ] Dialog and toast text localized.
+- [ ] Product Create/Edit/Confirm/management dialogs use **`BoDialog`** (Enter = primary, Escape = `OnClose`, optional `InitialFocusFieldKey`, default focus restore). No local dialog chrome or autofocus JS — [overlays.md](shell/overlays.md) § Dialog.
 - [ ] Long-running ops use **`IBoPageFreezeService`** (`RunAsync` preferred); pass already-localized freeze messages; show outcome toasts **after** Hide; follow when / when-not rules — [overlays.md](shell/overlays.md) § Page freeze.
 - [ ] New user-visible strings added to resources in the **same change set**.
 
