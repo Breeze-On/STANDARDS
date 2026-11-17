@@ -90,7 +90,7 @@ Generic independently scrolling regions. **Not** owned by `BoAppBody` — reusab
 
 Does **not** render section content. Item DOM ids: `bo-panel-nav-{key}`.
 
-**Visual:** compact administrative cards (not landing-page density); subtle hover; selected uses tertiary fill + primary inset accent (not left-nav `--bo-color-nav-selected`); single-line label ellipsis (~13px). Prefer hosting inside `BoSectionMain` (e.g. title **Navigation**, icon Fluent **ArrowSplit** Regular rotated −90° via `bo-icon--rotate-90` so forks point right) for section chrome consistency.
+**Visual:** compact administrative cards (not landing-page density); subtle hover; selected uses tertiary fill + thin inset accent bar (~2px; primary in light, semantic white in dark — not left-nav `--bo-color-nav-selected`); single-line label ellipsis (~13px). Prefer hosting inside `BoSectionMain` (or `BoSectionSub` when the Fill peer is also Sub, e.g. EAC App Config Steps workspace) with title **Navigation**, icon Fluent **ArrowSplit** Regular rotated −90° via `bo-icon--rotate-90` so forks point right.
 
 **A11y:** `role="tablist"` + `aria-orientation="vertical"`; items `role="tab"`; Arrow Up/Down / Home/End; `:focus-visible` primary outline.
 

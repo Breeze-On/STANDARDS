@@ -53,6 +53,8 @@ Footer is **optional per page** via `BoAppShell.ShowFooter` (default `true`). Wh
 
 Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTabs` / `BoTab` and body `BoTabPanels` / `BoTabPanel`. Tabs are page sections, not left-nav routes. For large multi-section **workspace** navigation (App Config, onboarding, admin), use `BoPanelNavigation` + `BoKeepAlivePanels` instead — [panels.md](../layout/panels.md). Do not conflate header tabs with workspace panel navigation.
 
+**Section-hosted tabs:** When `BoTabs` is placed inside a `BoSectionMain` / `BoSectionSub` body (e.g. EAC Application Configuration area segmentation), Shared UI applies `margin-bottom: var(--bo-space-md)` (~16px) under `.bo-section .bo-tabs` so content is not flush with the strip. Header `TabsContent` is unaffected. Selection chrome: exactly one `bo-tab--selected` at a time — `BoTabs` notifies all registered `BoTab` instances on change (fixed cascading owner + click re-render only the clicked tab otherwise).
+
 **Gallery Error Message Page:** uses the same tab architecture as Components / Theme **even when only one tab exists** (Access Denied today). This is intentional so future error scenarios are added as tabs on `/error-message-page`, not as separate showcase pages.
 
 | Concern | Standard |
