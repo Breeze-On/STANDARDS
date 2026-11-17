@@ -114,10 +114,11 @@ An Application enabled for a specific Business Entity. Stored in `System.EACAppl
 
 ## Business Reference Data
 
-Configuration / lookup values managed for the ecosystem (often via EAC). In current EAC docs, paired with business drop-down (DDL) management.
+Configuration / lookup values managed for the ecosystem (often via EAC). Implemented as [Data Entities](#data-entity) / [DDL](#ddl).
 
 Related:
 - [architecture/eac.md](../architecture/eac.md)
+- [Data Entity](#data-entity)
 - [DDL](#ddl)
 
 ## Current Reality Only
@@ -128,12 +129,23 @@ Related:
 - [documentation.md](documentation.md)
 - [README.md](../README.md)
 
+## Data Entity
+
+Configurable master / reference data definition owned by EAC (`System.EACDataEntities*`). Definitions are Application-scoped; rows are Application Context–scoped. Distinct from [Business Entity](#business-entity) (organizational hierarchy). Prefer Data Entities for administrator-maintained lookups before custom tables.
+
+Related:
+- [architecture/data-entities/README.md](../architecture/data-entities/README.md)
+- [ADR-016](../decisions/ADR-016-data-entity-ownership.md)
+- [DDL](#ddl)
+- [Business Reference Data](#business-reference-data)
+
 ## DDL
 
-Business drop-down list values (lookup / configuration lists) managed through EAC. Distinct from the UI control **Drop-Down List** (`BoDropDownList`).
+Business drop-down list values (lookup / configuration lists) managed through EAC. Distinct from the UI control **Drop-Down List** (`BoDropDownList`). Implemented via the **Data Entities** platform capability.
 
 Related:
 - [architecture/eac.md](../architecture/eac.md)
+- [Data Entity](#data-entity)
 - [Drop-Down List](#drop-down-list)
 
 ## Domain

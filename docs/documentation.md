@@ -165,6 +165,10 @@ Any change affecting **authentication architecture**, **Identity schema**, **App
 
 Any change affecting **authorization architecture**, **Security schema**, **page security**, **`IBoAuthorizationService`**, or **authorization onboarding (Workflow G)** is incomplete until [`architecture/authorization/`](../architecture/authorization/README.md) and related ADR(s) (ADR-014 or successors) are updated in the **same change set**. When Workflow G or end-to-end onboarding checkpoints change, also update [`runbooks/customer-onboarding-master-flow.md`](../runbooks/customer-onboarding-master-flow.md).
 
+### Data Entities DoD (platform)
+
+Any change affecting Data Entity **schema**, **stored procedures**, **API contracts**, **business rules**, **CRUD flows**, or **platform standards** is incomplete until [`architecture/data-entities/`](../architecture/data-entities/README.md), related ADR(s) (ADR-016 or successors), and EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) (plus thin product `README` / `README_AI` pointers) are updated in the **same change set**.
+
 UI / query-driven standards also follow **[Example Governance](ui/example-governance.md)**: normative standard + AI guidance + Gallery working example (unless an approved exception applies).
 
 ### UI / shared component DoD (BreezeOn.UI)

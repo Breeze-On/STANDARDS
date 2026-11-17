@@ -35,3 +35,4 @@ Categories are discoverability labels for the index; they do not replace reading
 | [ADR-013](ADR-013-microsoft-graph-directory-synchronization.md) | Microsoft Graph directory synchronization | Accepted | Identity / Authentication | Customer databases, SYSTEM-SHARED-UI, EAC Users admin |
 | [ADR-014](ADR-014-platform-authorization.md) | Platform authorization | Accepted | Authorization | All product applications, SYSTEM-SHARED-UI, customer databases, EAC admin surfaces |
 | [ADR-015](ADR-015-object-owned-administrator-groups.md) | Object-owned administrator groups (Applications & Business Entities) | Accepted | Authorization | EAC Applications / Business Entities, SYSTEM-SHARED-UI Security schema, customer databases |
+| [ADR-016](ADR-016-data-entity-ownership.md) | Data Entity ownership and scope | Accepted | Data | EAC Data Entities, Application vs Application Context configuration, consumer apps |
