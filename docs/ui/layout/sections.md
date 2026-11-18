@@ -17,11 +17,21 @@ Form Sections may opt into collapse without changing default behavior:
 
 When `IsCollapsible=true`, the section header becomes a WAI-ARIA disclosure control; the body uses the **same disclosure engine** as [`BoExpandableSection`](expandable-section.md) (animation, reduced-motion, DOM retention, `inert`/`aria-hidden` when collapsed). Main/Sub typography, header rule, validation badge, `Required`, and `HeaderActions` are retained. `HeaderActions` clicks must not toggle collapse.
 
+### Default expand vs in-page navigation (locked)
+
+| Concern | Rule |
+| --- | --- |
+| Page default | Initial `Expanded` (or host field default) applies when the **page** loads / the owning page component is created |
+| In-page tabs / panels | Changing `BoTabs`, `BoPanelNavigation`, or other in-page chrome **must not** reset section expand/collapse to the page default |
+| Host binding | Product hosts that set a constant `Expanded="true"` (or `"false"`) without `@bind-Expanded` will re-apply that value on every parent re-render — **do not** do this for collapsible sections the user can toggle. Use `@bind-Expanded` to a page-owned field; only reassign that field when intentionally resetting (e.g. leaving the page, or a documented context change such as ApplicationGUID for Quick Actions) |
+| Remount | Navigating away and back to the route remounts the page and restores the documented default |
+
 **Hard rules:**
 
 - Collapsed content **remains mounted** (visibility only — never `@if (Expanded)` unmount).
 - Error Message Pages use **`BoExpandableSection`**, not collapsible Main/Sub.
 - Do not invent custom expand/collapse on form pages — use `IsCollapsible` or `BoExpandableSection` as appropriate.
+- Do not re-apply page-default expand/collapse on in-page tab or panel changes.
 
 ## Main Section (`BoSectionMain`)
 

@@ -20,7 +20,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | **Shell** | |
 | [shell/shell.md](shell/shell.md) | App shell chrome, footer, header tabs |
 | [shell/error-messages.md](shell/error-messages.md) | Error Message Pages framework (Access Denied + future scenarios) |
-| [layout/expandable-section.md](layout/expandable-section.md) | `BoExpandableSection` + shared disclosure engine; Section `IsCollapsible` |
+| [layout/expandable-section.md](layout/expandable-section.md) | `BoExpandableSection` + shared disclosure engine; Section `IsCollapsible`; page-default expand only on page load |
 | [shell/overlays.md](shell/overlays.md) | `BoDialog` (Enter/Escape, initial focus, focus restore), Settings, toasts, page freeze (`IBoPageFreezeService`) |
 | [shell/navigation.md](shell/navigation.md) | Left navigation, route/URL matching |
 | **Layout** | |

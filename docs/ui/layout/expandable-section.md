@@ -29,6 +29,7 @@ Do **not** invent custom page expand/collapse. Do **not** use `BoSectionMain`/`B
 - `prefers-reduced-motion` (instant toggle; full functionality retained)
 - Overflow: local `overflow: hidden` only on the panel wrapper — **never** on `BoAppBody`
 - Expanded bindable; **default `Expanded = true`** when unbound
+- Page-default expand/collapse resets **only on page load / remount** — not on in-page tab or panel navigation; hosts must `@bind-Expanded` (see [sections.md](sections.md#default-expand-vs-in-page-navigation-locked))
 
 ## DOM retention (hard rule)
 
