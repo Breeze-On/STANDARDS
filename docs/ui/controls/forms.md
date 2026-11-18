@@ -69,9 +69,40 @@ When shipping or changing a form `Bo*` control:
 - [ ] Root classes via `BoFieldChromeRules.RootClass` (invalid / disabled / hidden modifiers) — all editable controls, including Number Field
 - [ ] `ReadOnly` (Text / Number / Date): not editable, skips required validation; `Disabled` / `IsHidden` unchanged
 - [ ] `<label for>` points at the control id (`FieldKey` → `bo-field-{FieldKey}`, else an auto id)
-- [ ] Unmatched attributes (`AdditionalAttributes`, captured) are forwarded by the control
+- [ ] Unmatched attributes (`AdditionalAttributes`, captured) are forwarded by the control (root field chrome only — do **not** use them for `autocomplete`; use `AutoComplete` on Text/Number)
+- [ ] Browser autocomplete defaults to **off** on editable text surfaces (see [Browser autocomplete](#browser-autocomplete-locked))
 - [ ] Default Placeholder from resources when applicable
 - [ ] Update STANDARDS `forms.md` + gallery Preview (editable \| read-only \| Backend Value) in the same change set
+
+## Browser autocomplete (locked)
+
+Admin / enterprise workspaces (`Bo*` editable fields) **default autocomplete off**. Developers must not remember `autocomplete="off"` on every field. Opt in only when a field truly needs browser assistance.
+
+| Control | Behavior |
+| --- | --- |
+| `BoTextField` / `BoNumberField` | `AutoComplete` parameter **default `"off"`** → Fluent `FluentTextInput` (requires control `Id`; Bo already sets `FieldId`) |
+| `BoDateField` | Main date input and DateTime hour/minute/`select` use `autocomplete="off"` |
+| `BoDropDownList` / `BoPeoplePicker` | Panel search input uses `autocomplete="off"` |
+| Checkbox / Toggle / Button / Read-Only | N/A (no typed-history surface) |
+
+| Concern | Standard |
+| --- | --- |
+| Default | Literal token **`off`** — do **not** invent non-standard tokens (`nope`, random strings); Chromium treats invalid tokens as absent and can re-enable history |
+| Opt-in | Set `AutoComplete` on `BoTextField` / `BoNumberField` to a [standard HTML token](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete) (e.g. `email`) when needed |
+| Unmatched attributes | Host `autocomplete=` via `AdditionalAttributes` lands on the **root field `<div>`**, not the real input — **ineffective** for Fluent-backed Text/Number; use the `AutoComplete` parameter |
+| Grid cell editors | Reuse shipped `Bo*` fields in `Edit` templates — inherit this default. Raw `<input>` in an Edit template is a standards violation ([grids.md](grids.md)) |
+| Product apps (e.g. EAC) | No per-screen / form-shell fix — inherit via Shared UI |
+| Ownership | SYSTEM-SHARED-UI (`BreezeOn.UI`); documented here (no separate ADR) |
+
+**Browser expectations (Chrome / Edge — Chromium):**
+
+| Behavior | Realistic effect of `autocomplete="off"` |
+| --- | --- |
+| Typed-history / previously entered suggestions | Generally **suppressed** (primary admin UX goal) |
+| Profile / address / payment autofill | May still appear when name/id/label/placeholder look personal — prefer admin-oriented labels (Code, Description); do not chase CSS or fake-token hacks |
+| Password manager on login-like fields | Intentionally ignores `off` — N/A until a password control exists; then prefer `new-password` patterns |
+
+Success bar: routine saved-value / history suggestions stay off for admin text/number entry. Do not promise elimination of every Chromium profile heuristic.
 
 ## Read-Only Field (`BoFieldReadOnly`)
 
@@ -120,6 +151,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | `FieldKey` | Stable typed DTO / entity property identifier (mapping metadata only; does **not** replace `@bind-Value`) |
 | `Required` | **Mandatory** when editable — red asterisk after the label; suppressed when `Disabled` |
 | `MaxLength` | Maximum characters (enforced on the input). **Default 600** |
+| `AutoComplete` | HTML autocomplete token. **Default `"off"`** (admin workspace). Opt in with a standard token (e.g. `email`) — see [Browser autocomplete](#browser-autocomplete-locked) |
 | `ShowCharacterCount` | When true **and not `Disabled`**, shows `current/max` inside the input. **Never shown when `Disabled`**. **Default false** |
 | `Value` / `ValueChanged` | Two-way bind to the working model |
 | `DebounceMilliseconds` | When &gt; 0, defers `ValueChanged` until the user stops typing for that many ms, presses Enter, or leaves the field (whichever first). Default **0** (immediate). Filters typically use **750** — see [Filter execution](#filter-execution-query-driven) |
@@ -342,6 +374,7 @@ Planning JSON: `control: "DateField"`; optional `mode: "Date"` \| `"DateTime"`. 
 | --- | --- |
 | Date mode | Calendar / typing collect a **date**; bound value is `DateTime` at midnight |
 | DateTime mode | Date + hour/minute; culture-aware display (`g`). Panel time row: digit **hh** (0–12 with AM/PM, or 0–23 when culture is 24h) · digit **mm** (0–60, clamp overshoot to 60; stored minute 0–59) · **AM/PM** select when culture uses 12h (`AMDesignator` / `PMDesignator`). No native `<input type="time">`. |
+| Autocomplete | Main text input and DateTime hour/minute/`select` use `autocomplete="off"` — [Browser autocomplete](#browser-autocomplete-locked) |
 | Locale | Format + calendar month/weekday names from `IBoLocaleService` / `bo-culture` (**en-CA** / **fr-CA**) — same family as other i18n |
 | Typing | Parse culture-formatted input on blur / Enter; invalid input reverts to last good value |
 
@@ -381,6 +414,7 @@ Numeric entry with Text Field chrome. Public API is `Bo*` only; input uses Fluen
 | `Required` / `Disabled` / `IsHidden` | Same deferred mandatory rules as Text Field (Disabled / hidden skip participation) |
 | `Placeholder` | Optional; default resource **`Field_Number_Placeholder_Default`** ("Enter value"); **hidden when Disabled or ReadOnly** |
 | `ReadOnly` | Not editable; no asterisk / required validation |
+| `AutoComplete` | HTML autocomplete token. **Default `"off"`** — see [Browser autocomplete](#browser-autocomplete-locked) |
 
 ### Typed model / persistence (hard standard)
 

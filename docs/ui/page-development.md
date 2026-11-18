@@ -113,7 +113,7 @@ When the page includes a data grid:
 - [ ] **Action / icon columns** (`Hug` row actions): `Title=""` — never a header label; keep `title` / `aria-label` on icon buttons — [grids.md](controls/grids.md).
 - [ ] **`EnableHorizontalScroll`** only when many columns truly need a horizontal scrollbar (default false).
 - [ ] Host loads **`_content/BreezeOn.UI/js/bo-grid.js`** when using truncated display cells (hover full-value title).
-- [ ] Cell editors reuse existing **`Bo*`** fields; column / grid **`Required`** follow [grids.md](controls/grids.md).
+- [ ] Cell editors reuse existing **`Bo*`** fields (inherit browser autocomplete **off**); do **not** put raw `<input>` in `Edit` — [grids.md](controls/grids.md), [forms.md § Browser autocomplete](controls/forms.md#browser-autocomplete-locked); column / grid **`Required`** follow [grids.md](controls/grids.md).
 - [ ] Nested View: set `NodeKey`; same columns → `ChildrenSelector`; different columns → `ChildRowsHaveDifferentColumns` + `ChildGridTemplate` (nested `BoGrid`, not a new component). Optional `DefaultExpansionState`. Same-column Nested View may use `EnableSelection` with cascade. Keyword filters: follow [Nested View keyword filtering](controls/grids.md#nested-view-keyword-filtering-org-standard) unless a documented exception. See [grids.md Nested View](controls/grids.md#nested-view-locked--shipped).
 
 ### Filters and query-driven datasets
@@ -144,6 +144,7 @@ Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → 
 - [ ] **`BoDateField`** for date / date-time — bind **`DateTime?` only** (never `DateOnly`); `Mode` Date or DateTime is UI-only; Date mode still persists midnight — [forms.md](controls/forms.md#date-field-bodatefield).
 - [ ] **`BoNumberField`** for numbers — bind **`decimal?` only**; integer/decimals; `IsCurrency` / `IsPercent` mutually exclusive; percent UI 0–100 → bind ÷100; alignment default Right — [forms.md](controls/forms.md#number-field-bonumberfield).
 - [ ] **`BoFieldReadOnly`** for display-only scalars (host formats `Value`) — [forms.md](controls/forms.md#read-only-field-bofieldreadonly).
+- [ ] Browser autocomplete stays **off** by default on editable `Bo*` fields (`AutoComplete` opt-in only when needed) — [forms.md § Browser autocomplete](controls/forms.md#browser-autocomplete-locked).
 - [ ] **`Weight`** when a field should be wider/narrower than neighbors (default 1) — [layout.md](layout/layout.md).
 - [ ] **`BoEmptyField`** for permanent empty slots; **`IsHidden`** + optional **`PreserveLayoutWhenHidden`** for temporary hide — [layout.md](layout/layout.md). Do **not** confuse with Nested View **`PreserveNestedExpansionOnCacheReset`** ([grids.md](controls/grids.md)).
 - [ ] Sections that participate in Submit validation set **`SectionKey`** — [sections.md](layout/sections.md).

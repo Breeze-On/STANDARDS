@@ -4,7 +4,7 @@ Owner: UI
 
 Section-level data grid for `BreezeOn.UI`. Related: [forms.md](forms.md), [sections.md](../layout/sections.md), [layout.md](../layout/layout.md), [shell.md](../shell/shell.md), [overview.md](../overview.md).
 
-**Composition (hard standard):** `BoGrid` is a **section-level** surface (like Home hub). It is **not** a `BoRow` child and does **not** use Section → Row → Field for its own body. Optional `Title` wraps `BoSectionMain` / `BoSectionSub`. Cell editors reuse shipped `Bo*` fields.
+**Composition (hard standard):** `BoGrid` is a **section-level** surface (like Home hub). It is **not** a `BoRow` child and does **not** use Section → Row → Field for its own body. Optional `Title` wraps `BoSectionMain` / `BoSectionSub`. Cell editors reuse shipped `Bo*` fields — including [browser autocomplete off by default](forms.md#browser-autocomplete-locked) (do **not** put raw `<input>` in `Edit` templates).
 
 **Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoGrid<TItem>`, `BoGridColumn<TItem>`, `BoGridCache<TItem>`, `BoGridRow<TItem>`, `BoGridCellContext<TItem>`, enums `BoGridMode` / `BoGridDefaultExpansionState` / `BoGridColumnAlign` / `BoGridColumnWidth` / `BoGridSectionKind`. Internal helper `BoGridNesting` (not a public component). Host script: `_content/BreezeOn.UI/js/bo-grid.js` (overflow title on truncated display cells).
 
