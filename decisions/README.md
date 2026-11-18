@@ -36,3 +36,4 @@ Categories are discoverability labels for the index; they do not replace reading
 | [ADR-014](ADR-014-platform-authorization.md) | Platform authorization | Accepted | Authorization | All product applications, SYSTEM-SHARED-UI, customer databases, EAC admin surfaces |
 | [ADR-015](ADR-015-object-owned-administrator-groups.md) | Object-owned administrator groups (Applications & Business Entities) | Accepted | Authorization | EAC Applications / Business Entities, SYSTEM-SHARED-UI Security schema, customer databases |
 | [ADR-016](ADR-016-data-entity-ownership.md) | Data Entity ownership and scope | Accepted | Data | EAC Data Entities, Application vs Application Context configuration, consumer apps |
+| [ADR-017](ADR-017-application-configuration-deployment.md) | Application Configuration deployment (synchronize-by-Code) | Accepted | Data | EAC Application Configuration import/export, environment promotion |

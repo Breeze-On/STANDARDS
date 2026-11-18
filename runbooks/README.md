@@ -9,6 +9,7 @@ Operational runbooks document repeatable procedures for deploying, recovering, t
 | Runbook | Covers |
 | --- | --- |
 | [Customer Onboarding Master Flow](customer-onboarding-master-flow.md) | **Primary** end-to-end SSOT (intake + go-live checklist): intake → provisioning → Entra → consent → first login / tenant discovery → admin bootstrap (G) → Sync Now if Graph (F) → go-live |
+| [EAC Application Configuration deployment](eac-application-configuration-deployment.md) | Export/import synchronize of Application Configuration between environments |
 
 ### Related slice procedures (architecture)
 

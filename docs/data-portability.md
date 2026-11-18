@@ -2,7 +2,7 @@
 
 Owner: Engineering
 
-Current conventions for portable JSON payloads used to import and export application registry data owned by EAC.
+Current conventions for portable JSON payloads used to import and export application registry data and Application Configuration owned by EAC.
 
 ## Applications JSON (`breezeon.eac.applications`)
 
@@ -187,3 +187,89 @@ Envelope for EAC Business Hierarchy import/export. Business keys only (`code`, `
 
 - Selected nodes only (cascade selection includes descendants when the user selects a parent).
 - Do not auto-add unselected ancestors; import fails if a referenced parent is missing.
+
+---
+
+## Application Configuration JSON (`breezeon.eac.application-configuration`)
+
+Environment **deployment** envelope for Application Configuration State. Import **synchronizes** the target Application to match the file (create / update / **remove** by Code). This is **not** merge/upsert and **not** backup/restore. Semantic SSOT: [architecture/app-configuration/application-configuration-deployment.md](../architecture/app-configuration/application-configuration-deployment.md) · [ADR-017](../decisions/ADR-017-application-configuration-deployment.md).
+
+Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
+
+### Envelope
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `schemaVersion` | Yes | Integer. Current: `1` |
+| `kind` | Yes | `"breezeon.eac.application-configuration"` |
+| `exportedAt` | No | ISO-8601 UTC on export; import ignores |
+| `applicationUniqueCode` | Yes | Match key = Application `UniqueCode` (must equal selected Application on import) |
+| `applicationCode` | Export: yes; Import: when present | Short Application `Code`; when present on import must match selected Application |
+| `dataEntities` | Yes | Array (may be empty). Synchronized |
+
+**Not accepted from files:** Application/Data Entity/Column GUIDs, surrogate ids, audit columns, rows, translations, metadata values, group members.
+
+**Not shipped in schemaVersion 1:** non-empty `steps`, `options`, `roles`, `systemConfiguration`, `securityGroups` — rejected if present with items.
+
+### Data entity item
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `code` | Yes | Lowercase kebab-case; unique within Application |
+| `description` | No | Max 250 |
+| `sortOrder` | Yes | Positive integer; unique within `dataEntities` |
+| `columns` | Yes | Array (may be empty) |
+
+### Column item
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `code` | Yes | Lowercase kebab-case; unique within parent entity |
+| `description` | No | Max 250 |
+| `type` | Yes | `TEXT` \| `DECIMAL` \| `BOOLEAN` \| `DATETIME` (immutable on update for an existing Code) |
+| `sortOrder` | Yes | Positive integer; unique within parent `columns` |
+
+### Example
+
+```json
+{
+  "schemaVersion": 1,
+  "kind": "breezeon.eac.application-configuration",
+  "applicationUniqueCode": "INVOICE-APPROVAL",
+  "applicationCode": "INV",
+  "dataEntities": [
+    {
+      "code": "regions",
+      "description": "Regions",
+      "sortOrder": 1,
+      "columns": [
+        {
+          "code": "iso-code",
+          "description": "ISO code",
+          "type": "TEXT",
+          "sortOrder": 1
+        }
+      ]
+    }
+  ]
+}
+```
+
+### Import matching and synchronize
+
+- Validate selected Application `UniqueCode` == `applicationUniqueCode` (blocking).
+- Match Data Entities and Columns by **current** `Code` within the Application.
+- Create missing Codes; update matched Codes (description, sortOrder); **remove** Codes in the target that are absent from the file.
+- No rename detection.
+- Removing a Data Entity is blocked when any rows exist in any Application Context.
+- Removing a Column is blocked when metadata values reference that column.
+- All-or-nothing: validate → plan summary → confirm → single SQL transaction (`P_POST_EACApplicationConfigurationSync`).
+- Authorization: Global System Administrator or Application administrator group (`APP_*`) for the selected Application.
+- Max size: EAC `ApplicationConfigurationImport:MaxFileSizeMb` (default **5**); in-memory only.
+- Filename on export: `{applicationUniqueCode}.application-configuration.json`.
+- Local Docker may seed the same envelope after Applications/BE SQL (`SYSTEM-ADMIN-EAC` `sql/seed/` + `tools/BreezeOn.Eac.LocalAppConfigurationSeed`); never hosted environments.
+
+### Related
+
+- [architecture/app-configuration/README.md](../architecture/app-configuration/README.md)
+- Operations: [runbooks/eac-application-configuration-deployment.md](../runbooks/eac-application-configuration-deployment.md)

@@ -139,7 +139,7 @@ Keep `BoPanelNavigation` for the Data Entity **Navigation** list only.
 | One typed value | Metadata rows populate exactly one typed value column matching Column.Type. |
 | Row identity | `DataEntityRowGUID` is immutable system identity; `Code` is editable business value. |
 | Row Code uniqueness | Unique within a Data Entity for that Application Context. |
-| Deletion (future) | Data Entity deletion allowed only when no rows exist; otherwise blocked. Not implemented in Phase 2 UI/procs. |
+| Deletion | Data Entity deletion allowed only when no rows exist; otherwise blocked. UI delete not shipped; Application Configuration synchronize may remove definitions when safe ([ADR-017](../../decisions/ADR-017-application-configuration-deployment.md)). |
 
 ## Performance principles
 
@@ -155,4 +155,4 @@ Keep `BoPanelNavigation` for the Data Entity **Navigation** list only.
 
 ## Future scope (documented only)
 
-Not shipped as CRUD yet: Data Entity edit/delete UI, column CRUD, row CRUD, translation CRUD, import/export, auditing extensions, soft delete. Definition SortOrder drag-reorder via Change Order **is shipped**.
+Not shipped as CRUD yet: Data Entity edit/delete UI, column CRUD UI, row CRUD, translation CRUD, auditing extensions, soft delete. Definition SortOrder drag-reorder via Change Order **is shipped**. Application Configuration deployment import/export for definitions + columns **is shipped** (synchronize-by-Code; see [app-configuration deployment](../app-configuration/application-configuration-deployment.md)).

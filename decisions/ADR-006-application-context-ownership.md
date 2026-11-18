@@ -51,6 +51,8 @@ A feature that references `ApplicationEnabledGUID` is incomplete until:
 4. Validation / automated tests for that feature are updated (when an automated test initiative exists).
 5. Architecture and business documentation are updated.
 
+Application-scoped configuration promoted between environments must also follow Application Configuration deployment participation ([ADR-017](ADR-017-application-configuration-deployment.md)): define Export / Import / Synchronization / Code-matching in the same change set when the feature is part of App Configuration.
+
 ## Consequences
 
 - Product UI may add enablement relationships from Update dialogs; persisted Application Context deletion is managed from the Applications Nested Grid (not from edit popups).

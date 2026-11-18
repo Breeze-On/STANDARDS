@@ -14,6 +14,7 @@ Current reality only — do not place planned or speculative designs here. How w
 | [Ecosystem](ecosystem.md) | Org identity and existing repositories |
 | [EAC](eac.md) | Enterprise Administration Center (current) |
 | [Data Entities](data-entities/README.md) | Configurable master / reference data framework owned by EAC ([ADR-016](../decisions/ADR-016-data-entity-ownership.md)) |
+| [Application Configuration](app-configuration/README.md) | Application Configuration deployment between environments ([ADR-017](../decisions/ADR-017-application-configuration-deployment.md)) |
 | [Identity & Authentication](identity-and-authentication/README.md) | **Start here** for end-user OIDC, Identity schema, App Registrations, config, local auth (platform standard) |
 | [Authorization](authorization/README.md) | Security Groups, page security, `IBoAuthorizationService` (platform standard; [ADR-014](../decisions/ADR-014-platform-authorization.md)) |
 | [Security](security.md) | SQL access / MI and secrets posture; end-user auth and authorization point to Identity & Authorization trees (dependency/vuln governance: [`docs/security-governance.md`](../docs/security-governance.md)) |

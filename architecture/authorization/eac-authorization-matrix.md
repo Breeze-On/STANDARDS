@@ -84,7 +84,9 @@ Selector visibility on `/app-configuration` is **not** Applications/BE page RLS.
 | See all enablements for an administered Application (Path A) | Yes (all) | Scoped (that Application’s enablements) | No (unless also Path A/C) | No | No |
 | See enablements under administered BE + descendants (Path B) | Yes (all) | No (unless also Path B/C) | Scoped + Descendants | No | No |
 | See a single enablement via APPENA membership (Path C) | Yes (all) | No (unless also Path C) | No (unless also Path C) | That row only | No |
-| Configure / persist / Import-Export files | No (layout only today) | No | No | No | No |
+| Export Application Configuration JSON | Yes | Yes (Application they administer) | No | No | No |
+| Import / synchronize Application Configuration JSON | Yes | Yes (Application they administer; `applicationUniqueCode` must match) | No | No | No |
+| Configure other App Configuration sections (Steps/Options/Roles/System/Security Groups) | No (placeholders) | No | No | No | No |
 
 ## Platform / security
 
