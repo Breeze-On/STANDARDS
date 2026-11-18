@@ -20,7 +20,7 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 | Code is identity | Match configuration objects by `Code` within the Application |
 | Application identity | Envelope uses `applicationUniqueCode` (`UniqueCode`); never Application GUID |
 | GUIDs stay local | Never export environment GUIDs; resolve Codes → target GUIDs on import |
-| No rename detection | Code change = remove old + create new |
+| No rename detection | In portable JSON, a Code change = remove old + create new. EAC **Edit Data Entities** can rename `Code` in place (GUID stable); update deployment/seed JSON deliberately after such renames so sync still matches |
 | SortOrder | Exported and synchronized |
 | Transactional | Validate → plan → confirm → apply all-or-nothing |
 

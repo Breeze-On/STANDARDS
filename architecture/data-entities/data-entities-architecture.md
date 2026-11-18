@@ -111,7 +111,28 @@ Rules:
 - Assigns `SortOrder = OPENJSON key + 1` (top = 1) in one transaction and stamps `LastUpdated*`.
 - Returns the updated definition list ordered by new SortOrder.
 
+## Definition bulk save contract
+
+`System.P_POST_EACDataEntitiesSave`:
+
+| Parameter | Role |
+| --- | --- |
+| `@ApplicationGUID` | Target Application |
+| `@EntitiesJson` | Remaining definitions in visual order: `{ dataEntityGuid, code, description }` |
+| `@DeletedGuidsJson` | Staged `DataEntityGUID` deletes |
+| `@Actor` | Audit actor |
+
+Rules:
+
+- Updates are **GUID-keyed** (`DataEntityGUID` is immutable FK identity). `Code` is an editable business key; no child-table Code cascade (columns/rows already reference GUID).
+- Remaining rows + deletes must account for every definition on the Application exactly once.
+- SortOrder rewritten as `OPENJSON key + 1` for remaining rows.
+- Code uniqueness and kebab-case enforced; Code swaps use a temporary unique Code first.
+- Delete blocked while any `EACDataEntitiesRows` exist for that GUID; otherwise columns (and their metadata) cascade then the definition is removed.
+- Returns the updated definition list ordered by new SortOrder.
+
 ## Delete chains
 
+- `P_POST_EACDataEntitiesSave` (staged definition delete): when no rows, column metadata → columns → Data Entity.
 - `P_POST_EACApplicationsEnabledDelete`: Metadata → Translations → Rows for the context, then enablement.
 - `P_POST_EACApplicationDelete`: after enablements, Columns → DataEntities for the Application.
