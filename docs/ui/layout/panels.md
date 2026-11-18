@@ -76,6 +76,29 @@ Generic independently scrolling regions. **Not** owned by `BoAppBody` — reusab
 
 **Responsive:** below `48rem`, host stacks column (Left → Fill → Right); side panels use `max-height: 40vh`.
 
+### Pinned chrome inside Fill
+
+When Fill content needs a stable Actions / toolbar row **and** a scrollable body (so Save/Discard never leave the viewport while grids grow), compose a **product flex column** inside the Fill panel — do **not** add fill/scroll APIs to `BoSectionMain` / `BoSectionSub`.
+
+```text
+.bo-panel__scroll
+  └─ fill column (height: 100%; overflow: hidden; flex column)
+       ├─ pinned chrome (flex: 0 0 auto) — e.g. Actions BoSectionSub
+       └─ workspace scroll (flex: 1; min-height: 0; overflow: auto) — Values/Settings grids
+```
+
+**Rules:**
+
+| Concern | Ownership |
+| --- | --- |
+| Viewport / footer | `BoAppShell` (unchanged) |
+| Panel height slot | `BoPanelHost` / `.bo-panel__scroll` |
+| Anchored Actions | Non-scrolling sibling above the workspace scroll region |
+| Workspace overflow | Inner product scroll container only |
+| Section chrome | `BoSectionSub` remains grouping only |
+
+Shipped example: EAC App Configuration → Data Entities Fill (`.eac-data-entities-fill` / `.eac-data-entities-workspace-scroll`). Reuse this composition for future App Configuration workspaces; promote to SHARED-UI only when a second product needs the same helper.
+
 ## `BoPanelNavigation` (navigator only)
 
 ```razor

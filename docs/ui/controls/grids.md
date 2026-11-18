@@ -187,12 +187,27 @@ Also consider: sorting requirements (server whitelist vs client), future growth 
 | Concern | Standard |
 | --- | --- |
 | Cache content | Host fills `BoGridCache` with **only the current page** returned by the primary contract |
-| `TotalCount` | Comes from the **primary contract** (rows matching the filter before pagination); drives the pagination footer total and page count |
+| `TotalCount` | Comes from the **primary contract** (rows matching the filter before pagination); drives the pagination footer total and page count. **Pager navigation** (`GoToPageAsync`) must also use `TotalCount` in Server mode — never `Cache.Count` (cache is only the current page). |
 | Pipeline | Server applies **Filter → Sort → Pagination** (in that order); header sort and page changes raise a new host query instead of slicing the cache |
 | Nested View | Server query pages **roots**; children come from the same primary contract; keyword child selection + search expansion follow [Nested View keyword filtering](#nested-view-keyword-filtering-org-standard) |
 | Select-all | Selects the **current page only** (rows currently in `BoGridCache`). Under Server `QueryMode`, the cache is the current page — **not** every row matching the filter across all pages |
 | Filters | Filter controls follow [forms.md — Filter execution](forms.md#filter-execution-query-driven); no Apply button |
 | Stale responses | Host uses `BoLatestWinsQuery` (or equivalent); a stale response never calls `ReplaceAll` |
+
+### Host-driven dynamic `PaginationSize` (optional)
+
+When a Server-paged grid should fill available vertical space (larger monitors → more rows), the **host** owns `PaginationSize` — `BoGrid` has no AutoPageSize API.
+
+| Rule | Guidance |
+| --- | --- |
+| Measure | Available workspace height minus stable chrome (section header, toolbar, table header, pager) |
+| Apply | `floor(remaining / rowHeight)`, then **clamp** (product chooses bounds; EAC Values uses 5–40), then optionally reserve one row (EAC Values: `max(min, size - 1)` for footer breathing room) |
+| When to recompute | First layout after the workspace becomes active, and **debounced** container/window resize |
+| When not to recompute | Typing, dirty toggles, Add/Delete row, sort, or page navigation |
+| StartIndex | If size changes, snap `StartIndex` down to a page boundary before re-querying |
+| Overflow safety | Prefer fitting the page; residual overflow (e.g. many local Adds overlaid on the current page) belongs to a parent workspace scroll region — not page-level scroll |
+
+Shipped example: EAC Data Entities Values (`eac-workspace-page-size.js` + host `_pageSize`). Do not invent a Shared UI control until a second product needs the same helper.
 
 ## Extension points (host)
 
