@@ -350,7 +350,7 @@ Single-value date (or date+time) control. Public API is `Bo*` only; calendar pop
 | `Value` / `ValueChanged` | `@bind-Value` to **`DateTime?` only** (see typed model hard standard below) |
 | `Mode` | `BoDateFieldMode.Date` (default) or `DateTime` — **UI only**; does not change the bound CLR type |
 | `Required` / `Disabled` / `IsHidden` | Same deferred mandatory rules as Text Field (Disabled / hidden skip participation) |
-| `Placeholder` | Optional; default resource **`Field_Date_Placeholder_Default`** ("Choose a date") or **`Field_DateTime_Placeholder_Default`** when `Mode` is DateTime; **hidden when Disabled** |
+| `Placeholder` | Optional; default resource **`Field_Date_Placeholder_Default`** ("Select date") or **`Field_DateTime_Placeholder_Default`** ("Select date/time") when `Mode` is DateTime; **hidden when Disabled**; placeholder color matches Text/Number (Fluent `--colorNeutralForeground4`) |
 | `ReadOnly` | Not editable (no calendar popover); no asterisk / required validation |
 
 ### Typed model / persistence (hard standard)
@@ -383,6 +383,7 @@ Planning JSON: `control: "DateField"`; optional `mode: "Date"` \| `"DateTime"`. 
 | Concern | Standard |
 | --- | --- |
 | Label gap / corners / focus | Same as Text Field / DDL: **`--bo-field-label-gap`**, **`--bo-radius-md`**, hover + **full-border** focus (`--bo-color-field-border-focus`), themed caret/selection on the text input, field fill |
+| Placeholder color | Same as Text Field / Number Field: Fluent **`--colorNeutralForeground4`** (not `--bo-color-text-muted`) |
 | Invalid border | Control edge only after validation attempt |
 | Picker | Modern popover calendar: **fixed** placement (`boPopup` / `bo-popup.js`) so it overlays shell card / section overflow; rounded panel, soft elevation, tertiary/primary accents, today ring, selected primary fill |
 | Month nav (Dark) | Prev/next arrow glyphs are **white** (`--bo-color-semantic-white`) on the nav chip so they stay visible |
