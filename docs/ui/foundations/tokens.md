@@ -47,6 +47,16 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 | `color-text-muted` | `--bo-color-text-muted` | `#616161` | `#A8B2AC` | Muted text (e.g. character count) |
 | `color-danger` | `--bo-color-danger` | `#C50F1F` | `#FF8A8A` | Danger / mandatory asterisk |
 | `color-success` | `--bo-color-success` | `#0E700E` | `#4ADE80` | Success |
+| `color-save-button-background` | `--bo-color-save-button-background` | `#D9F0FF` | `#10354A` | Soft positive Save action fill (Data Entities Actions today) |
+| `color-save-button-border` | `--bo-color-save-button-border` | `#7CC7F5` | `#2A89C9` | Save action border |
+| `color-save-button-foreground` | `--bo-color-save-button-foreground` | `#0B5F8A` | `#BFE8FF` | Save action label/icon (WCAG AA on fill) |
+| `color-save-button-background-hover` | `--bo-color-save-button-background-hover` | `#C5E7FC` | `#154560` | Save action fill on hover |
+| `color-save-button-background-pressed` | `--bo-color-save-button-background-pressed` | `#B0DCF8` | `#1A5575` | Save action fill when pressed |
+| `color-discard-button-background` | `--bo-color-discard-button-background` | `#FDE2E2` | `#4A1818` | Soft revert Discard action fill (Data Entities Actions today) |
+| `color-discard-button-border` | `--bo-color-discard-button-border` | `#F2A4A4` | `#C75D5D` | Discard action border |
+| `color-discard-button-foreground` | `--bo-color-discard-button-foreground` | `#A12626` | `#FFD2D2` | Discard action label/icon (WCAG AA on fill) |
+| `color-discard-button-background-hover` | `--bo-color-discard-button-background-hover` | `#FBD0D0` | `#5C1E1E` | Discard action fill on hover |
+| `color-discard-button-background-pressed` | `--bo-color-discard-button-background-pressed` | `#F8BEBE` | `#6E2424` | Discard action fill when pressed |
 | `color-warning` | `--bo-color-warning` | `#C19C00` | `#C19C00` | Alert toast accent / badge gradient |
 | `color-info` | `--bo-color-info` | `#0078D4` | `#0078D4` | Information accent (Information toasts) |
 | `color-overlay-scrim` | `--bo-color-overlay-scrim` | `rgba(0,0,0,0.35)` | `rgba(0,0,0,0.35)` | Modal / profile-menu scrim |
@@ -57,6 +67,8 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 | `color-nav-hover-background` | `--bo-color-nav-hover-background` | `rgba(255,255,255,0.16)` | `rgba(255,255,255,0.12)` | Unselected nav hover fill |
 
 Legacy aliases still emitted: `--bo-color-surface` → card-container-background; `--bo-color-surface-muted` → background; `--bo-color-border` → card-container-border; `--bo-color-nav-background` → primary.
+
+**Save / Discard action tokens:** soft blue (Save) and soft red (Discard) families for Dirty State Persist/Revert chrome. CSS names stay `--bo-color-*` (no `*-light` / `*-dark` suffixes; not `--semantic-*`). Rest foreground-on-background contrast is WCAG AA (≥4.5:1) in both themes; hover/pressed keep the same foreground on a deeper fill in the same family. **Consumers today:** EAC Data Entities Actions only — do not reuse for generic Primary/Secondary buttons until a wider product rollout.
 
 **Nav-stable tokens:** `color-nav-selected` and `color-nav-logo-divider` do **not** follow Dark `color-tertiary` / `color-card-container-border`. They keep Light values so selected page fill and the brand logo divider match Light chrome in Dark mode.
 

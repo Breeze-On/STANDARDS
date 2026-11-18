@@ -61,6 +61,7 @@ Join to `EACDataEntitiesColumns` for `Code` / `Type`. Map typed columns:
 | --- | --- |
 | TEXT | ValueText |
 | DECIMAL | ValueNumber |
+| DATE | ValueDateTime (date @ midnight) |
 | DATETIME | ValueDateTime |
 | BOOLEAN | ValueBoolean |
 

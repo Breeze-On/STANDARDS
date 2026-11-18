@@ -32,7 +32,7 @@ Platform semantics: [architecture/app-configuration/application-configuration-de
 ## Important behaviors
 
 - Synchronize **removes** target definitions absent from the file.
-- Removals are blocked when Data Entity rows or column metadata exist in any Application Context.
+- Data Entity removals are blocked when rows exist in any Application Context. Column removals cascade-delete metadata, then the column.
 - Rows, translations, metadata, and group memberships are **not** deployed by this file.
 - Applications / Business Entities JSON remain separate merge/upsert contracts — do not use those for App Config promotion.
 

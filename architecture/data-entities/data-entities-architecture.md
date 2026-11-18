@@ -60,19 +60,36 @@ Full column inventory: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYS
 - Prefer indexed filters on `(ApplicationEnabledGUID, DataEntityGUID)` over scanning by Application alone for rows.
 - Avoid wide SQL pivots until a dedicated consumer retrieval contract exists.
 
+## Values workspace retrieval (locked)
+
+EAC Values UI must **not** load entire large catalogs into memory.
+
+| Concern | Design |
+| --- | --- |
+| Browsing | Server QueryMode — `System.P_GET_EACDataEntitiesRows` pages/sorts/filters; only the current page + its sparse metadata loads |
+| Editing | Local Changeset (Added / Modified / Deleted) — do not switch the grid to Client QueryMode |
+| Dirty | Changeset is not empty |
+| Save | `System.P_POST_EACDataEntitiesRowsSave` accepts Changeset JSON only (not a full-catalog replace) |
+| Discard | Clear Changeset + reload current server page |
+
+Settings (columns) remain a small client working copy via `P_GET` / `P_POST_EACDataEntitiesColumnsSave`.
+
 ## Sparse metadata rules
 
 - Absence of a metadata row means NULL.
 - Never insert a metadata row with all typed value columns NULL.
 - `TEXT` → `ValueText` only; `ValueRichText` is reserved and unused.
-- `DECIMAL` → `ValueNumber`; `DATETIME` → `ValueDateTime`; `BOOLEAN` → `ValueBoolean`.
+- `DECIMAL` → `ValueNumber` (`DECIMAL(28,10)`); column `Decimals` (0–10) drives UI scale and save rounding.
+- `DATE` and `DATETIME` → `ValueDateTime` (`DATETIME2`); DATE persists as calendar date at midnight.
+- `BOOLEAN` → `ValueBoolean`.
 - Exactly one typed column populated per metadata row, matching `EACDataEntitiesColumns.Type`.
 
 ## Translation strategy
 
 - Only **row Description** is translated (`EACDataEntitiesRowsTranslations`).
 - Data Entity and Column Description are **not** translated.
-- One translation row per `(DataEntityRowGUID, LanguageCode)` (e.g. `en-US`, `fr-CA`).
+- One translation row per `(DataEntityRowGUID, LanguageCode)`.
+- EAC Values UI persists/loads `LanguageCode = IBoLocaleService.FormatCulture.Name` (`en-CA` / `fr-CA`) — aligned with [i18n.md](../../docs/ui/foundations/i18n.md).
 
 ## Ownership split
 

@@ -226,7 +226,8 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 | --- | --- | --- |
 | `code` | Yes | Lowercase kebab-case; unique within parent entity |
 | `description` | No | Max 250 |
-| `type` | Yes | `TEXT` \| `DECIMAL` \| `BOOLEAN` \| `DATETIME` (immutable on update for an existing Code) |
+| `type` | Yes | `TEXT` \| `DECIMAL` \| `BOOLEAN` \| `DATE` \| `DATETIME` (immutable on update for an existing Code) |
+| `decimals` | Conditional | Integer **0–10**. Required semantics for `DECIMAL` (omit → default **2** on import). Must be omitted for non-DECIMAL types. Export emits only for DECIMAL. |
 | `sortOrder` | Yes | Positive integer; unique within parent `columns` |
 
 ### Example
@@ -262,7 +263,7 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 - Create missing Codes; update matched Codes (description, sortOrder); **remove** Codes in the target that are absent from the file.
 - No rename detection.
 - Removing a Data Entity is blocked when any rows exist in any Application Context.
-- Removing a Column is blocked when metadata values reference that column.
+- Removing a Column is **always allowed**; synchronize deletes associated metadata values first, then the column (same rule as Settings Save).
 - All-or-nothing: validate → plan summary → confirm → single SQL transaction (`P_POST_EACApplicationConfigurationSync`).
 - Authorization: Global System Administrator or Application administrator group (`APP_*`) for the selected Application.
 - Max size: EAC `ApplicationConfigurationImport:MaxFileSizeMb` (default **5**); in-memory only.

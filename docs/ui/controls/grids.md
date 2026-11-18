@@ -66,6 +66,8 @@ The library **never** talks to SQL or application repositories.
 | `ParentHasChildren` | Nested View different-columns: optional; default true when `ChildGridTemplate` is set |
 | `NewItemFactory` | Creates `TItem` for Add New (editable modes) |
 | `ShowAddNew` | Default **true** in editable modes (ignored in Nested View) |
+| `ShowSave` | Default **true**. When **false**, InlineEdit hides the section-header Save button so the host can own Save/Discard outside the grid (e.g. page Actions). Does not remove per-row RowEdit Save. |
+| `ActionsPlacement` | `BoGridActionsPlacement`: **`Trailing`** (default — actions after data columns) or **`Leading`** (actions before data columns, after selection when enabled). Use Leading when Delete must stay visible without horizontal scroll (e.g. wide dynamic columns). |
 | `OnSave`, `OnRowDeleted`, `OnChanged` | Host callbacks |
 | `EnableSelection` | Default **false**. When true (flat modes only; not Nested View), shows a compact **first** selection column |
 | `SelectionMode` | `Multiple` (default) or `Single` |
@@ -162,8 +164,8 @@ Default off (`IsPagination = false`). When on:
 ## Inline Edit (locked)
 
 - All rows show Edit templates; Delete available per row (no single-row lock); **no** left accent bar.
-- When the grid owns a section: **Add New** + overall **Save** on the section header row.
-- Save validates required cell fields (ValidationGroup) + grid `Required`; fail → toast + borders; success → `OnSave`.
+- When the grid owns a section: **Add New** + overall **Save** on the section header row (Save omitted when `ShowSave=false`).
+- Save validates required cell fields (ValidationGroup) + grid `Required`; fail → toast + borders; success → `OnSave`. Hosts that hide Save must run equivalent validation before their own Save path.
 - Sort order remains frozen while cells change (same rules as Sort).
 
 ## Server QueryMode

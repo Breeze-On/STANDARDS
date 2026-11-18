@@ -55,8 +55,9 @@ Non-empty not-yet-shipped section keys are rejected as unsupported for the curre
 ## Removal safety
 
 - Removing a Data Entity is blocked when any rows exist for that entity in **any** Application Context.
-- Removing a Column is blocked when any row metadata references that column.
+- Removing a Column is **always allowed**; associated row metadata is deleted, then the column (same cascade as Settings Save).
 - Column `type` is immutable on update; a type change for an existing Code is a validation failure.
+- Column `decimals` (0–10) applies to `DECIMAL` only (default 2 when omitted); `DATE` is a first-class type alongside `DATETIME`.
 
 ## Import UX (current)
 

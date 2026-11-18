@@ -69,11 +69,15 @@ Do **not** create custom columns named `code`, `description`, or `sort-order`. T
 
 ### Column types (database)
 
-Allowed: `TEXT`, `DECIMAL`, `BOOLEAN`, `DATETIME`.
+Allowed: `TEXT`, `DECIMAL`, `BOOLEAN`, `DATE`, `DATETIME`.
 
 Do not introduce database types for DDL, Person, People Picker, or Entity Reference — those are frontend concepts.
 
 Column **Type** is immutable once created.
+
+### DECIMAL precision (`Decimals`)
+
+When `Type = DECIMAL`, `Decimals` is required (integer **0–10**, default **2** on create). Non-DECIMAL columns store `Decimals = NULL`. `Decimals` may be updated after create; Values UI formats/edits using the current scale.
 
 ## Navigation display
 
@@ -139,7 +143,8 @@ Keep `BoPanelNavigation` for the Data Entity **Navigation** list only.
 | One typed value | Metadata rows populate exactly one typed value column matching Column.Type. |
 | Row identity | `DataEntityRowGUID` is immutable system identity; `Code` is editable business value. |
 | Row Code uniqueness | Unique within a Data Entity for that Application Context. |
-| Deletion | Data Entity deletion allowed only when no rows exist; otherwise blocked. UI delete not shipped; Application Configuration synchronize may remove definitions when safe ([ADR-017](../../decisions/ADR-017-application-configuration-deployment.md)). |
+| Column deletion | **Always allowed.** Removes the column definition and **all** associated `EACDataEntitiesRowsMetadata` (Settings Save and Application Configuration synchronize share this rule). |
+| Data Entity deletion | Allowed only when **no rows** exist; otherwise blocked. Application Configuration synchronize may remove definitions when safe ([ADR-017](../../decisions/ADR-017-application-configuration-deployment.md)). |
 
 ## Performance principles
 
@@ -153,6 +158,18 @@ Keep `BoPanelNavigation` for the Data Entity **Navigation** list only.
 - Consumers: [using-data-entities.md](using-data-entities.md).
 - Technical shape: [data-entities-architecture.md](data-entities-architecture.md).
 
+## Values & Settings workspaces (shipped)
+
+App Configuration → Data Entities right panel (when a Data Entity is selected):
+
+| Surface | Role |
+| --- | --- |
+| Actions | Equal-weight `BoRow` slots: Save · Discard · empties · `BoToggle` (Values / Settings; toggle slot weight 2). Save/Discard use dedicated semantic action tokens (`--bo-color-save-button-*` / `--bo-color-discard-button-*`) — not Primary/Secondary. Dirty State is **outside** BoToggle ([dirty-state.md](../../docs/ui/patterns/dirty-state.md), [toggle.md](../../docs/ui/controls/toggle.md), [tokens.md](../../docs/ui/foundations/tokens.md)). |
+| Values | Rows for the selected Application Context. **Server QueryMode** browsing + **local Changeset** editing. Save submits Added/Modified/Deleted only. Discard clears the Changeset and reloads the current page. Column order: Delete (leading) → Code → Description → dynamic columns → Sort Order. New row `SortOrder = max + 1` (or 1). Description uses current `IBoLocaleService.FormatCulture.Name` (`en-CA` / `fr-CA`) — no language picker. |
+| Settings | Column definitions for the Data Entity (Application-scoped). Client working copy. Delete Column requires confirm before working-copy delete; Save cascades metadata remove. Type immutable once created; DECIMAL has editable `Decimals` (0–10). Codes auto `extraN`. Delete is the leading grid actions column. |
+
+Save applies **only** to the active toggle workspace. Entity deletion when rows exist remains blocked. Column deletion always cascades metadata (Settings Save and Import synchronize).
+
 ## Future scope (documented only)
 
-Not shipped as CRUD yet: Data Entity edit/delete UI, column CRUD UI, row CRUD, translation CRUD, auditing extensions, soft delete. Definition SortOrder drag-reorder via Change Order **is shipped**. Application Configuration deployment import/export for definitions + columns **is shipped** (synchronize-by-Code; see [app-configuration deployment](../app-configuration/application-configuration-deployment.md)).
+Not shipped yet: Data Entity definition edit/delete UI, multi-language translation editor UI, auditing extensions, soft delete. Definition SortOrder drag-reorder via Change Order **is shipped**. Application Configuration deployment import/export for definitions + columns **is shipped** (synchronize-by-Code; see [app-configuration deployment](../app-configuration/application-configuration-deployment.md)). Values row CRUD + Settings column CRUD **are shipped** (see above).
