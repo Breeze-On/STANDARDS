@@ -206,10 +206,11 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 | `applicationUniqueCode` | Yes | Match key = Application `UniqueCode` (must equal selected Application on import) |
 | `applicationCode` | Export: yes; Import: when present | Short Application `Code`; when present on import must match selected Application |
 | `dataEntities` | Yes | Array (may be empty). Synchronized |
+| `securityGroups` | Export: yes; Import: when present | Array (may be empty). When **present** (including `[]`), synchronized for the Application. When **omitted**, security-group sync is skipped (backward compatible). |
 
-**Not accepted from files:** Application/Data Entity/Column GUIDs, surrogate ids, audit columns, rows, translations, metadata values, group members.
+**Not accepted from files:** Application/Data Entity/Column/SecurityGroup GUIDs, surrogate ids, audit columns, rows, translations, metadata values, group members.
 
-**Not shipped in schemaVersion 1:** non-empty `steps`, `options`, `roles`, `systemConfiguration`, `securityGroups` — rejected if present with items.
+**Not shipped in schemaVersion 1:** non-empty `steps`, `options`, `roles`, `systemConfiguration` — rejected if present with items.
 
 ### Data entity item
 
@@ -229,6 +230,18 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 | `type` | Yes | `TEXT` \| `DECIMAL` \| `BOOLEAN` \| `DATE` \| `DATETIME` (immutable on update for an existing Code) |
 | `decimals` | Conditional | Integer **0–10**. Required semantics for `DECIMAL` (omit → default **2** on import). Must be omitted for non-DECIMAL types. Export emits only for DECIMAL. |
 | `sortOrder` | Yes | Positive integer; unique within parent `columns` |
+
+### Security group item
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `businessEntityCode` | Yes | Must be enabled for the Application; resolves to Application Context |
+| `attributeCode` | Yes | `[A-Z0-9_]+`; unique within that Business Entity for the Application |
+| `description` | Yes | Stored on `Security.Groups.Description` (max 600) |
+| `metadata` | No | Stored on `EACSecurityGroups.Metadata` (max 250). **Export always emits** the property (`null` when unset) so round-trip matches import. |
+| `sortOrder` | Yes | Positive integer; unique within the same `businessEntityCode` |
+
+Creates `Security.Groups` with Code `APPSG_{UniqueCode}_{BusinessEntityCode}_{AttributeCode}`, Name `{ApplicationCode} / {BusinessEntityCode} — {AttributeCode}`, **`IsManuallyCreated = 1`**. Memberships are never imported. Removing a portable item deletes the EAC configuration row only (not the Security group).
 
 ### Example
 
@@ -252,6 +265,15 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
         }
       ]
     }
+  ],
+  "securityGroups": [
+    {
+      "businessEntityCode": "FIN",
+      "attributeCode": "INITIATE",
+      "description": "Can initiate requests.",
+      "metadata": null,
+      "sortOrder": 1
+    }
   ]
 }
 ```
@@ -261,6 +283,7 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 - Validate selected Application `UniqueCode` == `applicationUniqueCode` (blocking).
 - Match Data Entities and Columns by **current** `Code` within the Application.
 - Create missing Codes; update matched Codes (description, sortOrder); **remove** Codes in the target that are absent from the file.
+- When `securityGroups` is present: match by `businessEntityCode` + `attributeCode`; create missing (including `Security.Groups`); update matched; remove absent EAC rows (not Security groups/memberships). `businessEntityCode` must be enabled for the Application.
 - No rename detection.
 - Removing a Data Entity is blocked when any rows exist in any Application Context.
 - Removing a Column is **always allowed**; synchronize deletes associated metadata values first, then the column (same rule as Settings Save).

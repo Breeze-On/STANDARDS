@@ -35,6 +35,7 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 | Section | Contents |
 | --- | --- |
 | Data Entities | Definitions, Columns, SortOrder |
+| Security Groups | AttributeCode configuration per Business Entity (Application Context); synchronized Security.Groups Code/Name/Description; no memberships |
 
 ## Explicitly excluded
 
@@ -48,7 +49,8 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 | Section | In JSON | Synchronized |
 | --- | --- | --- |
 | `dataEntities` | Yes | Yes |
-| `steps` / `options` / `roles` / `systemConfiguration` / `securityGroups` | Omitted | No |
+| `securityGroups` | Yes (export always; import when present) | Yes when key present; skipped when omitted |
+| `steps` / `options` / `roles` / `systemConfiguration` | Omitted | No |
 
 Non-empty not-yet-shipped section keys are rejected as unsupported for the current `schemaVersion`.
 
