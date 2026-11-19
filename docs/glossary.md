@@ -26,6 +26,18 @@ An AI coding, planning, or documentation assistant operating in a Breeze-On repo
 
 Org-wide deny-by-default limits on agent publish, PR lifecycle, CI/CD triggers, deploy, cloud/infrastructure changes, secrets/permission management, and repository administration. Restricted actions require **explicit authorization in the current prompt**. SSOT: [ai-agent-governance.md](ai-agent-governance.md).
 
+## Development Agent
+
+AI agent role that implements from an active plan under `docs/plans/in-progress/` (especially on **Build Locally**), updates permanent documentation, transfers lasting knowledge out of the plan, and moves the plan to `docs/plans/implemented/` (or deletes it) only after completion criteria are met. SSOT: [planning-and-development-agents.md](planning-and-development-agents.md).
+
+## Implementation plan
+
+Temporary markdown working artifact. New/active plans live under `docs/plans/in-progress/`; successfully completed plans move to `docs/plans/implemented/` (or are deleted when fully transferred). Not permanent documentation; chat is not the plan store. Updates are delta-only. SSOT: [planning-and-development-agents.md](planning-and-development-agents.md).
+
+## Planning Agent
+
+AI agent role responsible for feature, architecture, refactoring, technical design, migration, and performance plans. Writes plans only to `docs/plans/in-progress/*.md`, applies **delta updates only** to existing plans, and must not render plan content in chat. SSOT: [planning-and-development-agents.md](planning-and-development-agents.md).
+
 ## Application
 
 A deployable software solution represented by a repository / application code. Defines shared software behavior and deployment. In the EAC registry sense, a row in `System.EACApplications`. Distinct from a shared library or the STANDARDS repo.

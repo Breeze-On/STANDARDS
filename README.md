@@ -30,6 +30,7 @@ Full rules: [`docs/documentation.md`](docs/documentation.md) (includes lightweig
 | --- | --- |
 | Where should an AI agent start? | [`docs/ai/BREEZEON-AI-QUICKSTART.md`](docs/ai/BREEZEON-AI-QUICKSTART.md) (see [`docs/ai/`](docs/ai/)) |
 | What may AI agents do operationally? | [`docs/ai-agent-governance.md`](docs/ai-agent-governance.md) ([ADR-007](decisions/ADR-007-ai-agent-operational-boundaries.md)) |
+| How do Planning / Development Agents work? | [`docs/planning-and-development-agents.md`](docs/planning-and-development-agents.md) |
 | What exists? | [`architecture/`](architecture/) — start at [landscape](architecture/landscape.md) |
 | How do we work? | [`docs/`](docs/) |
 | Why was this decision made? | [`decisions/`](decisions/) (ADRs) |
@@ -53,6 +54,7 @@ STANDARDS/
 ├─ docs/                     # Standards, conventions, governance
 │  ├─ ai/                    # AI onboarding (quickstart first)
 │  ├─ ai-agent-governance.md # AI operational boundaries (assistants ≠ release/cloud admin)
+│  ├─ planning-and-development-agents.md  # Planning / Dev Agent workflow
 │  ├─ documentation.md
 │  ├─ glossary.md            # Shared vocabulary (current usage)
 │  ├─ adr.md
@@ -83,7 +85,9 @@ STANDARDS/
 ├─ templates/
 │  ├─ local-sql/             # Docker SQL sandbox starter (copy into app repos)
 │  ├─ dependabot/            # Dependabot starter (copy into app/library repos)
-│  └─ cursor-rules/          # Cursor rule starters (AI agent boundaries)
+│  ├─ cursor-rules/          # Cursor rule starters (AI boundaries, Planning, Development)
+│  ├─ cursor-team-rules/     # Pasteable Cursor Team Rules text
+│  └─ docs-plans/            # Product-repo docs/plans/in-progress + implemented layout
 └─ architecture/             # Currently implemented systems only
    ├─ README.md
    ├─ landscape.md
@@ -129,6 +133,7 @@ Do not mix speculative design into these trees. If it is not real yet, it does n
 | [Testing](docs/testing.md) | Placeholder — not yet formally defined |
 | [Security governance](docs/security-governance.md) | Dependency & vulnerability policy; Dependabot; NuGet audit (see also [architecture/security.md](architecture/security.md)) |
 | [AI agent governance](docs/ai-agent-governance.md) | Operational boundaries: development assistants only; deny push/PR/CI/deploy/cloud/secrets/admin by default ([ADR-007](decisions/ADR-007-ai-agent-operational-boundaries.md)) |
+| [Planning & Development Agents](docs/planning-and-development-agents.md) | Org-wide plans under `docs/plans/in-progress/` → `docs/plans/implemented/`; delta updates only; never dump plans in chat; Build Locally; knowledge transfer |
 | [Observability](docs/observability.md) | Placeholder — not yet formally defined |
 | [Versioning](docs/versioning.md) | Placeholder — not yet formally defined |
 
@@ -159,7 +164,9 @@ Full index: [`decisions/README.md`](decisions/README.md).
 | --- | --- |
 | [templates/local-sql/](templates/local-sql/) | Starter `docker-compose.yml` and `.env.example` for local SQL Server |
 | [templates/azure-sql/](templates/azure-sql/) | Grant App Service Managed Identity on Azure SQL (`SQLAzureConnection`); apps also need SqlClient **`Extensions.Azure`** for MI (see [hosted-deployment.md](docs/hosted-deployment.md), [architecture/security.md](architecture/security.md)) |
-| [templates/cursor-rules/](templates/cursor-rules/) | Cursor rule starter for AI agent operational boundaries (copy into product `.cursor/rules/`) |
+| [templates/cursor-rules/](templates/cursor-rules/) | Cursor rule starters for AI boundaries, Planning Agent, and Development Agent (copy into product `.cursor/rules/`) |
+| [templates/cursor-team-rules/](templates/cursor-team-rules/) | Pasteable Cursor Team Rules text for dashboard org-wide enforcement |
+| [templates/docs-plans/](templates/docs-plans/) | Product-repo `docs/plans/in-progress/` + `docs/plans/implemented/` layout starter |
 
 ### Architecture (`architecture/`)
 
@@ -177,6 +184,7 @@ Index: [`architecture/README.md`](architecture/README.md).
 - Treat **STANDARDS** as the single source of truth for org-wide rules, current architecture, and ADRs.
 - Review **existing ADRs** before introducing new architecture patterns.
 - Follow [`docs/ai-agent-governance.md`](docs/ai-agent-governance.md): agents are development assistants — local work and recommendations by default; no push/PR/CI/deploy/cloud/secrets/admin unless the **current prompt** explicitly authorizes it.
+- Follow [`docs/planning-and-development-agents.md`](docs/planning-and-development-agents.md): active plans live in `docs/plans/in-progress/`; chat never stores plan bodies; Planning Agents apply delta updates only; Development Agents build from the plan file and update permanent docs.
 - Product repo `README_AI.md` files must **reference** [`STANDARDS/README_AI.md`](README_AI.md), hold **repo-specific** context only, and **avoid duplicating** organization-wide standards.
 
 ## Related

@@ -46,6 +46,9 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Default deny | No push, PR lifecycle, CI/CD trigger, deploy, cloud, secrets, or repo-admin without **current-prompt** authorization | Same |
 | Stop condition | After local work, recommend next steps and return control to the human | Same |
 | Debugging | Local diagnostics only; debug does not authorize publish/deploy | Same |
+| Planning Agent | Plans only in `docs/plans/in-progress/`; **delta updates only**; never render plan bodies in chat; reply with path + Build Locally only | [planning-and-development-agents.md](../planning-and-development-agents.md) |
+| Development Agent | Build Locally from `docs/plans/in-progress/`; update permanent docs; knowledge transfer; move completed plans to `docs/plans/implemented/` | Same |
+| Precedence | Org planning/output rules supersede repo-specific plan chat behavior unless current prompt overrides | Same |
 
 ---
 

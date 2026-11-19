@@ -69,6 +69,7 @@ This guidance is **advisory and pragmatic**. It does **not** create mandatory re
 | `docs/` | Standards and governance (how we work); glossary: [`glossary.md`](glossary.md) |
 | `docs/ai/` | AI onboarding path (mandatory quickstart first); index: [`ai/README.md`](ai/README.md) |
 | `docs/ai-agent-governance.md` | AI agent operational boundaries (development assistant only; deny push/PR/deploy/cloud/secrets/admin by default) |
+| `docs/planning-and-development-agents.md` | Org-wide Planning Agent + Development Agent workflow (`docs/plans/in-progress/` + `docs/plans/implemented/`; delta updates only; never dump plans in chat; Build Locally; knowledge transfer) |
 | `docs/local-development-scripts.md` | Org Local Development Script Standard (`dev-reset.ps1` only) |
 | `docs/data-portability.md` | File-format standard for JSON import/export (Applications JSON today) |
 | `docs/hosted-deployment.md` | Canonical hosted deploy standard (App Service, publish profile, GitHub Environments) |
@@ -145,6 +146,18 @@ When a human asks an agent to **extract all `.md` documentation for external rev
 | Not allowed | Zip-only delivery; creating or pushing GitHub repositories |
 
 This is an agent workflow for the Breeze-On org, not a product feature. Cursor encodes the same procedure in a user/project rule so agents recognize the request phrase.
+
+## Implementation plans (temporary)
+
+Org-wide Planning Agent and Development Agent rules: [`planning-and-development-agents.md`](planning-and-development-agents.md).
+
+- New and active plans live under `docs/plans/in-progress/` (temporary working artifacts).
+- Chat must **not** store or re-render plan bodies; the markdown file is the deliverable.
+- Plan updates are **delta-only** — update the existing file; do not regenerate unchanged sections or create V2/duplicate plans.
+- After successful implementation, validation, documentation updates, and knowledge transfer: move to `docs/plans/implemented/` (preferred) or delete if fully transferred.
+- Permanent documentation remains **current reality only** — do not embed planned/future behavior or dangling plan references into standards.
+
+These org rules **supersede** repository-specific planning/output behavior unless the current prompt explicitly overrides them.
 
 ## Definition of Done
 

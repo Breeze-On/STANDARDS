@@ -47,6 +47,8 @@ Product pages consume **`Bo*`** only. Fluent is an implementation detail of Shar
 ## Core Rules
 
 1. **Development assistant only** — Analyze, implement locally, document, test locally, recommend. Do **not** push, manage PRs, trigger CI/CD, deploy, change Azure/cloud, manage secrets, or administer repos unless the **current prompt** explicitly authorizes that action. SSOT: [ai-agent-governance.md](../ai-agent-governance.md) ([ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md)).
+1a. **Planning Agent — plans are files, not chat** — Write new plans only to `docs/plans/in-progress/*.md`. **Never** render plan content, previews, or summaries in chat. After create/update, return **only** the path and `[Build Locally]`. **Delta updates only** on existing plans (no full regenerations, no V2/copies). SSOT: [planning-and-development-agents.md](../planning-and-development-agents.md).
+1b. **Development Agent — Build Locally from the plan** — Locate `docs/plans/in-progress/…`, implement from that file, update affected permanent docs, transfer lasting knowledge out of the plan, then move to `docs/plans/implemented/` (or delete if fully transferred). Implementation alone is not Done. Same SSOT.
 2. **Reuse before create** — Prefer existing `Bo*` components, tokens, and STANDARDS patterns.
 3. **Common UI first** — Layout, shell, nav, home hub, forms: use `BreezeOn.UI`, not ad-hoc chrome.
 4. **ADR compliance** — Review `decisions/` before new architecture patterns; update/supersede ADRs in the same change set when decisions change.
@@ -180,6 +182,7 @@ Full matrix: [ai-agent-governance.md](../ai-agent-governance.md).
 - Duplicate hosted deploy procedures into product repos (use [`hosted-deployment.md`](../hosted-deployment.md))
 - Leave documentation stale after changing behavior, setup, schema, or architecture
 - Document planned/future work as if it were current reality
+- Dump implementation plans into chat instead of `docs/plans/in-progress/*.md`, regenerate entire plans instead of delta updates, or leave completed plans in `docs/plans/in-progress/` after knowledge transfer
 - Point routine Development at Azure SQL when local Docker SQL is the org pattern
 - Ship a data-owning App Service with MI SQL auth **without** `Microsoft.Data.SqlClient.Extensions.Azure` + `ActiveDirectoryAuthenticationProvider` registration (SqlClient 7+); that crash-loops startup and burns Free F1 into **QuotaExceeded**
 - Skip the org local script standard (`scripts/dev-reset.ps1`) or invent alternate startup scripts (`dev-up` / `dev-down` / custom run scripts)
@@ -194,6 +197,7 @@ Full matrix: [ai-agent-governance.md](../ai-agent-governance.md).
 | --- | --- |
 | This AI path index | [`docs/ai/README.md`](README.md) |
 | AI agent operational boundaries | [`ai-agent-governance.md`](../ai-agent-governance.md) · [ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md) |
+| Planning / Development Agents | [`planning-and-development-agents.md`](../planning-and-development-agents.md) |
 | Standards summary (AI) | [`BREEZEON-AI-STANDARDS-SUMMARY.md`](BREEZEON-AI-STANDARDS-SUMMARY.md) |
 | App adoption (AI) | [`BREEZEON-AI-APPLICATION-ADOPTION.md`](BREEZEON-AI-APPLICATION-ADOPTION.md) |
 | Org agent entry (full) | [`README_AI.md`](../../README_AI.md) |
