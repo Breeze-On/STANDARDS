@@ -2,7 +2,7 @@
 
 Owner: Engineering
 
-Current conventions for portable JSON payloads used to import and export application registry data and Application Configuration owned by EAC.
+Current conventions for portable payloads used to import and export application registry data, Application Configuration (JSON), and Data Entity Values (Excel) owned by EAC.
 
 ## Applications JSON (`breezeon.eac.applications`)
 
@@ -274,3 +274,56 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 
 - [architecture/app-configuration/README.md](../architecture/app-configuration/README.md)
 - Operations: [runbooks/eac-application-configuration-deployment.md](../runbooks/eac-application-configuration-deployment.md)
+
+---
+
+## Data Entity Values Excel (`*.data-entity-values.xlsx`)
+
+Excel workbook for moving Data Entity **Values** (rows, row Description, custom-column values) of one **Application Context** and for bulk maintenance. Surfaced by the EAC Data Entities Quick Action **Excel Tool**. Decision: [ADR-018](../decisions/ADR-018-data-entity-values-excel-portability.md). UX and rules: [data-entities-standard.md](../architecture/data-entities/data-entities-standard.md#excel-tool-shipped). Implementation lives in **SYSTEM-ADMIN-EAC** (`Components/DataEntities/Excel`, library **ClosedXML**).
+
+Distinct from other Data Entity payloads:
+
+| Payload | Carries | Semantics |
+| --- | --- | --- |
+| Application Configuration JSON (`breezeon.eac.application-configuration`) | Data Entity definitions + columns | Synchronize (create / update / remove by Code) — [above](#application-configuration-json-breezeoneacapplication-configuration) |
+| **Values Excel** (`.xlsx`, this section) | Rows, row Description (one language), custom-column values | Analyze → confirm; Add/Update or Overwrite by row Code |
+| Local Values JSON (`breezeon.eac.data-entity-values`) | Rows for local Docker seed | Synchronize-by-Code at seed time; **local only**, never hosted; not an import/export feature |
+
+Synchronize definitions (Application Configuration) **before** importing Values into a target environment.
+
+### Workbook structure
+
+- One sheet per Data Entity of the Application, in Data Entity order — **Data Entity sheets only** (no Instructions worksheet; the first sheet is the first Data Entity). **Sheet name = Data Entity Description** (user-facing identity). The Data Entity **Code** is the internal service key (Excel table name `tbl` + PascalCase of the Code; never the sheet name) and the stable in-memory key once a sheet is resolved.
+- Each sheet holds exactly **one Excel table starting at A1** with a header row (no totals row); nothing may exist outside the table.
+- Columns, in order: `Code` · `Description` · one column per Data Entity Column in Settings order (header = column Description, else column Code) · `SortOrder`. Headers must keep their text and order; they must be unique per sheet and ≤ 255 characters.
+- **No GUIDs** and no audit columns appear in the file.
+- Cell formats follow column type: `DECIMAL` numeric with the column `Decimals`; `BOOLEAN` TRUE/FALSE; `DATE` `yyyy-mm-dd`; `DATETIME` `yyyy-mm-dd hh:mm:ss` (UTC); `TEXT` max 250. An empty cell clears the stored value.
+- Row limits: `Code` required, ≤ 100; `Description` required, ≤ 250; `SortOrder` optional whole number (the column and header must exist; see [SortOrder on import](#import-modes-and-matching)).
+- Export filename: `{applicationUniqueCode}.{businessEntityCode|context}.data-entity-values.xlsx`.
+
+### Description sheet-name prerequisites
+
+Every Data Entity Description in the Application must be non-empty, **≤ 31** characters, unique (case-insensitive), free of `\ / ? * [ ] :`, and not start/end with an apostrophe. Otherwise export and import are blocked with an error naming the offending Data Entity.
+
+### Translation scope
+
+Row Description is the translation for **one language** — the current UI language (`en-CA` / `fr-CA`). Other languages are not exported and not changed by import.
+
+### Import modes and matching
+
+- Rows match by **row `Code`** within the Data Entity (case-insensitive). Never by GUID.
+- **Add Missing & Update Existing:** add missing rows, update existing rows (Description, SortOrder, custom columns); never deletes. Identical rows count as unchanged.
+- **Overwrite All Values:** same, plus delete destination rows absent from the sheet — only for Data Entities that have a sheet in the file.
+- **SortOrder is optional:** value provided → used; blank on a **new** row → auto-assigned `max + 1` in Excel row order; blank on an **existing** row → destination `SortOrder` kept.
+- **Mode selection:** the Import Mode dropdown starts empty and Import stays disabled until a mode is chosen (no helper labels under the dropdown — mode option text is self-explanatory). Overwrite deletes are expected and appear only in the Changes Summary Deleted column (not as warnings). Add/Update may warn when destination rows absent from the sheet will be retained.
+- **Included** = sheet present. A Data Entity with no sheet is **excluded** and left untouched in every mode. A sheet matching no Data Entity is ignored with a **warning**; no matching sheet at all is an error.
+- Flow: upload → choose mode → **analyze** (nothing written) → two standard `BoSectionMain` + read-only `BoGrid` sections — **Changes Summary** (Data Entity · Included? · New · Updated · Deleted; Deleted shows bold N/A for Add/Update mode and excluded entities) and **Errors and Warnings** (Type · Message; missing-worksheet warning for excluded Data Entities) → **Import**. When nothing differs, the UI reports "No changes detected" and Import is disabled. After a successful import all Excel dialogs close, Data Entities/Values refresh, and the first Data Entity is selected.
+- **All-or-nothing:** any structure or row error rejects the whole file; apply saves every Data Entity through the existing Values save path in **one database transaction**.
+- Authorization: Global System Administrator or Application object administrator.
+
+### Validation and limits
+
+- Extension: `.xlsx` only (official OOXML workbook).
+- File processed **in memory only** — never stored permanently.
+- Configurable max size: EAC `DataEntityExcelImport:MaxFileSizeMb` (default **25**).
+- Export loads all context rows via `System.P_GET_EACDataEntitiesRowsForExcel` (approved full-load exception to [ADR-008](../decisions/ADR-008-query-driven-data-retrieval.md)). Import analysis **parses first**, then loads destination rows only for **included** Data Entities (`@DataEntityGuidsJson`). The SP returns two result sets (rows + sparse metadata). Schema uses `P_GET_EACDataEntitiesColumnsByApplication`. Analyze latency diagnostics: **Debug** logger category `BreezeOn.Eac.DataEntities.Excel.Analyze` (stage breakdown + `OperationId`; opt-in). See [data-entities-architecture.md](../architecture/data-entities/data-entities-architecture.md#excel-tool-values-portability) and EAC `README_AI.md`.

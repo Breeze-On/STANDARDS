@@ -92,21 +92,11 @@ Use one shared helper in product UI; do not invent alternate label rules per scr
 
 - `SortOrder` on Data Entity definitions is owned by EAC.
 - On **create**, the server assigns `SortOrder = MAX(existing) + 1` for that Application.
-- On **Change Order**, the UI submits the authoritative visual order; `System.P_POST_EACDataEntitiesReorder` rewrites SortOrder as **1..N** (top card = 1) in a single transaction.
-- On **Edit Data Entities**, SortOrder is rewritten the same way as part of `System.P_POST_EACDataEntitiesSave` from the working-grid order (together with Code/Description updates and staged deletes).
-- The Change Order payload must be a **complete permutation** of every Data Entity GUID for the Application (no partial lists). Edit Save accounts for remaining rows + staged deletes covering every definition exactly once.
+- Reordering is done **only** via **Edit Data Entities** (handle drag-and-drop): SortOrder is rewritten as **1..N** (top row = 1) as part of `System.P_POST_EACDataEntitiesSave` from the working-grid order (together with Code/Description updates and staged deletes) in a single transaction.
+- The **Change Order** Quick Action, its dialog, and the UI service call were **removed**. The dedicated `System.P_POST_EACDataEntitiesReorder` procedure remains in the schema but is **not called by the UI** (UI uses Edit Save for reorder).
+- Edit Save accounts for remaining rows + staged deletes covering every definition exactly once.
 - Reordering requires the same authorization as create: Global System Administrator or Application object administrator.
-- Navigation does not support inline drag-reorder; order changes via the Change Order dialog or the Edit Data Entities dialog.
-
-### Change Order dialog display
-
-| Rule | Detail |
-| --- | --- |
-| Title | Dialog title **Change Order** only — no duplicate body heading/hint above the list |
-| Card content | Drag handle + **Description only** (`DataEntityNavLabel`: Description preferred, Code fallback when Description empty). Do not show Code as a secondary line, SortOrder, or other metadata |
-| Density | Compact-professional card padding (denser than showcase cards; still comfortable) so more entities are visible while scanning |
-| Motion | On drop, the moved card **glides** into place and neighbors **visibly shift** (~280–320ms, ease-out / Fluent-style easing). Avoid instant teleport. Honor `prefers-reduced-motion` (animation off / minimal) |
-| Drag affordance | Entire card surface is draggable; `ReOrderDotsVertical` remains a visual affordance only (not the sole hit target). Whole-page drag outside the list is not allowed |
+- Navigation does not support inline drag-reorder; order changes via the Edit Data Entities dialog.
 
 ## Quick Actions (App Configuration)
 
@@ -117,12 +107,12 @@ Quick Actions are **commands**, not navigation. They must still **feel** part of
 | Rule | Detail |
 | --- | --- |
 | Component | Collapsible `BoSectionSub` + EAC-local action list (**not** `BoPanelNavigation`) with leading icons |
-| Actions | New Data Entity (`Add`), Edit Data Entities (`Edit`), Change Order (`ReOrderDotsVertical`) — order in the rail: New → Edit → Change Order |
-| Enablement | New: manage grant. Edit and Change Order: manage grant **and** Data Entity count **≥ 1** (disabled when none exist; first entity is created via New) |
-| Overlap rationale | Edit supports drag-and-drop reordering **and** Code/Description/delete. Change Order remains a **focused reorder-only** workflow (Description-only cards) for users who do not need definition edits. Both stay intentionally. |
+| Actions | New Data Entity (`Add`), Edit Data Entities (`Edit`), Excel Tool (`DocumentTable`) — order in the rail: New → Edit → Excel Tool |
+| Enablement | New: manage grant. Edit and Excel Tool: manage grant **and** Data Entity count **≥ 1** (disabled when none exist; first entity is created via New) |
+| Reorder | The **Change Order** Quick Action was removed. Edit Data Entities (drag-and-drop + Code/Description/delete) is the only reorder path |
 | Auth | Unauthorized users see actions **disabled** (not hidden); server still enforces write gates |
 | Smart default expand | Data Entity count **== 0** → Quick Actions defaults **Expanded**; count **> 0** → defaults **Collapsed**. Apply only when establishing the initial expansion for a loaded Application context (page load / `ApplicationGUID` change) |
-| In-session persistence | Expanding/collapsing, then opening New, Edit, or Change Order (and closing the dialog), **must not** reset expand state. Do not re-run smart-default after create/edit/reorder list refresh. Reset to smart default only on page navigation/reload or Application context change |
+| In-session persistence | Expanding/collapsing, then opening New, Edit, or Excel Tool (and closing the dialog), **must not** reset expand state. Do not re-run smart-default after create/edit list refresh. Reset to smart default only on page navigation/reload or Application context change |
 
 ### Visual standards (command cards)
 
@@ -188,6 +178,31 @@ Quick Action **Edit Data Entities** opens a deferred working-copy dialog:
 | Persist | `System.P_POST_EACDataEntitiesSave` — GUID-keyed updates, SortOrder 1..N from grid order, staged deletes; delete blocked while Values rows exist |
 | Code rename | `DataEntityGUID` stays the FK identity (columns/rows unchanged). Code is the editable business / portable key — App Config sync/seed still match by Code, so deployment JSON must be updated deliberately after a rename |
 
+### Excel Tool (shipped)
+
+Quick Action **Excel Tool** (`DocumentTable`) imports and exports **Values** for the selected Application Context as one `.xlsx` workbook. Decision: [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md). File format and limits: [`docs/data-portability.md`](../../docs/data-portability.md) § Data Entity Values Excel. Definitions are **not** carried by the workbook — synchronize them first with Application Configuration JSON.
+
+| Rule | Detail |
+| --- | --- |
+| Enablement | Same as Edit: manage grant **and** Data Entity count **≥ 1** |
+| Dialog | `BoDialogSize.Default`; Import Mode dropdown + Import (left) + Export (right) only — no helper labels under the mode; import opens a second `BoDialogSize.Large` analysis dialog |
+| Export | One sheet per Data Entity of the Application, in Data Entity order, all rows of the Application Context, Description in the current UI language only |
+| Workbook | **Data Entity sheets only** — no Instructions worksheet; the first sheet is the first Data Entity |
+| Import flow | Upload → choose **Import Mode** → **analyze** (nothing is written) → review summary → **Import**. Errors block the whole file; apply is one transaction |
+| Modes | **Add Missing & Update Existing** (never deletes) · **Overwrite All Values** (deletes destination rows missing from the sheet). The **Import Mode** dropdown starts empty; **Import** is disabled until a mode is selected |
+| SortOrder | Optional on import: value provided → used; blank on a **new** row → auto-assigned `max + 1` in Excel row order; blank on an **existing** row → destination SortOrder kept |
+| Inclusion | Sheet present → Data Entity **included**. Sheet absent → **excluded** and untouched, even in Overwrite. Unknown sheet → warning and ignored. No matching sheet at all → error |
+| Matching | Row `Code` within the Data Entity (case-insensitive); no GUIDs in the file |
+| Analysis UI | Two standard `BoSectionMain` + read-only `BoGrid` sections only (no Import Mode recapitulation). **Changes Summary**: Data Entity (flex) · Included? · New · Updated · Deleted (Hug, centered) — success / warning / danger semantic icon colors; Deleted shows bold **N/A** for Add/Update mode and for excluded entities. **Errors and Warnings**: Type (Hug, centered) · Message (flex) — red error / amber warning icons. Overwrite deletes are expected (shown only in the Deleted column, not as warnings). Add/Update may warn that destination rows absent from the sheet are retained. A Data Entity with no sheet gets a missing-worksheet warning |
+| Analysis buttons | Primary **Import** (Save styling); **Cancel** (Discard styling) — Cancel/close also closes the Excel Tool dialog |
+| No-changes UX | When the workbook already matches the destination, the analysis dialog shows "No changes detected" and **Import** is disabled |
+| After import | All Excel dialogs close; Data Entities and Values refresh; the first Data Entity is selected |
+| Translation scope | One language per file — the current UI language (`en-CA` / `fr-CA`). Other languages are not exported and not changed by import |
+| Blank cells | Clear the stored value of a custom column (absence = NULL) |
+| Auth | Global System Administrator or Application object administrator; enforced server-side per Data Entity |
+
+**Prerequisite — Data Entity Description as sheet name.** The sheet name is the Data Entity **Description**, so every Description in the Application must be non-empty, **≤ 31** characters, unique (case-insensitive), free of `\ / ? * [ ] :`, and not start or end with an apostrophe. Custom-column headers (Description, else Code) must be unique per sheet together with Code / Description / SortOrder. Otherwise export and import are blocked with an explanatory error until corrected via Edit Data Entities. Sheet names (Description) are the user-facing identity; the Data Entity **Code** is the internal service key and the stable in-memory key once a sheet is resolved.
+
 ## Future scope (documented only)
 
-Not shipped yet: multi-language translation editor UI, auditing extensions, soft delete. Definition edit/delete via Edit Data Entities **is shipped**. Definition SortOrder drag-reorder via Change Order **is shipped**. Application Configuration deployment import/export for definitions + columns **is shipped** (synchronize-by-Code; see [app-configuration deployment](../app-configuration/application-configuration-deployment.md)). Values row CRUD + Settings column CRUD **are shipped** (see above).
+Not shipped yet: multi-language translation editor UI, auditing extensions, soft delete. Definition edit/delete via Edit Data Entities **is shipped**. Definition SortOrder drag-reorder **is shipped** via Edit Data Entities (the Change Order Quick Action was removed). Application Configuration deployment import/export for definitions + columns **is shipped** (synchronize-by-Code; see [app-configuration deployment](../app-configuration/application-configuration-deployment.md)). Values row CRUD + Settings column CRUD **are shipped** (see above). Excel Tool Values portability (`.xlsx` import/export) **is shipped** (see above).

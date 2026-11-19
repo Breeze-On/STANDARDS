@@ -74,6 +74,22 @@ EAC Values UI must **not** load entire large catalogs into memory.
 
 Settings (columns) remain a small client working copy via `P_GET` / `P_POST_EACDataEntitiesColumnsSave`.
 
+## Excel Tool (Values portability)
+
+Decision: [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md). UX and rules: [standard](data-entities-standard.md#excel-tool-shipped). Workbook contract: [`docs/data-portability.md`](../../docs/data-portability.md) § Data Entity Values Excel.
+
+| Concern | Design |
+| --- | --- |
+| Schema load | `P_GET_EACDataEntitiesByApplication` + `P_GET_EACDataEntitiesColumnsByApplication` (one batched columns query; no per-entity column N+1) |
+| Export read | `System.P_GET_EACDataEntitiesRowsForExcel` — **full load** of all Data Entities for `@ApplicationEnabledGUID` + `@LanguageCode`. Two result sets: rows, then sparse metadata (no per-row correlated JSON). Approved ADR-008 exception; not the Values grid contract |
+| Import analysis read | Same SP with optional `@DataEntityGuidsJson` after workbook parse — destination load **scoped to included** sheets only. Compare/changeset build stays in C# (`DataEntityExcelImportAnalyzer`) |
+| Import write | No dedicated import procedure. Analysis builds a per-Data-Entity Changeset; apply calls the existing `System.P_POST_EACDataEntitiesRowsSave` path once per Data Entity inside **one** database transaction (any failure rolls back all entities) |
+| Library | ClosedXML (EAC `Components/DataEntities/Excel`) |
+| Identity | Sheet names = Data Entity Description (UX); Data Entity **Code** is the stable in-memory key after a sheet is resolved. Workbook has Data Entity sheets only (no Instructions sheet) |
+| SortOrder | Optional on import: provided → used; blank new row → `max + 1` in Excel order; blank existing row → destination SortOrder kept |
+| Analyze diagnostics | Durable **Debug** timings via EAC `DataEntityExcelAnalyzeTiming`, category `BreezeOn.Eac.DataEntities.Excel.Analyze` (`OperationId` + stage ms + `TotalMs`). Opt-in for performance investigations; silent at default Information. See EAC `README_AI.md` and [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md) |
+| Performance stance | Keep Analyze → Confirm → Apply in-app. Do not move analysis into SQL unless measured timings prove the architecture itself is the bottleneck at large catalogs |
+
 ## Sparse metadata rules
 
 - Absence of a metadata row means NULL.
@@ -96,6 +112,8 @@ Settings (columns) remain a small client working copy via `P_GET` / `P_POST_EACD
 Definitions @ `ApplicationGUID`; rows @ `ApplicationEnabledGUID`. See [ADR-016](../../decisions/ADR-016-data-entity-ownership.md) and [ADR-006](../../decisions/ADR-006-application-context-ownership.md).
 
 ## Definition reorder contract
+
+The EAC UI reorders definitions only through **Edit Data Entities** (`P_POST_EACDataEntitiesSave`, below). The Change Order Quick Action and `DataEntityDataService.ReorderAsync` were removed; the dedicated procedure remains in the schema but is **not called by the UI**.
 
 `System.P_POST_EACDataEntitiesReorder`:
 
