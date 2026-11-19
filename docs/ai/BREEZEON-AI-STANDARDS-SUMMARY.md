@@ -80,6 +80,7 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | People Picker | `BoPeoplePicker`; Value = `UserGUID` / `;`-joined; active only; Top-N 100; no photos V1 | [forms.md](../ui/controls/forms.md#people-picker-bopeoplepicker) |
 | Example Governance | Normative + AI guidance + Gallery example required | [example-governance.md](../ui/example-governance.md) |
 | Controls | Shipped `Bo*` field types only | [ui/controls/forms.md](../ui/controls/forms.md) |
+| Shuffle Card Grid | Grid-family specialized renderer (`BoShuffleCardGrid`); Gallery Grid Type; header-only required `*`; page-first; host-owned Add | [shuffle-card-grid.md](../ui/controls/shuffle-card-grid.md) |
 | Tokens / type | Semantic CSS vars; Calibri | [ui/foundations/tokens.md](../ui/foundations/tokens.md), [typography.md](../ui/foundations/typography.md) |
 
 ---

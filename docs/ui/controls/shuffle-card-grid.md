@@ -1,0 +1,154 @@
+# UI — Shuffle Card Grid (`BoShuffleCardGrid`)
+
+Owner: UI
+
+Section-level editable card-row surface with a shared column header row and optional drag-and-drop reorder. Related: [grids.md](grids.md), [forms.md](forms.md), [sections.md](../layout/sections.md), [dirty-state.md](../patterns/dirty-state.md), [overview.md](../overview.md).
+
+**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoShuffleCardGrid<TItem>`, `BoShuffleCardGridColumn<TItem>`, `BoShuffleCardGridCellContext<TItem>`. Host scripts: `_content/BreezeOn.UI/js/lib/sortable.min.js` and `_content/BreezeOn.UI/js/bo-sortable.js`.
+
+## Responsibilities (locked)
+
+| Layer | Owns |
+| --- | --- |
+| `BoShuffleCardGrid` | Header row, card rows, column track alignment, optional handle DnD, row-action track, empty state, optional lightweight `MaxHeight` |
+| `BoShuffleCardGridColumn` | Column metadata + Field/Display templates; registers with parent |
+| Host page / dialog | Items working copy; Add New (section `HeaderActions`); Save/Discard or dialog Update/Cancel; Dirty State; validation; persistence / `SortOrder` |
+
+The library **never** talks to SQL or application repositories.
+
+## What it is / is not (locked)
+
+| Is | Is not |
+| --- | --- |
+| Grid-family section-level hybrid: one header row + editable card rows + optional shuffle | HTML-table `BoGrid` / spreadsheet |
+| Page-first, host-agnostic body | Dialog-optimized control or modal shell |
+| Column templates + row-action template | Built-in Add / Save / Discard / Dirty State |
+
+**Architecture (hard):** Shuffle Card is part of the **Grid family** from a consumer perspective (Gallery **Grid Type** DDL; `BreezeOn.UI.Grid` namespace). It uses a specialized renderer (`BoShuffleCardGrid`) — **not** an HTML-table `BoGridMode`. Do **not** invent parallel product CSS copies.
+
+## Hosting model (locked — page-first)
+
+- **Primary design target:** page / workspace section (`BoSectionMain` / `BoSectionSub`).
+- **Dialog usage:** supported as host composition (`BoDialog` wraps the same control). Dialog must not drive API, CSS, or scroll architecture.
+- **Scroll:** default follows the host (page/workspace scroll). Optional `MaxHeight` is a lightweight escape hatch only.
+
+## Add ownership (locked — host-owned)
+
+- **Add New stays on the host** in `BoSectionMain` / `BoSectionSub` `HeaderActions`.
+- `BoShuffleCardGrid` does **not** render Add, expose `ShowAdd` / `OnAdd`, or own create workflow.
+- Empty state is display-only (no Add CTA inside the control).
+
+## Parameters (`BoShuffleCardGrid<TItem>`)
+
+| Parameter | Role |
+| --- | --- |
+| `Items` | Host working list (`IList<TItem>` or equivalent) |
+| `ItemKey` | Required `Func<TItem, string>` → stable `data-key` for Sortable order |
+| `Columns` | Child `BoShuffleCardGridColumn<TItem>` definitions |
+| `AllowReorder` | Default **true**. When false, hide handle and do not init Sortable |
+| `Disabled` | Gates editors + Sortable |
+| `MaxHeight` | Optional CSS length (e.g. `min(60vh, 28rem)`). When set, list region scrolls inside the control |
+| `EmptyContent` | Optional empty placeholder when `Items` is empty |
+| `RowActions` | Optional template for the Hug actions track (delete, manage members, …) |
+| `ReorderHandleAriaLabel` | Accessible name for the drag handle |
+| `ListAriaLabel` | Accessible name for the list |
+| `OnOrderChanged` | Raised with ordered keys after a drag |
+| `OnChanged` | Optional host signal when fields/order/structure mutate |
+| `Class`, `Style` | Optional host chrome on the root |
+
+Public helpers (as needed by hosts): re-init Sortable after add/remove; read DOM order before save.
+
+## Column (`BoShuffleCardGridColumn<TItem>`)
+
+| Parameter | Role |
+| --- | --- |
+| `Title` | Header label — rendered **uppercase** via CSS (see Header standards) |
+| `Required` | Red asterisk on header only (`.bo-field__required`). Field labels/asterisks inside cells are **hidden** (same pattern as `BoGrid`). Field templates may still set `Required` on `Bo*` fields for **validation** — not for visible asterisks |
+| `ReadOnly` | Prefer Display template / read-only field path |
+| `WidthTrack` | CSS grid track fragment for this column (e.g. `minmax(7rem, 0.9fr)`). Shared definition drives **both** header cell and row cell |
+| `Field` | Editable cell template |
+| `Display` | Read-only / custom cell template |
+
+Changing `Title`, `Required`, `WidthTrack`, or templates after first render notifies the parent so headers and tracks stay aligned.
+
+### Cell context (`BoShuffleCardGridCellContext<TItem>`)
+
+| Member | Role |
+| --- | --- |
+| `Item` | Row DTO |
+| `ItemKey` | Stable key string |
+| `Disabled` | Grid-level disabled |
+
+## Header standards (locked)
+
+- Same **size / weight / color / alignment / family / case** as `.bo-grid__th-label` (10px / 700 / `--bo-color-text-field-label` / left / **uppercase**).
+- **`text-transform: uppercase`** (locked). Hosts may pass sentence-case `Title` strings; CSS renders `ATTRIBUTE CODE *`.
+- Header padding/border box mirrors card row so tracks share content boxes. Vertical header padding matches `.bo-grid__th`. Section body does **not** add the extra `bo-grid` top inset (header row is thead-equivalent).
+- Header labels are flush with the field **control box** left edge (not Fluent inner text inset).
+- Actions + drag-handle track: fixed `--bo-scg-action-col-width` (shared by header and rows — not `auto`); **actions header unlabeled**.
+
+## Required field standards (locked)
+
+- Column `Required=true` → `.bo-field__required` after the title — **the only visible required indicator for the column**.
+- Inside cells, `.bo-field__label` is hidden (including per-field asterisks). Do not invent a second visible required chrome.
+- Field templates may set `Required` on `Bo*` fields so deferred validation still runs.
+- Host owns validation messages and submit timing.
+
+## Reordering standards (locked)
+
+- Handle-only drag (`ReOrderDotsVertical`); not whole-card drag by default.
+- Ghost / chosen / drag classes under `bo-shuffle-card-grid__row--*`.
+- Respect `prefers-reduced-motion` (no lift/animation when reduced).
+- Order persistence remains host/SP responsibility (`SortOrder` 1..N from list order).
+- Stable `ItemKey`; re-init Sortable after add/remove; sync order from DOM before save when hosts need it.
+
+## Responsive behavior (locked — v1)
+
+- Shared CSS grid tracks for header and each card row.
+- When many columns overflow: **horizontal overflow scroll** on the surface so header cells stay aligned with fields.
+- Do **not** stack per-card labels in v1.
+
+## Theming (locked)
+
+- Card rows use card-container tokens (`--bo-color-card-container-*`, border, radius, shadow).
+- Handle / delete icon chrome follows theme text and danger tokens.
+- Light/Dark via existing `BoThemeProvider` variables.
+
+## Accessibility
+
+- List: `role="list"` + `ListAriaLabel`.
+- Rows: `role="listitem"` + `data-key`.
+- Header row may be `aria-hidden="true"` when column titles are also conveyed via field placeholders/labels; prefer visible sentence-case headers for sighted users.
+- Handle and icon actions require `title` / `aria-label`.
+- Keyboard reorder is a **follow-up** (not required for v1 standardization).
+
+## Dirty State
+
+`BoShuffleCardGrid` does **not** embed Dirty State. Hosts wire page `EacDirtyStateGuard` (or equivalent) or dialog local discard confirm per [dirty-state.md](../patterns/dirty-state.md).
+
+## Supported scenarios
+
+- Page section editable configuration lists with reorder (e.g. Application Configuration → Security Groups).
+- Dialog-hosted editors that reuse the same control (e.g. Edit Data Entities) without dialog-specific APIs.
+- Required / optional / read-only columns; custom Field/Display and RowActions templates.
+- Host-owned Add via section `HeaderActions`.
+
+## Unsupported scenarios (v1)
+
+- Built-in Add / `ShowAdd` / `OnAdd`
+- Dialog-specific chrome, footer actions, or scroll packs
+- Column-click sorting, pagination, selection checkboxes, Nested hierarchy
+- `BoGrid` InlineEdit Persist / spreadsheet paste
+- Stacked-mobile label mode
+- Embedding Dirty State dialogs inside the control
+
+## Host scripts
+
+Include Sortable + interop when the page uses Shuffle Card Grid:
+
+| Script | Role |
+| --- | --- |
+| `_content/BreezeOn.UI/js/lib/sortable.min.js` | Vendored SortableJS (`window.Sortable`) |
+| `_content/BreezeOn.UI/js/bo-sortable.js` | `boSortableInit` / `boSortableDestroy` / `boSortableReadOrder` |
+
+Gallery and product hosts that already load the standard `bo-*.js` set should also load these two when adopting Shuffle Card Grid.

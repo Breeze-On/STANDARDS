@@ -167,12 +167,12 @@ Save applies **only** to the active toggle workspace. Entity deletion when rows 
 
 ### Edit Data Entities dialog (shipped)
 
-Quick Action **Edit Data Entities** opens a deferred working-copy dialog:
+Quick Action **Edit Data Entities** opens a deferred working-copy dialog. UI chrome is **`BoShuffleCardGrid`** (SHARED-UI) — uppercase headers, required asterisks on Code/Description, handle DnD; host supplies optional `MaxHeight` for the dialog list. SSOT: [`shuffle-card-grid.md`](../../docs/ui/controls/shuffle-card-grid.md).
 
 | Rule | Detail |
 | --- | --- |
 | Scope | Existing definitions only — no Add row; create remains **New Data Entity** |
-| Columns | GUID (read-only), Code (editable, auto-lowercase), Description (editable, required on Update), drag handle, delete |
+| Columns | GUID (read-only), Code (editable, auto-lowercase, required), Description (editable, required on Update), drag handle, delete |
 | Local until Update | Code/Description edits, DnD reorder, and trash staging stay in-memory; Cancel/Escape/close with dirty state prompts Continue Editing / Discard Changes |
 | Validation | On Update only; consolidated summary prefers `Data Entity "{code}": …`, falls back to `Row N: …` when Code is blank |
 | Persist | `System.P_POST_EACDataEntitiesSave` — GUID-keyed updates, SortOrder 1..N from grid order, staged deletes; delete blocked while Values rows exist |

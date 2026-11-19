@@ -2,7 +2,7 @@
 
 Owner: UI / Architecture
 
-Centralized abandon-guard for working copies. Related: [toggle.md](../controls/toggle.md), [grids.md](../controls/grids.md), Data Entities architecture.
+Centralized abandon-guard for working copies. Related: [toggle.md](../controls/toggle.md), [grids.md](../controls/grids.md), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), Data Entities architecture.
 
 ## Philosophy (locked)
 
@@ -45,3 +45,5 @@ Abandon requested (toggle, nav, tab, selectors, import, route leave, …)
 ## Documentation duty
 
 When shipping a new abandon surface, wire it through the same guard — do not add a parallel confirm path.
+
+`BoShuffleCardGrid` is an abandon surface when the host edits a working copy (reorder, field edits, staged deletes). The control does **not** embed Dirty State — wire page guard or dialog discard confirm in the host ([shuffle-card-grid.md](../controls/shuffle-card-grid.md)).

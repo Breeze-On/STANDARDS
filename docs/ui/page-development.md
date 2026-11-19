@@ -26,7 +26,7 @@ Every app host that renders `BreezeOn.UI` must wire the following once (referenc
 | Localization | Supported cultures `en` / `fr` + `UseRequestLocalization()` — [i18n.md](foundations/i18n.md) |
 | Layout | Render **`BoThemeProvider`** (CSS variables) and **`BoProviders`** (Fluent providers, theme/locale bootstrap, dialog + toast + **page-freeze** hosts) around the app; pages live inside **`BoAppShell`** |
 | CSS (in `<head>`) | `_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css` and `_content/BreezeOn.UI/breezeon-ui.css` |
-| JS (in `<head>`) | `_content/BreezeOn.UI/js/bo-theme-mode.js`, `bo-locale.js`, `bo-popup.js`, `bo-number-field.js`, `bo-grid.js`, `bo-dialog.js` (**required for `BoDialog`**), `bo-toggle.js` (**required for sliding `BoToggle` selection**) |
+| JS (in `<head>`) | `_content/BreezeOn.UI/js/bo-theme-mode.js`, `bo-locale.js`, `bo-popup.js`, `bo-number-field.js`, `bo-grid.js`, `bo-dialog.js` (**required for `BoDialog`**), `bo-toggle.js` (**required for sliding `BoToggle` selection**); when using **`BoShuffleCardGrid`**, also `js/lib/sortable.min.js` + `bo-sortable.js` |
 
 JS file roles:
 
@@ -39,8 +39,9 @@ JS file roles:
 | `bo-grid.js` | `BoGrid` truncated-cell hover titles |
 | `bo-dialog.js` | **Required for `BoDialog`** (Enter suppress checks, `InitialFocusFieldKey`, focus restore) |
 | `bo-toggle.js` | **Required for sliding `BoToggle` selection pill** (measures selected segment; follows host-owned `SelectedToggleKey` only). Without it, selected segments use a static primary fill |
+| `js/lib/sortable.min.js` + `bo-sortable.js` | **Required for `BoShuffleCardGrid`** reorder (SortableJS + `boSortableInit` / Destroy / ReadOrder) |
 
-Include **all seven** scripts even if a page does not use every control — shell chrome and future pages depend on them. Note: the early scripts reduce theme/locale flash only partly; CSS variables are still emitted by `BoThemeProvider` after the circuit renders (see [tokens.md](foundations/tokens.md)).
+Include **all seven** core `bo-*.js` scripts even if a page does not use every control — shell chrome and future pages depend on them. Add Sortable + `bo-sortable.js` when the host uses Shuffle Card Grid. Note: the early scripts reduce theme/locale flash only partly; CSS variables are still emitted by `BoThemeProvider` after the circuit renders (see [tokens.md](foundations/tokens.md)).
 
 ## New page development checklist
 
@@ -115,6 +116,17 @@ When the page includes a data grid:
 - [ ] Host loads **`_content/BreezeOn.UI/js/bo-grid.js`** when using truncated display cells (hover full-value title).
 - [ ] Cell editors reuse existing **`Bo*`** fields (inherit browser autocomplete **off**); do **not** put raw `<input>` in `Edit` — [grids.md](controls/grids.md), [forms.md § Browser autocomplete](controls/forms.md#browser-autocomplete-locked); column / grid **`Required`** follow [grids.md](controls/grids.md).
 - [ ] Nested View: set `NodeKey`; same columns → `ChildrenSelector`; different columns → `ChildRowsHaveDifferentColumns` + `ChildGridTemplate` (nested `BoGrid`, not a new component). Optional `DefaultExpansionState`. Same-column Nested View may use `EnableSelection` with cascade. Keyword filters: follow [Nested View keyword filtering](controls/grids.md#nested-view-keyword-filtering-org-standard) unless a documented exception. See [grids.md Nested View](controls/grids.md#nested-view-locked--shipped).
+
+### Shuffle Card Grid (section-level)
+
+When the page needs **header + editable card rows + optional reorder** (not a table `BoGrid`):
+
+- [ ] Uses **`BoShuffleCardGrid`** / **`BoShuffleCardGridColumn`** — [shuffle-card-grid.md](controls/shuffle-card-grid.md).
+- [ ] Treats it as a **section-level** surface (page-first; dialog hosts compose the same control).
+- [ ] **Add New** (if any) lives in section **`HeaderActions`** — not inside the control.
+- [ ] Column headers: uppercase (CSS) + required `*` when needed; shared `WidthTrack` aligns header and fields.
+- [ ] Cell editors reuse **`Bo*`** fields (typically `bo-field--section-flush`); host owns validation and Dirty State.
+- [ ] Host loads **`sortable.min.js`** + **`bo-sortable.js`** for reorder.
 
 ### Filters and query-driven datasets
 

@@ -31,6 +31,8 @@ The library **never** talks to SQL or application repositories.
 
 **Architecture (hard):** Nested View is a **mode of `BoGrid`**, not a separate public component. Do **not** invent `BoNestedGrid` / `BoHierarchyGrid` / `BoTreeGrid`. All modes share layout, styling, theme, column sizing, a11y, docs, and core table rendering.
 
+**Boundary — Shuffle Card Grid:** Editable **card rows** with a shared header row and drag-and-drop reorder are a **Grid-family** surface rendered by **`BoShuffleCardGrid`** — [shuffle-card-grid.md](shuffle-card-grid.md). Gallery exposes it as a **Grid Type**. It is **not** an HTML-table `BoGridMode` — do **not** bolt card/DnD rendering onto `BoGrid` table chrome.
+
 ## Cache / working model (locked)
 
 | Type | Role |

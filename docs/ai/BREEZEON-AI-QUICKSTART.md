@@ -210,6 +210,7 @@ Full matrix: [ai-agent-governance.md](../ai-agent-governance.md).
 | ADR index | [`decisions/README.md`](../../decisions/README.md) |
 | ADR-002 / ADR-004 | Blazor Interactive Server · BreezeOn.UI abstraction |
 | Query-driven retrieval | [`query-driven-retrieval.md`](../ui/controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md) |
+| Shuffle Card Grid | [`shuffle-card-grid.md`](../ui/controls/shuffle-card-grid.md) |
 | Example Governance | [`example-governance.md`](../ui/example-governance.md) |
 | BoRow Weight / hidden layout | [`layout.md`](../ui/layout/layout.md) |
 | `@FiltersJson` schema | [`database.md`](../database.md#filtersjson-schema) |
