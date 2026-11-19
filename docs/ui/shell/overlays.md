@@ -162,6 +162,8 @@ Cross-control summary: [ux-conventions.md](../patterns/ux-conventions.md) § Pag
 
 Page freeze is for **meaningful backend work** or operations users perceive as “loading.” It improves confidence and prevents duplicate actions. It must **not** be used so aggressively that the application feels blocked during normal interaction. “Tab changes” in the MUST NOT list means chrome-only flips; tab/panel activation that reloads workspace data is a MUST.
 
+**Configuration Session Cache:** cold segment hydrate → MUST freeze; warm segment navigation (cache hit) → MUST NOT freeze. See [configuration-session-cache.md](../../../architecture/app-configuration/configuration-session-cache.md).
+
 ### Messaging
 
 - Pass **already-localized** short contextual gerunds (e.g. “Importing Applications...”, “Saving Changes...”, “Deleting Business Entity...”).

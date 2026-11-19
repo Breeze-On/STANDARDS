@@ -75,6 +75,7 @@ All editable inputs (`BoTextField`, `BoDropDownList`, `BoNumberField`, `BoDateFi
 | Sub-state inheritance | Do **not** inherit prior tab, panel, toggle, or filter sub-state across major workspace / context changes unless the page **explicitly documents** keep-alive intent |
 | In-page chrome | Tab / panel / toggle changes within the same workspace follow existing section expand rules — [sections.md](../layout/sections.md#default-expand-vs-in-page-navigation-locked) |
 | Route remount | Navigating away and back remounts the page and restores documented defaults |
+| In-page Configuration Session | Allowed for EAC Application Configuration: circuit-scoped baselines keyed by Application + Business Entity while the page stays mounted; cross-route remount still rebuilds ([configuration-session-cache.md](../../../architecture/app-configuration/configuration-session-cache.md)) |
 | Product docs | Each workspace documents its primary view and any intentional keep-alive exceptions |
 
 ## Page Freeze (summary)

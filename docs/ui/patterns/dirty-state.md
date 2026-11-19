@@ -45,6 +45,15 @@ Abandon requested (toggle, nav, tab, selectors, import, route leave, …)
 
 `BoToggle` only raises `ToggleRequested`. The host calls `RequestAsync` and updates `SelectedToggleKey` only when allowed.
 
+## Configuration Session interaction
+
+When a surface uses Application Configuration Session Cache ([configuration-session-cache.md](../../../architecture/app-configuration/configuration-session-cache.md) · [ADR-020](../../../decisions/ADR-020-configuration-session-cache.md)):
+
+- Session holds **baselines**; the active workspace holds the **working copy**
+- Dirty State still tracks only the **active** registered workspace (no multi-dirty v1)
+- Discard restores catalog working copies from the session baseline when warm
+- Save updates the session baseline from the persistence response
+
 ## Documentation duty
 
 When shipping a new abandon surface, wire it through the same guard — do not add a parallel confirm path.

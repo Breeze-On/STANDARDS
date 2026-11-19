@@ -174,14 +174,32 @@ For every **UI-bearing** plan, the Planning Agent **must** include a **UX Standa
 | Shared UI reuse | Which `Bo*` components are reused |
 | Gallery | Which Gallery examples were reviewed |
 | Applicable standards | Links to [page-development.md](ui/page-development.md), [ux-conventions.md](ui/patterns/ux-conventions.md), and control SSOTs |
-| Page Freeze | Expectations (MUST / MUST NOT) |
+| Page Freeze | Expectations (MUST / MUST NOT) — include cold hydrate vs warm cache-hit navigation |
 | Placeholders | Default resources vs documented semantic exceptions |
 | Navigation state | Reset vs keep-alive intent |
 | Truncation | How long values stay layout-stable |
 | Disabled / read-only | Path for each non-editable value |
 | Deviations | Intentional deviations with justification |
+| Configuration Session Review | **Mandatory** for configuration-heavy work (see below) |
 
 Incomplete UX discovery is a **planning defect**. SSOT: [ux-conventions.md](ui/patterns/ux-conventions.md) · [example-governance.md](ui/example-governance.md) · [page-development.md](ui/page-development.md).
+
+### Configuration Session Review (mandatory for configuration-heavy plans)
+
+Peer gate to Dirty State and Page Freeze. For plans that load/edit configuration catalogs or multi-module Application Configuration data, the Planning Agent **must** document:
+
+- Session Key · Session Lifetime · Cache Segments
+- Cache Classification — Cache Always / Cache Conditionally / Never Cache
+- Working Copy vs Baseline ownership · Dirty State interaction
+- Cache Invalidation Matrix (actions → None / Partial / Full session rebuild)
+- Save · Discard · Import · Export behavior
+- Page Freeze interaction · Session rebuild events
+
+Governing question: **What should be cached, what should not be cached, and when must cache be invalidated?**
+
+Plans that only say “cache results” or “reload on tab switch” without classification and an invalidation matrix are non-compliant. Extending an existing session requires a **delta matrix**. Outcome may be “no session cache” only with documented Never Cache rationale — skipping the review is not allowed.
+
+SSOT: [configuration-session-cache.md](../architecture/app-configuration/configuration-session-cache.md) · [ADR-020](../decisions/ADR-020-configuration-session-cache.md).
 
 ---
 
@@ -201,6 +219,7 @@ When **Build Locally** is executed:
 6. Update the plan status throughout implementation if appropriate (delta updates only).
 7. For UI work: confirm the plan’s **UX Standards Compliance** subsection is present; run [page-development.md](ui/page-development.md) + [ux-conventions.md](ui/patterns/ux-conventions.md).
 8. **Before custom UX:** validate that an existing Shared UI component, Gallery example, or documented pattern does **not** already solve the problem. Prefer Gallery as the copy source. Refuse undocumented deviations.
+9. For configuration-heavy work: implement only against an approved Configuration Session model (segments, classification, invalidation matrix). Do not invent reload-on-activate behavior. Wire Save / Discard / Import / Export / Page Freeze to the matrix; update segment inventory + invalidation docs in the same change set.
 
 ### Documentation responsibilities
 
