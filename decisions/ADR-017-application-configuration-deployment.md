@@ -67,7 +67,7 @@ and must extend the deployment envelope, planner, apply path, and STANDARDS docu
 
 - EAC implements kind `breezeon.eac.application-configuration` with synchronize semantics, separate from Applications/BE merge portability.
 - v1 ships Data Entities + Columns only; other sections are omitted until those features ship.
-- Administrators confirm a create/update/remove summary before synchronize executes.
+- Administrators confirm via the standard Import Summary (`BoImportSummaryDialog`: Changes Summary + Errors/Warnings) before synchronize executes. Errors block Synchronize; warnings do not.
 - Platform SSOT: [`architecture/app-configuration/`](../architecture/app-configuration/README.md).
 
 ## Related

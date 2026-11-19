@@ -287,7 +287,7 @@ Creates `Security.Groups` with Code `APPSG_{UniqueCode}_{BusinessEntityCode}_{At
 - No rename detection.
 - Removing a Data Entity is blocked when any rows exist in any Application Context.
 - Removing a Column is **always allowed**; synchronize deletes associated metadata values first, then the column (same rule as Settings Save).
-- All-or-nothing: validate → plan summary → confirm → single SQL transaction (`P_POST_EACApplicationConfigurationSync`).
+- All-or-nothing: validate → Import Summary (`BoImportSummaryDialog`: Item Type · Item Code · New · Updated · Deleted + Errors/Warnings; Errors block Synchronize) → confirm → single SQL transaction (`P_POST_EACApplicationConfigurationSync`). Pattern: [import-summary.md](../docs/ui/patterns/import-summary.md).
 - Authorization: Global System Administrator or Application administrator group (`APP_*`) for the selected Application.
 - Max size: EAC `ApplicationConfigurationImport:MaxFileSizeMb` (default **5**); in-memory only.
 - Filename on export: `{applicationUniqueCode}.application-configuration.json`.
@@ -340,7 +340,7 @@ Row Description is the translation for **one language** — the current UI langu
 - **SortOrder is optional:** value provided → used; blank on a **new** row → auto-assigned `max + 1` in Excel row order; blank on an **existing** row → destination `SortOrder` kept.
 - **Mode selection:** the Import Mode dropdown starts empty and Import stays disabled until a mode is chosen (no helper labels under the dropdown — mode option text is self-explanatory). Overwrite deletes are expected and appear only in the Changes Summary Deleted column (not as warnings). Add/Update may warn when destination rows absent from the sheet will be retained.
 - **Included** = sheet present. A Data Entity with no sheet is **excluded** and left untouched in every mode. A sheet matching no Data Entity is ignored with a **warning**; no matching sheet at all is an error.
-- Flow: upload → choose mode → **analyze** (nothing written) → two standard `BoSectionMain` + read-only `BoGrid` sections — **Changes Summary** (Data Entity · Included? · New · Updated · Deleted; Deleted shows bold N/A for Add/Update mode and excluded entities) and **Errors and Warnings** (Type · Message; missing-worksheet warning for excluded Data Entities) → **Import**. When nothing differs, the UI reports "No changes detected" and Import is disabled. After a successful import all Excel dialogs close, Data Entities/Values refresh, and the first Data Entity is selected.
+- Flow: upload → choose mode → **analyze** (nothing written) → shared **Import Summary** (`BoImportSummaryDialog`) with Excel `ChangesSummaryContent` — **Changes Summary** (Data Entity · Included? · New · Updated · Deleted; Deleted shows bold N/A for Add/Update mode and excluded entities) and **Errors and Warnings** (Type · Message; missing-worksheet warning for excluded Data Entities) → **Import**. When nothing differs, the UI reports "No changes detected" and Import is disabled. After a successful import all Excel dialogs close, Data Entities/Values refresh, and the first Data Entity is selected. Pattern: [import-summary.md](../docs/ui/patterns/import-summary.md).
 - **All-or-nothing:** any structure or row error rejects the whole file; apply saves every Data Entity through the existing Values save path in **one database transaction**.
 - Authorization: Global System Administrator or Application object administrator.
 

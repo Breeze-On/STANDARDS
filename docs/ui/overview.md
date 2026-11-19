@@ -31,6 +31,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, People Picker, Date Field, and form controls |
 | [controls/toggle.md](controls/toggle.md) | Segmented Toggle (`BoToggle`) — presentation-only; host-owned selection |
 | [patterns/dirty-state.md](patterns/dirty-state.md) | Centralized unsaved-changes gate (Save / Discard / Cancel) |
+| [patterns/import-summary.md](patterns/import-summary.md) | Import Summary review dialog (`BoImportSummaryDialog`) — Changes Summary + Errors/Warnings; explicit confirm |
 | [controls/grids.md](controls/grids.md) | Grid Family Standards + `BoGrid` — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode`; Add New top + focus |
 | [controls/shuffle-card-grid.md](controls/shuffle-card-grid.md) | Shuffle Card Grid (`BoShuffleCardGrid`) — Grid-family card + DnD; `InsertNewAtTopAsync`; inherits Family Standards |
 | [controls/query-driven-retrieval.md](controls/query-driven-retrieval.md) | Query-driven retrieval — one primary contract per dataset; Filter → Sort → Page; debounce, cancellation, Top-N, exceptions ([ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md)) |
@@ -100,6 +101,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoButton` | Pill button (primary / secondary / stealth); `HtmlType` (`BoButtonType`); shorter+wider padding; shadow + hover lift; optional icon | [forms.md](controls/forms.md), [tokens.md](foundations/tokens.md) |
 | `BoToggle` | Presentation-only segmented toggle; host-owned `SelectedToggleKey`; `ToggleRequested` intent; required icon+label per item; sliding selection pill via `bo-toggle.js` | [toggle.md](controls/toggle.md) |
 | `BoDialog` / `BoDialogCloseButton` | Product dialog shell (Enter/Escape, `InitialFocusFieldKey`, focus restore) | [overlays.md](shell/overlays.md) |
+| `BoImportSummaryDialog` | Presentational Import Summary (Changes Summary + Errors/Warnings; Stealth confirm; `ChangesSummaryContent`) | [import-summary.md](patterns/import-summary.md) |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`; hosted via `BoDialog`) | [overlays.md](shell/overlays.md) |
 | `IBoToastService` / `BoToastHost` | Top-right toasts (Main/Body; Success / Alert / Information / Error; click dismiss) | [shell.md](shell/shell.md), [overlays.md](shell/overlays.md) |
 | `IBoPageFreezeService` / `BoPageFreezeHost` | Full-viewport busy freeze (branded pulse + frosted scrim; `Show`/`Hide`/`RunAsync`; ref-counted) | [overlays.md](shell/overlays.md) |

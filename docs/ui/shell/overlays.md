@@ -21,7 +21,7 @@ Presentational shell for Create / Edit / Confirm / management dialogs. Product a
 | --- | --- |
 | Ownership | `BreezeOn.UI` (`Overlays/BoDialog`); keyboard + focus lifecycle owned by the shell |
 | Host JS | `_content/BreezeOn.UI/js/bo-dialog.js` required (initial focus + focus restore + Enter suppress checks) |
-| Size | `BoDialogSize.Default` (~52rem form/management), `Compact` (~28rem message/confirm), or `Large` (~76rem analysis / wide summary) |
+| Size | `BoDialogSize.Default` (~52rem form/management), `Compact` (~28rem message/confirm), or `Large` (~76rem analysis / wide summary; Import Summary uses Large via `BoImportSummaryDialog` — [import-summary.md](../patterns/import-summary.md)) |
 | Close (X) | Place `BoDialogCloseButton` in `BoSectionMain` `HeaderActions` so X shares `OnClose` with Escape / backdrop |
 | Primary / Secondary | Footer buttons via `PrimaryActionLabel` / `PrimaryAction` and optional Secondary; no duplicate business paths for keyboard |
 | Error | `ErrorText` (or `FooterError`) under actions |

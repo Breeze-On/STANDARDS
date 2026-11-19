@@ -64,10 +64,12 @@ Non-empty not-yet-shipped section keys are rejected as unsupported for the curre
 ## Import UX (current)
 
 1. Upload JSON (in memory; size-limited).
-2. Validate (schema, application match, configuration, sync plan safety).
-3. Show create / update / remove summary.
-4. Administrator confirms **Synchronize**.
+2. Validate file-level schema / application match (toasts on hard file failures — summary never opens).
+3. Build sync plan; open standard **Import Summary** (`BoImportSummaryDialog`): Changes Summary grid (Item Type · Item Code · New · Updated · Deleted; one row per planned code) + Errors and Warnings. Planner blocking issues (e.g. column type change, entity with rows) appear as Errors and disable Synchronize. Removals show only as Deleted counts.
+4. Administrator confirms **Synchronize** (disabled when Errors exist or there are no changes). Warnings do not block.
 5. Apply in one SQL transaction, or apply nothing.
+
+Pattern: [import-summary.md](../../docs/ui/patterns/import-summary.md).
 
 ## Planned / not shipped — feature participation rule
 
