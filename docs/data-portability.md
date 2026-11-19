@@ -350,3 +350,75 @@ Row Description is the translation for **one language** — the current UI langu
 - File processed **in memory only** — never stored permanently.
 - Configurable max size: EAC `DataEntityExcelImport:MaxFileSizeMb` (default **25**).
 - Export loads all context rows via `System.P_GET_EACDataEntitiesRowsForExcel` (approved full-load exception to [ADR-008](../decisions/ADR-008-query-driven-data-retrieval.md)). Import analysis **parses first**, then loads destination rows only for **included** Data Entities (`@DataEntityGuidsJson`). The SP returns two result sets (rows + sparse metadata). Schema uses `P_GET_EACDataEntitiesColumnsByApplication`. Analyze latency diagnostics: **Debug** logger category `BreezeOn.Eac.DataEntities.Excel.Analyze` (stage breakdown + `OperationId`; opt-in). See [data-entities-architecture.md](../architecture/data-entities/data-entities-architecture.md#excel-tool-values-portability) and EAC `README_AI.md`.
+
+---
+
+## Security Group Members JSON (`breezeon.eac.security-group-members`)
+
+Bulk **membership-only** portability for Application Configuration → Security Groups. Surfaced by EAC **Import Members** → **Manage Group Members** dialog. Implementation lives in **SYSTEM-ADMIN-EAC** (`Components/SecurityGroups/MembersPortability`).
+
+**Does not** create, delete, rename, or edit Security Group metadata (AttributeCode, Name, Description, Metadata, SortOrder, GroupCode). Application Configuration JSON (`breezeon.eac.application-configuration`) still **excludes** members — keep the kinds separate.
+
+### Envelope
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `schemaVersion` | Yes | String. Current: `"1.0"` |
+| `kind` | Yes | `"breezeon.eac.security-group-members"` |
+| `groups` | Yes | Array (may be empty) |
+
+### Group item
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `attributeCode` | Yes | Business identifier; resolve to existing context Security Group. **Do not** include GroupCode. |
+| `members` | Yes | Array of strings — Identity `UserPrincipalName` values (UPN only; not `Email`) |
+
+### Example
+
+```json
+{
+  "schemaVersion": "1.0",
+  "kind": "breezeon.eac.security-group-members",
+  "groups": [
+    {
+      "attributeCode": "APPROVERS",
+      "members": [
+        "user1@company.com",
+        "user2@company.com"
+      ]
+    },
+    {
+      "attributeCode": "FINANCE",
+      "members": []
+    }
+  ]
+}
+```
+
+### Scope and matching
+
+- Scoped to the **selected Application Context** only.
+- Match groups by **AttributeCode** (case-sensitive as stored; normalize only for UPN matching).
+- Member match: `Identity.Users.UserPrincipalName` only — `Trim()` + `ToLowerInvariant()`. Do not match `Email`.
+- Groups omitted from the file are **untouched** in every mode.
+- Unknown AttributeCode → warning; skip that group; never create a Security Group.
+- Unknown / disabled UPN → warning; skip that user; continue.
+- Duplicate UPNs within a group → warning; dedupe; continue.
+- Ambiguous duplicate normalized UPNs in Identity → warning; skip that address.
+
+### Import modes
+
+- **Add Missing:** union destination with import members; never removes. Warn when existing members are absent from the file (removals ignored).
+- **Overwrite Members:** replace destination membership with resolved import members (empty `members: []` clears that group). Groups themselves are never removed.
+
+Flow: upload → parse → validate → bulk-load groups/members/UPNs once → in-memory delta → **Import Summary** (`BoImportSummaryDialog` custom Changes Summary: Attribute Code · Group Code · Group Description · New · Removed · Not Found · Duplicates · Total Members After Import; Errors/Warnings) → confirm → `System.P_POST_EACSecurityGroupMembersBulk` in one transaction → `InvalidateUser` for each affected user. Pattern: [import-summary.md](../docs/ui/patterns/import-summary.md).
+
+**Download Template** (inside the Manage Group Members dialog only): all context groups; first group includes sample UPN `sample.user@company.com`; others `members: []`. Export emits real UPNs. Filename: `Security Group Members.json`. Blocking file/schema validation failures surface as **Errors** in the Import Summary (Import disabled); they are not toast-only.
+
+### Authorization and limits
+
+- Authorization: same as Security Groups Save — Global System Administrator **or** Application administrator for the context (`CanManage`).
+- Extension: `.json` only; in-memory only.
+- Max size: EAC `SecurityGroupMembersImport:MaxFileSizeMb` (default **5**).
+- Analyze diagnostics: Debug logger category `BreezeOn.Eac.SecurityGroups.Members.Analyze`.
