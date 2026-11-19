@@ -353,13 +353,13 @@ Row Description is the translation for **one language** — the current UI langu
 
 ---
 
-## Security Group Members JSON (`breezeon.eac.security-group-members`)
+## Security Group Members (`breezeon.eac.security-group-members` + Excel)
 
-Bulk **membership-only** portability for Application Configuration → Security Groups. Surfaced by EAC **Import Members** → **Manage Group Members** dialog. Implementation lives in **SYSTEM-ADMIN-EAC** (`Components/SecurityGroups/MembersPortability`).
+Bulk **membership-only** portability for Application Configuration → Security Groups. Surfaced by EAC Actions **Bulk Actions** → **Manage Group Members** dialog (**Format** = JSON | Excel; **Import Type** = Add Missing | Overwrite Members). Implementation lives in **SYSTEM-ADMIN-EAC** (`Components/SecurityGroups/MembersPortability`). JSON and Excel share one import contract → validation → analysis → summary → apply path after parse.
 
 **Does not** create, delete, rename, or edit Security Group metadata (AttributeCode, Name, Description, Metadata, SortOrder, GroupCode). Application Configuration JSON (`breezeon.eac.application-configuration`) still **excludes** members — keep the kinds separate.
 
-### Envelope
+### JSON envelope
 
 | Field | Required | Notes |
 | --- | --- | --- |
@@ -410,15 +410,28 @@ Bulk **membership-only** portability for Application Configuration → Security 
 ### Import modes
 
 - **Add Missing:** union destination with import members; never removes. Warn when existing members are absent from the file (removals ignored).
-- **Overwrite Members:** replace destination membership with resolved import members (empty `members: []` clears that group). Groups themselves are never removed.
+- **Overwrite Members:** replace destination membership with resolved import members. For **JSON**, empty `members: []` clears that group. For **Excel**, clearing a group is **not representable** (empty UPN is a blocking error; missing Attribute Code means omit/untouched) — use JSON to clear. Groups themselves are never removed.
 
-Flow: upload → parse → validate → bulk-load groups/members/UPNs once → in-memory delta → **Import Summary** (`BoImportSummaryDialog` custom Changes Summary: Attribute Code · Group Code · Group Description · New · Removed · Not Found · Duplicates · Total Members After Import; Errors/Warnings) → confirm → `System.P_POST_EACSecurityGroupMembersBulk` in one transaction → `InvalidateUser` for each affected user. Pattern: [import-summary.md](../docs/ui/patterns/import-summary.md).
+Flow: upload → parse (JSON or Excel) → shared document → validate → bulk-load groups/members/UPNs once → in-memory delta → **Import Summary** (`BoImportSummaryDialog` custom Changes Summary: Attribute Code · Group Code · Group Description · New · Removed · Not Found · Duplicates · Total Members After Import; Errors/Warnings) → confirm → `System.P_POST_EACSecurityGroupMembersBulk` in one transaction → `InvalidateUser` for each affected user. Pattern: [import-summary.md](../docs/ui/patterns/import-summary.md).
 
-**Download Template** (inside the Manage Group Members dialog only): all context groups; first group includes sample UPN `sample.user@company.com`; others `members: []`. Export emits real UPNs. Filename: `Security Group Members.json`. Blocking file/schema validation failures surface as **Errors** in the Import Summary (Import disabled); they are not toast-only.
+**Download Template** / **Export** require Format selected. Template includes all context groups (JSON empty arrays / Excel empty UPN placeholder rows; first group sample UPN `sample.user@company.com`). Filenames: `Security Group Members.json` or `Security Group Members.xlsx`. Blocking file/schema validation failures surface as **Errors** in the Import Summary (Import disabled); they are not toast-only.
+
+### Excel workbook (`*.xlsx`)
+
+| Item | Rule |
+| --- | --- |
+| Sheet | `Group Members` (required) |
+| Table | `GroupMembers` (**required**; no header-only fallback) |
+| Columns | `Attribute Code`, `UPN` |
+| Row grain | One row per member |
+| Export | Only groups with ≥1 member (no rows for empty groups) |
+| Template | All groups; first sample UPN; others Attribute Code + empty UPN |
+| UX | AutoFilter, freeze header row, auto-sized columns (ClosedXML) |
+| Import empty UPN | Attribute Code present + empty UPN → **blocking Error** |
 
 ### Authorization and limits
 
 - Authorization: same as Security Groups Save — Global System Administrator **or** Application administrator for the context (`CanManage`).
-- Extension: `.json` only; in-memory only.
-- Max size: EAC `SecurityGroupMembersImport:MaxFileSizeMb` (default **5**).
+- Extensions: `.json` or `.xlsx` per selected Format; in-memory only.
+- Max size: EAC `SecurityGroupMembersImport:MaxFileSizeMb` (default **5**) for both formats.
 - Analyze diagnostics: Debug logger category `BreezeOn.Eac.SecurityGroups.Members.Analyze`.
