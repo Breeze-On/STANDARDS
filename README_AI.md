@@ -44,7 +44,7 @@ Details: [`docs/documentation.md`](docs/documentation.md). ADR process: [`docs/a
 | --- | --- |
 | Where do I start as an AI agent? | [`docs/ai/BREEZEON-AI-QUICKSTART.md`](docs/ai/BREEZEON-AI-QUICKSTART.md) |
 | What may I push / PR / deploy / change in Azure? | [`docs/ai-agent-governance.md`](docs/ai-agent-governance.md) — **deny by default**; [ADR-007](decisions/ADR-007-ai-agent-operational-boundaries.md) |
-| How do Planning / Development Agents handle plans? | [`docs/planning-and-development-agents.md`](docs/planning-and-development-agents.md) — `docs/plans/in-progress/` + `docs/plans/implemented/`; delta updates only; never dump plans in chat |
+| How do Planning / Development Agents handle plans? | [`docs/planning-and-development-agents.md`](docs/planning-and-development-agents.md) — `docs/plans/in-progress/` + `docs/plans/implemented/`; in-place delta updates only (no V2/duplicates); never dump plans in chat |
 | AI standards / adoption summaries? | [`docs/ai/`](docs/ai/) |
 | What exists? | `architecture/` — start at [`architecture/landscape.md`](architecture/landscape.md) |
 | How do we work? | `docs/` |
@@ -117,10 +117,9 @@ STANDARDS/
 | `docs/documentation.md` | Current-reality rules; lightweight `Owner:` metadata; advisory periodic review (not mandatory cycles) |
 | `docs/security-governance.md` | Dependency & vulnerability policy, Dependabot, NuGet audit (≠ `architecture/security.md`) |
 | `docs/ai-agent-governance.md` | AI agent operational boundaries — development assistants only; current-prompt approval for restricted actions ([ADR-007](decisions/ADR-007-ai-agent-operational-boundaries.md)) |
-| `docs/planning-and-development-agents.md` | Planning Agent + Development Agent — `docs/plans/in-progress/` → `implemented/`; delta updates only; no plan dumps in chat; Build Locally; knowledge transfer |
+| `docs/planning-and-development-agents.md` | Planning Agent + Development Agent — `docs/plans/in-progress/` → `implemented/`; in-place delta updates only (no V2/duplicates); no plan dumps in chat; Build Locally; knowledge transfer |
 | `docs/ui/` | Hierarchical UI standards (entry: `overview.md`); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
 | `templates/cursor-rules/` | Optional per-repo Cursor rule copies (AI boundaries, Planning Agent, Development Agent) |
-| `templates/cursor-team-rules/` | Pasteable Cursor Team Rules text for org-wide dashboard enforcement |
 | `templates/docs-plans/` | Product-repo `docs/plans/in-progress/` + `docs/plans/implemented/` layout starter |
 | `docs/*` placeholders | `domain-modeling`, `testing`, `observability`, `versioning` — state that org standards are **not yet formally defined** (do not invent rules there) |
 | `runbooks/` | Operational procedures; little content today — see `runbooks/README.md` |
@@ -135,7 +134,7 @@ If you add or remove files under `docs/`, `decisions/`, or `architecture/`, upda
 
 1. Follow org STANDARDS (this repository).
 2. Obey [`docs/ai-agent-governance.md`](docs/ai-agent-governance.md): you are a **development assistant** — local analysis/implementation/docs/tests/recommendations by default; **never** push, manage PR lifecycle, trigger CI/CD, deploy, modify cloud/secrets/permissions, or administer repos unless the **current prompt** explicitly authorizes that action; then **stop** and return control to the user.
-2b. Obey [`docs/planning-and-development-agents.md`](docs/planning-and-development-agents.md): Planning Agents write plans only to `docs/plans/in-progress/`, apply **delta updates only**, and never render plan content in chat; Development Agents implement from those files on Build Locally, update permanent docs, transfer knowledge, and move completed plans to `docs/plans/implemented/`. Org rules supersede repo-specific plan-output behavior unless the current prompt overrides.
+2b. Obey [`docs/planning-and-development-agents.md`](docs/planning-and-development-agents.md): Planning Agents write plans only to `docs/plans/in-progress/`, update existing plans **in place** with **delta updates only** (never V2/duplicates), and never render plan content in chat; Development Agents implement from those files on Build Locally, update permanent docs, transfer knowledge, and move completed plans to `docs/plans/implemented/`. Org rules supersede repo-specific plan-output behavior unless the current prompt overrides.
 3. **Review existing ADRs** before introducing new architecture patterns.
 4. Update documentation when you change reality (product README / README_AI and/or STANDARDS, including ADRs when architectural decisions change).
 5. Current state only — never invent or document the future as present.
@@ -148,6 +147,7 @@ Before planning or implementing in a Breeze On repo:
 
 0. Read [`docs/ai/BREEZEON-AI-QUICKSTART.md`](docs/ai/BREEZEON-AI-QUICKSTART.md) (mandatory).
 0b. Read [`docs/ai-agent-governance.md`](docs/ai-agent-governance.md) for operational boundaries (mandatory for any publish/deploy/admin temptation).
+0c. For Planning / Development Agent work: read [`docs/planning-and-development-agents.md`](docs/planning-and-development-agents.md) (`docs/plans/in-progress/` → `implemented/`; in-place delta updates only).
 1. Read this file and [`docs/documentation.md`](docs/documentation.md) as needed for STANDARDS navigation.
 2. Use [`docs/glossary.md`](docs/glossary.md) for shared terminology; do not invent alternate definitions.
 3. Read [`docs/adr.md`](docs/adr.md) and relevant files under [`decisions/`](decisions/).
@@ -165,7 +165,7 @@ Before planning or implementing in a Breeze On repo:
 15. For dependency vulnerabilities / Dependabot / NuGet audit: follow [`docs/security-governance.md`](docs/security-governance.md); product repos keep thin pointers and `.github/dependabot.yml` only.
 16. For operational procedures: see [`runbooks/README.md`](runbooks/README.md); add runbooks only from real procedures. Hosted deploy standard: [`docs/hosted-deployment.md`](docs/hosted-deployment.md). Agents must not execute deploy/cloud steps unless the current prompt explicitly authorizes them ([ai-agent-governance.md](docs/ai-agent-governance.md)).
 17. Major STANDARDS docs may carry lightweight `Owner:` metadata (area label only — not an approval workflow); see [`docs/documentation.md`](docs/documentation.md).
-18. For AI operational boundaries and Planning/Development Agent adoption in product repos: thin `AGENTS.md` / `README_AI.md` pointers + optional copies from [`templates/cursor-rules/`](templates/cursor-rules/); product `docs/plans/in-progress/` + `docs/plans/implemented/` layout from [`templates/docs-plans/`](templates/docs-plans/); org-wide Cursor Team Rules paste from [`templates/cursor-team-rules/`](templates/cursor-team-rules/).
+18. For AI operational boundaries and Planning/Development Agent adoption in product repos: thin `AGENTS.md` / `README_AI.md` pointers + optional copies from [`templates/cursor-rules/`](templates/cursor-rules/); product `docs/plans/in-progress/` + `docs/plans/implemented/` layout from [`templates/docs-plans/`](templates/docs-plans/). Enforce via org Cursor user rules + per-repo `.cursor/rules/`.
 
 ## Product README_AI expectations
 

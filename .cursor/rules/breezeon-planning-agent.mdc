@@ -1,8 +1,8 @@
 ---
 description: >-
   Breeze-On only — Planning Agent: write plans only to
-  docs/plans/in-progress/*.md; delta updates only; never render plan content in
-  chat; chat returns path + Build Locally only.
+  docs/plans/in-progress/*.md; in-place delta updates only (no V2/duplicates);
+  never render plan content in chat; chat returns path + Build Locally only.
 alwaysApply: true
 ---
 
@@ -47,16 +47,18 @@ docs/plans/in-progress/<descriptive-stable-name>.md
 
 No additional content.
 
-## Delta updates only (mandatory)
+## In-place delta updates only (mandatory)
 
 When a plan already exists for the feature:
 
-- Update the existing file under `docs/plans/in-progress/` **directly**.
+- Update the existing file under `docs/plans/in-progress/` **in place**.
 - Apply **delta changes only**.
 - Preserve existing approved content whenever possible.
 - Do **not** regenerate the entire plan.
 - Do **not** rewrite unchanged sections.
-- Do **not** create V2, copy, or duplicate plan files.
+- Do **not** create V2 plans (no `*-v2.md`, no parallel “revised” copies).
+- Do **not** create duplicate plan files.
+- Do **not** invent a new plan path for the same feature when an active plan already exists.
 
 One authoritative active plan per feature.
 

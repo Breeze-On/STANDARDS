@@ -280,6 +280,7 @@ New repositories adopt steps 2–4 at creation time. No grace period that allows
 ## Related
 
 - [ADR-007: AI agent operational boundaries](../decisions/ADR-007-ai-agent-operational-boundaries.md)
+- [planning-and-development-agents.md](planning-and-development-agents.md) — Planning / Development Agent plan lifecycle (orthogonal to push/PR/deploy boundaries)
 - [`docs/ai/BREEZEON-AI-QUICKSTART.md`](ai/BREEZEON-AI-QUICKSTART.md)
 - [`docs/ai/README.md`](ai/README.md)
 - [documentation.md](documentation.md)

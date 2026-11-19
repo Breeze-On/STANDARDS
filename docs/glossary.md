@@ -32,11 +32,11 @@ AI agent role that implements from an active plan under `docs/plans/in-progress/
 
 ## Implementation plan
 
-Temporary markdown working artifact. New/active plans live under `docs/plans/in-progress/`; successfully completed plans move to `docs/plans/implemented/` (or are deleted when fully transferred). Not permanent documentation; chat is not the plan store. Updates are delta-only. SSOT: [planning-and-development-agents.md](planning-and-development-agents.md).
+Temporary markdown working artifact. New/active plans live under `docs/plans/in-progress/`; successfully completed plans move to `docs/plans/implemented/` (or are deleted when fully transferred). Not permanent documentation; chat is not the plan store. Updates are in-place and delta-only. SSOT: [planning-and-development-agents.md](planning-and-development-agents.md).
 
 ## Planning Agent
 
-AI agent role responsible for feature, architecture, refactoring, technical design, migration, and performance plans. Writes plans only to `docs/plans/in-progress/*.md`, applies **delta updates only** to existing plans, and must not render plan content in chat. SSOT: [planning-and-development-agents.md](planning-and-development-agents.md).
+AI agent role responsible for feature, architecture, refactoring, technical design, migration, and performance plans. Writes plans only to `docs/plans/in-progress/*.md`, updates existing plans **in place** with **delta updates only** (never V2/duplicates), and must not render plan content in chat. SSOT: [planning-and-development-agents.md](planning-and-development-agents.md).
 
 ## Application
 

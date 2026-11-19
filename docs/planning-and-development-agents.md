@@ -115,17 +115,18 @@ docs/plans/implemented/security-group-members.md
 
 File names should be descriptive and stable.
 
-### Delta updates only (mandatory)
+### In-place delta updates only (mandatory)
 
 When updating an existing plan, the Planning Agent **must**:
 
-- Update the existing markdown file **directly**.
+- Update the existing markdown file **in place**.
 - Apply **delta changes only**.
 - Preserve existing approved content whenever possible.
 - **Not** regenerate the entire plan.
 - **Not** rewrite unchanged sections.
-- **Not** create V2 plans.
+- **Not** create V2 plans (no `*-v2.md`, no parallel “revised” copies).
 - **Not** create duplicate plan files.
+- **Not** invent a new plan path for the same feature when an active plan already exists.
 
 A feature should have a **single** authoritative active plan under `docs/plans/in-progress/`.
 
@@ -147,8 +148,8 @@ Requirements:
 
 - Never render large plans in chat.
 - Always persist plans directly to files under `docs/plans/in-progress/` (or move to `docs/plans/implemented/` when complete).
-- Update existing plans whenever possible.
-- **Delta updates only** — see above (mandatory).
+- Update existing plans **in place** whenever possible.
+- **In-place delta updates only** — see above (mandatory).
 - Avoid repeating unchanged sections.
 - Avoid regenerating plans that already exist.
 - Prefer small targeted updates.
@@ -237,7 +238,7 @@ If implementation is:
 
 The plan must remain under `docs/plans/in-progress/`.
 
-Update status appropriately (delta updates only).
+Update status in place (delta updates only).
 
 ### Implemented plan cleanup
 
@@ -288,9 +289,20 @@ Plans are temporary working artifacts.
 
 ---
 
+## Cursor enforcement
+
+| Layer | Location | Role |
+| --- | --- | --- |
+| SSOT | This document | Full Planning / Development Agent policy |
+| Org user rules | `~/.cursor/rules/breezeon-planning-agent.mdc`, `breezeon-development-agent.mdc` | Always-on enforcement for Breeze-On work |
+| STANDARDS project rules | `.cursor/rules/breezeon-planning-agent.mdc`, `breezeon-development-agent.mdc` | Same rules when STANDARDS is open |
+| Product copy (optional) | Each repo `.cursor/rules/` copies from [`templates/cursor-rules/`](../templates/cursor-rules/) | Defense in depth |
+| Thin product pointers | Product `AGENTS.md` / `README_AI.md` | Link here; do not restate full plan-output rules |
+
 ## Adoption in product repositories
 
 1. Keep this document as the org SSOT (do not fork conflicting plan-output rules into product repos).
-2. Copy Cursor rule starters from [`templates/cursor-rules/`](../templates/cursor-rules/) into each product `.cursor/rules/` (defense in depth alongside Cursor Team Rules when used).
+2. Copy Cursor rule starters from [`templates/cursor-rules/`](../templates/cursor-rules/) into each product `.cursor/rules/` (defense in depth with the org user rules).
 3. Ensure product repos use `docs/plans/in-progress/` and `docs/plans/implemented/` — see [`templates/docs-plans/`](../templates/docs-plans/).
 4. Thin product `README_AI.md` / `AGENTS.md` may point here; they must not redefine chat plan-dumping behavior.
+5. Enforce via this SSOT + Cursor project/user rules only.
