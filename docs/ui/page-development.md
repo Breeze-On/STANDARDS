@@ -36,7 +36,7 @@ JS file roles:
 | `bo-locale.js` | Locale cookie helpers for `bo-culture` / `bo-timezone` |
 | `bo-popup.js` | Fixed-position panels for `BoDropDownList`, `BoPeoplePicker`, and `BoDateField` |
 | `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge to the Fluent input, display sync). Caret/selection stay native (no select-all on focus). Without it number entry does not behave per standard |
-| `bo-grid.js` | `BoGrid` truncated-cell hover titles |
+| `bo-grid.js` | `BoGrid` truncated-cell hover titles + Add New first-editable focus |
 | `bo-dialog.js` | **Required for `BoDialog`** (Enter suppress checks, `InitialFocusFieldKey`, focus restore) |
 | `bo-toggle.js` | **Required for sliding `BoToggle` selection pill** (measures selected segment; follows host-owned `SelectedToggleKey` only). Without it, selected segments use a static primary fill |
 | `js/lib/sortable.min.js` + `bo-sortable.js` | **Required for `BoShuffleCardGrid`** reorder (SortableJS + `boSortableInit` / Destroy / ReadOrder) |
@@ -99,6 +99,11 @@ When the page is a large multi-section **workspace** (not short header-tab page 
 - [ ] Sets nav item `Key` ≡ field `ValidationGroup` ≡ keep-alive `Key`.
 - [ ] Does **not** invent a second Tabs framework or put content ownership on `BoPanelNavigation`.
 
+### Grid Family (Planning / Dev — read first)
+
+- [ ] Follow **[Grid Family Standards](controls/grids.md#grid-family-standards-locked)** for any Grid-family surface (`BoGrid`, `BoShuffleCardGrid`, future): reuse-first, Add New at top + first-editable focus, deferred validation, sort vs uncommitted precedence, accessibility.
+- [ ] Do **not** invent a parallel Add New / focus / placement UX when a shipped helper already exists.
+
 ### Grid (section-level)
 
 When the page includes a data grid:
@@ -108,12 +113,12 @@ When the page includes a data grid:
 - [ ] If multi-select is needed: `EnableSelection` (flat: select-all = all cache rows; Nested Scenario 1: `SelectedNodeKeys` + cascade select/expand) — [grids.md](controls/grids.md#row-selection).
 - [ ] Binds a typed cache with **`CacheId`**; rows expose **`CacheRowId`** + nullable **`PrimaryKey`**.
 - [ ] Chooses **`Mode`**: ReadOnly (default), RowEdit, InlineEdit, or NestedView per requirements.
-- [ ] **`IsPagination`** only when required (default false); sort is over the full cache; display order stays frozen while editing.
+- [ ] **`IsPagination`** only when required (default false); sort is over the full cache; display order stays frozen while editing; uncommitted Add New stays at **top** — [grids.md § Sort](controls/grids.md#sort-locked).
 - [ ] Column **`Align`**: text/date Left; number/currency Right unless the design requires otherwise. Headers always left.
 - [ ] Column **`Width`**: leave default **Flex** unless Compact/Hug is intentional; do not invent custom table layouts.
 - [ ] **Action / icon columns** (`Hug` row actions): `Title=""` — never a header label; keep `title` / `aria-label` on icon buttons — [grids.md](controls/grids.md).
 - [ ] **`EnableHorizontalScroll`** only when many columns truly need a horizontal scrollbar (default false).
-- [ ] Host loads **`_content/BreezeOn.UI/js/bo-grid.js`** when using truncated display cells (hover full-value title).
+- [ ] Host loads **`_content/BreezeOn.UI/js/bo-grid.js`** when using `BoGrid` (truncated-cell hover titles + Add New first-editable focus).
 - [ ] Cell editors reuse existing **`Bo*`** fields (inherit browser autocomplete **off**); do **not** put raw `<input>` in `Edit` — [grids.md](controls/grids.md), [forms.md § Browser autocomplete](controls/forms.md#browser-autocomplete-locked); column / grid **`Required`** follow [grids.md](controls/grids.md).
 - [ ] Nested View: set `NodeKey`; same columns → `ChildrenSelector`; different columns → `ChildRowsHaveDifferentColumns` + `ChildGridTemplate` (nested `BoGrid`, not a new component). Optional `DefaultExpansionState`. Same-column Nested View may use `EnableSelection` with cascade. Keyword filters: follow [Nested View keyword filtering](controls/grids.md#nested-view-keyword-filtering-org-standard) unless a documented exception. See [grids.md Nested View](controls/grids.md#nested-view-locked--shipped).
 
@@ -121,12 +126,12 @@ When the page includes a data grid:
 
 When the page needs **header + editable card rows + optional reorder** (not a table `BoGrid`):
 
-- [ ] Uses **`BoShuffleCardGrid`** / **`BoShuffleCardGridColumn`** — [shuffle-card-grid.md](controls/shuffle-card-grid.md).
+- [ ] Uses **`BoShuffleCardGrid`** / **`BoShuffleCardGridColumn`** — [shuffle-card-grid.md](controls/shuffle-card-grid.md); inherits [Grid Family Standards](controls/grids.md#grid-family-standards-locked).
 - [ ] Treats it as a **section-level** surface (page-first; dialog hosts compose the same control).
-- [ ] **Add New** (if any) lives in section **`HeaderActions`** — not inside the control.
+- [ ] **Add New** (if any) lives in section **`HeaderActions`** and calls **`InsertNewAtTopAsync`** (not `_items.Add`) — [shuffle-card-grid.md](controls/shuffle-card-grid.md).
 - [ ] Column headers: uppercase (CSS) + required `*` when needed; shared `WidthTrack` aligns header and fields.
 - [ ] Cell editors reuse **`Bo*`** fields (typically `bo-field--section-flush`); host owns validation and Dirty State.
-- [ ] Host loads **`sortable.min.js`** + **`bo-sortable.js`** for reorder.
+- [ ] Host loads **`sortable.min.js`** + **`bo-sortable.js`** for reorder and **`bo-grid.js`** for Add New focus.
 
 ### Filters and query-driven datasets
 

@@ -31,8 +31,8 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, People Picker, Date Field, and form controls |
 | [controls/toggle.md](controls/toggle.md) | Segmented Toggle (`BoToggle`) — presentation-only; host-owned selection |
 | [patterns/dirty-state.md](patterns/dirty-state.md) | Centralized unsaved-changes gate (Save / Discard / Cancel) |
-| [controls/grids.md](controls/grids.md) | Grid (`BoGrid`) — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode` |
-| [controls/shuffle-card-grid.md](controls/shuffle-card-grid.md) | Shuffle Card Grid (`BoShuffleCardGrid`) — header + editable card rows + optional DnD; page-first; host-owned Add |
+| [controls/grids.md](controls/grids.md) | Grid Family Standards + `BoGrid` — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode`; Add New top + focus |
+| [controls/shuffle-card-grid.md](controls/shuffle-card-grid.md) | Shuffle Card Grid (`BoShuffleCardGrid`) — Grid-family card + DnD; `InsertNewAtTopAsync`; inherits Family Standards |
 | [controls/query-driven-retrieval.md](controls/query-driven-retrieval.md) | Query-driven retrieval — one primary contract per dataset; Filter → Sort → Page; debounce, cancellation, Top-N, exceptions ([ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md)) |
 
 Former single file [`docs/ui-components.md`](../ui-components.md) redirects here. Flat paths under `docs/ui/*.md` (e.g. `docs/ui/tokens.md`) redirect to the hierarchical files above.
@@ -106,8 +106,8 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoValidationContext` / `IBoSubmitInterceptor` | Deferred validation; `Validate(null)` attempts all groups, `Validate(group)` only that group (`IsAttempted(group)`); live fail badges; Field→Sub→Main→Tab failures | [forms.md](controls/forms.md) |
 | `BoValidationFailBadge` | Red disc + white “!” (tabs + section headers) | [forms.md](controls/forms.md) |
 | `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell/shell.md), [i18n.md](foundations/i18n.md), [overlays.md](shell/overlays.md) |
-| `BoGrid` / `BoGridColumn` / `BoGridCache` | Section-level grid (ReadOnly / RowEdit / InlineEdit / NestedView); optional `EnableSelection` (flat + Nested Scenario 1; cascade select/expand on nested Multiple); typed cache; frozen sort while editing; column `Align` / `Width` (Flex default); Nested View expand/collapse + rails; optional horizontal scroll; host `bo-grid.js` for truncated-cell titles | [grids.md](controls/grids.md) |
-| `BoShuffleCardGrid` / `BoShuffleCardGridColumn` | Grid-family specialized renderer (Gallery Grid Type): header + editable card rows + optional handle DnD; uppercase headers (same chrome as `BoGrid`); header-only required `*`; host-owned Add via section `HeaderActions`; page-first; optional lightweight `MaxHeight`; host `sortable.min.js` + `bo-sortable.js` | [shuffle-card-grid.md](controls/shuffle-card-grid.md) |
+| `BoGrid` / `BoGridColumn` / `BoGridCache` | Section-level grid (ReadOnly / RowEdit / InlineEdit / NestedView); optional `EnableSelection`; typed cache; frozen sort with uncommitted Add New at top; Nested View; Add New → first-editable focus; **Grid Family Standards** SSOT | [grids.md](controls/grids.md#grid-family-standards-locked) |
+| `BoShuffleCardGrid` / `BoShuffleCardGridColumn` | Grid-family card + DnD renderer; inherits Family Standards; host Add → `InsertNewAtTopAsync`; page-first; `sortable.min.js` + `bo-sortable.js` + `bo-grid.js` | [shuffle-card-grid.md](controls/shuffle-card-grid.md) |
 | `BoSectionMain` / `BoSectionSub` `Required` | Optional red asterisk after section title (e.g. mandatory grid) | [sections.md](layout/sections.md), [grids.md](controls/grids.md) |
 
 ## Local gallery

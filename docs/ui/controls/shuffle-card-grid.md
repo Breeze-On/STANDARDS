@@ -2,9 +2,11 @@
 
 Owner: UI
 
-Section-level editable card-row surface with a shared column header row and optional drag-and-drop reorder. Related: [grids.md](grids.md), [forms.md](forms.md), [sections.md](../layout/sections.md), [dirty-state.md](../patterns/dirty-state.md), [overview.md](../overview.md).
+Section-level editable card-row surface with a shared column header row and optional drag-and-drop reorder. Related: [grids.md](grids.md) (**Grid Family Standards** SSOT), [forms.md](forms.md), [sections.md](../layout/sections.md), [dirty-state.md](../patterns/dirty-state.md), [overview.md](../overview.md).
 
-**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoShuffleCardGrid<TItem>`, `BoShuffleCardGridColumn<TItem>`, `BoShuffleCardGridCellContext<TItem>`. Host scripts: `_content/BreezeOn.UI/js/lib/sortable.min.js` and `_content/BreezeOn.UI/js/bo-sortable.js`.
+**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoShuffleCardGrid<TItem>`, `BoShuffleCardGridColumn<TItem>`, `BoShuffleCardGridCellContext<TItem>`. Host scripts: `_content/BreezeOn.UI/js/lib/sortable.min.js`, `_content/BreezeOn.UI/js/bo-sortable.js`, and `_content/BreezeOn.UI/js/bo-grid.js` (Add New focus).
+
+**Family membership (hard):** Shuffle Card is a **Grid-family** control. Inherit [Grid Family Standards](grids.md#grid-family-standards-locked) (reuse-first, Add New top + focus, deferred validation, accessibility). This file documents Shuffle Card–specific chrome and host wiring only — do not invent competing Add New / focus / placement rules.
 
 ## Responsibilities (locked)
 
@@ -37,6 +39,19 @@ The library **never** talks to SQL or application repositories.
 - **Add New stays on the host** in `BoSectionMain` / `BoSectionSub` `HeaderActions`.
 - `BoShuffleCardGrid` does **not** render Add, expose `ShowAdd` / `OnAdd`, or own create workflow.
 - Empty state is display-only (no Add CTA inside the control).
+- **Mandatory Add New path:** host creates the DTO, then calls **`InsertNewAtTopAsync(item)`** on the grid ref (requires `Items` as `IList<TItem>`). Do **not** `_items.Add` + manual `RefreshSortableAsync` for new rows.
+- Family UX (top placement, auto-focus, deferred validation, keyboard-first): [Grid Family Standards](grids.md#grid-family-standards-locked).
+
+### Shuffle Card Add New wiring (locked)
+
+| Rule | Behavior |
+| --- | --- |
+| API | `InsertNewAtTopAsync(item)` — inserts at index **0**, refreshes Sortable, focuses first editable field |
+| Focus | `bo-grid.js` `focusFirstEditableInShuffleRow` after paint |
+| When not | Delete, reorder, field edits, or host list mutations that bypass `InsertNewAtTopAsync` |
+| Exception | No editable field → focus unchanged; insert still succeeds |
+
+Public helpers: `InsertNewAtTopAsync`, `RefreshSortableAsync` (non–Add New add/remove), `ReadDomOrderAsync` (before Save).
 
 ## Parameters (`BoShuffleCardGrid<TItem>`)
 
@@ -56,7 +71,7 @@ The library **never** talks to SQL or application repositories.
 | `OnChanged` | Optional host signal when fields/order/structure mutate |
 | `Class`, `Style` | Optional host chrome on the root |
 
-Public helpers (as needed by hosts): re-init Sortable after add/remove; read DOM order before save.
+Public helpers: `InsertNewAtTopAsync` (Add New — top + focus); `RefreshSortableAsync` (other add/remove); `ReadDomOrderAsync` (before Save).
 
 ## Column (`BoShuffleCardGridColumn<TItem>`)
 
@@ -116,6 +131,10 @@ Changing `Title`, `Required`, `WidthTrack`, or templates after first render noti
 
 ## Accessibility
 
+Family expectations (Add New focus, keyboard-first, deferred validation, errors vs warnings): [Grid Family Standards — Accessibility](grids.md#accessibility-grid-family).
+
+Shuffle Card–specific:
+
 - List: `role="list"` + `ListAriaLabel`.
 - Rows: `role="listitem"` + `data-key`.
 - Header row may be `aria-hidden="true"` when column titles are also conveyed via field placeholders/labels; prefer visible sentence-case headers for sighted users.
@@ -150,5 +169,6 @@ Include Sortable + interop when the page uses Shuffle Card Grid:
 | --- | --- |
 | `_content/BreezeOn.UI/js/lib/sortable.min.js` | Vendored SortableJS (`window.Sortable`) |
 | `_content/BreezeOn.UI/js/bo-sortable.js` | `boSortableInit` / `boSortableDestroy` / `boSortableReadOrder` |
+| `_content/BreezeOn.UI/js/bo-grid.js` | Add New first-editable focus (`focusFirstEditableInShuffleRow`) — same script as `BoGrid` |
 
-Gallery and product hosts that already load the standard `bo-*.js` set should also load these two when adopting Shuffle Card Grid.
+Gallery and product hosts that already load the standard `bo-*.js` set should also load Sortable + `bo-sortable.js` when adopting Shuffle Card Grid.

@@ -1,12 +1,85 @@
-# UI — Grid (`BoGrid`)
+# UI — Grid (`BoGrid`) + Grid Family
 
 Owner: UI
 
-Section-level data grid for `BreezeOn.UI`. Related: [forms.md](forms.md), [sections.md](../layout/sections.md), [layout.md](../layout/layout.md), [shell.md](../shell/shell.md), [overview.md](../overview.md).
+Section-level data grid for `BreezeOn.UI`. Related: [forms.md](forms.md), [shuffle-card-grid.md](shuffle-card-grid.md), [sections.md](../layout/sections.md), [layout.md](../layout/layout.md), [shell.md](../shell/shell.md), [overview.md](../overview.md), [page-development.md](../page-development.md).
 
 **Composition (hard standard):** `BoGrid` is a **section-level** surface (like Home hub). It is **not** a `BoRow` child and does **not** use Section → Row → Field for its own body. Optional `Title` wraps `BoSectionMain` / `BoSectionSub`. Cell editors reuse shipped `Bo*` fields — including [browser autocomplete off by default](forms.md#browser-autocomplete-locked) (do **not** put raw `<input>` in `Edit` templates).
 
-**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoGrid<TItem>`, `BoGridColumn<TItem>`, `BoGridCache<TItem>`, `BoGridRow<TItem>`, `BoGridCellContext<TItem>`, enums `BoGridMode` / `BoGridDefaultExpansionState` / `BoGridColumnAlign` / `BoGridColumnWidth` / `BoGridSectionKind`. Internal helper `BoGridNesting` (not a public component). Host script: `_content/BreezeOn.UI/js/bo-grid.js` (overflow title on truncated display cells).
+**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoGrid<TItem>`, `BoGridColumn<TItem>`, `BoGridCache<TItem>`, `BoGridRow<TItem>`, `BoGridCellContext<TItem>`, enums `BoGridMode` / `BoGridDefaultExpansionState` / `BoGridColumnAlign` / `BoGridColumnWidth` / `BoGridSectionKind`. Internal helper `BoGridNesting` (not a public component). Host script: `_content/BreezeOn.UI/js/bo-grid.js` (overflow title on truncated display cells; Add New → first-editable focus).
+
+## Grid Family Standards (locked)
+
+**SSOT for Planning Agents and Dev Agents.** Applies to **all** Grid-family surfaces:
+
+| Member | Doc |
+| --- | --- |
+| `BoGrid` (table) | this file |
+| `BoShuffleCardGrid` (card + optional DnD) | [shuffle-card-grid.md](shuffle-card-grid.md) |
+| Future Grid-family controls | must inherit these rules unless a STANDARDS exception is documented |
+
+Control-specific APIs and chrome live in each control doc. **Do not** restate family rules as one-off product inventions.
+
+### Reuse-first (org standard)
+
+When an approved SHARED-UI / Grid-family pattern already exists:
+
+1. **Reuse** before redesign.
+2. **Extend** the existing control/API before replacing it.
+3. **Deviations** require documented justification in STANDARDS (current reality + reason) — not silent product forks.
+4. **Do not** introduce a new UX pattern when an approved equivalent already exists (e.g. inventing a second Add New placement/focus model).
+
+Planning Agents: choose an existing Grid-family surface + host pattern first. Dev Agents: call shipped helpers (`Cache.Add(..., insertAtTop: true)`, `InsertNewAtTopAsync`, `bo-grid.js`) — do not recreate focus/sort/placement locally.
+
+### Add New / uncommitted rows
+
+| Rule | Standard |
+| --- | --- |
+| Top placement | Uncommitted new rows insert at the **top** and stay there until Save/commit (host may then reload / re-apply normal order) |
+| Edit-ready | The new row is immediately editable (Row Edit enters edit; Inline Edit / Shuffle Card fields are live) |
+| Auto-focus | After the row is fully rendered, focus moves to the **first editable** field — user types with no extra click |
+| Focus preservation | Focus must **not** be lost or stolen during the Add New → paint → first-field sequence |
+| Deferred validation | Add New / begin edit must **not** show mandatory error chrome; validation runs on Save/Commit only ([forms.md](forms.md) deferred mandatory) |
+| Autocomplete | Cell editors use shipped `Bo*` fields — [browser autocomplete off by default](forms.md#browser-autocomplete-locked); no raw `<input>` in edit templates |
+| Keyboard-first | Row creation and editing must be operable without relying on mouse-only steps for the happy path |
+
+**Visibility (hard):** users must **never** lose sight of a row they are creating. Uncommitted new rows always remain visible (e.g. paginated `BoGrid` resets to the first page on Add New).
+
+### Sorting vs uncommitted new rows (no conflict)
+
+These rules resolve frozen sort, Add New at top, and uncommitted visibility:
+
+| Concern | Standard |
+| --- | --- |
+| Precedence | **Uncommitted new rows take precedence over active sorting** for display position |
+| Active sort | Must **not** reposition a new/uncommitted row during creation or while that row remains uncommitted |
+| Frozen order | Existing rows keep frozen display order while editing; Add New inserts at the **top of that frozen order** without re-sorting peers |
+| After commit | Host Save/`ReplaceAll` / `RefreshSortOrder()` / user header-sort may restore normal sort — only after the create workflow is committed or cancelled |
+
+Shuffle Card has no column-header sort; list order is host + DnD. Add New still uses **index 0** via `InsertNewAtTopAsync` until commit.
+
+### Accessibility (Grid Family)
+
+Lightweight consolidation — implementation details stay in control docs + [forms.md](forms.md) / [overlays.md](../shell/overlays.md):
+
+| Expectation | Standard |
+| --- | --- |
+| Add New focus | Automatic focus on first editable field after paint (see Add New above) |
+| Keyboard-only | Create / edit / save-cancel happy paths must work without mouse |
+| Focus preservation | Do not drop or misroute focus during row creation |
+| Deferred validation | Required chrome after Save/Commit attempt only — not on Add New |
+| Required indicators | Consistent header/column `*` rules per control; no invented second asterisk system |
+| Disabled state | Disabled fields/rows are non-editable and skip mandatory participation per forms rules |
+| Errors vs warnings | **Errors** block destructive/commit actions; **warnings** do not block unless a product standard explicitly says so |
+
+Control a11y extras (Nested View keys, Shuffle Card `role="list"`, icon `aria-label`) remain in each control section.
+
+### Control entry points (do not fork)
+
+| Surface | Add New path |
+| --- | --- |
+| `BoGrid` | Built-in toolbar / `NewItemFactory` → `Cache.Add(..., insertAtTop: true)` + `bo-grid.js` `focusFirstEditableInRow` |
+| `BoShuffleCardGrid` | Host HeaderActions → **`InsertNewAtTopAsync(item)`** + `bo-grid.js` `focusFirstEditableInShuffleRow` |
 
 ## Responsibilities (locked)
 
@@ -144,7 +217,7 @@ Header click cycles **Ascending → Descending → Off**. Sort applies to the **
 2. The cache raises `Reset` (`Clear` / `ReplaceAll`), or
 3. The host calls `RefreshSortOrder()`.
 
-Add New while sorted inserts at the **top** of the frozen order without re-sorting other rows.
+**Uncommitted new rows (family rule):** Add New while sorted inserts at the **top** of the frozen order without re-sorting other rows. Active sorts must **not** bury or reposition the row being created. Full precedence rules: [Sorting vs uncommitted new rows](#sorting-vs-uncommitted-new-rows-no-conflict).
 
 ## Pagination (locked)
 
@@ -159,16 +232,31 @@ Default off (`IsPagination = false`). When on:
 - Action column: Edit (pencil) / Delete (trash).
 - While editing: **Save** (Checkmark) + **Cancel** (Dismiss) — Cancel restores snapshot; new unsaved row is removed; unlocks the row.
 - While a row is editing: **Add New** and other rows’ Edit/Delete are **disabled**.
-- **Add New** inserts at the **top** (resets to first page when paginated).
+- **Add New** follows [Grid Family Standards](#grid-family-standards-locked) (top + focus + deferred validation; resets to first page when paginated).
 - When the grid owns a section: **Add New** on the section header row.
-- **Add New / begin edit** must **not** show mandatory error chrome; column mandatory validation runs only on **row Save**; fail → Alert toast + field border chrome.
+- Column mandatory validation runs only on **row Save**; fail → Alert toast + field border chrome.
 
 ## Inline Edit (locked)
 
 - All rows show Edit templates; Delete available per row (no single-row lock); **no** left accent bar.
 - When the grid owns a section: **Add New** + overall **Save** on the section header row (Save omitted when `ShowSave=false`).
 - Save validates required cell fields (ValidationGroup) + grid `Required`; fail → toast + borders; success → `OnSave`. Hosts that hide Save must run equivalent validation before their own Save path.
-- Sort order remains frozen while cells change (same rules as Sort).
+- Sort order remains frozen while cells change (same rules as Sort + [Sorting vs uncommitted new rows](#sorting-vs-uncommitted-new-rows-no-conflict)).
+- **Add New** follows [Grid Family Standards](#grid-family-standards-locked).
+
+## BoGrid Add New implementation (locked)
+
+Family rules: [Grid Family Standards](#grid-family-standards-locked). This table is **`BoGrid`-only** wiring (Shuffle Card: [shuffle-card-grid.md](shuffle-card-grid.md)).
+
+| Rule | Behavior |
+| --- | --- |
+| When | **Add New only** (`ShowAddNew` + `NewItemFactory` in Row Edit / Inline Edit) — `Cache.Add(..., insertAtTop: true)` |
+| When not | Existing-row **Edit**, Delete, Save/Cancel, sort, pagination, selection, Nested View, or host cache inserts that bypass Add New |
+| Timing | After the new row is rendered (`bo-grid.js` `focusFirstEditableInRow`; short paint retry for Fluent upgrade) |
+| Target | First focusable control in left-to-right `.bo-grid__cell--edit` order (prefer `[data-bo-field-key]`); skips disabled / read-only |
+| Exception | No editable field → focus unchanged; Add New still succeeds |
+
+Host script: `_content/BreezeOn.UI/js/bo-grid.js`. Do not re-implement per product page.
 
 ## Server QueryMode
 
@@ -343,4 +431,4 @@ Components → **Grid** tab (`TabKey=grid`, `Table` icon). Parameters: Mode (inc
 
 ## Documentation governance
 
-Update this file + [overview.md](../overview.md) + [page-development.md](../page-development.md) + thin product README / README_AI / AGENTS when `BoGrid` behavior or parameters change (same change set as code). Current reality only.
+Update this file (including **Grid Family Standards**) + [shuffle-card-grid.md](shuffle-card-grid.md) when family rules change + [overview.md](../overview.md) + [page-development.md](../page-development.md) + thin product README / README_AI / AGENTS in the **same change set**. Current reality only. Do not duplicate family rules in product pages — link here.
