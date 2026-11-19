@@ -290,7 +290,8 @@ Plans are temporary working artifacts.
 
 ## Adoption in product repositories
 
-1. Keep this document as the org SSOT (do not fork conflicting plan-output rules into product repos).
-2. Copy Cursor rule starters from [`templates/cursor-rules/`](../templates/cursor-rules/) into each product `.cursor/rules/` (defense in depth alongside Cursor Team Rules when used).
-3. Ensure product repos use `docs/plans/in-progress/` and `docs/plans/implemented/` — see [`templates/docs-plans/`](../templates/docs-plans/).
-4. Thin product `README_AI.md` / `AGENTS.md` may point here; they must not redefine chat plan-dumping behavior.
+This document is the **single source of truth**. Product repos must not redefine planning/output behavior.
+
+1. Add a lightweight bootstrap Cursor rule from [`templates/cursor-rules/`](../templates/cursor-rules/) that points agents here.
+2. Create `docs/plans/in-progress/` and `docs/plans/implemented/` — see [`templates/docs-plans/`](../templates/docs-plans/).
+3. Point `README_AI.md` / `AGENTS.md` at this document (thin link only).

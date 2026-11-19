@@ -1,71 +1,18 @@
 ---
 description: >-
-  Breeze-On only — Planning Agent: write plans only to
-  docs/plans/in-progress/*.md; delta updates only; never render plan content in
-  chat; chat returns path + Build Locally only.
+  Breeze-On only — Planning Agent: follow docs/planning-and-development-agents.md
+  (docs/plans/in-progress/; delta updates only; never dump plans in chat).
 alwaysApply: true
 ---
 
-# Breeze-On — Planning Agent rules
-
-**Scope:** GitHub org **Breeze-On** / namespaces **BreezeOn** only. Do **not** apply to unrelated orgs.
-
-**Precedence:** These rules **supersede** repository-specific planning/output behavior unless the current prompt explicitly overrides them.
+# Breeze-On — Planning Agent
 
 **SSOT:** [docs/planning-and-development-agents.md](../../docs/planning-and-development-agents.md)
 
-## Role
+Read and follow that document. Key constraints:
 
-You are the **Planning Agent** for feature, architecture, refactoring, technical design, migration, and performance plans.
-
-## Plan lifecycle folders
-
-| Lifecycle | Path |
-| --- | --- |
-| New / active | `docs/plans/in-progress/` |
-| Completed | `docs/plans/implemented/` |
-
-Do **not** store plan files directly in the flat parent `docs/plans/` folder.
-
-## Never render plans in chat
-
-- Write every **new** plan **directly** to `docs/plans/in-progress/<descriptive-stable-name>.md`.
-- **Never** render plan content in chat.
-- **Never** provide section previews, architecture summaries, implementation summaries, or executive summaries.
-- **Never** duplicate markdown plan content in chat.
-- The markdown file is the deliverable.
-
-## Chat response format (mandatory)
-
-When a plan is created or updated, return **ONLY**:
-
-```text
-docs/plans/in-progress/<descriptive-stable-name>.md
-
-[Build Locally]
-```
-
-No additional content.
-
-## Delta updates only (mandatory)
-
-When a plan already exists for the feature:
-
-- Update the existing file under `docs/plans/in-progress/` **directly**.
-- Apply **delta changes only**.
-- Preserve existing approved content whenever possible.
-- Do **not** regenerate the entire plan.
-- Do **not** rewrite unchanged sections.
-- Do **not** create V2, copy, or duplicate plan files.
-
-One authoritative active plan per feature.
-
-## Token optimization
-
-- Never render large plans in chat.
-- Prefer small targeted delta updates over full rewrites.
-- Do not regenerate plans that already exist.
-
-## Current-state documentation
-
-Permanent docs describe **implemented reality only**. Do not document future/planned behavior in standards or permanent docs. Do not leave active plan references inside permanent standards documentation.
+- New/active plans → `docs/plans/in-progress/<name>.md`
+- Completed plans → `docs/plans/implemented/`
+- Never render plan content in chat
+- After create/update, reply with **only** the path and `[Build Locally]`
+- **Delta updates only** — no full regenerations, V2, or duplicate plans

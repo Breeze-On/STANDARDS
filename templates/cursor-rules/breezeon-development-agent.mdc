@@ -1,56 +1,22 @@
 ---
 description: >-
-  Breeze-On only — Development Agent: implement from
-  docs/plans/in-progress/*.md on Build Locally; update permanent docs; transfer
-  knowledge; move completed plans to docs/plans/implemented/.
+  Breeze-On only — bootstrap: follow STANDARDS Development Agent rules (Build
+  Locally from docs/plans/in-progress/; docs + knowledge transfer; archive).
 alwaysApply: true
 ---
 
-# Breeze-On — Development Agent rules
+# Breeze-On — Development Agent (bootstrap)
 
-**Scope:** GitHub org **Breeze-On** / namespaces **BreezeOn** only. Do **not** apply to unrelated orgs.
+**Scope:** Breeze-On / BreezeOn only.
 
-**Precedence:** These rules **supersede** repository-specific planning/output behavior unless the current prompt explicitly overrides them.
+**SSOT (read and follow):** https://github.com/Breeze-On/STANDARDS/blob/main/docs/planning-and-development-agents.md
 
-**SSOT:** https://github.com/Breeze-On/STANDARDS/blob/main/docs/planning-and-development-agents.md
+Do not invent local planning/output rules that conflict with STANDARDS.
 
-Copy this file into each Breeze-On repository at `.cursor/rules/breezeon-development-agent.mdc`. Do not weaken Build Locally / knowledge-transfer duties in product docs.
+## Hard requirements (summary)
 
-## Role
-
-You are the **Development Agent**. Integrate with the Planning Agent workflow. Active plans under `docs/plans/in-progress/` are the implementation source of truth.
-
-## Build Locally
-
-When Build Locally (or equivalent implement-from-plan) is executed:
-
-1. Automatically locate the corresponding plan under `docs/plans/in-progress/`.
-2. Use that markdown plan as the implementation source.
-3. Do **not** ask the user to paste the plan into chat.
-4. Implement directly from the plan; preserve documented architecture decisions.
-5. Update plan status during implementation when appropriate (**delta updates only** — do not regenerate the plan).
-
-## Documentation is part of Done
-
-Update all affected documentation in the same change set as implementation, including as applicable:
-
-- `README_AI.md` / product README
-- `docs/db-model.md`, `data-portability.md`
-- architecture, standards, implementation guidance, developer docs
-- STANDARDS when org-wide reality changes
-
-## Knowledge transfer
-
-Move lasting knowledge out of the temporary plan into permanent documentation (standards, patterns, conventions, portability, performance, security). Do not leave permanent knowledge trapped only in plans.
-
-## Plan completion and cleanup
-
-A plan is complete only when **all** are true: development done, validation done, documentation updated, standards updated where required, knowledge transfer completed.
-
-- Failed / blocked / cancelled / partial / deferred: **keep** the plan under `docs/plans/in-progress/`; update status with deltas only. Never delete merely because implementation started.
-- After successful implementation + docs + knowledge transfer: **Option A (preferred)** move to `docs/plans/implemented/`; **Option B** delete only if all useful information is already in permanent docs.
-- Do not leave implemented plans in `docs/plans/in-progress/`.
-
-## Operational boundaries
-
-Still obey https://github.com/Breeze-On/STANDARDS/blob/main/docs/ai-agent-governance.md (development assistant; deny push/PR/deploy/cloud/secrets/admin unless the current prompt authorizes).
+- On Build Locally: implement from `docs/plans/in-progress/…` (do not ask for the plan in chat)
+- Update permanent documentation as part of Done
+- Transfer lasting knowledge out of the plan into permanent docs
+- When complete: move plan to `docs/plans/implemented/` (preferred) or delete if fully transferred
+- Failed/blocked/partial: keep the plan under `docs/plans/in-progress/`; update status with deltas only

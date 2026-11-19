@@ -85,8 +85,7 @@ STANDARDS/
 ├─ templates/
 │  ├─ local-sql/             # Docker SQL sandbox starter (copy into app repos)
 │  ├─ dependabot/            # Dependabot starter (copy into app/library repos)
-│  ├─ cursor-rules/          # Cursor rule starters (AI boundaries, Planning, Development)
-│  ├─ cursor-team-rules/     # Pasteable Cursor Team Rules text
+│  ├─ cursor-rules/          # Cursor rule starters / bootstraps (AI boundaries, Planning, Development)
 │  └─ docs-plans/            # Product-repo docs/plans/in-progress + implemented layout
 └─ architecture/             # Currently implemented systems only
    ├─ README.md
@@ -164,8 +163,7 @@ Full index: [`decisions/README.md`](decisions/README.md).
 | --- | --- |
 | [templates/local-sql/](templates/local-sql/) | Starter `docker-compose.yml` and `.env.example` for local SQL Server |
 | [templates/azure-sql/](templates/azure-sql/) | Grant App Service Managed Identity on Azure SQL (`SQLAzureConnection`); apps also need SqlClient **`Extensions.Azure`** for MI (see [hosted-deployment.md](docs/hosted-deployment.md), [architecture/security.md](architecture/security.md)) |
-| [templates/cursor-rules/](templates/cursor-rules/) | Cursor rule starters for AI boundaries, Planning Agent, and Development Agent (copy into product `.cursor/rules/`) |
-| [templates/cursor-team-rules/](templates/cursor-team-rules/) | Pasteable Cursor Team Rules text for dashboard org-wide enforcement |
+| [templates/cursor-rules/](templates/cursor-rules/) | Lightweight Cursor rule bootstraps for AI boundaries, Planning Agent, and Development Agent (copy into product `.cursor/rules/`; SSOT remains STANDARDS docs) |
 | [templates/docs-plans/](templates/docs-plans/) | Product-repo `docs/plans/in-progress/` + `docs/plans/implemented/` layout starter |
 
 ### Architecture (`architecture/`)

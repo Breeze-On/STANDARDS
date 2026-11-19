@@ -119,8 +119,7 @@ STANDARDS/
 | `docs/ai-agent-governance.md` | AI agent operational boundaries — development assistants only; current-prompt approval for restricted actions ([ADR-007](decisions/ADR-007-ai-agent-operational-boundaries.md)) |
 | `docs/planning-and-development-agents.md` | Planning Agent + Development Agent — `docs/plans/in-progress/` → `implemented/`; delta updates only; no plan dumps in chat; Build Locally; knowledge transfer |
 | `docs/ui/` | Hierarchical UI standards (entry: `overview.md`); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
-| `templates/cursor-rules/` | Optional per-repo Cursor rule copies (AI boundaries, Planning Agent, Development Agent) |
-| `templates/cursor-team-rules/` | Pasteable Cursor Team Rules text for org-wide dashboard enforcement |
+| `templates/cursor-rules/` | Lightweight per-repo Cursor rule bootstraps (AI boundaries, Planning Agent, Development Agent) — point at STANDARDS SSOT |
 | `templates/docs-plans/` | Product-repo `docs/plans/in-progress/` + `docs/plans/implemented/` layout starter |
 | `docs/*` placeholders | `domain-modeling`, `testing`, `observability`, `versioning` — state that org standards are **not yet formally defined** (do not invent rules there) |
 | `runbooks/` | Operational procedures; little content today — see `runbooks/README.md` |
@@ -165,7 +164,7 @@ Before planning or implementing in a Breeze On repo:
 15. For dependency vulnerabilities / Dependabot / NuGet audit: follow [`docs/security-governance.md`](docs/security-governance.md); product repos keep thin pointers and `.github/dependabot.yml` only.
 16. For operational procedures: see [`runbooks/README.md`](runbooks/README.md); add runbooks only from real procedures. Hosted deploy standard: [`docs/hosted-deployment.md`](docs/hosted-deployment.md). Agents must not execute deploy/cloud steps unless the current prompt explicitly authorizes them ([ai-agent-governance.md](docs/ai-agent-governance.md)).
 17. Major STANDARDS docs may carry lightweight `Owner:` metadata (area label only — not an approval workflow); see [`docs/documentation.md`](docs/documentation.md).
-18. For AI operational boundaries and Planning/Development Agent adoption in product repos: thin `AGENTS.md` / `README_AI.md` pointers + optional copies from [`templates/cursor-rules/`](templates/cursor-rules/); product `docs/plans/in-progress/` + `docs/plans/implemented/` layout from [`templates/docs-plans/`](templates/docs-plans/); org-wide Cursor Team Rules paste from [`templates/cursor-team-rules/`](templates/cursor-team-rules/).
+18. For AI operational boundaries and Planning/Development Agent adoption in product repos: thin `AGENTS.md` / `README_AI.md` pointers + lightweight bootstraps from [`templates/cursor-rules/`](templates/cursor-rules/); product `docs/plans/in-progress/` + `docs/plans/implemented/` layout from [`templates/docs-plans/`](templates/docs-plans/). SSOT remains this STANDARDS repo.
 
 ## Product README_AI expectations
 
