@@ -207,10 +207,14 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 | `applicationCode` | Export: yes; Import: when present | Short Application `Code`; when present on import must match selected Application |
 | `dataEntities` | Yes | Array (may be empty). Synchronized |
 | `securityGroups` | Export: yes; Import: when present | Array (may be empty). When **present** (including `[]`), synchronized for the Application. When **omitted**, security-group sync is skipped (backward compatible). |
+| `processMetadataColumns` | Export: yes; Import: when present | Array (may be empty). Process Framework metadata column catalog. Present (including `[]`) = synchronized; omitted or `null` = skipped. |
+| `roles` | Export: yes; Import: when present | Array (may be empty). Same present/omitted semantics. |
+| `steps` | Export: yes; Import: when present | Array (may be empty). Same present/omitted semantics. |
+| `options` | Export: yes; Import: when present | Array (may be empty). Same present/omitted semantics. |
 
-**Not accepted from files:** Application/Data Entity/Column/SecurityGroup GUIDs, surrogate ids, audit columns, rows, translations, metadata values, group members.
+**Not accepted from files:** Application/Data Entity/Column/SecurityGroup/Role/Step/Option/metadata-column GUIDs, surrogate ids, audit columns, Data Entity rows, Data Entity translations, group members. (Process Framework metadata values **are** carried, inside each Role / Step / Option `metadata` object.)
 
-**Not shipped in schemaVersion 1:** non-empty `steps`, `options`, `roles`, `systemConfiguration` — rejected if present with items.
+**Not shipped in schemaVersion 1:** non-empty `systemConfiguration` — rejected if present with items.
 
 ### Data entity item
 
@@ -242,6 +246,43 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 | `sortOrder` | Yes | Positive integer; unique within the same `businessEntityCode` |
 
 Creates `Security.Groups` with Code `APPSG_{UniqueCode}_{BusinessEntityCode}_{AttributeCode}`, Name `{ApplicationCode} / {BusinessEntityCode} — {AttributeCode}`, **`IsManuallyCreated = 1`**. Memberships are never imported. Removing a portable item deletes the EAC configuration row only (not the Security group).
+
+### Process Framework sections
+
+Application-scoped; Codes only (lowercase kebab-case, max 100). Decision: [ADR-019](../decisions/ADR-019-process-framework-metadata.md). Architecture: [architecture/process-framework](../architecture/process-framework/README.md).
+
+**`processMetadataColumns` item** (match key `code`)
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `code` | Yes | Unique within Application; reserved: `code`, `type`, `sort-order`, `security-group-attribute-code`, `role-code`, `step-code`, `next-step-code` |
+| `description` | Yes | Max 250 (admin label). String **or** language map object (`{"en-CA":"...","fr-CA":"..."}`, like TEXT metadata); non-empty. Export writes the map when translations exist, else a string |
+| `dataType` | Yes | `TEXT` \| `NUMBER` \| `DATE` \| `DATETIME` \| `BOOLEAN` \| `DDL` \| `PEOPLEPICKER` (immutable on update for an existing Code) |
+| `decimals` | Conditional | **0–10**, `NUMBER` only (default 2 when omitted); omit for other types |
+| `isRequired` | Yes | Boolean |
+| `displayOrder` | Yes | Positive integer; unique within `processMetadataColumns` |
+| `appliesTo` | Yes | Non-empty array of `"roles"` \| `"steps"` \| `"options"` |
+| `dataEntityCode` | Conditional | Required for `DDL` (must match a Data Entity Code of the Application); omit otherwise |
+
+**`roles` item** (match key `code`): `code` (required), `type` (`Group` only), `securityGroupAttributeCode` (optional, `[A-Z0-9_]+`, max 100; soft reference — no foreign key), `sortOrder` (required, positive, unique within `roles`), `metadata` (optional object, see below).
+
+**`steps` item** (match key `code`): `code` (required), `roleCode` (optional; must match a Role Code; omitted/null = informational Step), `sortOrder` (required, unique within `steps`), `metadata`.
+
+**`options` item** (match key `stepCode` + `code`): `stepCode` (required, Step Code), `code` (required, unique within its Step), `nextStepCode` (required, Step Code), `sortOrder` (required, positive, unique within its Step), `metadata`.
+
+**`metadata` object:** keys are metadata column Codes (column must exist and apply to the owner kind); `null` or absent = no value; required columns must have a value (required `BOOLEAN` defaults to `false`). Value shape by `dataType`:
+
+| `dataType` | JSON value |
+| --- | --- |
+| `TEXT` | String, or a language map `{ "en-CA": "...", "fr-CA": "..." }` (max 250 per value) |
+| `NUMBER` | Number |
+| `DATE` | `yyyy-MM-dd` |
+| `DATETIME` | ISO-8601 date-time |
+| `BOOLEAN` | Boolean |
+| `DDL` | Data Entity row **Code** string |
+| `PEOPLEPICKER` | **`externalObjectId`** GUID string (Entra `oid`) — never `userGuid` / UPN |
+
+Import does not require a `PEOPLEPICKER` user to exist locally; the id is stored as written.
 
 ### Example
 
@@ -284,6 +325,7 @@ Creates `Security.Groups` with Code `APPSG_{UniqueCode}_{BusinessEntityCode}_{At
 - Match Data Entities and Columns by **current** `Code` within the Application.
 - Create missing Codes; update matched Codes (description, sortOrder); **remove** Codes in the target that are absent from the file.
 - When `securityGroups` is present: match by `businessEntityCode` + `attributeCode`; create missing (including `Security.Groups`); update matched; remove absent EAC rows (not Security groups/memberships). `businessEntityCode` must be enabled for the Application.
+- When `processMetadataColumns` / `roles` / `steps` / `options` are present: match by `code` (options by `stepCode` + `code`); sync order metadata columns → roles → steps → options, removals in reverse. Removing a metadata column is always allowed (cascades translations → values → column); removing a Step / Role is blocked while a remaining Option / Step references it; a Data Entity referenced by a `DDL` column cannot be removed.
 - No rename detection.
 - Removing a Data Entity is blocked when any rows exist in any Application Context.
 - Removing a Column is **always allowed**; synchronize deletes associated metadata values first, then the column (same rule as Settings Save).

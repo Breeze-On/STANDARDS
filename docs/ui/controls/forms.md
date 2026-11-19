@@ -2,7 +2,7 @@
 
 Owner: UI
 
-Form control standards. Related: [layout.md](../layout/layout.md) (Row + page composition JSON), [sections.md](../layout/sections.md), [typography.md](../foundations/typography.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [shell.md](../shell/shell.md) (toasts / Submit).
+Form control standards. Related: [layout.md](../layout/layout.md) (Row + page composition JSON), [sections.md](../layout/sections.md), [typography.md](../foundations/typography.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [shell.md](../shell/shell.md) (toasts / Submit), [ux-conventions.md](../patterns/ux-conventions.md) (placeholders, disabled, truncation).
 
 **Hard standard:** every Text Field, Drop-Down List, Checkbox, Date Field, Number Field, Read-Only Field, Empty Field, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
 
@@ -155,7 +155,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | `ShowCharacterCount` | When true **and not `Disabled`**, shows `current/max` inside the input. **Never shown when `Disabled`**. **Default false** |
 | `Value` / `ValueChanged` | Two-way bind to the working model |
 | `DebounceMilliseconds` | When &gt; 0, defers `ValueChanged` until the user stops typing for that many ms, presses Enter, or leaves the field (whichever first). Default **0** (immediate). Filters typically use **750** — see [Filter execution](#filter-execution-query-driven) |
-| `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_Placeholder_Default`** ("Enter text..."). **Always omitted when `Disabled`** |
+| `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_Placeholder_Default`** ("Enter text..."). **Do not** echo the field label or column header — [ux-conventions.md](../patterns/ux-conventions.md) § Placeholders. **Always omitted when `Disabled`** |
 | `ValidationGroup` | Optional group for scoped Submit validation |
 | `Disabled` | Standard disabled chrome |
 | `ReadOnly` | Value shown but not editable; no asterisk and no required validation |
@@ -212,9 +212,10 @@ Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory
 | `KeepOpen` | Single-select only: when true, the panel stays open after a selection (repeated-add / picker flows). Multi-select already stays open; ignored when `AllowMultiple` is true |
 | `ClearAfterSelect` | Single-select only: after raising `ValueChanged`, clears the bound Value so the closed control returns to placeholder. Typical with `KeepOpen` for add-pickers; ignored when `AllowMultiple` is true |
 | `ReadOnly` | Single: Description for selected Code. Multi: one checked Description **per line** (`;` → line breaks for UI) |
-| `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_DropDown_Placeholder_Default`** ("Select a value") |
+| `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_DropDown_Placeholder_Default`** ("Select a value"). **Do not** echo the field label or column header — [ux-conventions.md](../patterns/ux-conventions.md) § Placeholders. **Always omitted when `Disabled`** |
 | `ValidationGroup` | Optional group for scoped Submit validation |
-| `Disabled`, `ErrorText` | Standard field chrome; Disabled hides chevron/clear, no open, greyer fill |
+| `Disabled`, `ErrorText` | Standard field chrome; Disabled hides chevron/clear, no open, greyer fill, **muted text (same color as a disabled Text Field)**, and **omits Placeholder** |
+| Closed value overflow | Single-select closed value **truncates** with ellipsis; hover `title` when truncated. Selected values must not widen the control — [ux-conventions.md](../patterns/ux-conventions.md) § Control width and truncation |
 
 ### Search and list
 
@@ -247,7 +248,7 @@ Platform-standard **user** selector for BreezeOn applications (group membership,
 | `Label` / `FieldKey` | Same as Drop-Down List |
 | `Value` / `ValueChanged` | `string?` — **UserGUID** (`"D"` format) single; when `AllowMultiple`, UserGUIDs joined by **`;`**. No typed `Guid` / collection bind API in V1 |
 | `Required` / `Disabled` / `ReadOnly` / `AllowMultiple` | Same as Drop-Down List (`Required` = Mandatory; `AllowMultiple` = multi-select) |
-| `Placeholder` | Default resource **`Field_PeoplePicker_Placeholder_Default`** ("Select a person") |
+| `Placeholder` | Default resource **`Field_PeoplePicker_Placeholder_Default`** ("Select a person"). Same override rules as Drop-Down List; **omitted when `Disabled`** — [ux-conventions.md](../patterns/ux-conventions.md) |
 | `SearchDebounceMilliseconds` / `ProviderMaxItems` | Default 300 / **100** |
 | `ItemsProvider` | Optional override (Gallery fake / host custom). When null, uses `IBoPeoplePickerQueries` |
 | `ExcludeUserGuids` | Optional GUIDs excluded from search (serialized as JSON for the procedure) |

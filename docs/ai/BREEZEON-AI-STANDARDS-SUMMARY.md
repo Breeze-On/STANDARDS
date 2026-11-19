@@ -82,6 +82,9 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Drop-Down retrieval | Small → `Items`; large → `ItemsProvider` Top-N + search | [forms.md](../ui/controls/forms.md) |
 | People Picker | `BoPeoplePicker`; Value = `UserGUID` / `;`-joined; active only; Top-N 100; no photos V1 | [forms.md](../ui/controls/forms.md#people-picker-bopeoplepicker) |
 | Example Governance | Normative + AI guidance + Gallery example required | [example-governance.md](../ui/example-governance.md) |
+| UX conventions | Placeholders, truncation, disabled/read-only, nav state, freeze summary, Compliance Review | [ux-conventions.md](../ui/patterns/ux-conventions.md) |
+| Page Freeze | MUST for saves/bulk/perceptible workspace hydrate (incl. tab reload); MUST NOT for filter/sort/chrome-only | [overlays.md](../ui/shell/overlays.md) |
+| Placeholders | Platform defaults only; no label/header echo; omit when Disabled | [ux-conventions.md](../ui/patterns/ux-conventions.md) |
 | Controls | Shipped `Bo*` field types only | [ui/controls/forms.md](../ui/controls/forms.md) |
 | Shuffle Card Grid | Grid-family specialized renderer (`BoShuffleCardGrid`); Gallery Grid Type; header-only required `*`; page-first; host-owned Add | [shuffle-card-grid.md](../ui/controls/shuffle-card-grid.md) |
 | Tokens / type | Semantic CSS vars; Calibri | [ui/foundations/tokens.md](../ui/foundations/tokens.md), [typography.md](../ui/foundations/typography.md) |

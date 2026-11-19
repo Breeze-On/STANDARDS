@@ -27,6 +27,8 @@ When Build Locally (or equivalent implement-from-plan) is executed:
 3. Do **not** ask the user to paste the plan into chat.
 4. Implement directly from the plan; preserve documented architecture decisions.
 5. Update plan status during implementation when appropriate (**in-place delta updates only** — do not regenerate or duplicate the plan).
+6. For UI work: require the plan’s UX Standards Compliance subsection; follow `page-development.md` + `ux-conventions.md`.
+7. **Before custom UX:** confirm no existing Shared UI component, Gallery example, or documented pattern already solves the problem. Prefer Gallery copy-source. Refuse undocumented deviations (placeholders, overlays, alignment forks, Fluent).
 
 ## Documentation is part of Done
 

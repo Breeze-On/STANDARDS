@@ -73,3 +73,11 @@ One authoritative active plan per feature.
 ## Current-state documentation
 
 Permanent docs describe **implemented reality only**. Do not document future/planned behavior in standards or permanent docs. Do not leave active plan references inside permanent standards documentation.
+
+## UX Standards Compliance Review (UI plans)
+
+For every **UI-bearing** plan, include a **UX Standards Compliance** subsection **before** development. Peer gate to architecture/data/security — architecture approval is not UX approval.
+
+Document: Shared UI (`Bo*`) components reused; Gallery examples reviewed; applicable UX standards (`page-development.md`, `ux-conventions.md`, control SSOTs); Page Freeze expectations; placeholder strategy; navigation-state behavior; truncation strategy; disabled/read-only behavior; intentional deviations with justification.
+
+SSOT: https://github.com/Breeze-On/STANDARDS/blob/main/docs/ui/patterns/ux-conventions.md

@@ -35,7 +35,10 @@ Abandon requested (toggle, nav, tab, selectors, import, route leave, …)
   → RequestAsync(continue)
   → If clean: continue
   → If dirty: dialog
-       Save → persist active workspace → Clear → continue
+       Save → persist active workspace
+            success → Clear → continue
+            failure (validation / save error) → same as Cancel: close dialog, stay,
+              keep dirty, surface errors on the page (never trap the user in the dialog)
        Discard → discard active workspace → Clear → continue
        Cancel → stay
 ```

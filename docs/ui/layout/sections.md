@@ -26,6 +26,10 @@ When `IsCollapsible=true`, the section header becomes a WAI-ARIA disclosure cont
 | Host binding | Product hosts that set a constant `Expanded="true"` (or `"false"`) without `@bind-Expanded` will re-apply that value on every parent re-render — **do not** do this for collapsible sections the user can toggle. Use `@bind-Expanded` to a page-owned field; only reassign that field when intentionally resetting (e.g. leaving the page, or a documented context change such as ApplicationGUID for Quick Actions) |
 | Remount | Navigating away and back to the route remounts the page and restores the documented default |
 
+### Workspace / context navigation state (locked)
+
+Cross-control rules for major workspace entry, Application / Business Entity (or equivalent) context changes, and sub-state inheritance: [ux-conventions.md](../patterns/ux-conventions.md) § Navigation / workspace state. Section expand/collapse rules above remain the SSOT for in-page chrome; workspace primary-view reset is a separate product concern documented in that conventions file.
+
 **Hard rules:**
 
 - Collapsed content **remains mounted** (visibility only — never `@if (Expanded)` unmount).

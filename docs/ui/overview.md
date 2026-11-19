@@ -13,6 +13,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [overview.md](overview.md) (this file) | Library contract, shipped inventory, gallery, documentation governance |
 | [example-governance.md](example-governance.md) | Example Governance — normative + AI guidance + Gallery working example DoD |
 | [page-development.md](page-development.md) | Page-construction checklist for humans and AI agents (links to detailed standards) |
+| [ux-pr-review-checklist.md](ux-pr-review-checklist.md) | Short UX PR review checklist (Compliance Review, freeze, placeholders, truncation) |
 | **Foundations** | |
 | [foundations/tokens.md](foundations/tokens.md) | Design / shell tokens |
 | [foundations/typography.md](foundations/typography.md) | Default typeface |
@@ -32,6 +33,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [controls/toggle.md](controls/toggle.md) | Segmented Toggle (`BoToggle`) — presentation-only; host-owned selection |
 | [patterns/dirty-state.md](patterns/dirty-state.md) | Centralized unsaved-changes gate (Save / Discard / Cancel) |
 | [patterns/import-summary.md](patterns/import-summary.md) | Import Summary review dialog (`BoImportSummaryDialog`) — Changes Summary + Errors/Warnings; explicit confirm |
+| [patterns/ux-conventions.md](patterns/ux-conventions.md) | Cross-control UX conventions — placeholders, truncation, disabled/read-only, navigation state, Page Freeze summary, UX Compliance Review |
 | [controls/grids.md](controls/grids.md) | Grid Family Standards + `BoGrid` — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode`; Add New top + focus |
 | [controls/shuffle-card-grid.md](controls/shuffle-card-grid.md) | Shuffle Card Grid (`BoShuffleCardGrid`) — Grid-family card + DnD; `InsertNewAtTopAsync`; inherits Family Standards |
 | [controls/query-driven-retrieval.md](controls/query-driven-retrieval.md) | Query-driven retrieval — one primary contract per dataset; Filter → Sort → Page; debounce, cancellation, Top-N, exceptions ([ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md)) |
@@ -46,7 +48,7 @@ Former single file [`docs/ui-components.md`](../ui-components.md) redirects here
 | Package / project | `BreezeOn.UI` (`src/BreezeOn.UI`) |
 | Approach | Option B+: BreezeOn public API on top of Fluent UI Blazor (Fluent is internal) |
 | Registration | `services.AddBreezeOnUI()` or `AddBreezeOnUI(configureTheme)` — `configureTheme` is honored via `IOptions<BoThemeOptions>` ([tokens.md § Theme options](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
-| Host requirements | Render `BoThemeProvider` and `BoProviders` in the app layout; include `breezeon-ui.css`, the Fluent bundle CSS, and the five `bo-*.js` scripts (incl. `bo-number-field.js` for `BoNumberField`) — [page-development.md § Host integration](page-development.md#host-integration-required) |
+| Host requirements | Render `BoThemeProvider` and `BoProviders` in the app layout; include `breezeon-ui.css`, the Fluent bundle CSS, and the **seven** core `bo-*.js` scripts (`bo-theme-mode`, `bo-locale`, `bo-popup`, `bo-number-field`, `bo-grid`, `bo-dialog`, `bo-toggle`; plus Sortable + `bo-sortable` when using Shuffle Card) — [page-development.md § Host integration](page-development.md#host-integration-required) |
 | Decision record | [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 
 Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not reference `Microsoft.FluentUI.AspNetCore.Components` types from product pages.

@@ -62,6 +62,7 @@ Public helpers: `InsertNewAtTopAsync`, `RefreshSortableAsync` (non–Add New add
 | `Columns` | Child `BoShuffleCardGridColumn<TItem>` definitions |
 | `AllowReorder` | Default **true**. When false, hide handle and do not init Sortable |
 | `Disabled` | Gates editors + Sortable |
+| `ActionsPlacement` | `BoGridActionsPlacement` (same enum as `BoGrid`): **`Trailing`** default — handle + `RowActions` track after data columns; **`Leading`** — same track is the **first** grid column (header + every row), content start-aligned (`justify-content: flex-start`). Both use the fixed `--bo-scg-action-col-width` track. Use **Leading** for Process Framework–style editable lists where delete/reorder sit at the row start |
 | `MaxHeight` | Optional CSS length (e.g. `min(60vh, 28rem)`). When set, list region scrolls inside the control |
 | `EmptyContent` | Optional empty placeholder when `Items` is empty |
 | `RowActions` | Optional template for the Hug actions track (delete, manage members, …) |
@@ -80,11 +81,14 @@ Public helpers: `InsertNewAtTopAsync` (Add New — top + focus); `RefreshSortabl
 | `Title` | Header label — rendered **uppercase** via CSS (see Header standards) |
 | `Required` | Red asterisk on header only (`.bo-field__required`). Field labels/asterisks inside cells are **hidden** (same pattern as `BoGrid`). Field templates may still set `Required` on `Bo*` fields for **validation** — not for visible asterisks |
 | `ReadOnly` | Prefer Display template / read-only field path |
-| `WidthTrack` | CSS grid track fragment for this column (e.g. `minmax(7rem, 0.9fr)`). Shared definition drives **both** header cell and row cell |
+| `WidthTrack` | CSS grid track fragment for this column (e.g. `minmax(0, 0.9fr)`). **Use `minmax(0, …fr)`** — a non-zero minimum (`minmax(8rem, 1fr)`) or bare `1fr` lets long values widen the track. Shared definition drives **both** header cell and row cell |
+| `Align` | `BoGridColumnAlign` (`Left` default / `Center` / `Right`) for header label **and** cell content (same enum as `BoGrid`). Use **`Center`** for checkbox-only columns |
 | `Field` | Editable cell template |
 | `Display` | Read-only / custom cell template |
 
-Changing `Title`, `Required`, `WidthTrack`, or templates after first render notifies the parent so headers and tracks stay aligned.
+Changing `Title`, `Required`, `WidthTrack`, `Align`, or templates after first render notifies the parent so headers and tracks stay aligned.
+
+**Checkbox cells:** inside a grid, a `BoCheckbox`'s invisible label spacer is collapsed (the grid already owns the header label) and the control is centered in the cell — pair the column with `Align="BoGridColumnAlign.Center"` so header and checkbox line up.
 
 ### Cell context (`BoShuffleCardGridCellContext<TItem>`)
 
@@ -96,11 +100,16 @@ Changing `Title`, `Required`, `WidthTrack`, or templates after first render noti
 
 ## Header standards (locked)
 
-- Same **size / weight / color / alignment / family / case** as `.bo-grid__th-label` (10px / 700 / `--bo-color-text-field-label` / left / **uppercase**).
+- Same **size / weight / color / family / case** as `.bo-grid__th-label` (10px / 700 / `--bo-color-text-field-label` / **uppercase**).
+- Header **horizontal alignment follows column `Align`** (Left default / Center / Right) — intentional difference from `BoGrid` (headers always left). See [ux-conventions.md](../patterns/ux-conventions.md) § Column header alignment.
 - **`text-transform: uppercase`** (locked). Hosts may pass sentence-case `Title` strings; CSS renders `ATTRIBUTE CODE *`.
 - Header padding/border box mirrors card row so tracks share content boxes. Vertical header padding matches `.bo-grid__th`. Section body does **not** add the extra `bo-grid` top inset (header row is thead-equivalent).
 - Header labels are flush with the field **control box** left edge (not Fluent inner text inset).
 - Actions + drag-handle track: fixed `--bo-scg-action-col-width` (shared by header and rows — not `auto`); **actions header unlabeled**.
+- **`WidthTrack` MUST use `minmax(0, …fr)`** so long cell values truncate inside the track rather than skewing columns — [ux-conventions.md](../patterns/ux-conventions.md) § Control width and truncation. The library sets `min-width: 0; max-width: 100%` on `.bo-shuffle-card-grid__col` and on `.bo-field` / `.bo-ddl__*` / Fluent roots inside cells (closed DDL values ellipsize with `title`).
+- **Header ↔ row alignment (hard):** header and each row are separate CSS grids that must resolve to identical tracks. The library does **not** use `min-width: max-content` on them (that made track sizes depend on each grid's own content, so long selected values misaligned headers vs controls). Tracks are container-relative; hosts needing horizontal scroll set `--bo-scg-min-width` on the grid root (`Style`), applied to header and rows alike.
+- **Leading actions:** with `ActionsPlacement="Leading"` the action track is first in both header and rows; the unlabeled header cell reserves the same fixed width.
+- Cell editors use platform default placeholders (not column titles) — [ux-conventions.md](../patterns/ux-conventions.md) § Placeholders.
 
 ## Required field standards (locked)
 
@@ -120,7 +129,7 @@ Changing `Title`, `Required`, `WidthTrack`, or templates after first render noti
 ## Responsive behavior (locked — v1)
 
 - Shared CSS grid tracks for header and each card row.
-- When many columns overflow: **horizontal overflow scroll** on the surface so header cells stay aligned with fields.
+- When many columns overflow: **horizontal overflow scroll** on the surface so header cells stay aligned with fields (set `--bo-scg-min-width` on the grid root; default `0` = fit container and truncate).
 - Do **not** stack per-card labels in v1.
 
 ## Theming (locked)

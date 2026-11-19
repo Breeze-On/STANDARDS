@@ -38,3 +38,4 @@ Categories are discoverability labels for the index; they do not replace reading
 | [ADR-016](ADR-016-data-entity-ownership.md) | Data Entity ownership and scope | Accepted | Data | EAC Data Entities, Application vs Application Context configuration, consumer apps |
 | [ADR-017](ADR-017-application-configuration-deployment.md) | Application Configuration deployment (synchronize-by-Code) | Accepted | Data | EAC Application Configuration import/export, environment promotion |
 | [ADR-018](ADR-018-data-entity-values-excel-portability.md) | Data Entity Values Excel portability | Accepted | Data | EAC Data Entities Values import/export (Excel Tool), environment data movement, bulk maintenance |
+| [ADR-019](ADR-019-process-framework-metadata.md) | Process Framework metadata | Accepted | Data | EAC Application Configuration Process Framework (Roles / Steps / Options), Application Configuration JSON, PeoplePicker identity portability |

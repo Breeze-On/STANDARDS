@@ -126,9 +126,9 @@ See also [navigation.md § Branding ownership](navigation.md#branding-ownership-
 | Announce | `role="alertdialog"` + `aria-modal="true"` + `aria-busy="true"`; message `aria-live="assertive"` |
 | Scroll lock | `html` / `body` / `.bo-theme-root` overflow hidden via `:has(.bo-page-freeze-host:not([hidden]))` |
 
-### When to use
+### When to use (MUST)
 
-`IBoPageFreezeService` **SHOULD** be used when:
+`IBoPageFreezeService` **MUST** be used when:
 
 - Database writes occur (create, update, delete)
 - Import or export operations occur
@@ -137,23 +137,30 @@ See also [navigation.md § Branding ownership](navigation.md#branding-ownership-
 - Users might otherwise attempt duplicate actions
 - User interaction should be prevented until completion
 - Loading lookups that hit the backend at a scale users can perceive (e.g. full hierarchy fetch before an edit dialog)
+- **Workspace or configuration hydration** that performs one or more backend round-trips expected to be user-perceptible — including panel/tab **activation that reloads data** (not chrome-only flips)
 
-### When not to use
+Cross-control summary: [ux-conventions.md](../patterns/ux-conventions.md) § Page Freeze.
 
-`IBoPageFreezeService` **SHOULD NOT** be used for:
+### When not to use (MUST NOT)
+
+`IBoPageFreezeService` **MUST NOT** be used for:
 
 - Grid filtering, sorting, paging, or searching
-- Tab changes
+- **Chrome-only** tab changes (no backend reload)
 - Accordion expand/collapse
 - Dialog open/close chrome alone (without backend work)
 - Validation-only actions (e.g. field blur format checks)
 - Local UI state changes
-- Fast in-memory operations
-- Routine navigation / initial page navigation loads that are part of ordinary browsing
+- Fast in-memory / sub-second operations
+- Ordinary route navigation that paints page chrome before optional secondary fetches (initial route mount **without** heavy config hydrate)
+
+### Optional
+
+- A single fast lookup when perceived latency is unlikely — prefer freeze if unsure and the operation is multi-second class
 
 ### Principle
 
-Page freeze is for **meaningful backend work** or operations users perceive as “loading.” It improves confidence and prevents duplicate actions. It must **not** be used so aggressively that the application feels blocked during normal interaction.
+Page freeze is for **meaningful backend work** or operations users perceive as “loading.” It improves confidence and prevents duplicate actions. It must **not** be used so aggressively that the application feels blocked during normal interaction. “Tab changes” in the MUST NOT list means chrome-only flips; tab/panel activation that reloads workspace data is a MUST.
 
 ### Messaging
 

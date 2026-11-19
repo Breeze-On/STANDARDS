@@ -129,8 +129,8 @@ When the page needs **header + editable card rows + optional reorder** (not a ta
 - [ ] Uses **`BoShuffleCardGrid`** / **`BoShuffleCardGridColumn`** — [shuffle-card-grid.md](controls/shuffle-card-grid.md); inherits [Grid Family Standards](controls/grids.md#grid-family-standards-locked).
 - [ ] Treats it as a **section-level** surface (page-first; dialog hosts compose the same control).
 - [ ] **Add New** (if any) lives in section **`HeaderActions`** and calls **`InsertNewAtTopAsync`** (not `_items.Add`) — [shuffle-card-grid.md](controls/shuffle-card-grid.md).
-- [ ] Column headers: uppercase (CSS) + required `*` when needed; shared `WidthTrack` aligns header and fields.
-- [ ] Cell editors reuse **`Bo*`** fields (typically `bo-field--section-flush`); host owns validation and Dirty State.
+- [ ] Column headers: uppercase (CSS) + required `*` when needed; shared `WidthTrack` aligns header and fields; column `Align` applies to header **and** cell ([shuffle-card-grid.md](controls/shuffle-card-grid.md)).
+- [ ] Prefer `minmax(0, …)` tracks; cell editors reuse **`Bo*`** fields with **platform default placeholders** (not column titles); host owns validation and Dirty State.
 - [ ] Host loads **`sortable.min.js`** + **`bo-sortable.js`** for reorder and **`bo-grid.js`** for Add New focus.
 
 ### Filters and query-driven datasets
@@ -151,6 +151,17 @@ Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → 
 - [ ] Server query grids: Server `QueryMode`, cache = current page, `TotalCount` from the primary contract, select-all = current page only — [grids.md](controls/grids.md#server-querymode). Client mode remains the default.
 - [ ] Any exception (full-tree load, secondary contract) is documented.
 - [ ] Gallery working example exists or is explicitly pending ([example-governance.md](example-governance.md)).
+
+### UX conventions (Planning / Dev — read first)
+
+Cross-control SSOT: [ux-conventions.md](patterns/ux-conventions.md). UI plans require a **UX Standards Compliance Review** before development.
+
+- [ ] **Placeholders:** platform defaults only; do **not** echo labels/column titles; omit when Disabled — [ux-conventions.md](patterns/ux-conventions.md).
+- [ ] **Truncation / width:** long closed values truncate (ellipsis + hover title); selected values must not resize controls or skew columns.
+- [ ] **Disabled vs read-only vs N/A:** Disabled = temporary; prefer `BoFieldReadOnly` / Display for inherent read-only; hide N/A with `IsHidden`.
+- [ ] **Navigation state:** major workspace / context change opens documented primary view; no inherited sub-state unless documented keep-alive.
+- [ ] **Admin language:** no implementation identifiers in admin-facing copy.
+- [ ] Before custom UX: confirm no existing Shared UI component, Gallery example, or documented pattern already solves the problem.
 
 ### Controls
 
@@ -186,7 +197,8 @@ Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → 
 - [ ] `AppTitle` and `Subtitle` localized.
 - [ ] Dialog and toast text localized.
 - [ ] Product Create/Edit/Confirm/management dialogs use **`BoDialog`** (Enter = primary, Escape = `OnClose`, optional `InitialFocusFieldKey`, default focus restore). No local dialog chrome or autofocus JS — [overlays.md](shell/overlays.md) § Dialog.
-- [ ] Long-running ops use **`IBoPageFreezeService`** (`RunAsync` preferred); pass already-localized freeze messages; show outcome toasts **after** Hide; follow when / when-not rules — [overlays.md](shell/overlays.md) § Page freeze.
+- [ ] Long-running ops and **perceptible workspace/config hydrations** (including tab/panel activation that reloads data) use **`IBoPageFreezeService`** (`RunAsync` preferred); pass already-localized freeze messages; show outcome toasts **after** Hide; follow MUST / MUST NOT rules — [overlays.md](shell/overlays.md) § Page freeze; [ux-conventions.md](patterns/ux-conventions.md).
+- [ ] Do **not** invent page-local loading overlays.
 - [ ] New user-visible strings added to resources in the **same change set**.
 
 ### Theming
@@ -205,6 +217,7 @@ When page structure introduces or changes **org** standards:
 - [ ] Update gallery / product examples where appropriate.
 - [ ] Update UI overview indexes when new documentation files are added — [overview.md](overview.md).
 - [ ] Same change set as code — [documentation.md](../documentation.md).
+- [ ] UI-bearing PRs: run [ux-pr-review-checklist.md](ux-pr-review-checklist.md).
 
 ## Living document rule
 

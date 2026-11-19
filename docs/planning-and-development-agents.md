@@ -163,6 +163,26 @@ Permanent documentation must represent **implemented reality**.
 - Do **not** leave implementation plans referenced inside standards documentation.
 - Do **not** leave speculative content in permanent documentation.
 
+### UX Standards Compliance Review (mandatory for UI plans)
+
+BreezeOn challenges database schemas, relationships, portability, security, and reusability before build. **UX/UI discovery is a peer gate** — architecture approval is **not** UX approval.
+
+For every **UI-bearing** plan, the Planning Agent **must** include a **UX Standards Compliance** subsection before development begins. Development must not start until it documents:
+
+| Item | Required |
+| --- | --- |
+| Shared UI reuse | Which `Bo*` components are reused |
+| Gallery | Which Gallery examples were reviewed |
+| Applicable standards | Links to [page-development.md](ui/page-development.md), [ux-conventions.md](ui/patterns/ux-conventions.md), and control SSOTs |
+| Page Freeze | Expectations (MUST / MUST NOT) |
+| Placeholders | Default resources vs documented semantic exceptions |
+| Navigation state | Reset vs keep-alive intent |
+| Truncation | How long values stay layout-stable |
+| Disabled / read-only | Path for each non-editable value |
+| Deviations | Intentional deviations with justification |
+
+Incomplete UX discovery is a **planning defect**. SSOT: [ux-conventions.md](ui/patterns/ux-conventions.md) · [example-governance.md](ui/example-governance.md) · [page-development.md](ui/page-development.md).
+
 ---
 
 ## Development Agent
@@ -179,6 +199,8 @@ When **Build Locally** is executed:
 4. Implement directly from the markdown plan.
 5. Preserve architecture decisions documented in the plan.
 6. Update the plan status throughout implementation if appropriate (delta updates only).
+7. For UI work: confirm the plan’s **UX Standards Compliance** subsection is present; run [page-development.md](ui/page-development.md) + [ux-conventions.md](ui/patterns/ux-conventions.md).
+8. **Before custom UX:** validate that an existing Shared UI component, Gallery example, or documented pattern does **not** already solve the problem. Prefer Gallery as the copy source. Refuse undocumented deviations.
 
 ### Documentation responsibilities
 

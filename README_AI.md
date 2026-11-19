@@ -92,7 +92,8 @@ STANDARDS/
 │     ├─ foundations/    # tokens, typography, i18n
 │     ├─ shell/          # shell, navigation
 │     ├─ layout/         # sections, layout (Row)
-│     └─ controls/       # forms
+│     ├─ controls/       # forms, grids, shuffle-card, query-driven
+│     └─ patterns/       # dirty-state, import-summary, ux-conventions
 ├─ runbooks/             # operational runbooks (sparse today)
 │  └─ README.md
 ├─ decisions/            # Architecture Decision Records
@@ -118,7 +119,7 @@ STANDARDS/
 | `docs/security-governance.md` | Dependency & vulnerability policy, Dependabot, NuGet audit (≠ `architecture/security.md`) |
 | `docs/ai-agent-governance.md` | AI agent operational boundaries — development assistants only; current-prompt approval for restricted actions ([ADR-007](decisions/ADR-007-ai-agent-operational-boundaries.md)) |
 | `docs/planning-and-development-agents.md` | Planning Agent + Development Agent — `docs/plans/in-progress/` → `implemented/`; in-place delta updates only (no V2/duplicates); no plan dumps in chat; Build Locally; knowledge transfer |
-| `docs/ui/` | Hierarchical UI standards (entry: `overview.md`); folders: `foundations/`, `shell/`, `layout/`, `controls/` |
+| `docs/ui/` | Hierarchical UI standards (entry: `overview.md`); folders: `foundations/`, `shell/`, `layout/`, `controls/`, `patterns/`; plus `page-development.md`, `example-governance.md` |
 | `templates/cursor-rules/` | Optional per-repo Cursor rule copies (AI boundaries, Planning Agent, Development Agent) |
 | `templates/docs-plans/` | Product-repo `docs/plans/in-progress/` + `docs/plans/implemented/` layout starter |
 | `docs/*` placeholders | `domain-modeling`, `testing`, `observability`, `versioning` — state that org standards are **not yet formally defined** (do not invent rules there) |
@@ -160,7 +161,7 @@ Before planning or implementing in a Breeze On repo:
 10. For environment naming: follow [`docs/environments.md`](docs/environments.md) and [`docs/naming.md`](docs/naming.md) § Environments (labels `DEV`/`UAT`/`PRD`, Azure tokens `dev`/`uat`/`prd` — never `dv`/`pp`/`pr`); do not redefine environments independently in product docs.
 11. For hosted deployment: follow [`docs/hosted-deployment.md`](docs/hosted-deployment.md); product repos hold App Service / workflow **metadata** only — do not duplicate deploy procedures.
 12. For what an application repo must include: follow [`docs/application-model.md`](docs/application-model.md).
-13. For UI standards: start with the page checklist [`docs/ui/page-development.md`](docs/ui/page-development.md), then [`docs/ui/overview.md`](docs/ui/overview.md) and docs under `foundations/`, `shell/`, `layout/`, `controls/`; when docs grow too large, deepen the hierarchy and update the UI index (organic structure rule in the overview).
+13. For UI standards: start with the page checklist [`docs/ui/page-development.md`](docs/ui/page-development.md) and cross-control [`docs/ui/patterns/ux-conventions.md`](docs/ui/patterns/ux-conventions.md), then [`docs/ui/overview.md`](docs/ui/overview.md) and docs under `foundations/`, `shell/`, `layout/`, `controls/`, `patterns/`; when docs grow too large, deepen the hierarchy and update the UI index (organic structure rule in the overview). UI plans require a UX Standards Compliance Review before development.
 14. Placeholder docs (`domain-modeling`, `testing`, `observability`, `versioning`) mean **no org standard yet** — do not invent requirements there; update them only when conventions are actually established.
 15. For dependency vulnerabilities / Dependabot / NuGet audit: follow [`docs/security-governance.md`](docs/security-governance.md); product repos keep thin pointers and `.github/dependabot.yml` only.
 16. For operational procedures: see [`runbooks/README.md`](runbooks/README.md); add runbooks only from real procedures. Hosted deploy standard: [`docs/hosted-deployment.md`](docs/hosted-deployment.md). Agents must not execute deploy/cloud steps unless the current prompt explicitly authorizes them ([ai-agent-governance.md](docs/ai-agent-governance.md)).

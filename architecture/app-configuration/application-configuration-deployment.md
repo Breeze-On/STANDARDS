@@ -28,7 +28,7 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 
 - Deployment identity is the **Application** (`UniqueCode`).
 - Business Entity selection on `/app-configuration` gates the workspace; it is not part of the v1 portable identity.
-- Definitions owned by `ApplicationGUID` (Data Entities + Columns) are in scope ([ADR-016](../../decisions/ADR-016-data-entity-ownership.md)).
+- Definitions owned by `ApplicationGUID` (Data Entities + Columns, Process Framework Roles / Steps / Options + metadata columns) are in scope ([ADR-016](../../decisions/ADR-016-data-entity-ownership.md), [ADR-019](../../decisions/ADR-019-process-framework-metadata.md)).
 
 ## Included (current)
 
@@ -36,10 +36,11 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 | --- | --- |
 | Data Entities | Definitions, Columns, SortOrder |
 | Security Groups | AttributeCode configuration per Business Entity (Application Context); synchronized Security.Groups Code/Name/Description; no memberships |
+| Process Framework | Metadata column catalog, Roles, Steps, Options (with metadata values + `TEXT` translations); Application-scoped; Codes only — [process-framework](../process-framework/README.md) |
 
 ## Explicitly excluded
 
-- Data Entity Rows, Translations, Metadata values
+- Data Entity Rows, Translations, Metadata values (Data Entity row data; Process Framework metadata values **are** included, nested under their Role / Step / Option)
 - Security Group memberships / user assignments
 - Application runtime / operational / audit data
 - Environment-specific GUIDs
@@ -50,9 +51,19 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 | --- | --- | --- |
 | `dataEntities` | Yes | Yes |
 | `securityGroups` | Yes (export always; import when present) | Yes when key present; skipped when omitted |
-| `steps` / `options` / `roles` / `systemConfiguration` | Omitted | No |
+| `processMetadataColumns` | Yes (export always; import when present) | Yes when key present; skipped when omitted or `null` |
+| `roles` | Yes (export always; import when present) | Yes when key present; skipped when omitted or `null` |
+| `steps` | Yes (export always; import when present) | Yes when key present; skipped when omitted or `null` |
+| `options` | Yes (export always; import when present) | Yes when key present; skipped when omitted or `null` |
+| `systemConfiguration` | Omitted | No |
 
-Non-empty not-yet-shipped section keys are rejected as unsupported for the current `schemaVersion`.
+Non-empty not-yet-shipped section keys (`systemConfiguration`) are rejected as unsupported for the current `schemaVersion`.
+
+### Process Framework sections
+
+- Match keys: `processMetadataColumns`, `roles`, `steps` by `code`; `options` by (`stepCode`, `code`). Cross references are Codes (`roleCode`, `stepCode`, `nextStepCode`, `dataEntityCode`); GUIDs are never in the file.
+- Sync order in the single transaction: metadata columns → roles → steps → options; removals run in reverse. Removing a metadata column is **always allowed** and cascades translations → values → column (no in-use block). Removing a Step / Role is blocked while a remaining Option / Step references it. A `DDL` column's `dataEntityCode` must match a Data Entity of the Application, and that Data Entity cannot be removed while a `DDL` column references it.
+- Metadata values travel in each Role / Step / Option `metadata` object keyed by column Code. `PEOPLEPICKER` values are `externalObjectId` strings (never `userGuid`); `DDL` values are Data Entity row Codes; `TEXT` is a language map. Decision: [ADR-019](../../decisions/ADR-019-process-framework-metadata.md). Field tables: [`docs/data-portability.md`](../../docs/data-portability.md#process-framework-sections).
 
 ## Removal safety
 
@@ -91,3 +102,4 @@ EAC local `dev-reset` / `local-db-seed` may apply the same deployment JSON after
 - Operations: [`runbooks/eac-application-configuration-deployment.md`](../../runbooks/eac-application-configuration-deployment.md)
 - Product surface: [architecture/eac.md](../eac.md)
 - Data Entities: [architecture/data-entities/README.md](../data-entities/README.md)
+- Process Framework: [architecture/process-framework/README.md](../process-framework/README.md)
