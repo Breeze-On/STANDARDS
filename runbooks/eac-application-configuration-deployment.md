@@ -25,7 +25,7 @@ Platform semantics: [architecture/app-configuration/application-configuration-de
 2. Select the **same** Application (by UniqueCode) + a Business Entity context.
 3. Footer **Import JSON** → choose the file.
 4. Review file-level validation errors if any (toasts; nothing is applied).
-5. Review the **Import Summary**: Changes Summary (Item Type · Item Code · New · Updated · Deleted) and Errors and Warnings. Errors disable Synchronize; warnings do not. Nothing is applied until Synchronize succeeds.
+5. Review the **Import Summary**: Changes Summary (Item Type · Item Code · New · Updated · Deleted — aggregated totals per artifact kind; Process Metadata Columns grouped by Role / Step / Option) and Errors and Warnings. Errors disable Synchronize; warnings do not. Nothing is applied until Synchronize succeeds.
 6. Confirm **Synchronize**.
 7. Verify Data Entities tab reflects the file.
 

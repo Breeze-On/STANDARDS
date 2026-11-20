@@ -200,21 +200,20 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `schemaVersion` | Yes | Integer. Current: `1` |
+| `schemaVersion` | Yes | Integer. **Current export: `2`**. Import accepts `1` (legacy flat Process Framework) and `2` (nested `processFramework`). |
 | `kind` | Yes | `"breezeon.eac.application-configuration"` |
 | `exportedAt` | No | ISO-8601 UTC on export; import ignores |
 | `applicationUniqueCode` | Yes | Match key = Application `UniqueCode` (must equal selected Application on import) |
 | `applicationCode` | Export: yes; Import: when present | Short Application `Code`; when present on import must match selected Application |
 | `dataEntities` | Yes | Array (may be empty). Synchronized |
 | `securityGroups` | Export: yes; Import: when present | Array (may be empty). When **present** (including `[]`), synchronized for the Application. When **omitted**, security-group sync is skipped (backward compatible). |
-| `processMetadataColumns` | Export: yes; Import: when present | Array (may be empty). Process Framework metadata column catalog. Present (including `[]`) = synchronized; omitted or `null` = skipped. |
-| `roles` | Export: yes; Import: when present | Array (may be empty). Same present/omitted semantics. |
-| `steps` | Export: yes; Import: when present | Array (may be empty). Same present/omitted semantics. |
-| `options` | Export: yes; Import: when present | Array (may be empty). Same present/omitted semantics. |
+| `processFramework` | Export: yes; Import: when present | Object. Canonical Process Framework node (schemaVersion **2**). Absent = skip all Process Framework sync. See below. |
 
-**Not accepted from files:** Application/Data Entity/Column/SecurityGroup/Role/Step/Option/metadata-column GUIDs, surrogate ids, audit columns, Data Entity rows, Data Entity translations, group members. (Process Framework metadata values **are** carried, inside each Role / Step / Option `metadata` object.)
+**Legacy flat keys (schemaVersion 1 import only):** `processMetadataColumns`, `roles`, `steps`, `options` at the root. Dual-read normalizes them into the nested ownership model. **Reject** files that mix flat Process Framework keys with `processFramework`. Export never writes the flat keys.
 
-**Not shipped in schemaVersion 1:** non-empty `systemConfiguration` — rejected if present with items.
+**Not accepted from files:** Application/Data Entity/Column/SecurityGroup/Role/Step/Option/metadata-column GUIDs, surrogate ids, audit columns, Data Entity rows, Data Entity translations, group members. (Process Framework metadata values **are** carried, inside each Role / Step / Option `metadata` object under `values`.)
+
+**Not shipped:** non-empty `systemConfiguration` — rejected if present with items.
 
 ### Data entity item
 
@@ -251,26 +250,46 @@ Creates `Security.Groups` with Code `APPSG_{UniqueCode}_{BusinessEntityCode}_{At
 
 Application-scoped; Codes only (lowercase kebab-case, max 100). Decision: [ADR-019](../decisions/ADR-019-process-framework-metadata.md). Architecture: [architecture/process-framework](../architecture/process-framework/README.md).
 
-**`processMetadataColumns` item** (match key `code`)
+#### Canonical shape (`schemaVersion` 2) — ownership model
+
+Metadata columns are **not** a standalone top-level artifact. They belong to Steps, Options, or Roles:
+
+```text
+processFramework.steps.metadataColumns   → Settings for Steps
+processFramework.steps.values            → Step rows (Values)
+processFramework.options.metadataColumns → Settings for Options
+processFramework.options.values          → Option rows (Values)
+processFramework.roles.metadataColumns   → Settings for Roles
+processFramework.roles.values            → Role rows (Values)
+```
+
+| Child | Present / omit |
+| --- | --- |
+| `processFramework` absent | Skip all Process Framework sync |
+| Owner (`steps` / `options` / `roles`) absent | Skip that owner (both Settings and Values) |
+| `metadataColumns` / `values` absent under a present owner | Skip that half only; present including `[]` = synchronize |
+
+Export always writes the full `processFramework` tree (all three owners, both arrays).
+
+**`metadataColumns` item** (match key `(code, owner)` after normalize; ownership is **path-implied** — omit `processFrameworkEntity` and `appliesTo` in nested JSON)
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `code` | Yes | Unique within Application; reserved: `code`, `type`, `sort-order`, `security-group-attribute-code`, `role-code`, `step-code`, `next-step-code` |
+| `code` | Yes | Unique within Application **and** owner (same Code may exist once per owner as separate items); reserved: `code`, `type`, `sort-order`, `security-group-attribute-code`, `role-code`, `step-code`, `next-step-code` |
 | `description` | Yes | Max 250 (admin label). String **or** language map object (`{"en-CA":"...","fr-CA":"..."}`, like TEXT metadata); non-empty. Export writes the map when translations exist, else a string |
-| `dataType` | Yes | `TEXT` \| `NUMBER` \| `DATE` \| `DATETIME` \| `BOOLEAN` \| `DDL` \| `PEOPLEPICKER` (immutable on update for an existing Code) |
+| `dataType` | Yes | `TEXT` \| `NUMBER` \| `DATE` \| `DATETIME` \| `BOOLEAN` \| `DDL` \| `PEOPLEPICKER` (immutable on update for an existing `(code, owner)`) |
 | `decimals` | Conditional | **0–10**, `NUMBER` only (default 2 when omitted); omit for other types |
 | `isRequired` | Yes | Boolean |
-| `displayOrder` | Yes | Positive integer; unique within `processMetadataColumns` |
-| `appliesTo` | Yes | Non-empty array of `"roles"` \| `"steps"` \| `"options"` |
+| `displayOrder` | Yes | Positive integer; unique within the same owner’s `metadataColumns` |
 | `dataEntityCode` | Conditional | Required for `DDL` (must match a Data Entity Code of the Application); omit otherwise |
 
-**`roles` item** (match key `code`): `code` (required), `type` (`Group` only), `securityGroupAttributeCode` (optional, `[A-Z0-9_]+`, max 100; soft reference — no foreign key), `sortOrder` (required, positive, unique within `roles`), `metadata` (optional object, see below).
+**`roles.values` item** (match key `code`): `code` (required), `type` (`Group` only), `securityGroupAttributeCode` (optional, `[A-Z0-9_]+`, max 100; soft reference — no foreign key), `sortOrder` (required, positive, unique within roles values), `metadata` (optional object, see below).
 
-**`steps` item** (match key `code`): `code` (required), `roleCode` (optional; must match a Role Code; omitted/null = informational Step), `sortOrder` (required, unique within `steps`), `metadata`.
+**`steps.values` item** (match key `code`): `code` (required), `roleCode` (optional; must match a Role Code; omitted/null = informational Step), `sortOrder` (required, unique within steps values), `metadata`.
 
-**`options` item** (match key `stepCode` + `code`): `stepCode` (required, Step Code), `code` (required, unique within its Step), `nextStepCode` (required, Step Code), `sortOrder` (required, positive, unique within its Step), `metadata`.
+**`options.values` item** (match key `stepCode` + `code`): `stepCode` (required, Step Code), `code` (required, unique within its Step), `nextStepCode` (required, Step Code), `sortOrder` (required, positive, unique within its Step), `metadata`.
 
-**`metadata` object:** keys are metadata column Codes (column must exist and apply to the owner kind); `null` or absent = no value; required columns must have a value (required `BOOLEAN` defaults to `false`). Value shape by `dataType`:
+**`metadata` object:** keys are metadata column Codes (column must exist for that owner); `null` or absent = no value; required columns must have a value (required `BOOLEAN` defaults to `false`). Value shape by `dataType`:
 
 | `dataType` | JSON value |
 | --- | --- |
@@ -284,11 +303,15 @@ Application-scoped; Codes only (lowercase kebab-case, max 100). Decision: [ADR-0
 
 Import does not require a `PEOPLEPICKER` user to exist locally; the id is stored as written.
 
+#### Legacy flat import (`schemaVersion` 1)
+
+Root keys `processMetadataColumns`, `roles`, `steps`, `options` (present/omit semantics unchanged). Column items require `processFrameworkEntity` (`roles`\|`steps`\|`options`) or legacy `appliesTo` (expanded to one row per listed entity). Export never writes flat keys or `appliesTo`. Sync SP payload remains flat; EAC normalizes nested ↔ flat in process — **no database migration**.
+
 ### Example
 
 ```json
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "kind": "breezeon.eac.application-configuration",
   "applicationUniqueCode": "INVOICE-APPROVAL",
   "applicationCode": "INV",
@@ -307,6 +330,43 @@ Import does not require a `PEOPLEPICKER` user to exist locally; the id is stored
       ]
     }
   ],
+  "processFramework": {
+    "steps": {
+      "metadataColumns": [
+        {
+          "code": "step-description",
+          "description": "Description",
+          "dataType": "TEXT",
+          "isRequired": false,
+          "displayOrder": 1
+        }
+      ],
+      "values": []
+    },
+    "options": {
+      "metadataColumns": [],
+      "values": []
+    },
+    "roles": {
+      "metadataColumns": [
+        {
+          "code": "role-name",
+          "description": "Name",
+          "dataType": "TEXT",
+          "isRequired": true,
+          "displayOrder": 1
+        }
+      ],
+      "values": [
+        {
+          "code": "role0",
+          "type": "Group",
+          "sortOrder": 1,
+          "metadata": { "role-name": "Initiator" }
+        }
+      ]
+    }
+  },
   "securityGroups": [
     {
       "businessEntityCode": "FIN",
@@ -325,11 +385,11 @@ Import does not require a `PEOPLEPICKER` user to exist locally; the id is stored
 - Match Data Entities and Columns by **current** `Code` within the Application.
 - Create missing Codes; update matched Codes (description, sortOrder); **remove** Codes in the target that are absent from the file.
 - When `securityGroups` is present: match by `businessEntityCode` + `attributeCode`; create missing (including `Security.Groups`); update matched; remove absent EAC rows (not Security groups/memberships). `businessEntityCode` must be enabled for the Application.
-- When `processMetadataColumns` / `roles` / `steps` / `options` are present: match by `code` (options by `stepCode` + `code`); sync order metadata columns → roles → steps → options, removals in reverse. Removing a metadata column is always allowed (cascades translations → values → column); removing a Step / Role is blocked while a remaining Option / Step references it; a Data Entity referenced by a `DDL` column cannot be removed.
+- When Process Framework sections are present (nested or legacy flat): match metadata columns by `(code, owner)`; roles/steps by `code`; options by `stepCode` + `code`; sync order metadata columns → roles → steps → options, removals in reverse. Removing a metadata column is always allowed (cascades translations → values → column); removing a Step / Role is blocked while a remaining Option / Step references it; a Data Entity referenced by a `DDL` column cannot be removed.
 - No rename detection.
 - Removing a Data Entity is blocked when any rows exist in any Application Context.
 - Removing a Column is **always allowed**; synchronize deletes associated metadata values first, then the column (same rule as Settings Save).
-- All-or-nothing: validate → Import Summary (`BoImportSummaryDialog`: Item Type · Item Code · New · Updated · Deleted + Errors/Warnings; Errors block Synchronize) → confirm → single SQL transaction (`P_POST_EACApplicationConfigurationSync`). Pattern: [import-summary.md](../docs/ui/patterns/import-summary.md).
+- All-or-nothing: validate → Import Summary (`BoImportSummaryDialog` with App Config **custom** Changes Summary: Entity · Item · Type · New · Updated · Deleted — aggregated business units, not object codes; Errors block Synchronize) → confirm → single SQL transaction (`P_POST_EACApplicationConfigurationSync`). Aggregation model: [application-configuration-deployment.md](../architecture/app-configuration/application-configuration-deployment.md#import-analysis-summary). Pattern: [import-summary.md](../docs/ui/patterns/import-summary.md).
 - Authorization: Global System Administrator or Application administrator group (`APP_*`) for the selected Application.
 - Max size: EAC `ApplicationConfigurationImport:MaxFileSizeMb` (default **5**); in-memory only.
 - Filename on export: `{applicationUniqueCode}.application-configuration.json`.

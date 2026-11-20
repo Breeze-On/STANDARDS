@@ -14,9 +14,9 @@ Data Entity custom columns ([ADR-016](ADR-016-data-entity-ownership.md)) already
 
 Roles, Steps, Options, and the metadata column catalog are owned by **`ApplicationGUID`** (like Data Entity definitions), not by an Application Context. Application Context delete does not remove Process Framework data; Application delete does.
 
-### One shared metadata engine
+### One shared metadata engine (single-entity ownership)
 
-One metadata column catalog per Application (`System.EACProcessMetadataColumns`) serves Roles, Steps, and Options through applicability flags (`AppliesToRoles` / `AppliesToSteps` / `AppliesToOptions`; at least one true). Values are sparse typed EAV rows (`System.EACProcessMetadataValues`, polymorphic `OwnerType` + `OwnerGUID`; no row when the value is NULL). Translations (`System.EACProcessMetadataTranslations`) exist for `TEXT` columns only. There are not three parallel column systems.
+One metadata column catalog table per Application (`System.EACProcessMetadataColumns`) serves Roles, Steps, and Options. Each catalog row belongs to **exactly one** Process Framework entity via `ProcessFrameworkEntity` (`ROLE` | `STEP` | `OPTION`, aligned with `EACProcessMetadataValues.OwnerType`). The same logical `Code` may exist once per entity as **separate rows** (independent definitions, each with its own `MetadataColumnGUID`). Values are sparse typed EAV rows (`System.EACProcessMetadataValues`, polymorphic `OwnerType` + `OwnerGUID`; no row when the value is NULL). Translations (`System.EACProcessMetadataTranslations`) exist for `TEXT` columns only. There are not three parallel column systems or multi-flag applicability bits.
 
 ### Process Framework metadata type set (separate from Data Entity types)
 
@@ -40,11 +40,11 @@ GUIDs never appear in Application Configuration JSON; import resolves Codes to t
 
 ### Column delete cascades
 
-Deleting a metadata column is **always allowed** and deletes translations → values → column in one transaction (UI Settings Save and Application Configuration sync alike). It is never blocked by existing values. Turning an applicability flag off removes the now-inapplicable values. Entity-level deletes remain guarded: a Role referenced by Steps, and a Step referenced by Options (as `StepGUID` or `NextStepGUID`), cannot be deleted.
+Deleting a metadata column is **always allowed** and deletes translations → values → column in one transaction (UI Settings Save and Application Configuration sync alike). It is never blocked by existing values. Settings delete always removes that entity’s catalog row (no soft “clear applicability on a shared row”). Entity-level deletes remain guarded: a Role referenced by Steps, and a Step referenced by Options (as `StepGUID` or `NextStepGUID`), cannot be deleted.
 
 ### Deployment participation
 
-Application Configuration JSON gains optional sections `processMetadataColumns`, `roles`, `steps`, `options` — synchronize-by-Code, key absent = skipped, present (including `[]`) = synchronized. No separate import/export feature exists for Process Framework.
+Application Configuration JSON gains optional sections `processMetadataColumns`, `roles`, `steps`, `options` — synchronize by `(code, processFrameworkEntity)` for columns (and by Code for roles/steps; options by stepCode+code); key absent = skipped, present (including `[]`) = synchronized. No separate import/export feature exists for Process Framework.
 
 ### Not in scope
 

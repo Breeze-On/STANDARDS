@@ -71,6 +71,7 @@ Lightweight consolidation — implementation details stay in control docs + [for
 | Required indicators | Consistent header/column `*` rules per control; no invented second asterisk system |
 | Disabled state | Disabled fields/rows are non-editable and skip mandatory participation per forms rules |
 | Errors vs warnings | **Errors** block destructive/commit actions; **warnings** do not block unless a product standard explicitly says so |
+| Validation Summary | Multi-row editable Save/Commit failures use [Validation Summary](../patterns/validation-summary.md) as a dedicated Errors section below Actions / above the grid (with field chrome + Alert toast + navigate-to-error; inline field messages suppressed via HighlightOnly). Adoption Matrix is Required for editable multi-row BoGrid / Shuffle hosts |
 
 Control a11y extras (Nested View keys, Shuffle Card `role="list"`, icon `aria-label`) remain in each control section.
 
@@ -234,13 +235,13 @@ Default off (`IsPagination = false`). When on:
 - While a row is editing: **Add New** and other rows’ Edit/Delete are **disabled**.
 - **Add New** follows [Grid Family Standards](#grid-family-standards-locked) (top + focus + deferred validation; resets to first page when paginated).
 - When the grid owns a section: **Add New** on the section header row.
-- Column mandatory validation runs only on **row Save**; fail → Alert toast + field border chrome.
+- Column mandatory validation runs only on **row Save**; fail → Alert toast + field border chrome + [Validation Summary](../patterns/validation-summary.md) above the table when failures exist (navigate-to-error).
 
 ## Inline Edit (locked)
 
 - All rows show Edit templates; Delete available per row (no single-row lock); **no** left accent bar.
 - When the grid owns a section: **Add New** + overall **Save** on the section header row (Save omitted when `ShowSave=false`).
-- Save validates required cell fields (ValidationGroup) + grid `Required`; fail → toast + borders; success → `OnSave`. Hosts that hide Save must run equivalent validation before their own Save path.
+- Save validates required cell fields (ValidationGroup) + grid `Required`; fail → toast + borders + [Validation Summary](../patterns/validation-summary.md) above the table when failures exist; success → `OnSave`. Hosts that hide Save must run equivalent validation before their own Save path (including summary when the Adoption Matrix says Required).
 - Sort order remains frozen while cells change (same rules as Sort + [Sorting vs uncommitted new rows](#sorting-vs-uncommitted-new-rows-no-conflict)).
 - **Add New** follows [Grid Family Standards](#grid-family-standards-locked).
 

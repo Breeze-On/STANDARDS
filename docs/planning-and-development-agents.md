@@ -181,8 +181,20 @@ For every **UI-bearing** plan, the Planning Agent **must** include a **UX Standa
 | Disabled / read-only | Path for each non-editable value |
 | Deviations | Intentional deviations with justification |
 | Configuration Session Review | **Mandatory** for configuration-heavy work (see below) |
+| Validation Summary Adoption Matrix | **Mandatory** when the plan includes Save/Commit validation UX (see below) |
 
 Incomplete UX discovery is a **planning defect**. SSOT: [ux-conventions.md](ui/patterns/ux-conventions.md) · [example-governance.md](ui/example-governance.md) · [page-development.md](ui/page-development.md).
+
+### Validation Summary Adoption Matrix (mandatory for validation UX)
+
+Peer gate to Dirty State and field-chrome decisions. When a plan includes Save/Commit validation messaging (grids, Shuffle Cards, configuration editors, dialogs, wizards, bulk edit, import), the Planning Agent **must** evaluate the [Validation Summary Adoption Matrix](ui/patterns/validation-summary.md#validation-summary-adoption-matrix):
+
+1. Is Validation Summary **Required / Optional / Not Recommended**?
+2. Is **field chrome** enough alone?
+3. Is a **toast** enough alone?
+4. Should **navigate-to-error** be available?
+
+Do **not** invent ad-hoc error lists, toast-only multi-row Save failures, or merge Import Summary with live-editor Validation Summary. SSOT: [validation-summary.md](ui/patterns/validation-summary.md) · [ADR-021](../decisions/ADR-021-validation-summary-experience.md).
 
 ### Configuration Session Review (mandatory for configuration-heavy plans)
 
@@ -217,7 +229,7 @@ When **Build Locally** is executed:
 4. Implement directly from the markdown plan.
 5. Preserve architecture decisions documented in the plan.
 6. Update the plan status throughout implementation if appropriate (delta updates only).
-7. For UI work: confirm the plan’s **UX Standards Compliance** subsection is present; run [page-development.md](ui/page-development.md) + [ux-conventions.md](ui/patterns/ux-conventions.md).
+7. For UI work: confirm the plan’s **UX Standards Compliance** subsection is present; run [page-development.md](ui/page-development.md) + [ux-conventions.md](ui/patterns/ux-conventions.md). For Save/Commit validation UX, apply the [Validation Summary Adoption Matrix](ui/patterns/validation-summary.md#validation-summary-adoption-matrix).
 8. **Before custom UX:** validate that an existing Shared UI component, Gallery example, or documented pattern does **not** already solve the problem. Prefer Gallery as the copy source. Refuse undocumented deviations.
 9. For configuration-heavy work: implement only against an approved Configuration Session model (segments, classification, invalidation matrix). Do not invent reload-on-activate behavior. Wire Save / Discard / Import / Export / Page Freeze to the matrix; update segment inventory + invalidation docs in the same change set.
 

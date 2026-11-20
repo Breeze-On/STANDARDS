@@ -33,6 +33,7 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [controls/toggle.md](controls/toggle.md) | Segmented Toggle (`BoToggle`) — presentation-only; host-owned selection |
 | [patterns/dirty-state.md](patterns/dirty-state.md) | Centralized unsaved-changes gate (Save / Discard / Cancel) |
 | [patterns/import-summary.md](patterns/import-summary.md) | Import Summary review dialog (`BoImportSummaryDialog`) — Changes Summary + Errors/Warnings; explicit confirm |
+| [patterns/validation-summary.md](patterns/validation-summary.md) | Validation Summary (`BoValidationSummary`) — live-editor collapsible errors above grids/Shuffle; Adoption Matrix; [ADR-021](../../decisions/ADR-021-validation-summary-experience.md) |
 | [patterns/ux-conventions.md](patterns/ux-conventions.md) | Cross-control UX conventions — placeholders, truncation, disabled/read-only, navigation state, Page Freeze summary, UX Compliance Review |
 | [controls/grids.md](controls/grids.md) | Grid Family Standards + `BoGrid` — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode`; Add New top + focus |
 | [controls/shuffle-card-grid.md](controls/shuffle-card-grid.md) | Shuffle Card Grid (`BoShuffleCardGrid`) — Grid-family card + DnD; `InsertNewAtTopAsync`; inherits Family Standards |
@@ -104,6 +105,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoToggle` | Presentation-only segmented toggle; host-owned `SelectedToggleKey`; `ToggleRequested` intent; required icon+label per item; sliding selection pill via `bo-toggle.js` | [toggle.md](controls/toggle.md) |
 | `BoDialog` / `BoDialogCloseButton` | Product dialog shell (Enter/Escape, `InitialFocusFieldKey`, focus restore) | [overlays.md](shell/overlays.md) |
 | `BoImportSummaryDialog` | Presentational Import Summary (Changes Summary + Errors/Warnings; Stealth confirm; `ChangesSummaryContent`) | [import-summary.md](patterns/import-summary.md) |
+| `BoValidationSummary` / `BoValidationIssue` | Live-editor collapsible validation summary above grids/Shuffle; navigate-to-error; Adoption Matrix | [validation-summary.md](patterns/validation-summary.md) |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`; hosted via `BoDialog`) | [overlays.md](shell/overlays.md) |
 | `IBoToastService` / `BoToastHost` | Top-right toasts (Main/Body; Success / Alert / Information / Error; click dismiss) | [shell.md](shell/shell.md), [overlays.md](shell/overlays.md) |
 | `IBoPageFreezeService` / `BoPageFreezeHost` | Full-viewport busy freeze (branded pulse + frosted scrim; `Show`/`Hide`/`RunAsync`; ref-counted) | [overlays.md](shell/overlays.md) |

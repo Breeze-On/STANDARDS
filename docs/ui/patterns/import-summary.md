@@ -16,6 +16,10 @@ Import Summary dialogs are **review surfaces**.
 
 Nothing is written until the user confirms (Import / Synchronize). Analysis and plan phases are read-only.
 
+### Sibling: Validation Summary (live editors)
+
+Import Summary is **pre-apply** only. Live editable grids/Shuffle after Save/Commit use [Validation Summary](validation-summary.md) (`BoValidationSummary`) — do **not** dual-stack both on the same analyze/confirm path, and do **not** overload `BoImportSummaryDialog` for live editors. Severity concepts align (Error blocks; Warning does not); controls stay separate ([ADR-021](../../../decisions/ADR-021-validation-summary-experience.md)).
+
 ## Architecture boundary
 
 - **SHARED-UI:** `BoImportSummaryDialog`, `BoImportChangeSummaryRow`, `BoImportIssueRow`, `BoImportIssueSeverity` — presentation only.
@@ -50,7 +54,8 @@ Callers omit rows where New, Updated, and Deleted are all zero.
 `BoImportSummaryDialog` **must** support `ChangesSummaryContent`:
 
 - Standard imports omit it and use the default Item Type / Item Code / New / Updated / Deleted grid.
-- Specialized workflows (e.g. Data Entities Excel) supply custom columns (Data Entity · Included? · New · Updated · Deleted) without forking a second summary dialog.
+- Specialized workflows supply custom columns without forking a second summary dialog. Examples: Data Entities Excel (Data Entity · Included? · New · Updated · Deleted); Application Configuration synchronize (Entity · Item · Type · New · Updated · Deleted).
+- Default Item Type / Item Code columns are **not** enforced for every host. Aggregate **measures** (New / Updated / Deleted) remain the shared pattern; column sets are case-specific via `ChangesSummaryContent`.
 
 When using custom content, set `HasChanges` explicitly if the default `ChangeRows` gate does not match domain semantics.
 
@@ -97,8 +102,9 @@ Future candidates (toast-only today): Applications JSON, Business Entities / Typ
 
 | Workflow | Changes Summary | Primary verb |
 | --- | --- | --- |
-| Application Configuration synchronize | Default Item Type / Item Code grid | Synchronize |
+| Application Configuration synchronize | `ChangesSummaryContent` (Entity · Item · Type · New · Updated · Deleted); aggregated business units — not one row per portable code. Model: [application-configuration-deployment.md](../../../architecture/app-configuration/application-configuration-deployment.md#import-analysis-summary) | Synchronize |
 | Data Entities Excel import | `ChangesSummaryContent` (Included? / N/A) | Import |
+| Security Group Members import | `ChangesSummaryContent` (domain member columns) | Import |
 
 ## Documentation duty
 

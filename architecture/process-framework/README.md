@@ -33,7 +33,7 @@ flowchart LR
 ### Scope and ownership
 
 - **Application-scoped** (`ApplicationGUID`) — Roles, Steps, Options, and the metadata column catalog. Not owned by an Application Context; Context delete does not touch them, Application delete removes them.
-- Surfaced in EAC on `/app-configuration` as the **Process Framework** tab with three cards — **Roles**, **Steps**, **Options**. Each card has an **Entity | Settings** toggle (same Values/Settings pattern as Data Entities). Entity mode is a `BoShuffleCardGrid` (Security Groups pattern: Save / Discard, reorder, delete, add — **no Manage Members**). Settings mode is **entity-scoped**: one shared `ProcessMetadataSettingsWorkspace` configured with the current entity (Role / Step / Option) shows only the catalog columns that apply to that entity, with **no AppliesTo columns in the UI**. Add New creates a column applying only to the current entity; Delete hard-deletes a column used only by this entity, or just clears this entity's applicability when other entities also use it. Save still sends the **full** Application catalog (strict server accounting). Navigating between Roles / Steps / Options always opens the **Entity** view.
+- Surfaced in EAC on `/app-configuration` as the **Process Framework** tab with three cards — **Roles**, **Steps**, **Options**. Each card has an **Entity | Settings** toggle (same Values/Settings pattern as Data Entities). Entity mode is a `BoShuffleCardGrid` (Security Groups pattern: Save / Discard, reorder, delete, add — **no Manage Members**). Settings mode is **entity-scoped**: one shared `ProcessMetadataSettingsWorkspace` configured with the current entity (Role / Step / Option) shows only catalog rows owned by that entity (`ProcessFrameworkEntity`). Add New creates a row for the current entity only; Delete always hard-deletes that entity’s row (cascades values/translations). The same Code may exist once per entity as independent rows. Save still sends the **full** Application catalog (strict server accounting). Navigating between Roles / Steps / Options always opens the **Entity** view.
 - **UI conventions:** Entity and Settings grids place reorder + delete in the **first** track (`ActionsPlacement=Leading`) and use `minmax(0, …fr)` tracks. Reference dropdowns show `Name (code)` — Step **Role** and Option **Step** / **Next Step** use the Role / Step `name` (else `description`) metadata value for the current language, falling back to the code alone — while the **Code** is persisted; Step Role is optional and clearable. Column titles are **Role**, **Step**, **Next Step**, **Data Entity** (not "… Code"), and no Process Framework control uses a custom placeholder ([ux-conventions.md](../../docs/ui/patterns/ux-conventions.md) § Placeholders).
 - Authorization is the same as other Application Configuration sections: Global System Administrator or the Application's `APP_*` administrator group ([eac-authorization-matrix.md](../authorization/eac-authorization-matrix.md)).
 - Portability is **only** Application Configuration JSON. There is no separate import/export for Process Framework.
@@ -50,7 +50,7 @@ Codes are lowercase kebab-case, unique within the Application (Options within th
 
 ### Metadata engine
 
-One catalog (`EACProcessMetadataColumns`) per Application, shared by all three entities via applicability flags (Roles / Steps / Options; at least one). Values are sparse typed rows (`EACProcessMetadataValues`); `TEXT` values are translatable (`EACProcessMetadataTranslations`, one row per language).
+One catalog table (`EACProcessMetadataColumns`) per Application; each row is owned by exactly one entity (`ProcessFrameworkEntity` = `ROLE` | `STEP` | `OPTION`). The same Code may appear once per entity as independent rows. Values are sparse typed rows (`EACProcessMetadataValues`); `TEXT` values are translatable (`EACProcessMetadataTranslations`, one row per language).
 
 | `DataType` | Stored value | Editor |
 | --- | --- | --- |
@@ -72,7 +72,7 @@ Database relationships use GUID foreign keys; the UI, JSON, and soft references 
 
 ### Application Configuration JSON
 
-Optional sections `processMetadataColumns`, `roles`, `steps`, `options`. Key omitted (or `null`) = skipped; key present (including `[]`) = synchronize by Code. Sync order: metadata columns → roles → steps → options (removals in reverse; column removals cascade). Field tables: [`docs/data-portability.md`](../../docs/data-portability.md#process-framework-sections).
+Portable file shape: nested `processFramework.{steps|options|roles}.{metadataColumns|values}` (schemaVersion **2**; dual-read of schemaVersion **1** flat keys). Ownership of metadata columns is path-implied. Sync order: metadata columns → roles → steps → options (removals in reverse; column removals cascade). The sync SP still receives a flat payload; EAC normalizes at the boundary. Field tables: [`docs/data-portability.md`](../../docs/data-portability.md#process-framework-sections).
 
 ### ERD
 

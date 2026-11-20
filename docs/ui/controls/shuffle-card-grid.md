@@ -51,7 +51,7 @@ The library **never** talks to SQL or application repositories.
 | When not | Delete, reorder, field edits, or host list mutations that bypass `InsertNewAtTopAsync` |
 | Exception | No editable field → focus unchanged; insert still succeeds |
 
-Public helpers: `InsertNewAtTopAsync`, `RefreshSortableAsync` (non–Add New add/remove), `ReadDomOrderAsync` (before Save).
+Public helpers: `InsertNewAtTopAsync`, `RefreshSortableAsync` (non–Add New add/remove), `ReadDomOrderAsync` (before Save), `FocusRowAsync` (Validation Summary navigate-to-error).
 
 ## Parameters (`BoShuffleCardGrid<TItem>`)
 
@@ -154,6 +154,18 @@ Shuffle Card–specific:
 
 `BoShuffleCardGrid` does **not** embed Dirty State. Hosts wire page `EacDirtyStateGuard` (or equivalent) or dialog local discard confirm per [dirty-state.md](../patterns/dirty-state.md).
 
+## Validation Summary (host composition — locked)
+
+`BoShuffleCardGrid` does **not** embed validation, Save, or Validation Summary. For multi-row editable Shuffle experiences the host **must**:
+
+1. Compose [`BoValidationSummary`](../patterns/validation-summary.md) as a dedicated **Errors** section **below Actions** and **above** the Shuffle content after a failed Save/Commit when failures exist.
+2. Map domain errors to `BoValidationIssue` (one issue per failing row/field — do not collapse distinct rows into one string).
+3. Apply matching field chrome (`BoValidationContext` + `Validate()`, or per-field `ErrorText`).
+4. Show the co-required Alert toast.
+5. Wire navigate-to-error via `FocusRowAsync` / field-key focus helpers (`bo-grid.js`).
+
+Adoption Matrix: **Required** for editable Shuffle hosts — see [validation-summary.md](../patterns/validation-summary.md#validation-summary-adoption-matrix).
+
 ## Supported scenarios
 
 - Page section editable configuration lists with reorder (e.g. Application Configuration → Security Groups).
@@ -178,6 +190,6 @@ Include Sortable + interop when the page uses Shuffle Card Grid:
 | --- | --- |
 | `_content/BreezeOn.UI/js/lib/sortable.min.js` | Vendored SortableJS (`window.Sortable`) |
 | `_content/BreezeOn.UI/js/bo-sortable.js` | `boSortableInit` / `boSortableDestroy` / `boSortableReadOrder` |
-| `_content/BreezeOn.UI/js/bo-grid.js` | Add New first-editable focus (`focusFirstEditableInShuffleRow`) — same script as `BoGrid` |
+| `_content/BreezeOn.UI/js/bo-grid.js` | Add New first-editable focus (`focusFirstEditableInShuffleRow`); Validation Summary navigate-to-error (`focusRowByKey` / field-key focus) — same script as `BoGrid` |
 
 Gallery and product hosts that already load the standard `bo-*.js` set should also load Sortable + `bo-sortable.js` when adopting Shuffle Card Grid.

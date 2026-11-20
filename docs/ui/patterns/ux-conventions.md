@@ -2,7 +2,7 @@
 
 Owner: UI
 
-Organization standards that apply across `Bo*` controls and product pages. Control-specific details remain in [forms.md](../controls/forms.md), [grids.md](../controls/grids.md), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), and [overlays.md](../shell/overlays.md). Related: [page-development.md](../page-development.md), [example-governance.md](../example-governance.md).
+Organization standards that apply across `Bo*` controls and product pages. Control-specific details remain in [forms.md](../controls/forms.md), [grids.md](../controls/grids.md), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), [validation-summary.md](validation-summary.md), and [overlays.md](../shell/overlays.md). Related: [page-development.md](../page-development.md), [example-governance.md](../example-governance.md).
 
 Current reality only. Incomplete without Gallery working examples for library-scoped patterns ([example-governance.md](../example-governance.md)).
 
@@ -23,8 +23,9 @@ Planning Agents must document a **UX Standards Compliance** subsection in every 
 | Truncation | How long values stay stable (ellipsis + hover title) |
 | Disabled / read-only | Which path for each non-editable value |
 | Deviations | Any intentional deviation with justification |
+| Validation Summary Adoption Matrix | Required / Optional / Not Recommended for Save/Commit validation UX ([validation-summary.md](validation-summary.md)) |
 
-Development Agents must confirm an existing Shared UI component, Gallery example, or documented pattern does **not** already solve the problem before introducing custom UX. Undocumented deviations in a plan are refused at Build Locally.
+Development Agents must confirm an existing Shared UI component, Gallery example, or documented pattern does **not** already solve the problem before introducing custom UX. Undocumented deviations in a plan are refused at Build Locally. Multi-row Save validation must use `BoValidationSummary` when the Adoption Matrix says Required — do not invent host error lists.
 
 ## Column header alignment (locked)
 

@@ -181,6 +181,7 @@ Cross-control SSOT: [ux-conventions.md](patterns/ux-conventions.md). UI plans re
 ### Validation
 
 - [ ] Deferred mandatory validation pattern respected (asterisk immediately; error chrome **after** attempt) — [forms.md § Deferred mandatory validation](controls/forms.md#deferred-mandatory-validation-locked).
+- [ ] Multi-row editable BoGrid / Shuffle / bulk-edit Save failures use [Validation Summary](patterns/validation-summary.md) when the **Adoption Matrix** says Required (summary + chrome + Alert toast + navigate-to-error). Do not invent host `<ul>` error lists.
 - [ ] Required fields use standard behavior; **Disabled** fields skip required validation.
 - [ ] Universal required message (`Validation_FieldRequired`); never field-label-specific.
 - [ ] Fields expose `FieldKey` + `ValidationGroup` (header tab **or** workspace panel-nav key); sections set `SectionKey` so failures report Field → Sub → Main → Tab/Panel.

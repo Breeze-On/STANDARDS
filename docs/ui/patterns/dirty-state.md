@@ -38,7 +38,8 @@ Abandon requested (toggle, nav, tab, selectors, import, route leave, …)
        Save → persist active workspace
             success → Clear → continue
             failure (validation / save error) → same as Cancel: close dialog, stay,
-              keep dirty, surface errors on the page (never trap the user in the dialog)
+              keep dirty, surface errors on the page (never trap the user in the dialog;
+              multi-row editors use [Validation Summary](validation-summary.md) above the grid)
        Discard → discard active workspace → Clear → continue
        Cancel → stay
 ```

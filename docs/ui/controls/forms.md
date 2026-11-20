@@ -17,6 +17,10 @@ Form control standards. Related: [layout.md](../layout/layout.md) (Row + page co
 
 See [layout.md — Hidden fields and layout preservation](../layout/layout.md#hidden-fields-and-layout-preservation-organization-standard).
 
+## Validation Summary (cross-link)
+
+Multi-row live editors (BoGrid / BoShuffleCardGrid and Adoption Matrix **Required** surfaces) also use [Validation Summary](../patterns/validation-summary.md) (dedicated Errors section + BoGrid) after a failed Save/Commit. Summary **does not** replace deferred field chrome, fail badges, or Alert toasts — cascade `BoFieldErrorMessageOptions.HighlightOnly` so chrome shows *where* while the Errors grid shows *what* ([ADR-021](../../../decisions/ADR-021-validation-summary-experience.md)).
+
 ## Deferred mandatory validation (locked)
 
 | Concern | Standard |
