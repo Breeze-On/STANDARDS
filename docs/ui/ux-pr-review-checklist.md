@@ -14,6 +14,7 @@ Short human / agent checklist for UI-bearing PRs. Normative detail: [ux-conventi
 - [ ] Product pages use `Bo*` only (no Fluent types)
 - [ ] No page-local loading overlays (use `IBoPageFreezeService`)
 - [ ] No product CSS forks of Shared UI header/track alignment or truncation
+- [ ] No product CSS `border-radius` overrides on `.bo-button` (hard standard: `--bo-button-radius`)
 
 ## Conventions
 

@@ -27,6 +27,10 @@ Planning Agents must document a **UX Standards Compliance** subsection in every 
 
 Development Agents must confirm an existing Shared UI component, Gallery example, or documented pattern does **not** already solve the problem before introducing custom UX. Undocumented deviations in a plan are refused at Build Locally. Multi-row Save validation must use `BoValidationSummary` when the Adoption Matrix says Required — do not invent host error lists.
 
+## Button corner radius (locked)
+
+All `BoButton` variants and Shared UI action chrome use `--bo-button-radius` (aliases `--bo-radius-md`, default **8px** — less-rounded, **not** pill). Product apps must not fork `border-radius` on `.bo-button`. Circular non-button chrome (header Settings hit, theme switch, avatars, header tabs) may keep `--bo-radius-full` / `50%`. SSOT: [forms.md § Button](../controls/forms.md#button-bobutton), [tokens.md § Corner radius](../foundations/tokens.md#corner-radius-tokens-current).
+
 ## Column header alignment (locked)
 
 | Surface | Header alignment | Value / cell alignment |

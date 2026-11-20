@@ -75,8 +75,8 @@ File-level failures that prevent analysis (bad extension, oversize, unreadable s
 
 ## Footer / Synchronize action
 
-- Stealth Cancel + Stealth primary (Import / Synchronize) via `FooterContent` — **not** `BoDialog.PrimaryAction` (pill Primary).
-- Corner radius: `--bo-radius-md` (Save/Discard action tokens).
+- Stealth Cancel + Stealth primary (Import / Synchronize) via `FooterContent` — **not** `BoDialog.PrimaryAction` (standard Primary colors).
+- Corner radius: inherits `.bo-button` / `--bo-button-radius` (same hard standard as all buttons; Save/Discard color tokens only).
 - Primary disabled when busy, when Errors exist, or when there are no changes.
 
 ## Summary data shape (host → shell)

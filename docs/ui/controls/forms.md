@@ -454,7 +454,9 @@ These Number Field rules are **org standards** for every `BoNumberField` usage.
 
 ## Button (`BoButton`)
 
-**Component:** `BoButton` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI). Pill button; visual tokens in [tokens.md](../foundations/tokens.md).
+**Component:** `BoButton` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI). Visual tokens in [tokens.md](../foundations/tokens.md).
+
+**Corner radius (hard standard):** all variants use `--bo-button-radius` (aliases `--bo-radius-md`, default **8px** — less-rounded, not pill). Applies to Primary / Secondary / Stealth, Dialog footer actions, grid toolbar actions, Import Summary footer, and any product chrome that renders `.bo-button`. There is **no** per-instance radius / shape API. Product apps and Gallery pages **must not** set `border-radius` on `.bo-button` (no page-level forks). Circular non-button chrome (header Settings hit, theme switch, avatars, header tabs) is out of scope and may keep `--bo-radius-full` / `50%`.
 
 | Parameter | Role |
 | --- | --- |

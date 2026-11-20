@@ -83,6 +83,19 @@ Legacy aliases still emitted: `--bo-color-surface` → card-container-background
 | `row-gap` | `--bo-space-row-gap` | Gap between field containers in a `BoRow` (default `16px`) — see [layout.md](../layout/layout.md) |
 | `page-freeze-blur` | `--bo-page-freeze-blur` | Page freeze backdrop blur radius (default `6px`; `BoThemeOptions.PageFreezeBlur`) |
 
+### Corner radius tokens (current)
+
+Emitted by `BoThemeProvider` from `BoThemeOptions` (structural — same in Light and Dark):
+
+| CSS variable | `BoThemeOptions` | Default | Used for |
+| --- | --- | --- | --- |
+| `--bo-radius-sm` | `RadiusSm` | `4px` | Compact chrome (nav links, collapse hit, profile menu items, toggle segments) |
+| `--bo-radius-md` | `RadiusMd` | `8px` | Fields, cards, dialogs, toasts, panels |
+| `--bo-radius-full` | `RadiusFull` | `9999px` | Pill / circular **non-button** chrome (header tabs, theme switch track, circular header icon hits) |
+| `--bo-button-radius` | *(alias)* | `var(--bo-radius-md)` | **Hard standard for all `BoButton` variants and Shared UI action chrome** (grid toolbar / icon / pager buttons, shuffle card action buttons). Not independently tunable — always aliases `--bo-radius-md`. |
+
+**Button corner radius (locked):** every `BoButton` (Primary / Secondary / Stealth, including Dialog footer actions, toolbar actions, Import Summary footer, and product Save/Discard chrome that uses `.bo-button`) uses `--bo-button-radius`. Product apps and Gallery pages **must not** override `border-radius` on `.bo-button`. Circular non-button hits (`.bo-header-actions__icon-btn`, avatars, theme switch thumb) keep `--bo-radius-full` / `50%`. See [forms.md](../controls/forms.md#button-bobutton).
+
 ### Reorder motion tokens (current)
 
 Platform motion (not palette-mode-specific). Defined on `.bo-theme-root` in `breezeon-ui.css`. Full behavior: [motion.md](motion.md).

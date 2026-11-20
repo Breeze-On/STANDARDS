@@ -210,6 +210,7 @@ Cross-control SSOT: [ux-conventions.md](patterns/ux-conventions.md). UI plans re
 - [ ] No ad-hoc hardcoded colors (derive from tokens; update `tokens.md` if a new independent token is intentional).
 - [ ] Supports Light and Dark mode via **`IBoThemeModeService`** (dual palettes; same semantic names).
 - [ ] Uses semantic Breeze On colors; nav-stable tokens (`nav-selected`, `nav-logo-divider`) stay Light values in both modes.
+- [ ] **`BoButton` corner radius:** use Shared UI default (`--bo-button-radius`); do **not** override `border-radius` on `.bo-button` in product/page CSS — [forms.md § Button](controls/forms.md#button-bobutton), [tokens.md § Corner radius](foundations/tokens.md#corner-radius-tokens-current).
 - [ ] Default typeface **Calibri** — [typography.md](foundations/typography.md).
 
 ### Documentation
