@@ -6,7 +6,7 @@ Section-level data grid for `BreezeOn.UI`. Related: [forms.md](forms.md), [shuff
 
 **Composition (hard standard):** `BoGrid` is a **section-level** surface (like Home hub). It is **not** a `BoRow` child and does **not** use Section → Row → Field for its own body. Optional `Title` wraps `BoSectionMain` / `BoSectionSub`. Cell editors reuse shipped `Bo*` fields — including [browser autocomplete off by default](forms.md#browser-autocomplete-locked) (do **not** put raw `<input>` in `Edit` templates).
 
-**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoGrid<TItem>`, `BoGridColumn<TItem>`, `BoGridCache<TItem>`, `BoGridRow<TItem>`, `BoGridCellContext<TItem>`, enums `BoGridMode` / `BoGridDefaultExpansionState` / `BoGridColumnAlign` / `BoGridColumnWidth` / `BoGridSectionKind`. Internal helper `BoGridNesting` (not a public component). Host script: `_content/BreezeOn.UI/js/bo-grid.js` (overflow title on truncated display cells; Add New → first-editable focus).
+**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoGrid<TItem>`, `BoGridColumn<TItem>`, `BoGridCache<TItem>`, `BoGridRow<TItem>`, `BoGridCellContext<TItem>`, `BoGridFamilyFilter`, enums `BoGridMode` / `BoGridDefaultExpansionState` / `BoGridColumnAlign` / `BoGridColumnWidth` / `BoGridSectionKind`. Internal helper `BoGridNesting` (not a public component). Host script: `_content/BreezeOn.UI/js/bo-grid.js` (overflow title on truncated display cells; Add New → first-editable focus).
 
 ## Grid Family Standards (locked)
 
@@ -129,8 +129,10 @@ The library **never** talks to SQL or application repositories.
 | `Required` | At least one row; section title asterisk when grid owns the section; registers with `BoValidationContext` |
 | `FieldKey`, `ValidationGroup` | Submit ancestry for grid Mandatory |
 | `IsPagination` | Default **false** (Nested View: pages **root** cache rows only) |
-| `StartIndex` / `StartIndexChanged` | 0-based offset into the **sorted full cache** (when paginating) |
+| `StartIndex` / `StartIndexChanged` | 0-based offset into the **filtered then sorted** working set (when paginating; Client mode) |
 | `PaginationSize` / `PaginationSizeChanged` | Page size (default **5**). `PaginationSizeChanged` is part of the public bind surface (`@bind-PaginationSize`); raised when the grid **clamps** an invalid size (e.g. &lt; 1 → 1), not on every render |
+| `ShowFiltersButton` | Default **false**. When true, shows Filters toolbar button that toggles the column filter row (ignored in NestedView) |
+| `ColumnFilters` / `ColumnFiltersChanged` | Optional controlled filter terms keyed by `FieldKey` (primarily Server hosts → `BoQueryFilter` Contains) |
 | `EnableHorizontalScroll` | Default **false**. When true, wide tables may scroll horizontally |
 | `Columns` | Child `BoGridColumn<TItem>` definitions |
 | `ChildRowsHaveDifferentColumns` | Nested View only. Default **false** (same columns / indented tree). **true** → expanded parents render `ChildGridTemplate` |
@@ -155,7 +157,7 @@ The library **never** talks to SQL or application repositories.
 ### Row selection
 
 - **Column UX:** first column; **no header text**; **no labels**; checkbox controls only; minimum practical width (`--bo-grid-selection-col-width`); header and row checkboxes centered; vertical alignment consistent with other cells.
-- **Flat grids:** bind `SelectedCacheRowIds`; select-all (Multiple) = all rows in `BoGridCache` (not the database).
+- **Flat grids:** bind `SelectedCacheRowIds`; select-all (Multiple) = the **filtered working set** when column filters are active; otherwise all rows in `BoGridCache` (not the database). Select All checkbox remains on the **column-header** row.
 - **Nested View (same columns):** `EnableSelection` is supported. Bind `SelectedNodeKeys` (`NodeKey` strings). Select-all walks the full tree from cache roots via `ChildrenSelector`. **Cascade (Multiple):** selecting a node expands and selects all descendants; deselecting clears the node, all descendants, **and all ancestors** (so a parent cannot stay selected after a descendant is cleared—avoids surprising delete/export roots). Different-columns Nested View does not show selection.
 - Selection clears on cache `Clear` / `ReplaceAll` (`Reset`).
 - `GetSelectedItems()` returns selected flat cache items or nested nodes matched by key.
@@ -171,6 +173,7 @@ The library **never** talks to SQL or application repositories.
 | `Width` | `BoGridColumnWidth`: default **Flex** = equal `100%/n` among Flex columns without `WidthPercent` (`table-layout: fixed` + `<colgroup>`; table always 100% of container). Action column (Row Edit / Inline Edit) is Hug via `--bo-grid-action-col-width` (default `4.75rem`; never `1px`). Do not use `calc()` on `<col>`. **Compact** ≈ `12%` when set |
 | `WidthPercent` | Optional explicit percent of table width (e.g. `20`). When set on a Flex column, that column uses `width: N%` instead of equal Flex share. Compact/Hug ignore this and keep their fixed behavior |
 | `SortValue` | Optional `Func<TItem, object?>`; when set, header is sortable |
+| `FilterText` | Optional `Func<TItem, string?>`; when set (with `FieldKey`), column is filterable — return the **displayed** string |
 | `Display` | Read-only / non-editing cell template (`BoGridCellContext<TItem>`) |
 | `Edit` | Editable cell template (`BoTextField`, `BoDropDownList`, `BoDateField`, `BoNumberField`, …) |
 
@@ -192,7 +195,7 @@ Changing a column's `Title`, `FieldKey`, `Required`, `Align`, `Width`, or `Width
 - **Header separator:** **primary-tinted** gradient under headers (soft edge fade, reduced opacity, 1px) — branded anchor, not a grey table border. Transparent header band (no fill).
 - **Section rule:** standard section header rule **remains** when a section hosts a grid.
 - **Column width:** `table-layout: fixed` + `<colgroup>`; Flex = `100%/n`; Compact ≈12%; action Hug = CSS `--bo-grid-action-col-width` (default `4.75rem`; never `1px` — that clips Edit/Delete). Flex `%` + rem action together fill the table; avoid `calc()` on `<col>`. Table **always 100%** of container.
-- **Header actions:** when the grid owns a section and toolbar is shown: `Title [Add New] [Save]` on one line (no dash); buttons ~**16px** height, **equal width** (widest label / locale-safe); Add New = **primary** fill; Save = **tertiary** fill; soft elevation. Extra header/body air only when the section has `HeaderActions` (`bo-section--with-header-actions`) — **not** on ancestor sections that merely nest a grid.
+- **Header actions:** when the grid owns a section and toolbar is shown: `Title [Add New] [Save] [Filters]` on one line (no dash; Filters only when `ShowFiltersButton`); buttons ~**16px** height, **equal width** (widest label / locale-safe); Add New = **primary** fill; Save / Filters = **secondary**; Filters is **rightmost**. Soft elevation. Extra header/body air only when the section has `HeaderActions` (`bo-section--with-header-actions`) — **not** on ancestor sections that merely nest a grid.
 - **Column header row:** tight padding; labels sit close to the header divider.
 - **Display overflow:** single-line ellipsis; hover `title` = full value when truncated (`bo-grid.js`); click expands that cell only (overlay); click elsewhere collapses. Edit cells are not truncated.
 - **Row separators:** inset hairlines only — never enclose cells. No vertical column lines.
@@ -224,9 +227,28 @@ Header click cycles **Ascending → Descending → Off**. Sort applies to the **
 
 Default off (`IsPagination = false`). When on:
 
-- Slice with `StartIndex` + `PaginationSize` after sort.
+- Slice with `StartIndex` + `PaginationSize` after sort (after filters when filtering is active).
 - Footer **one row:** **Showing {from}–{to} of {total}** (`Grid_Pagination_Showing`) left; first / previous / **windowed page numbers (max 5)** / next / last centered — **icons** preferred (Chevrons); no text labels on the buttons. The "Showing…" text is formatted with **`IBoLocaleService.FormatCulture`**. `BoGrid` subscribes to `Locale.Changed` and re-renders on language change (no page reload).
 - Window examples: page 1 → `1 2 3 4 5`; page 5 → `3 4 5 6 7`; near end clamps correctly.
+- Client total uses the **filtered** working set when column filters are active.
+
+## Filtering (lightweight — locked)
+
+Grid Family capability for administration, troubleshooting, data entry, and locating rows. Shared helper: `BoGridFamilyFilter` (contains + AND). Same mental model on [Shuffle Card](shuffle-card-grid.md).
+
+| Rule | Standard |
+| --- | --- |
+| Opt-in button | `ShowFiltersButton` (default **false**). Gallery demos set **true**. NestedView ignores it (use host keyword + `BoNestedViewKeywordFilter`) |
+| Toggle | Filters button shows/hides the filter row; hiding does **not** clear terms. State is **component-instance only** (no cookie / cross-navigation persistence) |
+| Filter row | Second header row of `BoTextField` **below** the header separator line (Column headers → separator → filter row → data). **Every data column** gets a `BoTextField` (same size/spacing/alignment) — filterable columns are editable; columns without `FilterText` render **disabled** (standard disabled chrome) so the row has no visual holes. Placeholder **`Grid_Filter_Placeholder`** (`Search...`). Debounce **300** ms. `ShowClearButton` on filterable fields only. Compact vertical spacing (**4px** margin above/below each filter field). No Apply button. Toolbar order: **Add New \| Save \| Filters** (Filters rightmost) |
+| Select All placement | Select All checkbox stays on the **column-header** row (selection column). Filter row uses an empty selection spacer only — filtering controls only |
+| Column opt-in | `BoGridColumn.FilterText` (`Func<TItem, string?>`) — when set with a `FieldKey`, the column is filterable. Match against the **displayed** string the user sees |
+| Match | Case-insensitive **contains** only; multiple active columns AND together. No operators, builders, regex, or saved filters |
+| Pipeline (Client) | Data source → **Filters** → Sorting → Pagination → Display |
+| Uncommitted / editing | `IsNew` rows always remain visible; Row Edit keeps the row being edited visible |
+| Select All | When filters are active, Select All targets the **filtered working set**. When the filter row is visible, the Select All checkbox is on the **filter row** (selection column), aligned with filter inputs |
+| Server `QueryMode` | Do **not** filter the current page client-side. Bind `ColumnFilters` / `ColumnFiltersChanged`; host maps to `BoQueryFilter` (`Contains`) on `BoQueryRequest` |
+| Non-text columns | Omit `FilterText` for Number / Boolean / Date / DateTime / Action unless a compelling display-string reason exists — those columns still show a **disabled** filter `BoTextField`. People / DDL / Lookup / Badge / Metadata participate only when the host supplies resolved display text. Action / selection chrome columns stay empty (not data columns) |
 
 ## Row Edit (locked)
 
@@ -428,7 +450,7 @@ Future extract candidates (do **not** extract in product apps): split `BoGrid.ra
 
 ## Gallery
 
-Components → **Grid** tab (`TabKey=grid`, `Table` icon). Parameters: Mode (includes Nested View), and when Nested View — **Do Child Rows Have Different Columns?** + **Default Expansion State**. Editable demos: Sub **Grid Control** with 4 sample rows (Text / Drop-Down / Date / Number). Nested same-columns: Michael Jackson International Holdings tree (≥3 divisions; one branch ≥6 levels). Nested different-columns: 4 departments, each expands to an employee `BoGrid` (2 rows). Host loads `bo-grid.js`.
+Components → **Grid** tab (`TabKey=grid`, `Table` icon). Parameters: Mode (includes Nested View), and when Nested View — **Do Child Rows Have Different Columns?** + **Default Expansion State**. Editable demos: Sub **Grid Control** with 4 sample rows (Text / Drop-Down / Date / Number) and **`ShowFiltersButton=true`** (text + DDL supply `FilterText`; Date / Number show disabled filter fields). Nested same-columns: Michael Jackson International Holdings tree (≥3 divisions; one branch ≥6 levels). Nested different-columns: 4 departments, each expands to an employee `BoGrid` (2 rows). Server demo binds `ColumnFilters` → `BoQueryFilter` Contains. Shuffle Card demo enables Filters with reorder disabled while filtered. Host loads `bo-grid.js`.
 
 ## Documentation governance
 

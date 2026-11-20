@@ -61,6 +61,8 @@ Public helpers: `InsertNewAtTopAsync`, `RefreshSortableAsync` (non–Add New add
 | `ItemKey` | Required `Func<TItem, string>` → stable `data-key` for Sortable order |
 | `Columns` | Child `BoShuffleCardGridColumn<TItem>` definitions |
 | `AllowReorder` | Default **true**. When false, hide handle and do not init Sortable |
+| `ShowFiltersButton` | Default **false**. When true, enables the filter **card** (`BoTextField` row). Host places the Filters button in section `HeaderActions` (rightmost after Add New) |
+| `FiltersVisible` / `FiltersVisibleChanged` | Two-way bind for filter-card visibility; toggle via `ToggleFiltersAsync()` from the host Filters button |
 | `Disabled` | Gates editors + Sortable |
 | `MaxHeight` | Optional CSS length (e.g. `min(60vh, 28rem)`). When set, list region scrolls inside the control |
 | `EmptyContent` | Optional empty placeholder when `Items` is empty |
@@ -78,6 +80,8 @@ Public helpers: `InsertNewAtTopAsync` (Add New — top + focus); `RefreshSortabl
 | Parameter | Role |
 | --- | --- |
 | `Title` | Header label — rendered **uppercase** via CSS (see Header standards) |
+| `FieldKey` | Stable column key for filter state (required when `FilterText` is set) |
+| `FilterText` | Optional display-text extractor for lightweight contains filtering |
 | `Required` | Red asterisk on header only (`.bo-field__required`). Field labels/asterisks inside cells are **hidden** (same pattern as `BoGrid`). Field templates may still set `Required` on `Bo*` fields for **validation** — not for visible asterisks |
 | `ReadOnly` | Prefer Display template / read-only field path |
 | `WidthTrack` | CSS grid track fragment for this column (e.g. `minmax(0, 0.9fr)`). **Use `minmax(0, …fr)`** — a non-zero minimum (`minmax(8rem, 1fr)`) or bare `1fr` lets long values widen the track. Shared definition drives **both** header cell and row cell |
@@ -117,13 +121,27 @@ Changing `Title`, `Required`, `WidthTrack`, `Align`, or templates after first re
 - Field templates may set `Required` on `Bo*` fields so deferred validation still runs.
 - Host owns validation messages and submit timing.
 
+## Filtering (lightweight — locked)
+
+Same Grid Family rules as [`grids.md` § Filtering](grids.md#filtering-lightweight--locked): `ShowFiltersButton`, `FilterText` / `FieldKey`, `BoTextField` filters (`Search...`, **300** ms debounce, `ShowClearButton`), `BoGridFamilyFilter` contains + AND.
+
+Shuffle-specific:
+
+- **Filters button is host-owned** in section `HeaderActions` (with Add New). Order: **Add New \| …other actions… \| Filters** (Filters rightmost). Use `@bind-FiltersVisible`, `ToggleFiltersAsync()`, and `FiltersButtonClass` / `HasActiveFilters` for chrome. Do **not** render Filters inside the Shuffle control body.
+- Filter UI is a **card** (same chrome as data rows) under the header separator — not a utility toolbar row. Leading action track is an empty spacer only (no drag handle, delete, or other icons).
+- Visual hierarchy: column headers → branded header separator → filter card → data cards.
+- **Every data column** renders a filter `BoTextField`; columns without `FilterText` are **disabled**.
+- Filter fields use **4px** vertical margin for a compact card.
+- While **any** filter term is active, the drag/reorder handle is **disabled** and Sortable is not initialized. **No** tooltips, dialogs, or warning chrome. Clearing all filters (via × or emptying text) re-enables reorder automatically.
+- `InsertNewAtTopAsync` **clears** active filters so the new row stays visible (Shuffle has no `IsNew` pin).
+
 ## Reordering standards (locked)
 
 Platform cascade / settle / tokens / remount deferral: **[motion.md](../foundations/motion.md) § Reorder motion** (SSOT). Shuffle Card is the first consumer — do not fork durations or easing here.
 
 Shuffle-specific:
 
-- Handle-only drag (`ReOrderDotsVertical`); handle **always leading** (first track) — see Header standards. Not whole-card drag by default.
+- Handle-only drag (`ReOrderDotsVertical`); handle **always leading** (first track) — see Header standards. Not whole-card drag by default. Reorder is suspended while column filters are active (see Filtering above).
 - Ghost / chosen / drag classes under `bo-shuffle-card-grid__row--*` (consume `--bo-reorder-*` for settle chrome).
 - Respect `prefers-reduced-motion` (no lift/animation when reduced) — see motion SSOT.
 - Order persistence remains host/SP responsibility (`SortOrder` 1..N from list order).

@@ -60,6 +60,7 @@ All `BoButton` variants and Shared UI action chrome use `--bo-button-radius` (al
 | Default | When `Placeholder` is null/whitespace, use the control’s platform resource (`Field_Placeholder_Default`, `Field_DropDown_Placeholder_Default`, `Field_Date_Placeholder_Default`, `Field_DateTime_Placeholder_Default`, `Field_Number_Placeholder_Default`, `Field_PeoplePicker_Placeholder_Default`) |
 | Overrides | **Forbidden** to echo the field label, column header, or section title |
 | Semantic exceptions | Allowed only when the placeholder carries meaning that is **not** an echo of the field label/column title or a restatement of “empty”, and the justification is documented in the product docs. Optional single-select fields (e.g. an optional Role on a Step) use the platform default placeholder plus the platform clear affordance — do not invent “None (…)” strings |
+| Grid Family filter row | Documented exception: use **`Grid_Filter_Placeholder`** (`Search...`) — not the column title and not `Field_Placeholder_Default` ([grids.md § Filtering](../controls/grids.md#filtering-lightweight--locked)) |
 | Disabled | Placeholder is **always omitted** when `Disabled` (all editable `Bo*` inputs, including Drop-Down List and People Picker) |
 | Grid / Shuffle cells | Same rules — do not pass column titles as `Placeholder` |
 
@@ -78,7 +79,7 @@ All editable inputs (`BoTextField`, `BoDropDownList`, `BoNumberField`, `BoDateFi
 | Concern | Standard |
 | --- | --- |
 | Major workspace entry | Opening a major product workspace (or changing Application / Business Entity / equivalent context) opens the **documented primary view** |
-| Sub-state inheritance | Do **not** inherit prior tab, panel, toggle, or filter sub-state across major workspace / context changes unless the page **explicitly documents** keep-alive intent |
+| Sub-state inheritance | Do **not** inherit prior tab, panel, toggle, or filter sub-state across major workspace / context changes unless the page **explicitly documents** keep-alive intent. Grid Family column-filter visibility and terms are **component-instance only** (cleared on leave) |
 | In-page chrome | Tab / panel / toggle changes within the same workspace follow existing section expand rules — [sections.md](../layout/sections.md#default-expand-vs-in-page-navigation-locked) |
 | Route remount | Navigating away and back remounts the page and restores documented defaults |
 | In-page Configuration Session | Allowed for EAC Application Configuration: circuit-scoped baselines keyed by Application + Business Entity while the page stays mounted; cross-route remount still rebuilds ([configuration-session-cache.md](../../../architecture/app-configuration/configuration-session-cache.md)) |

@@ -157,8 +157,9 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | `MaxLength` | Maximum characters (enforced on the input). **Default 600** |
 | `AutoComplete` | HTML autocomplete token. **Default `"off"`** (admin workspace). Opt in with a standard token (e.g. `email`) — see [Browser autocomplete](#browser-autocomplete-locked) |
 | `ShowCharacterCount` | When true **and not `Disabled`**, shows `current/max` inside the input. **Never shown when `Disabled`**. **Default false** |
+| `ShowClearButton` | When true, shows an inline Clear × while the field has a value (same family as Drop-Down / Date clear). **Hidden when `Disabled` or `ReadOnly`**. Clear commits **immediately** (cancels pending debounce). **Default false**. Grid Family filter fields set this true |
 | `Value` / `ValueChanged` | Two-way bind to the working model |
-| `DebounceMilliseconds` | When &gt; 0, defers `ValueChanged` until the user stops typing for that many ms, presses Enter, or leaves the field (whichever first). Default **0** (immediate). Filters typically use **750** — see [Filter execution](#filter-execution-query-driven) |
+| `DebounceMilliseconds` | When &gt; 0, defers `ValueChanged` until the user stops typing for that many ms, presses Enter, or leaves the field (whichever first). Default **0** (immediate). Query-driven Filters sections typically use **750**; Grid Family column filters use **300** — see [Filter execution](#filter-execution-query-driven) / [grids.md § Filtering](grids.md#filtering-lightweight--locked) |
 | `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_Placeholder_Default`** ("Enter text..."). **Do not** echo the field label or column header — [ux-conventions.md](../patterns/ux-conventions.md) § Placeholders. **Always omitted when `Disabled`** |
 | `ValidationGroup` | Optional group for scoped Submit validation |
 | `Disabled` | Standard disabled chrome |
@@ -179,7 +180,8 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Caret | Themed via native CSS `caret-color` (`--bo-color-caret`) only — **no** custom caret widgets or JS caret rendering |
 | Selection | Branded via native `::selection` / `::-moz-selection` (`--bo-color-selection-bg` / `--bo-color-selection-fg`) only — **no** custom selection engines |
 | Character count | Optional (`ShowCharacterCount`, default false); format `current/max` (no brackets); **inside** the input (Fluent `EndTemplate`), trailing/right; italic **10px**; muted. Denominator = `MaxLength` (**default 600**). **Hidden when `Disabled`** |
-| Disabled | Hide Placeholder; hide character count; hide mandatory asterisk; skip required validation; greyer fill (`--bo-color-background`) so the field reads as non-editable; muted text |
+| Clear × | Optional (`ShowClearButton`, default false); **inside** the input (Fluent `EndTemplate`); same visual family as Drop-Down / Date clear; label `Field_Text_Clear`. Appears only while there is a value. **Hidden when `Disabled` or `ReadOnly`** |
+| Disabled | Hide Placeholder; hide character count; hide clear ×; hide mandatory asterisk; skip required validation; greyer fill (`--bo-color-background`) so the field reads as non-editable; muted text |
 
 ### Editing visuals and native interaction (locked)
 
@@ -281,6 +283,8 @@ Platform-standard **user** selector for BreezeOn applications (group membership,
 ## Filter execution (query-driven)
 
 When Text Fields and Drop-Down Lists act as **filters** for a queryable dataset (typically a Filters section above a grid). Retrieval standard: [query-driven-retrieval.md](query-driven-retrieval.md) · [ADR-008](../../../decisions/ADR-008-query-driven-data-retrieval.md).
+
+**Grid Family column filters** (filter row under headers via `ShowFiltersButton` / `FilterText`) also use `BoTextField` with **no Apply button**, but debounce is **300** ms and the placeholder is **`Grid_Filter_Placeholder`** (`Search...`) — see [grids.md § Filtering](grids.md#filtering-lightweight--locked). Do not echo the column title as the placeholder.
 
 | Control | Execution |
 | --- | --- |

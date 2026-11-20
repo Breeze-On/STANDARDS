@@ -69,7 +69,7 @@ Filters are typed (`BoQueryFilterOperator`):
 | --- | --- |
 | `In` | Value is one of a set (multi-select drop-down) |
 | `Equals` | Exact match (single-select drop-down) |
-| `Contains` | Substring match (text filter) |
+| `Contains` | Substring match (text filter). Grid Family column filters (`ColumnFilters` / `FilterText`) map here for Server `QueryMode` — [grids.md § Filtering](grids.md#filtering-lightweight--locked) |
 
 ### Sort column whitelist
 

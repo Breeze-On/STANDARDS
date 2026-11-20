@@ -109,6 +109,7 @@ When the page is a large multi-section **workspace** (not short header-tab page 
 When the page includes a data grid:
 
 - [ ] Uses **`BoGrid`** / **`BoGridColumn`** / **`BoGridCache`** — [grids.md](controls/grids.md).
+- [ ] Lightweight column filters (optional): set `ShowFiltersButton` when needed; supply `FilterText` with the **displayed** string for textual columns; Client pipeline Filter → Sort → Page; Server hosts bind `ColumnFilters` → `BoQueryFilter` Contains — [grids.md § Filtering](controls/grids.md#filtering-lightweight--locked).
 - [ ] Treats the grid as a **section-level** surface (not a `BoRow` child; not Section → Row → Field for the grid body).
 - [ ] If multi-select is needed: `EnableSelection` (flat: select-all = all cache rows; Nested Scenario 1: `SelectedNodeKeys` + cascade select/expand) — [grids.md](controls/grids.md#row-selection).
 - [ ] Binds a typed cache with **`CacheId`**; rows expose **`CacheRowId`** + nullable **`PrimaryKey`**.
@@ -127,6 +128,7 @@ When the page includes a data grid:
 When the page needs **header + editable card rows + optional reorder** (not a table `BoGrid`):
 
 - [ ] Uses **`BoShuffleCardGrid`** / **`BoShuffleCardGridColumn`** — [shuffle-card-grid.md](controls/shuffle-card-grid.md); inherits [Grid Family Standards](controls/grids.md#grid-family-standards-locked).
+- [ ] Shuffle filtering (optional): `ShowFiltersButton` + `FieldKey`/`FilterText`; place Filters in section `HeaderActions` (rightmost after Add New) with `@bind-FiltersVisible` / `ToggleFiltersAsync()`; filter **card** chrome; reorder handle disabled while filters are active — [shuffle-card-grid.md § Filtering](controls/shuffle-card-grid.md#filtering-lightweight--locked).
 - [ ] Treats it as a **section-level** surface (page-first; dialog hosts compose the same control).
 - [ ] **Add New** (if any) lives in section **`HeaderActions`** and calls **`InsertNewAtTopAsync`** (not `_items.Add`) — [shuffle-card-grid.md](controls/shuffle-card-grid.md).
 - [ ] Column headers: uppercase (CSS) + required `*` when needed; shared `WidthTrack` aligns header and fields; column `Align` applies to header **and** cell ([shuffle-card-grid.md](controls/shuffle-card-grid.md)).
