@@ -2,7 +2,7 @@
 
 Owner: UI
 
-Section-level editable card-row surface with a shared column header row and optional drag-and-drop reorder. Related: [grids.md](grids.md) (**Grid Family Standards** SSOT), [forms.md](forms.md), [sections.md](../layout/sections.md), [dirty-state.md](../patterns/dirty-state.md), [overview.md](../overview.md).
+Section-level editable card-row surface with a shared column header row and optional drag-and-drop reorder. Related: [grids.md](grids.md) (**Grid Family Standards** SSOT), [forms.md](forms.md), [sections.md](../layout/sections.md), [dirty-state.md](../patterns/dirty-state.md), [motion.md](../foundations/motion.md) (reorder motion SSOT), [overview.md](../overview.md).
 
 **Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoShuffleCardGrid<TItem>`, `BoShuffleCardGridColumn<TItem>`, `BoShuffleCardGridCellContext<TItem>`. Host scripts: `_content/BreezeOn.UI/js/lib/sortable.min.js`, `_content/BreezeOn.UI/js/bo-sortable.js`, and `_content/BreezeOn.UI/js/bo-grid.js` (Add New focus).
 
@@ -119,12 +119,16 @@ Changing `Title`, `Required`, `WidthTrack`, `Align`, or templates after first re
 
 ## Reordering standards (locked)
 
+Platform cascade / settle / tokens / remount deferral: **[motion.md](../foundations/motion.md) § Reorder motion** (SSOT). Shuffle Card is the first consumer — do not fork durations or easing here.
+
+Shuffle-specific:
+
 - Handle-only drag (`ReOrderDotsVertical`); handle **always leading** (first track) — see Header standards. Not whole-card drag by default.
-- Ghost / chosen / drag classes under `bo-shuffle-card-grid__row--*`.
-- Respect `prefers-reduced-motion` (no lift/animation when reduced).
+- Ghost / chosen / drag classes under `bo-shuffle-card-grid__row--*` (consume `--bo-reorder-*` for settle chrome).
+- Respect `prefers-reduced-motion` (no lift/animation when reduced) — see motion SSOT.
 - Order persistence remains host/SP responsibility (`SortOrder` 1..N from list order).
 - Stable `ItemKey` on every row (`data-key` **and** Blazor `@key`) so host re-renders after `OnOrderChanged` reconcile by identity, not by index — Sortable moves DOM outside Blazor; unkeyed rows desync on the first drag.
-- After a successful drag, remount the list from the authoritative C# order and re-init Sortable (generation-guarded interop ignores stale `onEnd` callbacks). Membership fingerprint alone must not treat reorder as add/remove.
+- On successful drop: mutate host `IList` and raise `OnOrderChanged` / `OnChanged` immediately; remount list + re-init Sortable after drop (FLIP cascade runs during drag swaps and is cleared by `onEnd` — do not add a post-drop delay that only feels laggy). Generation-guarded interop ignores stale `onEnd` callbacks. Membership fingerprint alone must not treat reorder as add/remove. Do **not** CSS-transition `transform` on rows (Sortable FLIP owns transform).
 - Final drop index is derived from pointer Y vs sibling row midlines (tall cards make Sortable `swapThreshold` miss index 0/last). Do **not** enable Sortable `forceFallback` — it paints `ghostClass` on the source row on micro-moves/clicks and flashes a washed/white card when row opacity/background are transitioned.
 - Sync order from DOM before save when hosts need it (`ReadDomOrderAsync`).
 

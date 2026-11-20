@@ -2,7 +2,7 @@
 
 Owner: UI
 
-Shell and accent tokens currently shipped by `BreezeOn.UI`. Related: [shell.md](../shell/shell.md), [navigation.md](../shell/navigation.md), [typography.md](typography.md), [forms.md](../controls/forms.md), [sections.md](../layout/sections.md), [overview.md](../overview.md).
+Shell and accent tokens currently shipped by `BreezeOn.UI`. Related: [shell.md](../shell/shell.md), [navigation.md](../shell/navigation.md), [typography.md](typography.md), [motion.md](motion.md), [forms.md](../controls/forms.md), [sections.md](../layout/sections.md), [overview.md](../overview.md).
 
 Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Font family: [typography.md](typography.md).
 
@@ -82,6 +82,16 @@ Legacy aliases still emitted: `--bo-color-surface` → card-container-background
 | `row-inset` | `--bo-space-row-inset` | Inside padding for `BoRow` and each field container (default `4px`) — see [layout.md](../layout/layout.md) |
 | `row-gap` | `--bo-space-row-gap` | Gap between field containers in a `BoRow` (default `16px`) — see [layout.md](../layout/layout.md) |
 | `page-freeze-blur` | `--bo-page-freeze-blur` | Page freeze backdrop blur radius (default `6px`; `BoThemeOptions.PageFreezeBlur`) |
+
+### Reorder motion tokens (current)
+
+Platform motion (not palette-mode-specific). Defined on `.bo-theme-root` in `breezeon-ui.css`. Full behavior: [motion.md](motion.md).
+
+| CSS variable | Value | Used for |
+| --- | --- | --- |
+| `--bo-reorder-flip-duration` | `260ms` | Sibling FLIP duration; remount deferral |
+| `--bo-reorder-flip-easing` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | FLIP + settle easing (Toggle-aligned) |
+| `--bo-reorder-settle-duration` | `220ms` | Dragged-item scale/shadow settle |
 
 ### Layering and focus tokens (current)
 
