@@ -55,6 +55,7 @@ These rules resolve frozen sort, Add New at top, and uncommitted visibility:
 | Active sort | Must **not** reposition a new/uncommitted row during creation or while that row remains uncommitted |
 | Frozen order | Existing rows keep frozen display order while editing; Add New inserts at the **top of that frozen order** without re-sorting peers |
 | After commit | Host Save/`ReplaceAll` / `RefreshSortOrder()` / user header-sort may restore normal sort — only after the create workflow is committed or cancelled |
+| Rebuild while `IsNew` | Header re-sort / `RefreshSortOrder` / cache `Reset` keeps all `IsNew` rows at the top, then sorts non-new peers |
 
 Shuffle Card has no column-header sort; list order is host + DnD. Add New still uses **index 0** via `InsertNewAtTopAsync` until commit.
 
@@ -66,6 +67,7 @@ Lightweight consolidation — implementation details stay in control docs + [for
 | --- | --- |
 | Add New focus | Automatic focus on first editable field after paint (see Add New above) |
 | Keyboard-only | Create / edit / save-cancel happy paths must work without mouse |
+| Sortable headers | Enter / Space cycle Asc → Desc → Off; `aria-sort` reflects the active column; focus-visible ring on sortable headers |
 | Focus preservation | Do not drop or misroute focus during row creation |
 | Deferred validation | Required chrome after Save/Commit attempt only — not on Add New |
 | Required indicators | Consistent header/column `*` rules per control; no invented second asterisk system |
@@ -213,15 +215,27 @@ Changing a column's `Title`, `FieldKey`, `Required`, `Align`, `Width`, or `Width
 
 ## Sort (locked)
 
-Header click cycles **Ascending → Descending → Off**. Sort applies to the **full cache**, then pagination slices. Sorted column shows a subtle arrow beside the header.
+Header click (and Enter/Space on a focused sortable header) cycles **Ascending → Descending → Off**. Only **one** column may be actively sorted. Clicking a different sortable column clears the previous column and starts Ascending. Sort applies to the **full cache** (after filters when filtering is active), then pagination slices. **Client and Server** reset `StartIndex` to **0** when the active sort changes.
+
+**Active column chrome:** the sorted header uses class `bo-grid__th--sorted` — **bolder** label (`font-weight: 900`) + direction arrow (`ArrowSortUp` / `ArrowSortDown`) at full opacity. Label and icon keep the normal header label color (no primary tint, no header background fill). No always-on arrows on unsorted columns. Idle sortable headers keep pointer + hover text darken only.
+
+**Accessibility:** sortable headers are keyboard-focusable (`tabindex="0"`). The active sorted column sets `aria-sort` to `ascending` or `descending`; other sortable headers set `aria-sort="none"`. Sort icons are `aria-hidden`; focus-visible uses the shared `--bo-focus-ring` / primary outline.
+
+**Persistence:** active sort state is **component-instance only** (survives while the grid remains mounted). No cookies, localStorage, or URL sync. The grid may retain **internal** last Asc/Desc field + direction after Off for the instance lifetime — not part of the public host contract; does not change Off / default-order semantics or visuals.
+
+**Off / default order:** `BoGridSortDirection.None` clears the active field; Client drops frozen display order (cache/`Items` order); Server hosts apply their own default when `SortFieldKey` is null.
 
 **Frozen while editing:** after a sort is applied, display order is frozen by `CacheRowId`. Editing a sort-key value in Row Edit or Inline Edit **must not** move rows. Re-evaluation only when:
 
-1. The user clicks a sortable column header, or
+1. The user activates a sortable column header (click / Enter / Space), or
 2. The cache raises `Reset` (`Clear` / `ReplaceAll`), or
 3. The host calls `RefreshSortOrder()`.
 
-**Uncommitted new rows (family rule):** Add New while sorted inserts at the **top** of the frozen order without re-sorting other rows. Active sorts must **not** bury or reposition the row being created. Full precedence rules: [Sorting vs uncommitted new rows](#sorting-vs-uncommitted-new-rows-no-conflict).
+On rebuild, **`IsNew` rows stay pinned at the top**; only non-new rows are ordered by `SortValue`.
+
+**Uncommitted new rows (family rule):** Add New while sorted inserts at the **top** of the frozen order without re-sorting other rows. Active sorts must **not** bury or reposition the row being created — including when the user re-sorts or the host refreshes sort while uncommitted rows exist. Full precedence rules: [Sorting vs uncommitted new rows](#sorting-vs-uncommitted-new-rows-no-conflict).
+
+**Shuffle Card:** no column-header sort — list order is host + DnD only.
 
 ## Pagination (locked)
 
