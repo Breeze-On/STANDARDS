@@ -29,7 +29,7 @@ Development Agents must confirm an existing Shared UI component, Gallery example
 
 ## Button corner radius (locked)
 
-All `BoButton` variants and Shared UI action chrome use `--bo-button-radius` (aliases `--bo-radius-md`, default **8px** — less-rounded, **not** pill). Product apps must not fork `border-radius` on `.bo-button`. Circular non-button chrome (header Settings hit, theme switch, avatars, header tabs) may keep `--bo-radius-full` / `50%`. SSOT: [forms.md § Button](../controls/forms.md#button-bobutton), [tokens.md § Corner radius](../foundations/tokens.md#corner-radius-tokens-current).
+All `BoButton` variants and Shared UI action chrome use `--bo-button-radius` (aliases `--bo-radius-md`, default **8px** — less-rounded, **not** pill). Product apps must not fork `border-radius` on `.bo-button`. Header / section `BoTabs` also use `--bo-button-radius` (selected/hover/indicator). Circular non-button chrome (header Settings hit, theme switch, avatars) may keep `--bo-radius-full` / `50%`. SSOT: [forms.md § Button](../controls/forms.md#button-bobutton), [tokens.md § Corner radius](../foundations/tokens.md#corner-radius-tokens-current), [shell.md](../shell/shell.md) (header tabs).
 
 ## Column header alignment (locked)
 

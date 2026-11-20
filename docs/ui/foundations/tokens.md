@@ -91,10 +91,10 @@ Emitted by `BoThemeProvider` from `BoThemeOptions` (structural — same in Light
 | --- | --- | --- | --- |
 | `--bo-radius-sm` | `RadiusSm` | `4px` | Compact chrome (nav links, collapse hit, profile menu items, toggle segments) |
 | `--bo-radius-md` | `RadiusMd` | `8px` | Fields, cards, dialogs, toasts, panels |
-| `--bo-radius-full` | `RadiusFull` | `9999px` | Pill / circular **non-button** chrome (header tabs, theme switch track, circular header icon hits) |
-| `--bo-button-radius` | *(alias)* | `var(--bo-radius-md)` | **Hard standard for all `BoButton` variants and Shared UI action chrome** (grid toolbar / icon / pager buttons, shuffle card action buttons). Not independently tunable — always aliases `--bo-radius-md`. |
+| `--bo-radius-full` | `RadiusFull` | `9999px` | Pill / circular **non-button** chrome (theme switch track, circular header icon hits) — **not** header tabs |
+| `--bo-button-radius` | *(alias)* | `var(--bo-radius-md)` | **Hard standard for all `BoButton` variants, Shared UI action chrome** (grid toolbar / icon / pager buttons, shuffle card action buttons), **and header / section `BoTabs` selected/hover/indicator chrome**. Not independently tunable — always aliases `--bo-radius-md`. |
 
-**Button corner radius (locked):** every `BoButton` (Primary / Secondary / Stealth, including Dialog footer actions, toolbar actions, Import Summary footer, and product Save/Discard chrome that uses `.bo-button`) uses `--bo-button-radius`. Product apps and Gallery pages **must not** override `border-radius` on `.bo-button`. Circular non-button hits (`.bo-header-actions__icon-btn`, avatars, theme switch thumb) keep `--bo-radius-full` / `50%`. See [forms.md](../controls/forms.md#button-bobutton).
+**Button corner radius (locked):** every `BoButton` (Primary / Secondary / Stealth, including Dialog footer actions, toolbar actions, Import Summary footer, and product Save/Discard chrome that uses `.bo-button`) uses `--bo-button-radius`. Product apps and Gallery pages **must not** override `border-radius` on `.bo-button`. Circular non-button hits (`.bo-header-actions__icon-btn`, avatars, theme switch thumb) keep `--bo-radius-full` / `50%`. Header tabs use `--bo-button-radius` (not `--bo-radius-full`). See [forms.md](../controls/forms.md#button-bobutton), [shell.md](../shell/shell.md).
 
 ### Reorder motion tokens (current)
 
@@ -103,8 +103,18 @@ Platform motion (not palette-mode-specific). Defined on `.bo-theme-root` in `bre
 | CSS variable | Value | Used for |
 | --- | --- | --- |
 | `--bo-reorder-flip-duration` | `260ms` | Sibling FLIP duration; remount deferral |
-| `--bo-reorder-flip-easing` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | FLIP + settle easing (Toggle-aligned) |
+| `--bo-reorder-flip-easing` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | FLIP + settle easing (selection-travel-aligned) |
 | `--bo-reorder-settle-duration` | `220ms` | Dragged-item scale/shadow settle |
+
+### Selection travel tokens (current)
+
+Shared by `BoToggle` / `BoTabs` (and future segmented controls). Defined on `.bo-theme-root`; geometry vars written on the control root by `bo-sliding-selection.js`. Full behavior: [motion.md](motion.md) § Selection travel.
+
+| CSS variable | Value | Used for |
+| --- | --- | --- |
+| `--bo-selection-travel-duration` | `240ms` | Indicator / thumb travel |
+| `--bo-selection-travel-easing` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | Same family as reorder |
+| `--bo-selection-travel-x` / `y` / `w` / `h` | JS-written | Indicator geometry |
 
 ### Layering and focus tokens (current)
 

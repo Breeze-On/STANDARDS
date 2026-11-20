@@ -59,16 +59,18 @@ Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTab
 
 | Concern | Standard |
 | --- | --- |
-| Width | Dynamic / content-hug; label nowrap |
+| Width | Dynamic / content-hug; label nowrap; strip `overflow-x: auto` when tabs exceed the header |
 | Content | Icon (`BoIcon`, **16px**) + label (**13px**); vertically center-aligned |
 | Default colors | Black text/icon; transparent background |
-| Hover (unselected) | Tertiary fill + full rounded pill + lift; selected has no hover |
-| Selected | Tertiary fill + full rounded pill; no hover |
+| Corner radius | **`--bo-button-radius`** (aliases `--bo-radius-md` / **8px**) — aligned with button chrome; not `--bo-radius-full` |
+| Hover (unselected) | Tertiary fill + button-radius chrome + lift; selected has no hover; honor `prefers-reduced-motion` (no lift) |
+| Selected | Traveling tertiary **indicator** (`.bo-tabs__indicator`) via shared selection travel ([motion.md](../foundations/motion.md)); host-authoritative `SelectedTab`; enterprise / navigation-reinforcing motion character |
+| Host script | `_content/BreezeOn.UI/js/bo-sliding-selection.js` (same module as `BoToggle`; no tabs-specific script) |
 | Vertical separator | Border-token rule centered in the gap between tabs (16px gap) |
 | Horizontal divider under titles | **None** (tabs sit under the title row with no rule between) |
 | Inside padding | Tab hit: 4px vertical / 8px horizontal |
 | Outside spacing | 16px gap between tabs; inside header padding |
-| Switch behavior | All panels load together and stay mounted; hide inactive with CSS (no remount/reload) |
+| Switch behavior | All panels load together and stay mounted; hide inactive with CSS (no remount/reload); indicator travels; panel content still switches instantly |
 | `SelectedTab` | Bindable in-memory key (`@bind-SelectedTab`); defaults to first tab; persists across switches |
 | Validation fail chrome | After Submit attempt, tabs whose `TabKey` is in `FailedGroups` show `BoValidationFailBadge` in the **left icon slot** (replaces `IconContent` while failed). Clears live when that group no longer fails (`NotifyFieldChanged`) |
 
