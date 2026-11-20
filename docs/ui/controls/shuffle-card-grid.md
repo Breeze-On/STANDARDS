@@ -62,7 +62,6 @@ Public helpers: `InsertNewAtTopAsync`, `RefreshSortableAsync` (non–Add New add
 | `Columns` | Child `BoShuffleCardGridColumn<TItem>` definitions |
 | `AllowReorder` | Default **true**. When false, hide handle and do not init Sortable |
 | `Disabled` | Gates editors + Sortable |
-| `ActionsPlacement` | `BoGridActionsPlacement` (same enum as `BoGrid`): **`Trailing`** default — handle + `RowActions` track after data columns; **`Leading`** — same track is the **first** grid column (header + every row), content start-aligned (`justify-content: flex-start`). Both use the fixed `--bo-scg-action-col-width` track. Use **Leading** for Process Framework–style editable lists where delete/reorder sit at the row start |
 | `MaxHeight` | Optional CSS length (e.g. `min(60vh, 28rem)`). When set, list region scrolls inside the control |
 | `EmptyContent` | Optional empty placeholder when `Items` is empty |
 | `RowActions` | Optional template for the Hug actions track (delete, manage members, …) |
@@ -108,7 +107,7 @@ Changing `Title`, `Required`, `WidthTrack`, `Align`, or templates after first re
 - Actions + drag-handle track: fixed `--bo-scg-action-col-width` (shared by header and rows — not `auto`); **actions header unlabeled**.
 - **`WidthTrack` MUST use `minmax(0, …fr)`** so long cell values truncate inside the track rather than skewing columns — [ux-conventions.md](../patterns/ux-conventions.md) § Control width and truncation. The library sets `min-width: 0; max-width: 100%` on `.bo-shuffle-card-grid__col` and on `.bo-field` / `.bo-ddl__*` / Fluent roots inside cells (closed DDL values ellipsize with `title`).
 - **Header ↔ row alignment (hard):** header and each row are separate CSS grids that must resolve to identical tracks. The library does **not** use `min-width: max-content` on them (that made track sizes depend on each grid's own content, so long selected values misaligned headers vs controls). Tracks are container-relative; hosts needing horizontal scroll set `--bo-scg-min-width` on the grid root (`Style`), applied to header and rows alike.
-- **Leading actions:** with `ActionsPlacement="Leading"` the action track is first in both header and rows; the unlabeled header cell reserves the same fixed width.
+- **Leading icons / actions (locked — mandatory):** the reorder handle (`ReOrderDotsVertical`) and `RowActions` (delete, …) **always** render as the **first** grid track in both header and every row, content start-aligned (`justify-content: flex-start`). End-of-row / trailing icon placement is **not supported** — there is no `ActionsPlacement` (or other) override on `BoShuffleCardGrid`. (`BoGrid` may still use `ActionsPlacement` Leading/Trailing; that enum does **not** apply to Shuffle Card.)
 - Cell editors use platform default placeholders (not column titles) — [ux-conventions.md](../patterns/ux-conventions.md) § Placeholders.
 
 ## Required field standards (locked)
@@ -120,11 +119,14 @@ Changing `Title`, `Required`, `WidthTrack`, `Align`, or templates after first re
 
 ## Reordering standards (locked)
 
-- Handle-only drag (`ReOrderDotsVertical`); not whole-card drag by default.
+- Handle-only drag (`ReOrderDotsVertical`); handle **always leading** (first track) — see Header standards. Not whole-card drag by default.
 - Ghost / chosen / drag classes under `bo-shuffle-card-grid__row--*`.
 - Respect `prefers-reduced-motion` (no lift/animation when reduced).
 - Order persistence remains host/SP responsibility (`SortOrder` 1..N from list order).
-- Stable `ItemKey`; re-init Sortable after add/remove; sync order from DOM before save when hosts need it.
+- Stable `ItemKey` on every row (`data-key` **and** Blazor `@key`) so host re-renders after `OnOrderChanged` reconcile by identity, not by index — Sortable moves DOM outside Blazor; unkeyed rows desync on the first drag.
+- After a successful drag, remount the list from the authoritative C# order and re-init Sortable (generation-guarded interop ignores stale `onEnd` callbacks). Membership fingerprint alone must not treat reorder as add/remove.
+- Final drop index is derived from pointer Y vs sibling row midlines (tall cards make Sortable `swapThreshold` miss index 0/last). Do **not** enable Sortable `forceFallback` — it paints `ghostClass` on the source row on micro-moves/clicks and flashes a washed/white card when row opacity/background are transitioned.
+- Sync order from DOM before save when hosts need it (`ReadDomOrderAsync`).
 
 ## Responsive behavior (locked — v1)
 

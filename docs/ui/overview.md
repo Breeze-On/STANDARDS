@@ -113,7 +113,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoValidationFailBadge` | Red disc + white “!” (tabs + section headers) | [forms.md](controls/forms.md) |
 | `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell/shell.md), [i18n.md](foundations/i18n.md), [overlays.md](shell/overlays.md) |
 | `BoGrid` / `BoGridColumn` / `BoGridCache` | Section-level grid (ReadOnly / RowEdit / InlineEdit / NestedView); optional `EnableSelection`; typed cache; frozen sort with uncommitted Add New at top; Nested View; Add New → first-editable focus; **Grid Family Standards** SSOT | [grids.md](controls/grids.md#grid-family-standards-locked) |
-| `BoShuffleCardGrid` / `BoShuffleCardGridColumn` | Grid-family card + DnD renderer; inherits Family Standards; host Add → `InsertNewAtTopAsync`; page-first; `sortable.min.js` + `bo-sortable.js` + `bo-grid.js` | [shuffle-card-grid.md](controls/shuffle-card-grid.md) |
+| `BoShuffleCardGrid` / `BoShuffleCardGridColumn` | Grid-family card + DnD renderer; inherits Family Standards; host Add → `InsertNewAtTopAsync`; leading-only handle/icons; page-first; `sortable.min.js` + `bo-sortable.js` + `bo-grid.js` | [shuffle-card-grid.md](controls/shuffle-card-grid.md) |
 | `BoSectionMain` / `BoSectionSub` `Required` | Optional red asterisk after section title (e.g. mandatory grid) | [sections.md](layout/sections.md), [grids.md](controls/grids.md) |
 
 ## Local gallery

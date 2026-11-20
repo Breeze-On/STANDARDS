@@ -35,6 +35,7 @@ Development Agents must confirm an existing Shared UI component, Gallery example
 | `BoShuffleCardGrid` | Follows column `Align` (Left / Center / Right) | Same `Align` on the cell |
 
 - Shuffle Card header and row tracks **must** share the same `WidthTrack` definition; product CSS must not fork header/row track alignment.
+- Shuffle Card reorder handle + row-action icons are **always leading** (first track) — end-of-row placement is not supported ([shuffle-card-grid.md](../controls/shuffle-card-grid.md)).
 - Checkbox-only Shuffle columns use `Align="Center"`.
 - This Grid vs Shuffle header difference is **intentional** (table thead vs card-track headers).
 

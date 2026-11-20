@@ -130,6 +130,7 @@ When the page needs **header + editable card rows + optional reorder** (not a ta
 - [ ] Treats it as a **section-level** surface (page-first; dialog hosts compose the same control).
 - [ ] **Add New** (if any) lives in section **`HeaderActions`** and calls **`InsertNewAtTopAsync`** (not `_items.Add`) — [shuffle-card-grid.md](controls/shuffle-card-grid.md).
 - [ ] Column headers: uppercase (CSS) + required `*` when needed; shared `WidthTrack` aligns header and fields; column `Align` applies to header **and** cell ([shuffle-card-grid.md](controls/shuffle-card-grid.md)).
+- [ ] Reorder handle + row-action icons are **always leading** (first track) — no end-of-row / `ActionsPlacement` override ([shuffle-card-grid.md](controls/shuffle-card-grid.md)).
 - [ ] Prefer `minmax(0, …)` tracks; cell editors reuse **`Bo*`** fields with **platform default placeholders** (not column titles); host owns validation and Dirty State.
 - [ ] Host loads **`sortable.min.js`** + **`bo-sortable.js`** for reorder and **`bo-grid.js`** for Add New focus.
 
