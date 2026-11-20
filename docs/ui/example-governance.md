@@ -35,6 +35,8 @@ Gallery is the **primary discoverability** mechanism for developers and agents f
 2. **Challenge** standards that exist only as documentation (or only as product-page prose) without a Gallery example — unless an explicit exception below applies.
 3. Do **not** treat product `README_AI` mega-bullets as the normative SSOT; they must link to STANDARDS.
 4. Same change set: normative change → AI index update → Gallery update (or a labeled **example pending** note with owner).
+5. Every UI-bearing plan must include a **UX Standards Compliance Review** subsection before development — peer gate to architecture/data/security. Required fields: Shared UI components reused, Gallery examples reviewed, applicable UX standards, Page Freeze, placeholders, navigation-state, truncation, disabled/read-only, intentional deviations — [ux-conventions.md](patterns/ux-conventions.md).
+6. Architecture approval is **not** UX approval. Incomplete UX discovery is a planning defect.
 
 ## Approved exceptions (no Gallery requirement)
 

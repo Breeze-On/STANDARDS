@@ -35,12 +35,25 @@ Abandon requested (toggle, nav, tab, selectors, import, route leave, …)
   → RequestAsync(continue)
   → If clean: continue
   → If dirty: dialog
-       Save → persist active workspace → Clear → continue
+       Save → persist active workspace
+            success → Clear → continue
+            failure (validation / save error) → same as Cancel: close dialog, stay,
+              keep dirty, surface errors on the page (never trap the user in the dialog;
+              multi-row editors use [Validation Summary](validation-summary.md) above the grid)
        Discard → discard active workspace → Clear → continue
        Cancel → stay
 ```
 
 `BoToggle` only raises `ToggleRequested`. The host calls `RequestAsync` and updates `SelectedToggleKey` only when allowed.
+
+## Configuration Session interaction
+
+When a surface uses Application Configuration Session Cache ([configuration-session-cache.md](../../../architecture/app-configuration/configuration-session-cache.md) · [ADR-020](../../../decisions/ADR-020-configuration-session-cache.md)):
+
+- Session holds **baselines**; the active workspace holds the **working copy**
+- Dirty State still tracks only the **active** registered workspace (no multi-dirty v1)
+- Discard restores catalog working copies from the session baseline when warm
+- Save updates the session baseline from the persistence response
 
 ## Documentation duty
 

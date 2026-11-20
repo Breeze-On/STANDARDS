@@ -21,7 +21,7 @@ docs/
 - After successful implementation + documentation + knowledge transfer: move to `docs/plans/implemented/` (preferred) or delete if fully transferred.
 - Do **not** store plan markdown directly in the flat parent `docs/plans/` folder.
 - One authoritative active plan per feature.
-- When updating an existing plan: **delta updates only** — update the existing file directly; do not regenerate, rewrite unchanged sections, or create V2/duplicate plans.
+- When updating an existing plan: **in-place delta updates only** — edit the existing file; do not regenerate, rewrite unchanged sections, or create V2/duplicate plans.
 - Never dump plan bodies into chat — see org SSOT:
 
 https://github.com/Breeze-On/STANDARDS/blob/main/docs/planning-and-development-agents.md

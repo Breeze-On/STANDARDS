@@ -6,7 +6,7 @@ Section-level data grid for `BreezeOn.UI`. Related: [forms.md](forms.md), [shuff
 
 **Composition (hard standard):** `BoGrid` is a **section-level** surface (like Home hub). It is **not** a `BoRow` child and does **not** use Section → Row → Field for its own body. Optional `Title` wraps `BoSectionMain` / `BoSectionSub`. Cell editors reuse shipped `Bo*` fields — including [browser autocomplete off by default](forms.md#browser-autocomplete-locked) (do **not** put raw `<input>` in `Edit` templates).
 
-**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoGrid<TItem>`, `BoGridColumn<TItem>`, `BoGridCache<TItem>`, `BoGridRow<TItem>`, `BoGridCellContext<TItem>`, enums `BoGridMode` / `BoGridDefaultExpansionState` / `BoGridColumnAlign` / `BoGridColumnWidth` / `BoGridSectionKind`. Internal helper `BoGridNesting` (not a public component). Host script: `_content/BreezeOn.UI/js/bo-grid.js` (overflow title on truncated display cells; Add New → first-editable focus).
+**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoGrid<TItem>`, `BoGridColumn<TItem>`, `BoGridCache<TItem>`, `BoGridRow<TItem>`, `BoGridCellContext<TItem>`, `BoGridFamilyFilter`, enums `BoGridMode` / `BoGridDefaultExpansionState` / `BoGridColumnAlign` / `BoGridColumnWidth` / `BoGridSectionKind`. Internal helper `BoGridNesting` (not a public component). Host script: `_content/BreezeOn.UI/js/bo-grid.js` (overflow title on truncated display cells; Add New → first-editable focus).
 
 ## Grid Family Standards (locked)
 
@@ -55,6 +55,7 @@ These rules resolve frozen sort, Add New at top, and uncommitted visibility:
 | Active sort | Must **not** reposition a new/uncommitted row during creation or while that row remains uncommitted |
 | Frozen order | Existing rows keep frozen display order while editing; Add New inserts at the **top of that frozen order** without re-sorting peers |
 | After commit | Host Save/`ReplaceAll` / `RefreshSortOrder()` / user header-sort may restore normal sort — only after the create workflow is committed or cancelled |
+| Rebuild while `IsNew` | Header re-sort / `RefreshSortOrder` / cache `Reset` keeps all `IsNew` rows at the top, then sorts non-new peers |
 
 Shuffle Card has no column-header sort; list order is host + DnD. Add New still uses **index 0** via `InsertNewAtTopAsync` until commit.
 
@@ -66,11 +67,13 @@ Lightweight consolidation — implementation details stay in control docs + [for
 | --- | --- |
 | Add New focus | Automatic focus on first editable field after paint (see Add New above) |
 | Keyboard-only | Create / edit / save-cancel happy paths must work without mouse |
+| Sortable headers | Enter / Space cycle Asc → Desc → Off; `aria-sort` reflects the active column; focus-visible ring on sortable headers |
 | Focus preservation | Do not drop or misroute focus during row creation |
 | Deferred validation | Required chrome after Save/Commit attempt only — not on Add New |
 | Required indicators | Consistent header/column `*` rules per control; no invented second asterisk system |
 | Disabled state | Disabled fields/rows are non-editable and skip mandatory participation per forms rules |
 | Errors vs warnings | **Errors** block destructive/commit actions; **warnings** do not block unless a product standard explicitly says so |
+| Validation Summary | Multi-row editable Save/Commit failures use [Validation Summary](../patterns/validation-summary.md) as a dedicated Errors section below Actions / above the grid (with field chrome + Alert toast + navigate-to-error; inline field messages suppressed via HighlightOnly). Adoption Matrix is Required for editable multi-row BoGrid / Shuffle hosts |
 
 Control a11y extras (Nested View keys, Shuffle Card `role="list"`, icon `aria-label`) remain in each control section.
 
@@ -128,8 +131,10 @@ The library **never** talks to SQL or application repositories.
 | `Required` | At least one row; section title asterisk when grid owns the section; registers with `BoValidationContext` |
 | `FieldKey`, `ValidationGroup` | Submit ancestry for grid Mandatory |
 | `IsPagination` | Default **false** (Nested View: pages **root** cache rows only) |
-| `StartIndex` / `StartIndexChanged` | 0-based offset into the **sorted full cache** (when paginating) |
+| `StartIndex` / `StartIndexChanged` | 0-based offset into the **filtered then sorted** working set (when paginating; Client mode) |
 | `PaginationSize` / `PaginationSizeChanged` | Page size (default **5**). `PaginationSizeChanged` is part of the public bind surface (`@bind-PaginationSize`); raised when the grid **clamps** an invalid size (e.g. &lt; 1 → 1), not on every render |
+| `ShowFiltersButton` | Default **false**. When true, shows Filters toolbar button that toggles the column filter row (ignored in NestedView) |
+| `ColumnFilters` / `ColumnFiltersChanged` | Optional controlled filter terms keyed by `FieldKey` (primarily Server hosts → `BoQueryFilter` Contains) |
 | `EnableHorizontalScroll` | Default **false**. When true, wide tables may scroll horizontally |
 | `Columns` | Child `BoGridColumn<TItem>` definitions |
 | `ChildRowsHaveDifferentColumns` | Nested View only. Default **false** (same columns / indented tree). **true** → expanded parents render `ChildGridTemplate` |
@@ -142,7 +147,7 @@ The library **never** talks to SQL or application repositories.
 | `NewItemFactory` | Creates `TItem` for Add New (editable modes) |
 | `ShowAddNew` | Default **true** in editable modes (ignored in Nested View) |
 | `ShowSave` | Default **true**. When **false**, InlineEdit hides the section-header Save button so the host can own Save/Discard outside the grid (e.g. page Actions). Does not remove per-row RowEdit Save. |
-| `ActionsPlacement` | `BoGridActionsPlacement`: **`Trailing`** (default — actions after data columns) or **`Leading`** (actions before data columns, after selection when enabled). Use Leading when Delete must stay visible without horizontal scroll (e.g. wide dynamic columns). |
+| `ActionsPlacement` | `BoGrid`-only. `BoGridActionsPlacement`: **`Trailing`** (default — actions after data columns) or **`Leading`** (actions before data columns, after selection when enabled). Use Leading when Delete must stay visible without horizontal scroll (e.g. wide dynamic columns). Does **not** apply to `BoShuffleCardGrid` — Shuffle Card handle/icons are always leading ([shuffle-card-grid.md](shuffle-card-grid.md)). |
 | `OnSave`, `OnRowDeleted`, `OnChanged` | Host callbacks |
 | `EnableSelection` | Default **false**. When true (flat modes only; not Nested View), shows a compact **first** selection column |
 | `SelectionMode` | `Multiple` (default) or `Single` |
@@ -154,7 +159,7 @@ The library **never** talks to SQL or application repositories.
 ### Row selection
 
 - **Column UX:** first column; **no header text**; **no labels**; checkbox controls only; minimum practical width (`--bo-grid-selection-col-width`); header and row checkboxes centered; vertical alignment consistent with other cells.
-- **Flat grids:** bind `SelectedCacheRowIds`; select-all (Multiple) = all rows in `BoGridCache` (not the database).
+- **Flat grids:** bind `SelectedCacheRowIds`; select-all (Multiple) = the **filtered working set** when column filters are active; otherwise all rows in `BoGridCache` (not the database). Select All checkbox remains on the **column-header** row.
 - **Nested View (same columns):** `EnableSelection` is supported. Bind `SelectedNodeKeys` (`NodeKey` strings). Select-all walks the full tree from cache roots via `ChildrenSelector`. **Cascade (Multiple):** selecting a node expands and selects all descendants; deselecting clears the node, all descendants, **and all ancestors** (so a parent cannot stay selected after a descendant is cleared—avoids surprising delete/export roots). Different-columns Nested View does not show selection.
 - Selection clears on cache `Clear` / `ReplaceAll` (`Reset`).
 - `GetSelectedItems()` returns selected flat cache items or nested nodes matched by key.
@@ -170,6 +175,7 @@ The library **never** talks to SQL or application repositories.
 | `Width` | `BoGridColumnWidth`: default **Flex** = equal `100%/n` among Flex columns without `WidthPercent` (`table-layout: fixed` + `<colgroup>`; table always 100% of container). Action column (Row Edit / Inline Edit) is Hug via `--bo-grid-action-col-width` (default `4.75rem`; never `1px`). Do not use `calc()` on `<col>`. **Compact** ≈ `12%` when set |
 | `WidthPercent` | Optional explicit percent of table width (e.g. `20`). When set on a Flex column, that column uses `width: N%` instead of equal Flex share. Compact/Hug ignore this and keep their fixed behavior |
 | `SortValue` | Optional `Func<TItem, object?>`; when set, header is sortable |
+| `FilterText` | Optional `Func<TItem, string?>`; when set (with `FieldKey`), column is filterable — return the **displayed** string |
 | `Display` | Read-only / non-editing cell template (`BoGridCellContext<TItem>`) |
 | `Edit` | Editable cell template (`BoTextField`, `BoDropDownList`, `BoDateField`, `BoNumberField`, …) |
 
@@ -191,7 +197,7 @@ Changing a column's `Title`, `FieldKey`, `Required`, `Align`, `Width`, or `Width
 - **Header separator:** **primary-tinted** gradient under headers (soft edge fade, reduced opacity, 1px) — branded anchor, not a grey table border. Transparent header band (no fill).
 - **Section rule:** standard section header rule **remains** when a section hosts a grid.
 - **Column width:** `table-layout: fixed` + `<colgroup>`; Flex = `100%/n`; Compact ≈12%; action Hug = CSS `--bo-grid-action-col-width` (default `4.75rem`; never `1px` — that clips Edit/Delete). Flex `%` + rem action together fill the table; avoid `calc()` on `<col>`. Table **always 100%** of container.
-- **Header actions:** when the grid owns a section and toolbar is shown: `Title [Add New] [Save]` on one line (no dash); buttons ~**16px** height, **equal width** (widest label / locale-safe); Add New = **primary** fill; Save = **tertiary** fill; soft elevation. Extra header/body air only when the section has `HeaderActions` (`bo-section--with-header-actions`) — **not** on ancestor sections that merely nest a grid.
+- **Header actions:** when the grid owns a section and toolbar is shown: `Title [Add New] [Save] [Filters]` on one line (no dash; Filters only when `ShowFiltersButton`); buttons ~**16px** height, **equal width** (widest label / locale-safe); Add New = **primary** fill; Save / Filters = **secondary**; Filters is **rightmost**. Soft elevation. Extra header/body air only when the section has `HeaderActions` (`bo-section--with-header-actions`) — **not** on ancestor sections that merely nest a grid.
 - **Column header row:** tight padding; labels sit close to the header divider.
 - **Display overflow:** single-line ellipsis; hover `title` = full value when truncated (`bo-grid.js`); click expands that cell only (overlay); click elsewhere collapses. Edit cells are not truncated.
 - **Row separators:** inset hairlines only — never enclose cells. No vertical column lines.
@@ -209,23 +215,54 @@ Changing a column's `Title`, `FieldKey`, `Required`, `Align`, `Width`, or `Width
 
 ## Sort (locked)
 
-Header click cycles **Ascending → Descending → Off**. Sort applies to the **full cache**, then pagination slices. Sorted column shows a subtle arrow beside the header.
+Header click (and Enter/Space on a focused sortable header) cycles **Ascending → Descending → Off**. Only **one** column may be actively sorted. Clicking a different sortable column clears the previous column and starts Ascending. Sort applies to the **full cache** (after filters when filtering is active), then pagination slices. **Client and Server** reset `StartIndex` to **0** when the active sort changes.
+
+**Active column chrome:** the sorted header uses class `bo-grid__th--sorted` — **bolder** label (`font-weight: 900`) + direction arrow (`ArrowSortUp` / `ArrowSortDown`) at full opacity. Label and icon keep the normal header label color (no primary tint, no header background fill). No always-on arrows on unsorted columns. Idle sortable headers keep pointer + hover text darken only.
+
+**Accessibility:** sortable headers are keyboard-focusable (`tabindex="0"`). The active sorted column sets `aria-sort` to `ascending` or `descending`; other sortable headers set `aria-sort="none"`. Sort icons are `aria-hidden`; focus-visible uses the shared `--bo-focus-ring` / primary outline.
+
+**Persistence:** active sort state is **component-instance only** (survives while the grid remains mounted). No cookies, localStorage, or URL sync. The grid may retain **internal** last Asc/Desc field + direction after Off for the instance lifetime — not part of the public host contract; does not change Off / default-order semantics or visuals.
+
+**Off / default order:** `BoGridSortDirection.None` clears the active field; Client drops frozen display order (cache/`Items` order); Server hosts apply their own default when `SortFieldKey` is null.
 
 **Frozen while editing:** after a sort is applied, display order is frozen by `CacheRowId`. Editing a sort-key value in Row Edit or Inline Edit **must not** move rows. Re-evaluation only when:
 
-1. The user clicks a sortable column header, or
+1. The user activates a sortable column header (click / Enter / Space), or
 2. The cache raises `Reset` (`Clear` / `ReplaceAll`), or
 3. The host calls `RefreshSortOrder()`.
 
-**Uncommitted new rows (family rule):** Add New while sorted inserts at the **top** of the frozen order without re-sorting other rows. Active sorts must **not** bury or reposition the row being created. Full precedence rules: [Sorting vs uncommitted new rows](#sorting-vs-uncommitted-new-rows-no-conflict).
+On rebuild, **`IsNew` rows stay pinned at the top**; only non-new rows are ordered by `SortValue`.
+
+**Uncommitted new rows (family rule):** Add New while sorted inserts at the **top** of the frozen order without re-sorting other rows. Active sorts must **not** bury or reposition the row being created — including when the user re-sorts or the host refreshes sort while uncommitted rows exist. Full precedence rules: [Sorting vs uncommitted new rows](#sorting-vs-uncommitted-new-rows-no-conflict).
+
+**Shuffle Card:** no column-header sort — list order is host + DnD only.
 
 ## Pagination (locked)
 
 Default off (`IsPagination = false`). When on:
 
-- Slice with `StartIndex` + `PaginationSize` after sort.
+- Slice with `StartIndex` + `PaginationSize` after sort (after filters when filtering is active).
 - Footer **one row:** **Showing {from}–{to} of {total}** (`Grid_Pagination_Showing`) left; first / previous / **windowed page numbers (max 5)** / next / last centered — **icons** preferred (Chevrons); no text labels on the buttons. The "Showing…" text is formatted with **`IBoLocaleService.FormatCulture`**. `BoGrid` subscribes to `Locale.Changed` and re-renders on language change (no page reload).
 - Window examples: page 1 → `1 2 3 4 5`; page 5 → `3 4 5 6 7`; near end clamps correctly.
+- Client total uses the **filtered** working set when column filters are active.
+
+## Filtering (lightweight — locked)
+
+Grid Family capability for administration, troubleshooting, data entry, and locating rows. Shared helper: `BoGridFamilyFilter` (contains + AND). Same mental model on [Shuffle Card](shuffle-card-grid.md).
+
+| Rule | Standard |
+| --- | --- |
+| Opt-in button | `ShowFiltersButton` (default **false**). Gallery demos set **true**. NestedView ignores it (use host keyword + `BoNestedViewKeywordFilter`) |
+| Toggle | Filters button shows/hides the filter row; hiding does **not** clear terms. State is **component-instance only** (no cookie / cross-navigation persistence) |
+| Filter row | Second header row of `BoTextField` **below** the header separator line (Column headers → separator → filter row → data). **Every data column** gets a `BoTextField` (same size/spacing/alignment) — filterable columns are editable; columns without `FilterText` render **disabled** (standard disabled chrome) so the row has no visual holes. Placeholder **`Grid_Filter_Placeholder`** (`Search...`). Debounce **300** ms. `ShowClearButton` on filterable fields only. Compact vertical spacing (**4px** margin above/below each filter field). No Apply button. Toolbar order: **Add New \| Save \| Filters** (Filters rightmost) |
+| Select All placement | Select All checkbox stays on the **column-header** row (selection column). Filter row uses an empty selection spacer only — filtering controls only |
+| Column opt-in | `BoGridColumn.FilterText` (`Func<TItem, string?>`) — when set with a `FieldKey`, the column is filterable. Match against the **displayed** string the user sees |
+| Match | Case-insensitive **contains** only; multiple active columns AND together. No operators, builders, regex, or saved filters |
+| Pipeline (Client) | Data source → **Filters** → Sorting → Pagination → Display |
+| Uncommitted / editing | `IsNew` rows always remain visible; Row Edit keeps the row being edited visible |
+| Select All | When filters are active, Select All targets the **filtered working set**. When the filter row is visible, the Select All checkbox is on the **filter row** (selection column), aligned with filter inputs |
+| Server `QueryMode` | Do **not** filter the current page client-side. Bind `ColumnFilters` / `ColumnFiltersChanged`; host maps to `BoQueryFilter` (`Contains`) on `BoQueryRequest` |
+| Non-text columns | Omit `FilterText` for Number / Boolean / Date / DateTime / Action unless a compelling display-string reason exists — those columns still show a **disabled** filter `BoTextField`. People / DDL / Lookup / Badge / Metadata participate only when the host supplies resolved display text. Action / selection chrome columns stay empty (not data columns) |
 
 ## Row Edit (locked)
 
@@ -234,13 +271,13 @@ Default off (`IsPagination = false`). When on:
 - While a row is editing: **Add New** and other rows’ Edit/Delete are **disabled**.
 - **Add New** follows [Grid Family Standards](#grid-family-standards-locked) (top + focus + deferred validation; resets to first page when paginated).
 - When the grid owns a section: **Add New** on the section header row.
-- Column mandatory validation runs only on **row Save**; fail → Alert toast + field border chrome.
+- Column mandatory validation runs only on **row Save**; fail → Alert toast + field border chrome + [Validation Summary](../patterns/validation-summary.md) above the table when failures exist (navigate-to-error).
 
 ## Inline Edit (locked)
 
 - All rows show Edit templates; Delete available per row (no single-row lock); **no** left accent bar.
 - When the grid owns a section: **Add New** + overall **Save** on the section header row (Save omitted when `ShowSave=false`).
-- Save validates required cell fields (ValidationGroup) + grid `Required`; fail → toast + borders; success → `OnSave`. Hosts that hide Save must run equivalent validation before their own Save path.
+- Save validates required cell fields (ValidationGroup) + grid `Required`; fail → toast + borders + [Validation Summary](../patterns/validation-summary.md) above the table when failures exist; success → `OnSave`. Hosts that hide Save must run equivalent validation before their own Save path (including summary when the Adoption Matrix says Required).
 - Sort order remains frozen while cells change (same rules as Sort + [Sorting vs uncommitted new rows](#sorting-vs-uncommitted-new-rows-no-conflict)).
 - **Add New** follows [Grid Family Standards](#grid-family-standards-locked).
 
@@ -427,7 +464,7 @@ Future extract candidates (do **not** extract in product apps): split `BoGrid.ra
 
 ## Gallery
 
-Components → **Grid** tab (`TabKey=grid`, `Table` icon). Parameters: Mode (includes Nested View), and when Nested View — **Do Child Rows Have Different Columns?** + **Default Expansion State**. Editable demos: Sub **Grid Control** with 4 sample rows (Text / Drop-Down / Date / Number). Nested same-columns: Michael Jackson International Holdings tree (≥3 divisions; one branch ≥6 levels). Nested different-columns: 4 departments, each expands to an employee `BoGrid` (2 rows). Host loads `bo-grid.js`.
+Components → **Grid** tab (`TabKey=grid`, `Table` icon). Parameters: Mode (includes Nested View), and when Nested View — **Do Child Rows Have Different Columns?** + **Default Expansion State**. Editable demos: Sub **Grid Control** with 4 sample rows (Text / Drop-Down / Date / Number) and **`ShowFiltersButton=true`** (text + DDL supply `FilterText`; Date / Number show disabled filter fields). Nested same-columns: Michael Jackson International Holdings tree (≥3 divisions; one branch ≥6 levels). Nested different-columns: 4 departments, each expands to an employee `BoGrid` (2 rows). Server demo binds `ColumnFilters` → `BoQueryFilter` Contains. Shuffle Card demo enables Filters with reorder disabled while filtered. Host loads `bo-grid.js`.
 
 ## Documentation governance
 

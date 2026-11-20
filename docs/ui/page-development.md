@@ -26,7 +26,7 @@ Every app host that renders `BreezeOn.UI` must wire the following once (referenc
 | Localization | Supported cultures `en` / `fr` + `UseRequestLocalization()` — [i18n.md](foundations/i18n.md) |
 | Layout | Render **`BoThemeProvider`** (CSS variables) and **`BoProviders`** (Fluent providers, theme/locale bootstrap, dialog + toast + **page-freeze** hosts) around the app; pages live inside **`BoAppShell`** |
 | CSS (in `<head>`) | `_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css` and `_content/BreezeOn.UI/breezeon-ui.css` |
-| JS (in `<head>`) | `_content/BreezeOn.UI/js/bo-theme-mode.js`, `bo-locale.js`, `bo-popup.js`, `bo-number-field.js`, `bo-grid.js`, `bo-dialog.js` (**required for `BoDialog`**), `bo-toggle.js` (**required for sliding `BoToggle` selection**); when using **`BoShuffleCardGrid`**, also `js/lib/sortable.min.js` + `bo-sortable.js` |
+| JS (in `<head>`) | `_content/BreezeOn.UI/js/bo-theme-mode.js`, `bo-locale.js`, `bo-popup.js`, `bo-number-field.js`, `bo-grid.js`, `bo-dialog.js` (**required for `BoDialog`**), `bo-sliding-selection.js` (**required for sliding `BoToggle` / `BoTabs` selection**); when using **`BoShuffleCardGrid`**, also `js/lib/sortable.min.js` + `bo-sortable.js` |
 
 JS file roles:
 
@@ -38,7 +38,7 @@ JS file roles:
 | `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge to the Fluent input, display sync). Caret/selection stay native (no select-all on focus). Without it number entry does not behave per standard |
 | `bo-grid.js` | `BoGrid` truncated-cell hover titles + Add New first-editable focus |
 | `bo-dialog.js` | **Required for `BoDialog`** (Enter suppress checks, `InitialFocusFieldKey`, focus restore) |
-| `bo-toggle.js` | **Required for sliding `BoToggle` selection pill** (measures selected segment; follows host-owned `SelectedToggleKey` only). Without it, selected segments use a static primary fill |
+| `bo-sliding-selection.js` | **Required for sliding `BoToggle` / `BoTabs` selection** (shared selection travel; controls call `boSlidingSelection` directly). Without it, selected chrome uses a static fill (no slide) |
 | `js/lib/sortable.min.js` + `bo-sortable.js` | **Required for `BoShuffleCardGrid`** reorder (SortableJS + `boSortableInit` / Destroy / ReadOrder) |
 
 Include **all seven** core `bo-*.js` scripts even if a page does not use every control — shell chrome and future pages depend on them. Add Sortable + `bo-sortable.js` when the host uses Shuffle Card Grid. Note: the early scripts reduce theme/locale flash only partly; CSS variables are still emitted by `BoThemeProvider` after the circuit renders (see [tokens.md](foundations/tokens.md)).
@@ -109,6 +109,7 @@ When the page is a large multi-section **workspace** (not short header-tab page 
 When the page includes a data grid:
 
 - [ ] Uses **`BoGrid`** / **`BoGridColumn`** / **`BoGridCache`** — [grids.md](controls/grids.md).
+- [ ] Lightweight column filters (optional): set `ShowFiltersButton` when needed; supply `FilterText` with the **displayed** string for textual columns; Client pipeline Filter → Sort → Page; Server hosts bind `ColumnFilters` → `BoQueryFilter` Contains — [grids.md § Filtering](controls/grids.md#filtering-lightweight--locked).
 - [ ] Treats the grid as a **section-level** surface (not a `BoRow` child; not Section → Row → Field for the grid body).
 - [ ] If multi-select is needed: `EnableSelection` (flat: select-all = all cache rows; Nested Scenario 1: `SelectedNodeKeys` + cascade select/expand) — [grids.md](controls/grids.md#row-selection).
 - [ ] Binds a typed cache with **`CacheId`**; rows expose **`CacheRowId`** + nullable **`PrimaryKey`**.
@@ -127,10 +128,13 @@ When the page includes a data grid:
 When the page needs **header + editable card rows + optional reorder** (not a table `BoGrid`):
 
 - [ ] Uses **`BoShuffleCardGrid`** / **`BoShuffleCardGridColumn`** — [shuffle-card-grid.md](controls/shuffle-card-grid.md); inherits [Grid Family Standards](controls/grids.md#grid-family-standards-locked).
+- [ ] Shuffle filtering (optional): `ShowFiltersButton` + `FieldKey`/`FilterText`; place Filters in section `HeaderActions` (rightmost after Add New) with `@bind-FiltersVisible` / `ToggleFiltersAsync()`; filter **card** chrome; reorder handle disabled while filters are active — [shuffle-card-grid.md § Filtering](controls/shuffle-card-grid.md#filtering-lightweight--locked).
 - [ ] Treats it as a **section-level** surface (page-first; dialog hosts compose the same control).
 - [ ] **Add New** (if any) lives in section **`HeaderActions`** and calls **`InsertNewAtTopAsync`** (not `_items.Add`) — [shuffle-card-grid.md](controls/shuffle-card-grid.md).
-- [ ] Column headers: uppercase (CSS) + required `*` when needed; shared `WidthTrack` aligns header and fields.
-- [ ] Cell editors reuse **`Bo*`** fields (typically `bo-field--section-flush`); host owns validation and Dirty State.
+- [ ] Column headers: uppercase (CSS) + required `*` when needed; shared `WidthTrack` aligns header and fields; column `Align` applies to header **and** cell ([shuffle-card-grid.md](controls/shuffle-card-grid.md)).
+- [ ] Reorder handle + row-action icons are **always leading** (first track) — no end-of-row / `ActionsPlacement` override ([shuffle-card-grid.md](controls/shuffle-card-grid.md)).
+- [ ] Reorder motion follows platform tokens (`--bo-reorder-*`) — live FLIP while dragging; do not CSS-transition `transform` on rows; honor reduced-motion ([motion.md](foundations/motion.md)).
+- [ ] Prefer `minmax(0, …)` tracks; cell editors reuse **`Bo*`** fields with **platform default placeholders** (not column titles); host owns validation and Dirty State.
 - [ ] Host loads **`sortable.min.js`** + **`bo-sortable.js`** for reorder and **`bo-grid.js`** for Add New focus.
 
 ### Filters and query-driven datasets
@@ -152,6 +156,17 @@ Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → 
 - [ ] Any exception (full-tree load, secondary contract) is documented.
 - [ ] Gallery working example exists or is explicitly pending ([example-governance.md](example-governance.md)).
 
+### UX conventions (Planning / Dev — read first)
+
+Cross-control SSOT: [ux-conventions.md](patterns/ux-conventions.md). UI plans require a **UX Standards Compliance Review** before development.
+
+- [ ] **Placeholders:** platform defaults only; do **not** echo labels/column titles; omit when Disabled — [ux-conventions.md](patterns/ux-conventions.md).
+- [ ] **Truncation / width:** long closed values truncate (ellipsis + hover title); selected values must not resize controls or skew columns.
+- [ ] **Disabled vs read-only vs N/A:** Disabled = temporary; prefer `BoFieldReadOnly` / Display for inherent read-only; hide N/A with `IsHidden`.
+- [ ] **Navigation state:** major workspace / context change opens documented primary view; no inherited sub-state unless documented keep-alive.
+- [ ] **Admin language:** no implementation identifiers in admin-facing copy.
+- [ ] Before custom UX: confirm no existing Shared UI component, Gallery example, or documented pattern already solves the problem.
+
 ### Controls
 
 - [ ] **`BoTextField`** for text entry — [forms.md](controls/forms.md#text-field-botextfield).
@@ -170,6 +185,7 @@ Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → 
 ### Validation
 
 - [ ] Deferred mandatory validation pattern respected (asterisk immediately; error chrome **after** attempt) — [forms.md § Deferred mandatory validation](controls/forms.md#deferred-mandatory-validation-locked).
+- [ ] Multi-row editable BoGrid / Shuffle / bulk-edit Save failures use [Validation Summary](patterns/validation-summary.md) when the **Adoption Matrix** says Required (summary + chrome + Alert toast + navigate-to-error). Do not invent host `<ul>` error lists.
 - [ ] Required fields use standard behavior; **Disabled** fields skip required validation.
 - [ ] Universal required message (`Validation_FieldRequired`); never field-label-specific.
 - [ ] Fields expose `FieldKey` + `ValidationGroup` (header tab **or** workspace panel-nav key); sections set `SectionKey` so failures report Field → Sub → Main → Tab/Panel.
@@ -186,7 +202,8 @@ Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → 
 - [ ] `AppTitle` and `Subtitle` localized.
 - [ ] Dialog and toast text localized.
 - [ ] Product Create/Edit/Confirm/management dialogs use **`BoDialog`** (Enter = primary, Escape = `OnClose`, optional `InitialFocusFieldKey`, default focus restore). No local dialog chrome or autofocus JS — [overlays.md](shell/overlays.md) § Dialog.
-- [ ] Long-running ops use **`IBoPageFreezeService`** (`RunAsync` preferred); pass already-localized freeze messages; show outcome toasts **after** Hide; follow when / when-not rules — [overlays.md](shell/overlays.md) § Page freeze.
+- [ ] Long-running ops and **perceptible workspace/config hydrations** (including tab/panel activation that reloads data) use **`IBoPageFreezeService`** (`RunAsync` preferred); pass already-localized freeze messages; show outcome toasts **after** Hide; follow MUST / MUST NOT rules — [overlays.md](shell/overlays.md) § Page freeze; [ux-conventions.md](patterns/ux-conventions.md).
+- [ ] Do **not** invent page-local loading overlays.
 - [ ] New user-visible strings added to resources in the **same change set**.
 
 ### Theming
@@ -195,6 +212,7 @@ Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → 
 - [ ] No ad-hoc hardcoded colors (derive from tokens; update `tokens.md` if a new independent token is intentional).
 - [ ] Supports Light and Dark mode via **`IBoThemeModeService`** (dual palettes; same semantic names).
 - [ ] Uses semantic Breeze On colors; nav-stable tokens (`nav-selected`, `nav-logo-divider`) stay Light values in both modes.
+- [ ] **`BoButton` corner radius:** use Shared UI default (`--bo-button-radius`); do **not** override `border-radius` on `.bo-button` in product/page CSS — [forms.md § Button](controls/forms.md#button-bobutton), [tokens.md § Corner radius](foundations/tokens.md#corner-radius-tokens-current).
 - [ ] Default typeface **Calibri** — [typography.md](foundations/typography.md).
 
 ### Documentation
@@ -205,6 +223,7 @@ When page structure introduces or changes **org** standards:
 - [ ] Update gallery / product examples where appropriate.
 - [ ] Update UI overview indexes when new documentation files are added — [overview.md](overview.md).
 - [ ] Same change set as code — [documentation.md](../documentation.md).
+- [ ] UI-bearing PRs: run [ux-pr-review-checklist.md](ux-pr-review-checklist.md).
 
 ## Living document rule
 

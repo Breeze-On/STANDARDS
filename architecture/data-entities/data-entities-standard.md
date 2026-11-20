@@ -120,7 +120,7 @@ Quick Actions are **commands**, not navigation. They must still **feel** part of
 | --- | --- |
 | Layout | Full-width rows; left-aligned icon + label; gap/rhythm aligned with `BoPanelNavigation` items |
 | Typography | Same font size / weight / line-height as `.bo-panel-nav-item` labels |
-| Shape | Less-rounded corners (`--bo-radius-md`) — like Import JSON / secondary action cards, **not** pill-shaped |
+| Shape | Matches `BoButton` hard standard (`--bo-button-radius` / `--bo-radius-md`) — same less-rounded corners as all platform buttons |
 | Chrome | Subtle border (`--bo-color-card-container-border`) + light outer shadow / elevation (`--bo-shadow-card-container`) |
 | Interaction | Hover and `:focus-visible` consistent with BreezeOn panel-nav / field standards |
 | Section spacing | Vertical space between Quick Actions and Navigation `BoSectionSub`s uses standard section spacing tokens (e.g. `--bo-space-md` / 16px stacked-section rhythm); do not invent one-off px gaps |

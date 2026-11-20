@@ -13,8 +13,10 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [overview.md](overview.md) (this file) | Library contract, shipped inventory, gallery, documentation governance |
 | [example-governance.md](example-governance.md) | Example Governance — normative + AI guidance + Gallery working example DoD |
 | [page-development.md](page-development.md) | Page-construction checklist for humans and AI agents (links to detailed standards) |
+| [ux-pr-review-checklist.md](ux-pr-review-checklist.md) | Short UX PR review checklist (Compliance Review, freeze, placeholders, truncation) |
 | **Foundations** | |
 | [foundations/tokens.md](foundations/tokens.md) | Design / shell tokens |
+| [foundations/motion.md](foundations/motion.md) | Platform motion — reorder FLIP / settle tokens; reduced-motion; anti-patterns |
 | [foundations/typography.md](foundations/typography.md) | Default typeface |
 | [foundations/i18n.md](foundations/i18n.md) | Culture / timezone cookies; per-app resource libraries; no hardcoded labels |
 | **Shell** | |
@@ -32,8 +34,10 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [controls/toggle.md](controls/toggle.md) | Segmented Toggle (`BoToggle`) — presentation-only; host-owned selection |
 | [patterns/dirty-state.md](patterns/dirty-state.md) | Centralized unsaved-changes gate (Save / Discard / Cancel) |
 | [patterns/import-summary.md](patterns/import-summary.md) | Import Summary review dialog (`BoImportSummaryDialog`) — Changes Summary + Errors/Warnings; explicit confirm |
+| [patterns/validation-summary.md](patterns/validation-summary.md) | Validation Summary (`BoValidationSummary`) — live-editor collapsible errors above grids/Shuffle; Adoption Matrix; [ADR-021](../../decisions/ADR-021-validation-summary-experience.md) |
+| [patterns/ux-conventions.md](patterns/ux-conventions.md) | Cross-control UX conventions — placeholders, truncation, disabled/read-only, navigation state, Page Freeze summary, UX Compliance Review |
 | [controls/grids.md](controls/grids.md) | Grid Family Standards + `BoGrid` — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode`; Add New top + focus |
-| [controls/shuffle-card-grid.md](controls/shuffle-card-grid.md) | Shuffle Card Grid (`BoShuffleCardGrid`) — Grid-family card + DnD; `InsertNewAtTopAsync`; inherits Family Standards |
+| [controls/shuffle-card-grid.md](controls/shuffle-card-grid.md) | Shuffle Card Grid (`BoShuffleCardGrid`) — Grid-family card + DnD; premium reorder motion ([motion.md](foundations/motion.md)); `InsertNewAtTopAsync`; inherits Family Standards |
 | [controls/query-driven-retrieval.md](controls/query-driven-retrieval.md) | Query-driven retrieval — one primary contract per dataset; Filter → Sort → Page; debounce, cancellation, Top-N, exceptions ([ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md)) |
 
 Former single file [`docs/ui-components.md`](../ui-components.md) redirects here. Flat paths under `docs/ui/*.md` (e.g. `docs/ui/tokens.md`) redirect to the hierarchical files above.
@@ -46,7 +50,7 @@ Former single file [`docs/ui-components.md`](../ui-components.md) redirects here
 | Package / project | `BreezeOn.UI` (`src/BreezeOn.UI`) |
 | Approach | Option B+: BreezeOn public API on top of Fluent UI Blazor (Fluent is internal) |
 | Registration | `services.AddBreezeOnUI()` or `AddBreezeOnUI(configureTheme)` — `configureTheme` is honored via `IOptions<BoThemeOptions>` ([tokens.md § Theme options](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
-| Host requirements | Render `BoThemeProvider` and `BoProviders` in the app layout; include `breezeon-ui.css`, the Fluent bundle CSS, and the five `bo-*.js` scripts (incl. `bo-number-field.js` for `BoNumberField`) — [page-development.md § Host integration](page-development.md#host-integration-required) |
+| Host requirements | Render `BoThemeProvider` and `BoProviders` in the app layout; include `breezeon-ui.css`, the Fluent bundle CSS, and the **seven** core `bo-*.js` scripts (`bo-theme-mode`, `bo-locale`, `bo-popup`, `bo-number-field`, `bo-grid`, `bo-dialog`, `bo-toggle`; plus Sortable + `bo-sortable` when using Shuffle Card) — [page-development.md § Host integration](page-development.md#host-integration-required) |
 | Decision record | [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 
 Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not reference `Microsoft.FluentUI.AspNetCore.Components` types from product pages.
@@ -98,10 +102,11 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoDateField` | Date / DateTime UI; bound type always `DateTime?` (never `DateOnly`); `ReadOnly`; locale (`FormatCulture`) + fixed calendar popover | [forms.md](controls/forms.md) |
 | `BoDateDisplay` | Format culture for wall-clock values (`Format`); UTC→user timezone + culture for instants (`FormatUtc`) — standard for grids / read-only datetime text | [i18n.md](foundations/i18n.md) |
 | `BoNumberField` | Number UI; bound type always `decimal?`; integer/decimals; currency/% (mutex); focus raw / blur formatted; `ReadOnly`; alignment default Right; needs host `bo-number-field.js` | [forms.md](controls/forms.md) |
-| `BoButton` | Pill button (primary / secondary / stealth); `HtmlType` (`BoButtonType`); shorter+wider padding; shadow + hover lift; optional icon | [forms.md](controls/forms.md), [tokens.md](foundations/tokens.md) |
-| `BoToggle` | Presentation-only segmented toggle; host-owned `SelectedToggleKey`; `ToggleRequested` intent; required icon+label per item; sliding selection pill via `bo-toggle.js` | [toggle.md](controls/toggle.md) |
+| `BoButton` | Button (primary / secondary / stealth); corner radius `--bo-button-radius` (aliases `--bo-radius-md`, not pill); `HtmlType` (`BoButtonType`); shorter+wider padding; shadow + hover lift; optional icon | [forms.md](controls/forms.md), [tokens.md](foundations/tokens.md) |
+| `BoToggle` | Presentation-only segmented toggle; host-owned `SelectedToggleKey`; `ToggleRequested` intent; required icon+label per item; sliding selection pill via shared `bo-sliding-selection.js` | [toggle.md](controls/toggle.md) |
 | `BoDialog` / `BoDialogCloseButton` | Product dialog shell (Enter/Escape, `InitialFocusFieldKey`, focus restore) | [overlays.md](shell/overlays.md) |
 | `BoImportSummaryDialog` | Presentational Import Summary (Changes Summary + Errors/Warnings; Stealth confirm; `ChangesSummaryContent`) | [import-summary.md](patterns/import-summary.md) |
+| `BoValidationSummary` / `BoValidationIssue` | Live-editor collapsible validation summary above grids/Shuffle; navigate-to-error; Adoption Matrix | [validation-summary.md](patterns/validation-summary.md) |
 | `BoDialogService` | Message dialog facade (`ShowMessageAsync`; hosted via `BoDialog`) | [overlays.md](shell/overlays.md) |
 | `IBoToastService` / `BoToastHost` | Top-right toasts (Main/Body; Success / Alert / Information / Error; click dismiss) | [shell.md](shell/shell.md), [overlays.md](shell/overlays.md) |
 | `IBoPageFreezeService` / `BoPageFreezeHost` | Full-viewport busy freeze (branded pulse + frosted scrim; `Show`/`Hide`/`RunAsync`; ref-counted) | [overlays.md](shell/overlays.md) |
@@ -109,7 +114,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoValidationFailBadge` | Red disc + white “!” (tabs + section headers) | [forms.md](controls/forms.md) |
 | `BoSettingsDialogService` | Centered Settings dialog (Language / Timezone via `BoDropDownList`) | [shell.md](shell/shell.md), [i18n.md](foundations/i18n.md), [overlays.md](shell/overlays.md) |
 | `BoGrid` / `BoGridColumn` / `BoGridCache` | Section-level grid (ReadOnly / RowEdit / InlineEdit / NestedView); optional `EnableSelection`; typed cache; frozen sort with uncommitted Add New at top; Nested View; Add New → first-editable focus; **Grid Family Standards** SSOT | [grids.md](controls/grids.md#grid-family-standards-locked) |
-| `BoShuffleCardGrid` / `BoShuffleCardGridColumn` | Grid-family card + DnD renderer; inherits Family Standards; host Add → `InsertNewAtTopAsync`; page-first; `sortable.min.js` + `bo-sortable.js` + `bo-grid.js` | [shuffle-card-grid.md](controls/shuffle-card-grid.md) |
+| `BoShuffleCardGrid` / `BoShuffleCardGridColumn` | Grid-family card + DnD renderer; inherits Family Standards; host Add → `InsertNewAtTopAsync`; leading-only handle/icons; page-first; `sortable.min.js` + `bo-sortable.js` + `bo-grid.js` | [shuffle-card-grid.md](controls/shuffle-card-grid.md) |
 | `BoSectionMain` / `BoSectionSub` `Required` | Optional red asterisk after section title (e.g. mandatory grid) | [sections.md](layout/sections.md), [grids.md](controls/grids.md) |
 
 ## Local gallery

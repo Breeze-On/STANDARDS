@@ -28,7 +28,7 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 
 - Deployment identity is the **Application** (`UniqueCode`).
 - Business Entity selection on `/app-configuration` gates the workspace; it is not part of the v1 portable identity.
-- Definitions owned by `ApplicationGUID` (Data Entities + Columns) are in scope ([ADR-016](../../decisions/ADR-016-data-entity-ownership.md)).
+- Definitions owned by `ApplicationGUID` (Data Entities + Columns, Process Framework Roles / Steps / Options + metadata columns) are in scope ([ADR-016](../../decisions/ADR-016-data-entity-ownership.md), [ADR-019](../../decisions/ADR-019-process-framework-metadata.md)).
 
 ## Included (current)
 
@@ -36,10 +36,11 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 | --- | --- |
 | Data Entities | Definitions, Columns, SortOrder |
 | Security Groups | AttributeCode configuration per Business Entity (Application Context); synchronized Security.Groups Code/Name/Description; no memberships |
+| Process Framework | Metadata column catalog, Roles, Steps, Options (with metadata values + `TEXT` translations); Application-scoped; Codes only — [process-framework](../process-framework/README.md) |
 
 ## Explicitly excluded
 
-- Data Entity Rows, Translations, Metadata values
+- Data Entity Rows, Translations, Metadata values (Data Entity row data; Process Framework metadata values **are** included, nested under their Role / Step / Option)
 - Security Group memberships / user assignments
 - Application runtime / operational / audit data
 - Environment-specific GUIDs
@@ -50,9 +51,16 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 | --- | --- | --- |
 | `dataEntities` | Yes | Yes |
 | `securityGroups` | Yes (export always; import when present) | Yes when key present; skipped when omitted |
-| `steps` / `options` / `roles` / `systemConfiguration` | Omitted | No |
+| `processFramework` | Yes (export always as nested tree; import when present) | Per-owner `metadataColumns` / `values` present/omit; skipped when `processFramework` omitted |
+| `systemConfiguration` | Omitted | No |
 
-Non-empty not-yet-shipped section keys are rejected as unsupported for the current `schemaVersion`.
+Legacy schemaVersion **1** flat keys (`processMetadataColumns` / `roles` / `steps` / `options`) are still accepted on import (dual-read). Export writes schemaVersion **2** nested only. Non-empty `systemConfiguration` is rejected.
+
+### Process Framework sections
+
+- Canonical ownership: metadata columns live under `processFramework.{steps|options|roles}.metadataColumns`; row data under `.values`. Match keys after normalize: columns `(code, owner)`; roles/steps `code`; options `(stepCode, code)`. Cross references are Codes (`roleCode`, `stepCode`, `nextStepCode`, `dataEntityCode`); GUIDs are never in the file.
+- Sync order in the single transaction: metadata columns → roles → steps → options; removals run in reverse. Removing a metadata column is **always allowed** and cascades translations → values → column (no in-use block). Removing a Step / Role is blocked while a remaining Option / Step references it. A `DDL` column's `dataEntityCode` must match a Data Entity of the Application, and that Data Entity cannot be removed while a `DDL` column references it.
+- Metadata values travel in each Role / Step / Option `metadata` object keyed by column Code. `PEOPLEPICKER` values are `externalObjectId` strings (never `userGuid`); `DDL` values are Data Entity row Codes; `TEXT` is a language map. Decision: [ADR-019](../../decisions/ADR-019-process-framework-metadata.md). Field tables: [`docs/data-portability.md`](../../docs/data-portability.md#process-framework-sections).
 
 ## Removal safety
 
@@ -65,11 +73,60 @@ Non-empty not-yet-shipped section keys are rejected as unsupported for the curre
 
 1. Upload JSON (in memory; size-limited).
 2. Validate file-level schema / application match (toasts on hard file failures — summary never opens).
-3. Build sync plan; open standard **Import Summary** (`BoImportSummaryDialog`): Changes Summary grid (Item Type · Item Code · New · Updated · Deleted; one row per planned code) + Errors and Warnings. Planner blocking issues (e.g. column type change, entity with rows) appear as Errors and disable Synchronize. Removals show only as Deleted counts.
+3. Build sync plan; open standard **Import Summary** (`BoImportSummaryDialog`) with App Config **custom** Changes Summary (`ChangesSummaryContent`) + Errors and Warnings. See [Import Analysis Summary](#import-analysis-summary).
 4. Administrator confirms **Synchronize** (disabled when Errors exist or there are no changes). Warnings do not block.
 5. Apply in one SQL transaction, or apply nothing.
 
 Pattern: [import-summary.md](../../docs/ui/patterns/import-summary.md).
+
+## Import Analysis Summary
+
+Authoritative aggregation model for Application Configuration synchronize review. Implementation: EAC `ApplicationConfigurationSyncSummaryMapper`. Planner still tracks per-code create/update/remove for apply; the summary only rolls counts up. Object codes (`role0`, `step-description`, …) **never** appear as Item.
+
+### Aggregation key
+
+**Entity · Item · Type** — display columns: Entity · Item · Type · New · Updated · Deleted. Omit rows where all three measures are zero.
+
+### Entity (fixed sort order)
+
+1. Data Entity  
+2. Process Framework  
+3. Security Group  
+4. System Configuration (designed; no rows until shipped)
+
+### Item
+
+| Entity | Item |
+| --- | --- |
+| Data Entity | Business name (`description` when non-empty, else `code`). One row per entity with entity-level changes. |
+| Process Framework | Steps → Options → Roles (fixed order) |
+| Security Group | always `Group` |
+| System Configuration | future category label |
+
+### Type (sort: Values, then Settings)
+
+| Entity | Values | Settings |
+| --- | --- | --- |
+| Process Framework | `values` arrays | `metadataColumns` for that owner |
+| Data Entity | entity-level create/update/delete only (column counts omitted) | not used |
+| Security Group | always Values | none today |
+
+### Sort within Entity
+
+1. Item order (PF: Steps → Options → Roles; Data Entity: file `sortOrder` then name)  
+2. Within Item: Values before Settings  
+3. Entity block order as above
+
+### Example
+
+```text
+Process Framework | Steps   | Settings | 3 | 0 | 0
+Process Framework | Options | Settings | 1 | 0 | 0
+Process Framework | Roles   | Settings | 1 | 0 | 0
+Process Framework | Roles   | Values   | 3 | 0 | 0
+```
+
+Shared dialog columns are **not** forced to Entity/Item/Type org-wide; App Config supplies custom content while retaining New / Updated / Deleted measures.
 
 ## Planned / not shipped — feature participation rule
 
@@ -91,3 +148,4 @@ EAC local `dev-reset` / `local-db-seed` may apply the same deployment JSON after
 - Operations: [`runbooks/eac-application-configuration-deployment.md`](../../runbooks/eac-application-configuration-deployment.md)
 - Product surface: [architecture/eac.md](../eac.md)
 - Data Entities: [architecture/data-entities/README.md](../data-entities/README.md)
+- Process Framework: [architecture/process-framework/README.md](../process-framework/README.md)

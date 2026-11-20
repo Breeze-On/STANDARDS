@@ -2,7 +2,7 @@
 
 Owner: UI
 
-Presentation-only segmented toggle for mutually exclusive options. Related: [forms.md](forms.md), [overview.md](../overview.md), [dirty-state.md](../patterns/dirty-state.md).
+Presentation-only segmented toggle for mutually exclusive options. Related: [forms.md](forms.md), [motion.md](../foundations/motion.md) (selection travel + easing family shared with reorder), [overview.md](../overview.md), [dirty-state.md](../patterns/dirty-state.md).
 
 **Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoToggle`, `BoToggleItem` (`BreezeOn.UI.Inputs`). Gallery: Components → Other → Toggle.
 
@@ -54,7 +54,7 @@ Clicking the already-selected item is a no-op (no event).
 ## Visual
 
 - Outer card container (border + elevation tokens)
-- **Sliding selection pill** (`.bo-toggle__thumb`): primary fill + subtle elevation; geometry follows the host-owned selected item (measured via `bo-toggle.js`). No optimistic movement on click — pill moves only after `SelectedToggleKey` updates
+- **Sliding selection pill** (`.bo-toggle__thumb`): primary fill + subtle elevation; geometry follows the host-owned selected item via shared **selection travel** (`bo-sliding-selection.js` / `boSlidingSelection` called directly from `BoToggle`). No optimistic movement on click — pill moves only after `SelectedToggleKey` updates. Duration / easing: shared `--bo-selection-travel-*` tokens (**240ms** / `cubic-bezier(0.2, 0.8, 0.2, 1)`); `--bo-toggle-thumb-duration` / `--bo-toggle-thumb-easing` are aliases — [motion.md](../foundations/motion.md)
 - Selected label/icon: white foreground (`--bo-color-semantic-white`) for contrast on the pill; unselected hover/focus unchanged
 - Icon + label vertically centered via flex (`align-items: center`); empty icon slot collapses
 - Full-width friendly: equal flex segments
@@ -62,7 +62,7 @@ Clicking the already-selected item is a no-op (no event).
 
 ## Host script
 
-Hosts that render `BoToggle` must load `_content/BreezeOn.UI/js/bo-toggle.js` (see [page-development.md](../page-development.md) § Host integration). Without it, selected segments fall back to a static primary fill (no slide).
+Hosts that render `BoToggle` (or `BoTabs`) must load `_content/BreezeOn.UI/js/bo-sliding-selection.js` (see [page-development.md](../page-development.md) § Host integration). Without it, selected segments fall back to a static primary fill (no slide). Do **not** load a separate `bo-toggle.js`.
 
 ## Intended use
 
