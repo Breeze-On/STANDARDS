@@ -19,9 +19,9 @@ This is **not** Redis, ASP.NET session, `IMemoryCache`, or a SHARED-UI domain ca
 
 | Classification | Examples |
 | --- | --- |
-| Cache Always | PF Roles / Steps / Options rows; PF metadata columns; Security Group definitions; Data Entity definitions; Data Entity Settings columns (per visited entity); CanManage flags |
+| Cache Always | PF Roles / Steps / Options rows; PF metadata columns; Security Group definitions; Data Entity definitions; Data Entity Settings columns (per visited entity); CanManage flags; **Translations enabled languages** (`translations-languages:{ApplicationEnabledGUID}`) |
 | Cache Conditionally | People-picker label map; VisibleContexts (page-level) |
-| Never Cache | Data Entity Values pages / Changesets; Security Group member lists; Import/Export envelopes; locale strings |
+| Never Cache | Data Entity Values pages / Changesets; Security Group member lists; Import/Export envelopes; locale strings; **Translations grid rows / Changesets / Excel envelopes** |
 
 ## Invalidation (summary)
 
@@ -33,6 +33,8 @@ This is **not** Redis, ASP.NET session, `IMemoryCache`, or a SHARED-UI domain ca
 | Catalog Save | Partial — update that segment baseline (+ dependents) |
 | Catalog Discard | None — restore working copy from baseline |
 | PF Settings Save | Update metadata baseline; invalidate PF entity segments |
+| Translations language add/reorder/delete | Invalidate `translations-languages:{guid}` (+ dependents when purge affects PF/Variables) |
+| Translations Value Save / Excel import apply | Invalidate translation dependents (Variables values, PF metadata/entity segments, languages stats) |
 | Warm tab / card navigation | None |
 | Page refresh / new circuit | New session |
 

@@ -61,6 +61,9 @@ Public helpers: `InsertNewAtTopAsync`, `RefreshSortableAsync` (non–Add New add
 | `ItemKey` | Required `Func<TItem, string>` → stable `data-key` for Sortable order |
 | `Columns` | Child `BoShuffleCardGridColumn<TItem>` definitions |
 | `AllowReorder` | Default **true**. When false, hide handle and do not init Sortable |
+| `ItemReorderable` | Optional `Func<TItem, bool>`. When false for an item: disabled handle + `bo-shuffle-card-grid__row--locked`; Sortable `filter` excludes the row from drag. Null = all rows reorderable when `AllowReorder` is true |
+
+Cell content (Display / Field) is vertically centered in each column track (`display: flex; align-items: center` on `.bo-shuffle-card-grid__col`) so icons and text share one midline with the handle / row actions.
 | `ShowFiltersButton` | Default **false**. When true, enables the filter **card** (`BoTextField` row). Host places the Filters button in section `HeaderActions` (rightmost after Add New) |
 | `FiltersVisible` / `FiltersVisibleChanged` | Two-way bind for filter-card visibility; toggle via `ToggleFiltersAsync()` from the host Filters button |
 | `Disabled` | Gates editors + Sortable |

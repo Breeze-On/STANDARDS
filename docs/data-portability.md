@@ -563,3 +563,39 @@ Flow: upload → parse (JSON or Excel) → shared document → validate → bulk
 - Extensions: `.json` or `.xlsx` per selected Format; in-memory only.
 - Max size: EAC `SecurityGroupMembersImport:MaxFileSizeMb` (default **5**) for both formats.
 - Analyze diagnostics: Debug logger category `BreezeOn.Eac.SecurityGroups.Members.Analyze`.
+
+---
+
+## Translations Excel (EAC-owned catalog)
+
+Bulk maintenance for **EAC-owned** translations only (Data Entity row Description, Process Framework column labels + TEXT metadata, Variable TEXT values). Surfaced by Application Configuration → **Translations** → **Bulk Actions**. Implementation: **SYSTEM-ADMIN-EAC** (`Components/Translations/Excel`, ClosedXML). **Not** part of Application Configuration JSON (`breezeon.eac.application-configuration`); PF/Variable language maps in that envelope remain a separate dual path.
+
+**Ownership boundary:** business-application string catalogs and EAC UI `.resx` chrome are out of scope.
+
+### Workbook
+
+| Item | Rule |
+| --- | --- |
+| Sheet | `Translations` (required) |
+| Table | `TranslationsTable` (required; AutoFilter) |
+| Row grain | One row per translatable item |
+| Fixed columns | `SourceKey` (protected write token), `Entity`, `Type`, `Item`, `Identifier`, `ApplyTo`, `Status` |
+| Language columns | One column per enabled language for the Application Context (`en-CA`, `fr-CA`, …) |
+| Status | Export-only review rollup (`Matched` / `Unmatched`); ignored on import |
+| Last Modified | Omitted from Excel |
+
+### Import safeguards
+
+- **Import Type** (required before Import; same pattern as Data Entity Excel / Security Groups Members):
+  - **Add Missing & Update Existing** — only non-blank language cells write; blank cells leave destination values untouched.
+  - **Overwrite Translations** — true overwrite; blank language cells clear the corresponding destination value (`P_POST_EACTranslationsSave` empty/null Value).
+- Identity columns (`SourceKey` + Entity/Type/Item/Identifier/ApplyTo) must match the destination; changing them is a blocking Error.
+- Only language value cells may change (per Import Type rules above).
+- Unknown / not-enabled language headers → Errors. Unknown `SourceKey` → Warning (ignored).
+- Flow: choose Import Type → upload → parse → analyze → **Import Summary** (Entity · Type · New · Updated) → confirm → `P_POST_EACTranslationsSave` one transaction.
+- Max size: EAC `TranslationExcelImport:MaxFileSizeMb` (default **25**). Authorization: Application Configuration manage (GSA or `APP_*`).
+
+### Export layout
+
+- Word wrap off; metadata columns width **12**; language columns width **25**.
+- Language columns use a soft primary header/data tint so editable columns are visually distinct from metadata.

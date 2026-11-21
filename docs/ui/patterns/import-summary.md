@@ -105,6 +105,7 @@ Future candidates (toast-only today): Applications JSON, Business Entities / Typ
 | Application Configuration synchronize | `ChangesSummaryContent` (Entity · Item · Type · New · Updated · Deleted); aggregated business units — not one row per portable code. Model: [application-configuration-deployment.md](../../../architecture/app-configuration/application-configuration-deployment.md#import-analysis-summary) | Synchronize |
 | Data Entities Excel import | `ChangesSummaryContent` (Included? / N/A) | Import |
 | Security Group Members import | `ChangesSummaryContent` (domain member columns) | Import |
+| Translations Excel import | `ChangesSummaryContent` (Entity · Type · New · Updated) | Import |
 
 ## Documentation duty
 
