@@ -16,7 +16,7 @@ Prerequisite: [`BREEZEON-AI-QUICKSTART.md`](BREEZEON-AI-QUICKSTART.md).
 | Approved patterns only | Gallery-shaped host; no Fluent on product pages; locked Home/`BoAppShell` |
 | Thin app resources | EAC owns `EacResources` / `IEacLocalizer` instead of misusing Gallery `BoUi` |
 | Honest auth deferral | Identity removed for this milestone; pages public until a security milestone |
-| Docs updated together | STANDARDS landscape/adm/i18n + EAC README_AI + Shared UI README_AI |
+| Docs updated together | STANDARDS landscape/eac/i18n + EAC README_AI + Shared UI README_AI |
 
 Success criterion for adoption: a separate application runs on Interactive Server with `BoAppShell`, BreezeOn branding, localized chrome, and standards-compliant Home cards — without inventing alternate chrome.
 

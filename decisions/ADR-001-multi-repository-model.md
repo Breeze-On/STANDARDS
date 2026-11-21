@@ -12,7 +12,7 @@ Use a **multi-repository** model: one repository per application or shared conce
 
 ## Consequences
 
-- Clear ownership and boundaries per repository (e.g. ADM vs Shared UI vs STANDARDS).
+- Clear ownership and boundaries per repository (e.g. EAC vs Shared UI vs STANDARDS).
 - Shared UI and other packages are consumed across repos rather than via a monorepo project graph.
 - Documentation and ADRs for org-wide decisions belong in STANDARDS; product `README_AI` remains repo-specific.
 - Agents must respect repository boundaries and not add unrelated domains into an existing product repo.

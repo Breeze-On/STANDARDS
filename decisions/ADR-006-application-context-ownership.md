@@ -4,7 +4,7 @@ Status: Accepted
 
 ## Context
 
-EAC enables Applications for Business Entities. Entity-specific configuration (roles, permissions, configurations, drop-down values, references, feature flags, future ADM metadata) must hang off a single canonical key rather than duplicating `(ApplicationGUID, BusinessEntityGUID)` pairs across tables.
+EAC enables Applications for Business Entities. Entity-specific configuration (roles, permissions, configurations, drop-down values, references, feature flags, future EAC metadata) must hang off a single canonical key rather than duplicating `(ApplicationGUID, BusinessEntityGUID)` pairs across tables.
 
 ## Decision
 
