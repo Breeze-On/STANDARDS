@@ -40,7 +40,7 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 
 ## Explicitly excluded
 
-- Data Entity Rows, Translations, Metadata values (Data Entity row data; Process Framework metadata values **are** included, nested under their Role / Step / Option)
+- Data Entity Rows, Translations, Metadata values (Data Entity row data; Process Framework metadata values **are** included, nested under their Role / Step / Option; Variable **values** are included under `variables.values`)
 - Security Group memberships / user assignments
 - Application runtime / operational / audit data
 - Environment-specific GUIDs
@@ -51,10 +51,10 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 | --- | --- | --- |
 | `dataEntities` | Yes | Yes |
 | `securityGroups` | Yes (export always; import when present) | Yes when key present; skipped when omitted |
+| `variables` | Yes (export always as `{ definitions, values }`; import when present) | Yes when key present (both arrays required); skipped when omitted |
 | `processFramework` | Yes (export always as nested tree; import when present) | Per-owner `metadataColumns` / `values` present/omit; skipped when `processFramework` omitted |
-| `systemConfiguration` | Omitted | No |
 
-Legacy schemaVersion **1** flat keys (`processMetadataColumns` / `roles` / `steps` / `options`) are still accepted on import (dual-read). Export writes schemaVersion **2** nested only. Non-empty `systemConfiguration` is rejected.
+Legacy schemaVersion **1** flat keys (`processMetadataColumns` / `roles` / `steps` / `options`) are still accepted on import (dual-read). Export writes schemaVersion **2** nested only. Non-empty legacy `systemConfiguration` is rejected (replaced by `variables`).
 
 ### Process Framework sections
 
@@ -92,7 +92,7 @@ Authoritative aggregation model for Application Configuration synchronize review
 1. Data Entity  
 2. Process Framework  
 3. Security Group  
-4. System Configuration (designed; no rows until shipped)
+4. Variables
 
 ### Item
 
@@ -101,7 +101,7 @@ Authoritative aggregation model for Application Configuration synchronize review
 | Data Entity | Business name (`description` when non-empty, else `code`). One row per entity with entity-level changes. |
 | Process Framework | Steps → Options → Roles (fixed order) |
 | Security Group | always `Group` |
-| System Configuration | future category label |
+| Variables | always `Variable` |
 
 ### Type (sort: Values, then Settings)
 
@@ -110,6 +110,7 @@ Authoritative aggregation model for Application Configuration synchronize review
 | Process Framework | `values` arrays | `metadataColumns` for that owner |
 | Data Entity | entity-level create/update/delete only (column counts omitted) | not used |
 | Security Group | always Values | none today |
+| Variables | `variables.values` | `variables.definitions` |
 
 ### Sort within Entity
 

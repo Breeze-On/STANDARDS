@@ -87,7 +87,8 @@ Selector visibility on `/app-configuration` is **not** Applications/BE page RLS.
 | Export Application Configuration JSON | Yes | Yes (Application they administer) | No | No | No |
 | Import / synchronize Application Configuration JSON | Yes | Yes (Application they administer; `applicationUniqueCode` must match) | No | No | No |
 | Configure Process Framework (Roles / Steps / Options / metadata columns; `/app-configuration` Process Framework tab) | Yes | Yes (Application they administer; `APP_*` / `EnsureCanManageObjectAsync`) | No | No (read-only chrome) | No |
-| Configure other App Configuration sections (System / Security Groups) | No (System Configuration not shipped; Security Groups per their own rules) | No | No | No | No |
+| Configure Variables (definitions + values; `/app-configuration` Variables tab) | Yes | Yes (Application they administer; `APP_*` / `EnsureCanManageObjectAsync`) | No | No (read-only chrome) | No |
+| Configure Security Groups (App Config) | Yes | Yes (Application they administer) | No | No (read-only chrome) | No |
 
 ## Platform / security
 

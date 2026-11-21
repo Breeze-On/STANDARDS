@@ -207,13 +207,14 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 | `applicationCode` | Export: yes; Import: when present | Short Application `Code`; when present on import must match selected Application |
 | `dataEntities` | Yes | Array (may be empty). Synchronized |
 | `securityGroups` | Export: yes; Import: when present | Array (may be empty). When **present** (including `[]`), synchronized for the Application. When **omitted**, security-group sync is skipped (backward compatible). |
+| `variables` | Export: yes; Import: when present | Object with required `definitions` + `values` arrays (may be empty). When **present**, both are synchronized. When **omitted**, Variables sync is skipped. See below. |
 | `processFramework` | Export: yes; Import: when present | Object. Canonical Process Framework node (schemaVersion **2**). Absent = skip all Process Framework sync. See below. |
 
 **Legacy flat keys (schemaVersion 1 import only):** `processMetadataColumns`, `roles`, `steps`, `options` at the root. Dual-read normalizes them into the nested ownership model. **Reject** files that mix flat Process Framework keys with `processFramework`. Export never writes the flat keys.
 
-**Not accepted from files:** Application/Data Entity/Column/SecurityGroup/Role/Step/Option/metadata-column GUIDs, surrogate ids, audit columns, Data Entity rows, Data Entity translations, group members. (Process Framework metadata values **are** carried, inside each Role / Step / Option `metadata` object under `values`.)
+**Not accepted from files:** Application/Data Entity/Column/SecurityGroup/Variable/Role/Step/Option/metadata-column GUIDs, surrogate ids, audit columns, Data Entity rows, Data Entity translations, group members. (Process Framework metadata values **are** carried, inside each Role / Step / Option `metadata` object under `values`. Variable **values** are carried under `variables.values`.)
 
-**Not shipped:** non-empty `systemConfiguration` — rejected if present with items.
+**Legacy reject:** non-empty `systemConfiguration` — still rejected if present with items (replaced by `variables`; never shipped with rows).
 
 ### Data entity item
 
@@ -245,6 +246,31 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 | `sortOrder` | Yes | Positive integer; unique within the same `businessEntityCode` |
 
 Creates `Security.Groups` with Code `APPSG_{UniqueCode}_{BusinessEntityCode}_{AttributeCode}`, Name `{ApplicationCode} / {BusinessEntityCode} — {AttributeCode}`, **`IsManuallyCreated = 1`**. Memberships are never imported. Removing a portable item deletes the EAC configuration row only (not the Security group).
+
+### Variables
+
+Application-scoped definitions; values per Application Enabled context (resolved via `businessEntityCode`). Export always emits `variables` with both arrays. Import: key absent = skip; present = sync both (both keys required when `variables` is present). No GUIDs / audit in the file. DataType is immutable on update for an existing Code.
+
+#### `variables.definitions` item
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `code` | Yes | Lowercase kebab-case; unique within Application |
+| `description` | Yes | Plain English string only (administrative metadata; language maps are rejected) |
+| `dataType` | Yes | `TEXT` \| `NUMBER` \| `BOOLEAN` \| `DATE` \| `DATETIME` (immutable on update) |
+| `decimals` | Conditional | Integer **0–10**. NUMBER only (omit → default **0**). Must be omitted for other types. |
+| `metadata` | No | Freeform organizational text ≤250. Export always emits (`null` when unset). |
+| `sortOrder` | Yes | Positive integer; unique within `definitions` |
+
+#### `variables.values` item
+
+| Field | Required | Notes |
+| --- | --- | --- |
+| `businessEntityCode` | Yes | Must be enabled for the Application; resolves to ApplicationEnabledGUID |
+| `code` | Yes | Must match a definition in the file |
+| `value` | Yes | Typed per definition DataType: TEXT = string or language map; NUMBER = number; BOOLEAN = boolean; DATE / DATETIME = ISO string. Sparse: omit the entry when unset. |
+
+Removing a definition cascades all contexts’ values + TEXT translations. When `variables` is present, values are a **full sync** across enablements for this Application’s variables (absent entries are removed).
 
 ### Process Framework sections
 

@@ -147,6 +147,7 @@ The library **never** talks to SQL or application repositories.
 | `NewItemFactory` | Creates `TItem` for Add New (editable modes) |
 | `ShowAddNew` | Default **true** in editable modes (ignored in Nested View) |
 | `ShowSave` | Default **true**. When **false**, InlineEdit hides the section-header Save button so the host can own Save/Discard outside the grid (e.g. page Actions). Does not remove per-row RowEdit Save. |
+| `ShowDelete` | Default **true**. When **false**, hides the per-row Delete action. In Inline Edit, the actions column is omitted entirely when Delete is the only action. Use for value-maintenance grids that must not delete rows (e.g. EAC Variables values). |
 | `ActionsPlacement` | `BoGrid`-only. `BoGridActionsPlacement`: **`Trailing`** (default — actions after data columns) or **`Leading`** (actions before data columns, after selection when enabled). Use Leading when Delete must stay visible without horizontal scroll (e.g. wide dynamic columns). Does **not** apply to `BoShuffleCardGrid` — Shuffle Card handle/icons are always leading ([shuffle-card-grid.md](shuffle-card-grid.md)). |
 | `OnSave`, `OnRowDeleted`, `OnChanged` | Host callbacks |
 | `EnableSelection` | Default **false**. When true (flat modes only; not Nested View), shows a compact **first** selection column |

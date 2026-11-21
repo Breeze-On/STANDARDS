@@ -24,7 +24,7 @@ The portable envelope identifies the Application by **`applicationUniqueCode`** 
 
 ### Object identity
 
-Within an Application, configuration objects (Data Entities, Columns, Security Groups, Process Framework metadata columns / Roles / Steps / Options, and future System Configuration) match by **`Code`**. Never by GUID, database identity, or environment-specific keys.
+Within an Application, configuration objects (Data Entities, Columns, Security Groups, Variables, Process Framework metadata columns / Roles / Steps / Options) match by **`Code`**. Never by GUID, database identity, or environment-specific keys. Variable values additionally match by (`businessEntityCode`, `code`) for Application Enabled contexts.
 
 ### No rename detection
 
@@ -48,7 +48,7 @@ The Application Configuration kind uses integer `schemaVersion` starting at `1`.
 
 ### Relation to Application Context ownership
 
-Application-scoped definitions (for example Data Entity definitions and columns, and Process Framework Roles / Steps / Options with their metadata) synchronize under this framework. Instance/runtime data owned by `ApplicationEnabledGUID` (rows, translations, metadata, memberships) is **excluded** from this portable contract ([ADR-016](ADR-016-data-entity-ownership.md), [ADR-006](ADR-006-application-context-ownership.md)).
+Application-scoped definitions (for example Data Entity definitions and columns, Variables definitions, and Process Framework Roles / Steps / Options with their metadata) synchronize under this framework. Instance/runtime Data Entity data owned by `ApplicationEnabledGUID` (rows, translations, metadata) and Security Group memberships remain **excluded** ([ADR-016](ADR-016-data-entity-ownership.md), [ADR-006](ADR-006-application-context-ownership.md)). **Exceptions that do ship context-scoped portable rows:** Security Groups configuration and **Variable values** (resolved by `businessEntityCode`).
 
 Removing a Data Entity or Column during sync is blocked when dependents (rows / metadata) exist in any Application Context.
 
@@ -66,7 +66,7 @@ and must extend the deployment envelope, planner, apply path, and STANDARDS docu
 ## Consequences
 
 - EAC implements kind `breezeon.eac.application-configuration` with synchronize semantics, separate from Applications/BE merge portability.
-- `schemaVersion` 1 ships Data Entities + Columns, optional Security Groups, and the optional Process Framework sections `processMetadataColumns`, `roles`, `steps`, `options` ([ADR-019](ADR-019-process-framework-metadata.md)); `systemConfiguration` is still omitted until that feature ships. Optional sections: key absent = skipped; present (including `[]`) = synchronized.
+- `schemaVersion` 1 ships Data Entities + Columns, optional Security Groups, and the optional Process Framework sections `processMetadataColumns`, `roles`, `steps`, `options` ([ADR-019](ADR-019-process-framework-metadata.md)). Current export (`schemaVersion` 2) also ships optional nested `processFramework` and optional `variables` (`definitions` + `values`). Legacy non-empty `systemConfiguration` is rejected. Optional sections: key absent = skipped; present (including empty arrays / empty nested trees) = synchronized.
 - Administrators confirm via the standard Import Summary (`BoImportSummaryDialog`: Changes Summary + Errors/Warnings) before synchronize executes. Errors block Synchronize; warnings do not.
 - Platform SSOT: [`architecture/app-configuration/`](../architecture/app-configuration/README.md).
 
