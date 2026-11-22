@@ -28,7 +28,12 @@ Adopt the **Query-Driven Data Retrieval Standard** ([docs/ui/controls/query-driv
 - **Sort governance:** sortable columns use a **whitelist**; unknown sort columns fall back to a safe default (never concatenated into SQL).
 - **Interaction rules:** text filters execute after **debounce (~750ms)**, **Enter**, or **blur**; dropdown filters apply **immediately** on change; **no Apply button**. Requests use **cancellation / latest-wins**; a stale response **never** updates the UI.
 - **Top-N for large drop-down sources:** default recommendation **100**, **configurable**, not a hard constant; **small** sets may preload fully.
-- **Exceptions framework:** deviations are allowed only when justified, documented (product docs; ADR when it sets a pattern), and approved. **Known approved exception:** EAC **Business Entities → Business Hierarchy** full-tree load (hierarchy path, cycle checks, and cascade selection need the whole tree).
+- **Exceptions framework:** deviations are allowed only when justified, documented (product docs; ADR when it sets a pattern), and approved.
+- **Approved EAC full-load exceptions:**
+  - **Business Entities → Business Hierarchy** — hierarchy path, cycle checks, and cascade selection need the whole tree.
+  - **Process Framework Roles / Steps / Options** — configuration catalogs are loaded in full for the `BoShuffleCardGrid` working copies.
+  - **Variable Values** — the selected Application Context's configuration values are loaded in full into the client working copy.
+- The Process Framework and Variable Values exceptions are intended for **relatively small-cardinality configuration catalogs**. **No paging is required at this time.** Revisit the exception if catalog sizes materially exceed that operating envelope or cease to be a practical single-response, in-memory working set.
 - **Planning Agents** must default to **one primary retrieval contract per dataset**, **challenge** any proposed secondary contract, **require rationale**, and **document exceptions**.
 
 ## Consequences
@@ -36,7 +41,7 @@ Adopt the **Query-Driven Data Retrieval Standard** ([docs/ui/controls/query-driv
 - Fewer SQL objects per dataset; one contract to test, document in `docs/db-model.md`, and evolve.
 - Consistent UX across apps: same filter execution, sort, pagination, and cancellation behavior.
 - Simple catalogs stay in EF / app services (**FilterCatalog** naming preferred); stored procedures remain for justified needs (consistent with [database.md](../docs/database.md)).
-- Pages with full-tree or small preloaded datasets remain valid when documented as exceptions or as small-set preloads.
+- Pages with full-tree or small preloaded datasets remain valid when documented as exceptions or as small-set preloads. EAC Process Framework Roles / Steps / Options and Variable Values remain client full-load configuration workspaces; paging is not currently required.
 - Existing companion FilterOptions procedures in products are migration candidates; new work must not introduce them by default.
 - `BoGrid` Client mode (full cache) remains the default; Server `QueryMode` is documented in [grids.md](../docs/ui/controls/grids.md#server-querymode).
 - Host reuse: **`BoLatestWinsQuery`** (cancellation / latest-wins / optional signature skip) and **`BoNestedViewKeywordFilter`** (client Rules 1–3) live in `BreezeOn.UI` without SQL awareness (ADR-004). Large dropdowns use **`ItemsProvider`**.

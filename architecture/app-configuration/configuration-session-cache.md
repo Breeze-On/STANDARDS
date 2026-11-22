@@ -21,7 +21,7 @@ This is **not** Redis, ASP.NET session, `IMemoryCache`, or a SHARED-UI domain ca
 | Classification | Examples |
 | --- | --- |
 | Cache Always | PF Roles / Steps / Options rows; PF metadata columns; Security Group definitions; Data Entity definitions; Data Entity Settings columns (per visited entity); **Variables definitions** (`variables-definitions`); **Variables values** for the session context (`variables-values:{ApplicationEnabledGUID}`) — current implemented behavior; CanManage flags; **Translations enabled languages** (`translations-languages:{ApplicationEnabledGUID}`) |
-| Cache Conditionally | People-picker label map; VisibleContexts (page-level) |
+| Cache Conditionally | People-picker label map; **Process Framework DDL option maps** (`pf-ddl-options:{ApplicationEnabledGUID}`); VisibleContexts (page-level) |
 | Never Cache | Data Entity Values pages / Changesets; Security Group member lists; Import/Export envelopes; locale strings; **Translations grid rows / Changesets / Excel envelopes** |
 
 Shipped App Configuration modules represented above: Data Entities, Process Framework, Variables, Security Groups, Translations.
@@ -35,10 +35,10 @@ Shipped App Configuration modules represented above: Data Entities, Process Fram
 | Export | No refresh |
 | Catalog Save | Partial — update that segment baseline (+ dependents) |
 | Catalog Discard | None — restore working copy from baseline |
-| PF Settings Save | Update metadata baseline; invalidate PF entity segments |
+| PF Settings Save | Update metadata baseline; invalidate PF entity segments and the context PF DDL option map |
 | Variables definitions / values Save | Update `variables-definitions` / `variables-values:{guid}` baselines; **invalidate** `translations-languages:{guid}` (stats depend on Variable TEXT) |
 | PF Settings / entity Save (metadata values, labels) | Update PF baselines; **invalidate** `translations-languages:{guid}` |
-| Data Entity Values Save | Never Cache values; **invalidate** `translations-languages:{guid}` (DE row Description stats) |
+| Data Entity definition / Values Save | Update definitions when applicable; Values remain Never Cache; **invalidate** `pf-ddl-options:{guid}` and `translations-languages:{guid}` (DE row Code/Description options and stats) |
 | Translations language add/reorder/delete | Invalidate `translations-languages:{guid}` (+ dependents when purge affects PF/Variables) |
 | Translations Value Save / Excel import apply | Invalidate translation dependents (Variables values, PF metadata/entity segments, languages stats) |
 | Warm tab / card navigation | None |

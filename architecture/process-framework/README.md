@@ -3,9 +3,16 @@
 
 Owner: Architecture (EAC domain)
 
-**Process Framework is an EAC business capability** — not a platform workflow engine. Multi-application consumption of PF is **Future Validation**. Implementation lives in SYSTEM-ADMIN-EAC.
+**Process Framework is an EAC business capability and metadata model** — not a platform workflow engine. Multi-application consumption of PF is **Future Validation**. Implementation lives in SYSTEM-ADMIN-EAC.
 
-The Process Framework lets Application Administrators define **one process definition per Application**: who acts (**Roles**), what happens (**Steps**), and how work moves (**Options** / routes), plus optional business attributes (metadata). A future Process Automation Workflow Engine may consume this metadata; the engine itself is **not implemented**.
+The Process Framework lets Application Administrators define **one process definition per Application**: who acts (**Roles**), what happens (**Steps**), and how work moves (**Options** / routes), plus optional business attributes (metadata). PF stores and governs that definition only; it does not execute process instances. A future Process Automation Workflow Engine may consume this metadata; the engine itself is **not implemented**.
+
+## Application adoption boundary
+
+- PF is **metadata only**. It does not provide runtime instances, task assignment, state transitions, or execution services.
+- An application may own and implement its own runtime against PF metadata. That application-owned runtime is an approved architecture boundary; it does not make the runtime part of PF or the platform.
+- A platform workflow engine is **not a prerequisite for Application #2** or another BreezeOn product application. Do not block application adoption on an unshipped engine.
+- If an application does not need PF metadata, it is not required to adopt the EAC PF capability. Multi-application PF consumption remains Future Validation.
 
 > **DEV-001:** Only the [Business vision (future engine)](#business-vision-future-engine) section is non-normative. All **authoring semantics** (Role, Step, Option, Terminal, Informational, Routing, Outcome, Entry Step, graph rules) in this document are **normative current reality**.
 

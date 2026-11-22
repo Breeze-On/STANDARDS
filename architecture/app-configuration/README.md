@@ -22,6 +22,16 @@ Decision: [ADR-017](../../decisions/ADR-017-application-configuration-deployment
 | Platform deployment semantics / architecture | STANDARDS (`architecture/app-configuration/`) |
 | Portable JSON contract | STANDARDS (`docs/data-portability.md`) |
 
+## Service-boundary authorization
+
+EAC App Configuration uses the grant-driven `VisibleContexts` projection for read scope. DataService reads **must enforce** that scope **at the service boundary** (or accept the equivalent stronger grant: owning Application administrator or Global System Administrator); they must not rely solely on the page's selectors or component composition.
+
+- Application-scoped reads require at least one visible context for the requested Application, unless the actor is its administrator or a GSA.
+- Application Context–scoped reads require the requested `ApplicationEnabledGUID` in `VisibleContexts`, unless the actor administers the owning Application or is a GSA.
+- Writes retain their operation-specific management checks.
+
+This is the secure default inherited by future applications: presentation-layer filtering supplements service authorization; it never replaces it. Normative platform rule: [authorization-standard.md](../authorization/authorization-standard.md#service-boundary-read-authorization).
+
 ## Definition of Done
 
 Any change affecting Application Configuration **deployment semantics**, **JSON contract**, **sync apply**, or **section participation** is incomplete until this tree, related ADR(s), [`docs/data-portability.md`](../../docs/data-portability.md), EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md), and thin product README pointers are updated in the **same change set**.

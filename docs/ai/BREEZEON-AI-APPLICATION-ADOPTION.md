@@ -36,6 +36,7 @@ The **Customer Onboarding Master Flow is not used to create new BreezeOn applica
 - Defer Authentication or Authorization
 - Fork **Identity** or **Security** schemas / create an independent Identity catalog
 - Platformize EAC **Process Framework**, **Data Entities**, or **Variables** (EAC-scoped)
+- Require an unshipped platform workflow engine before Application #2 can proceed. Process Framework is metadata only; an application-owned runtime is an approved boundary when the product needs execution
 - Invent **NuGet** distribution mechanics or **registry** discovery/deploy-order workflows
 
 ### Future Validation

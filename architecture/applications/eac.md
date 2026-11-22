@@ -45,6 +45,25 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | Portability | Applications + Business Entity Types + Business Entities JSON (merge/upsert) + Application Configuration JSON (synchronize; includes Process Framework sections) — [data-portability.md](../../docs/data-portability.md) (EAC-owned; not a shared service) |
 | Local database | SQL Server Docker (`BreezeOnLocal`); see [local-database.md](../../docs/local-database.md) |
 
+## Application Configuration authorization boundary
+
+App Configuration selector composition is not the authorization boundary. DataService reads **must enforce** the grant at the service boundary through the shared App Configuration authorization checks:
+
+- Application-scoped reads require the Application to appear in `VisibleContexts`, or the actor to be an Application administrator / GSA.
+- Application Context–scoped reads require the requested `ApplicationEnabledGUID` to appear in `VisibleContexts`, or the actor to administer the owning Application / be a GSA.
+- Writes continue to require their operation-specific Application or Context management grant.
+
+This prevents a caller-controlled Application or Application Enabled GUID from bypassing the page's filtered selectors. Platform rule: [authorization-standard.md](../authorization/authorization-standard.md#service-boundary-read-authorization).
+
+## Application Configuration catalog retrieval
+
+The following are approved [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md) full-load exceptions:
+
+- Process Framework **Roles / Steps / Options** load each catalog in full for the `BoShuffleCardGrid` working copy.
+- **Variable Values** load all values for the selected Application Context into the client working copy.
+
+These are relatively small-cardinality configuration catalogs. **No paging is required at this time.** Revisit the exceptions if catalog sizes materially exceed that operating envelope or stop being practical as a single-response, in-memory working set. **Business Entities → Business Hierarchy** remains the separate approved full-tree exception documented below.
+
 ## Applications: selection, import, export
 
 Applications import/export is **owned by EAC** (`SYSTEM-ADMIN-EAC`). It is **not** a shared service. File format: [data-portability.md](../../docs/data-portability.md). Audit columns: [database.md](../../docs/database.md#mandatory-audit-columns) / [ADR-005](../../decisions/ADR-005-mandatory-transactional-audit-columns.md) (actor = logged-in user).

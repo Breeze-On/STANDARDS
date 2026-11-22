@@ -116,7 +116,13 @@ An exception to the One Dataset standard (for example a justified secondary cont
 2. The rationale is **documented** (product `docs/db-model.md` / architecture doc; ADR if it sets a pattern);
 3. The primary-contract default was **challenged** first.
 
-**Known approved exception:** EAC **Business Entities → Business Hierarchy** loads the **full tree** (hierarchy path, cycle checks, cascade selection require it). Keyword filtering on that tab still follows [Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) with **client-side** result selection over the loaded tree (no server-paged Hierarchy contract). See [architecture/applications/eac.md](../../../architecture/applications/eac.md#business-entities).
+### Approved EAC full-load exceptions
+
+- **Business Entities → Business Hierarchy** loads the **full tree** because hierarchy path, cycle checks, and cascade selection require it. Keyword filtering still follows [Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) with **client-side** result selection over the loaded tree (no server-paged Hierarchy contract).
+- **Process Framework Roles / Steps / Options** load each configuration catalog in full for its `BoShuffleCardGrid` working copy.
+- **Variable Values** load the selected Application Context's configuration values in full into the client working copy.
+
+Process Framework and Variable Values are **relatively small-cardinality configuration catalogs**. **No paging is required at this time.** Revisit these exceptions if catalog sizes materially exceed that operating envelope or no longer remain a practical single-response, in-memory working set. See [architecture/applications/eac.md](../../../architecture/applications/eac.md#application-configuration-catalog-retrieval).
 
 ## Planning Agent rules
 

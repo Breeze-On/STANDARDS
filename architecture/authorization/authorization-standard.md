@@ -50,6 +50,20 @@ Passing page security does not imply unrestricted data access. A platform GroupG
 
 Application Context–scoped permissions beyond enablement visibility remain future work under [ADR-006](../../decisions/ADR-006-application-context-ownership.md).
 
+## Service-boundary read authorization
+
+Page composition, hidden controls, selector filtering, and route authorization are **not** data-access controls. An application service or DataService that reads grant-scoped data **must enforce the applicable grant again at the service boundary** before querying or returning data.
+
+For EAC Application Configuration, every DataService read must require one of:
+
+- membership in the grant-driven **`VisibleContexts`** projection for the requested Application or Application Enabled context;
+- Application object-administrator membership for the owning Application; or
+- Global System Administrator access.
+
+Application-scoped reads may succeed when any `VisibleContexts` row belongs to that Application. Context-scoped reads require the requested `ApplicationEnabledGUID` itself to be visible. A caller-controlled GUID must never bypass these checks merely because the App Configuration page previously filtered its selectors.
+
+This is the secure-default pattern for future BreezeOn applications: **enforce authorization at the service boundary and use page composition only as an additional UX layer**. The equivalent grant model may differ by product, but route or component visibility alone is never sufficient.
+
 ## Privileged writes (defense in depth)
 
 ### Convention-based mutation APIs (accepted)
@@ -96,7 +110,7 @@ When a user is added to or removed from a Security Group (for example via EAC **
 | Concern | Owner | Where |
 | --- | --- | --- |
 | Page security | Platform (`IBoAuthorizationService` + page catalog) | Nav, Home, route, Access Denied |
-| Data security | Product / domain | Stored procedures, retrieval contracts, EF filters, GroupGUID membership checks |
+| Data security | Product / domain | Service-boundary read gates, stored procedures, retrieval contracts, EF filters, GroupGUID membership checks |
 
 Passing page security does not imply unrestricted data access.
 
