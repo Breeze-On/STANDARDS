@@ -1,7 +1,7 @@
 ---
 description: >-
   Breeze-On only — bootstrap: follow STANDARDS Development Agent rules (Build
-  Locally from docs/plans/in-progress/; docs + knowledge transfer; archive).
+  Locally from docs/plans/in-progress/; docs + knowledge transfer; delete-preferred).
 alwaysApply: true
 ---
 
@@ -18,5 +18,5 @@ Do not invent local planning/output rules that conflict with STANDARDS.
 - On Build Locally: implement from `docs/plans/in-progress/…` (do not ask for the plan in chat)
 - Update permanent documentation as part of Done
 - Transfer lasting knowledge out of the plan into permanent docs
-- When complete: move plan to `docs/plans/implemented/` (preferred) or delete if fully transferred
+- When complete: prefer delete after knowledge transfer; retain under `docs/plans/implemented/` only when justified
 - Failed/blocked/partial: keep the plan under `docs/plans/in-progress/`; update status with deltas only

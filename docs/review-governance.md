@@ -3,11 +3,9 @@
 
 Owner: Architecture
 
-**Mandatory** format for BreezeOn reviews: documentation content reviews, code reviews that raise findings, architecture reviews, domain reviews (D01+), and future application reviews.
+**Mandatory** format when a BreezeOn review raises findings (ad-hoc architecture, domain, code, or application reviews). This is a finding-shape SSOT — **not** authorization for recurring documentation review programs, standing roadmaps, or permanent review corpora.
 
 **Objective:** Optimize reviews for **owner decision-making and implementation clarity**, not audit-style evidence collection alone. The product owner must never have to interpret reviewer intent.
-
-**Related:** Content-review execution roadmap lives in each product’s `docs/plans/` (e.g. SYSTEM-ADMIN-EAC). This file is the **org SSOT** for finding shape and Executive Summary; roadmaps and templates must reference it.
 
 ---
 
@@ -52,7 +50,7 @@ Every finding (all severities) **must** include:
 
 ### Recommended Action examples
 
-Correct contradictory documentation · Add explicit exception documentation · Clarify platform versus EAC ownership · Update an ADR · Implement validation · Future validation only · Architecture decision required · No action required
+Correct contradictory documentation · Add explicit exception documentation · Clarify platform versus application ownership · Update an ADR · Implement validation · Future validation only · Architecture decision required · No action required
 
 ---
 
@@ -91,14 +89,14 @@ Findings where remediation is unclear, impact is uncertain, or additional verifi
 
 Exactly one concise recommendation:
 
-- Close domain/review and implement approved findings
-- Close domain/review and defer findings
+- Close review and implement approved findings
+- Close review and defer findings
 - Re-review specific findings only
 - Hold open pending owner decision
 
 ---
 
-## Severity model (domain content reviews)
+## Severity model
 
 | Severity | Meaning |
 | --- | --- |
@@ -111,34 +109,32 @@ Only Critical, Major, and Medium produce remediation recommendations (Reviewer R
 
 ### Approval decision values
 
-Exactly one per domain review report:
+Exactly one per review report when an approval decision is recorded:
 
 | Decision | Meaning |
 | --- | --- |
 | **Approved** | No Critical/Major open; Medium items accepted as deferred with owners/dates or waived with rationale; Future Validation listed explicitly |
-| **Approved with Improvements** | Critical none; Major/Medium remediations accepted and scheduled; domain usable for downstream reviews |
-| **Needs Rework** | Critical open, or Major findings that invalidate downstream sequencing until rewritten/re-decided |
+| **Approved with Improvements** | Critical none; Major/Medium remediations accepted and scheduled |
+| **Needs Rework** | Critical open, or Major findings that invalidate proceeding until rewritten/re-decided |
 
-Product roadmaps may cite this section; they must **not** redefine severity or approval values.
+Do **not** redefine severity or approval values in product plans.
 
 ---
 
 ## Closed review-report lifecycle
 
-Domain content-review reports are temporary plan artifacts (`Classification` may become **H** when archived).
+Review reports are temporary plan artifacts.
 
-After a domain reaches **Approved** or **Approved with Improvements** (with remediations closed or explicitly deferred):
+After a review reaches **Approved** or **Approved with Improvements** (with remediations closed or explicitly deferred):
 
-1. Move the Closed report from `docs/plans/in-progress/` to `docs/plans/implemented/` (H-class archive), **or** delete only if every lasting decision already lives in permanent AA docs.
-2. Do **not** leave Closed review reports in `in-progress/` indefinitely.
-3. Re-open only with **new evidence** (code/schema change that breaks docs; later AA contradiction; material incident; new app scope change; Critical security finding).
-
-Active/in-flight review reports and the content-review roadmap stay under `docs/plans/in-progress/` until Closed.
+1. Promote lasting decisions into permanent AA/OPS/DEC/ENT docs in the same remediation change sets.
+2. **Prefer delete** the closed report once knowledge is transferred. Keep under `docs/plans/implemented/` (`Classification: H`) only when retention is explicitly justified.
+3. Do **not** leave Closed review reports in `in-progress/` indefinitely.
+4. Do **not** invent standing content-review roadmaps or retain closed review corpora as long-term inventory.
+5. Re-open only with **new evidence** (code/schema change that breaks docs; later AA contradiction; material incident; new app scope change; Critical security finding).
 
 ---
 
 ## Templates
 
-Domain content reviews: product `docs/plans/in-progress/domain-content-review-report-TEMPLATE.md` (must mirror this SSOT).
-
-Other review types (PR / architecture / app kickoff) may use a shorter header but **must** use the same finding fields and Executive Summary buckets when they raise findings.
+Finding-bearing reviews may use a short product-local draft under `docs/plans/in-progress/` while open. Any template **must** mirror this SSOT’s finding fields and Executive Summary buckets. Do not maintain a permanent org review-report template library for its own sake.

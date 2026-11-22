@@ -16,7 +16,7 @@ Do not invent local planning/output rules that conflict with STANDARDS.
 ## Hard requirements (summary)
 
 - New/active plans: `docs/plans/in-progress/<name>.md` only
-- Completed plans: move to `docs/plans/implemented/`
+- Completed plans: prefer delete after knowledge transfer; `implemented/` only when retention justified
 - Never render plan content in chat
 - After create/update, reply with **only** the path and `[Build Locally]`
 - **Delta updates only** — update the existing file; no full regenerations, V2, or duplicates

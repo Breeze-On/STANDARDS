@@ -24,7 +24,7 @@ Owns org-wide standards, platform architecture, ADRs, runbooks, deviations, and 
 | Task | Read |
 | --- | --- |
 | Doc architecture / classification / README rules | [`docs/documentation.md`](docs/documentation.md) |
-| Review findings / severity / Closed-report archive | [`docs/review-governance.md`](docs/review-governance.md) |
+| Review finding format (ad-hoc) | [`docs/review-governance.md`](docs/review-governance.md) |
 | UI behavior / page construction | [`docs/ui/overview.md`](docs/ui/overview.md) · [`page-development.md`](docs/ui/page-development.md) |
 | Database / seed | [`docs/database.md`](docs/database.md) · [`local-database.md`](docs/local-database.md) |
 | Identity / auth | [`architecture/identity-and-authentication/`](architecture/identity-and-authentication/README.md) |

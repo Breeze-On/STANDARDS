@@ -12,7 +12,7 @@ alwaysApply: true
 Read and follow that document. Key constraints:
 
 - New/active plans → `docs/plans/in-progress/<name>.md`
-- Completed plans → `docs/plans/implemented/`
+- Completed plans → prefer delete after knowledge transfer; `implemented/` only when retention justified
 - Never render plan content in chat
 - After create/update, reply with **only** the path and `[Build Locally]`
 - **Delta updates only** — no full regenerations, V2, or duplicate plans

@@ -37,11 +37,11 @@ The parent folder `docs/plans/` holds lifecycle subfolders only:
 | Folder | Holds |
 | --- | --- |
 | `docs/plans/in-progress/` | New and active plans |
-| `docs/plans/implemented/` | Successfully completed plans (after knowledge transfer) |
+| `docs/plans/implemented/` | Retained completed plans only when retention is justified (`Classification: H`) |
 
 - **New** plans are created under `docs/plans/in-progress/`.
 - **Active** plans remain under `docs/plans/in-progress/`.
-- **Successfully completed** plans move to `docs/plans/implemented/`.
+- **Successfully completed** plans: after knowledge transfer, **prefer delete**. Keep under `docs/plans/implemented/` only when retention is explicitly justified (audit/legal). Do not accumulate closed review corpora or fully transferred feature plans.
 
 Do **not** store plan markdown files directly in the flat parent `docs/plans/` folder.
 
@@ -103,7 +103,7 @@ docs/plans/in-progress/security-group-members.md
 | Lifecycle | Path |
 | --- | --- |
 | New / active | `docs/plans/in-progress/` |
-| Completed | `docs/plans/implemented/` |
+| Retained after close (exception) | `docs/plans/implemented/` |
 
 Examples:
 
@@ -111,8 +111,9 @@ Examples:
 docs/plans/in-progress/security-group-members.md
 docs/plans/in-progress/security-group-members-excel.md
 docs/plans/in-progress/data-entity-ordering.md
-docs/plans/implemented/security-group-members.md
 ```
+
+After knowledge transfer, **prefer delete**. Use `docs/plans/implemented/` only when retention is justified.
 
 File names should be descriptive and stable.
 
@@ -147,7 +148,7 @@ Planning Agents must minimize token consumption.
 Requirements:
 
 - Never render large plans in chat.
-- Always persist plans directly to files under `docs/plans/in-progress/` (or move to `docs/plans/implemented/` when complete).
+- Always persist plans directly to files under `docs/plans/in-progress/` (delete after knowledge transfer; retain under `implemented/` only when justified).
 - Update existing plans whenever possible.
 - **Delta updates only** — see above (mandatory).
 - Avoid repeating unchanged sections.
@@ -296,24 +297,18 @@ Update status appropriately (delta updates only).
 
 After successful implementation and successful documentation updates, choose **ONE**:
 
-**Option A (preferred)** — Move the plan from `docs/plans/in-progress/` to:
+**Option A (preferred)** — Delete the plan if all useful information has been transferred into permanent documentation.
 
-```text
-docs/plans/implemented/
-```
-
-Example:
+**Option B (exception)** — Move the plan from `docs/plans/in-progress/` to `docs/plans/implemented/` (`Classification: H`) only when retention is explicitly justified (e.g. audit/legal). Example:
 
 ```text
 docs/plans/in-progress/security-group-members.md
 → docs/plans/implemented/security-group-members.md
 ```
 
-**Option B** — Delete the plan if all useful information has been transferred into permanent documentation.
-
 Do **not** leave implemented plans in `docs/plans/in-progress/`.
 
-Do **not** accumulate stale plans.
+Do **not** accumulate stale plans, closed review reports, or transferred feature plans as long-term inventory.
 
 ---
 
@@ -328,7 +323,7 @@ Request
 → Implementation
 → Documentation Updated
 → Knowledge Transfer
-→ Plan Moved to docs/plans/implemented/ (or Deleted)
+→ Plan Deleted (preferred) or Moved to docs/plans/implemented/ when retention justified
 ```
 
 Chat should never become the storage location for implementation plans.

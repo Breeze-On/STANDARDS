@@ -136,7 +136,7 @@ Do not invent additional owner labels or assign personal names. Omit the Owner l
 
 ## Review governance (mandatory finding format)
 
-Owner-oriented review reports (documentation content reviews, architecture/domain reviews, and other finding-bearing reviews) **must** follow [`review-governance.md`](review-governance.md): Problem, Evidence, Recommended Action, Scope, Owner Decision Required?, Reviewer Recommendation, Expected Outcome, plus Executive Summary. Optimize for owner decision-making — not evidence-only audit notes.
+When a finding-bearing review is run (ad-hoc architecture, domain, or similar — **not** a recurring documentation program), reports **must** follow [`review-governance.md`](review-governance.md): Problem, Evidence, Recommended Action, Scope, Owner Decision Required?, Reviewer Recommendation, Expected Outcome, plus Executive Summary. Optimize for owner decision-making — not evidence-only audit notes. Do not create standing review roadmaps or retain closed review corpora after knowledge promotion.
 
 ## Periodic review (advisory)
 
@@ -264,17 +264,29 @@ Org-wide Planning Agent and Development Agent rules: [`ai/planning-and-developme
 
 ### Plan lifecycle
 
-**proposed → approved → implemented → durable outcomes promoted → historical/frozen**
+**proposed → approved → implemented → durable outcomes promoted → delete (preferred) or historical/frozen**
 
 - New and active plans live under `docs/plans/in-progress/` (temporary working artifacts; never AA for shipped behavior).
 - Chat must **not** store or re-render plan bodies; the markdown file is the deliverable.
 - Plan updates are **in-place and delta-only** — edit the existing file; do not regenerate unchanged sections or create V2/duplicate plans.
-- Before treating a plan as pure history: verify each durable claim has an AA home; if missing, move/extract existing text into that home (no stylistic rewrite), then mark **Historical — not authoritative** (`Classification: H`).
-- After successful implementation, validation, documentation updates, and knowledge transfer: move to `docs/plans/implemented/` (preferred) or delete if fully transferred.
+- Before closing a plan: verify each durable claim has an AA/OPS/DEC/ENT home; if missing, move/extract existing text into that home (no stylistic rewrite).
+- After successful implementation, validation, documentation updates, and knowledge transfer: **prefer delete** the plan. Keep under `docs/plans/implemented/` (`Classification: H`) only when retention is explicitly justified (e.g. audit/legal). Do not accumulate closed review corpora or transferred feature plans as long-term inventory.
 - Permanent documentation remains **current reality only** — do not embed planned/future behavior or dangling plan references into standards.
-- Remediation backlogs and “future phases” left inside implemented plans are **not** authoritative.
+- Remediation backlogs and “future phases” left inside retained H plans are **not** authoritative.
 
 These org rules **supersede** repository-specific planning/output behavior unless the current prompt explicitly overrides them.
+
+## Anti-sprawl (lean footprint)
+
+Prefer fewer living artifacts. Do **not**:
+
+- Copy platform standards into product repos (link to STANDARDS)
+- Create a second AI reading order or parallel onboarding/governance handbook
+- Put technical contracts in `README` / `README_AI` / `AGENTS` (routing only; product `README_AI` task maps stay **app-local**)
+- Keep historical review reports, roadmaps, or fully transferred plans once knowledge is in permanent docs
+- Add meta-documentation whose primary purpose is maintaining documentation process (extend this file or existing AI SSOTs instead)
+
+Create a new markdown file only when no existing AA/AN/ENT/OPS/DEC covers the need. Prefer link over new file. Prefer delete over archive when reasonable.
 
 ## Definition of Done
 
@@ -287,6 +299,20 @@ A change is incomplete until **all affected documentation reflects current reali
 - Indexes and cross-references kept accurate
 
 Updates must occur in the **same change set** as the implementation change. Documentation maintenance is part of **Definition of Done**.
+
+### Change-class documentation checklist
+
+Use this as a lightweight reminder (not a review program). Map the change to the living surface that must update in the same change set:
+
+| Change class | Update in same change set |
+| --- | --- |
+| New feature / behavior | Owning app or library AA + thin `README_AI` route **only if** discovery changes |
+| New architecture decision | New/updated ADR (+ owning `architecture/` AA) |
+| New BreezeOn application | [`BREEZEON-AI-APPLICATION-ADOPTION.md`](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) pattern + landscape/applications + thin ENT trio (`README` / `README_AI` / `AGENTS`) |
+| New deployment requirement | [`hosted-deployment.md`](hosted-deployment.md) and/or owning runbook |
+| New dependency / vulnerability policy | [`security-governance.md`](security-governance.md) (+ Dependabot template under `templates/` if needed) |
+
+Do **not** invent mandatory review cycles, PR bots, ownership matrices, or committees to enforce this. Agent Development DoD + same-change-set habit are the enforcement model.
 
 ### Identity & Authentication DoD (platform)
 

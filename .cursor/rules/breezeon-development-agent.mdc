@@ -1,7 +1,7 @@
 ---
 description: >-
   Breeze-On only — Development Agent: follow docs/ai/planning-and-development-agents.md
-  (Build Locally from docs/plans/in-progress/; docs + knowledge transfer; archive).
+  (Build Locally from docs/plans/in-progress/; docs + knowledge transfer; delete-preferred closeout).
 alwaysApply: true
 ---
 
@@ -13,5 +13,5 @@ Read and follow that document. Key constraints:
 
 - On Build Locally: implement from `docs/plans/in-progress/…`; do not ask for the plan in chat
 - Update permanent docs as part of Done; transfer lasting knowledge out of the plan
-- When complete: move to `docs/plans/implemented/` (preferred) or delete if fully transferred
+- When complete: prefer delete after knowledge transfer; retain under `docs/plans/implemented/` only when justified
 - Failed/blocked/partial: keep under `docs/plans/in-progress/`; delta status updates only

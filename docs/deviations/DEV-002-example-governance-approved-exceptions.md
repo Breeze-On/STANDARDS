@@ -19,7 +19,7 @@ Patterns that **have** Gallery coverage are listed (with paths) in [`docs/ui/gal
 
 ## Registry
 
-Each row is an explicit, time-boxed exception: the standard exists and is normative, but no Gallery working example exists yet. Source: D07 domain content review F-008 (2026-11-21). **Status** is *Active — demo scope pending owner decision* until the owner confirms, per gap, **demo** vs **accepted exception**. Remove a row in the same change set that adds the Gallery demo and its [`gallery-index.md`](../ui/gallery-index.md) row.
+Each row is an explicit, time-boxed exception: the standard exists and is normative, but no Gallery working example exists yet. **Status** is *Active — demo scope pending owner decision* until the owner confirms, per gap, **demo** vs **accepted exception**. Remove a row in the same change set that adds the Gallery demo and its [`gallery-index.md`](../ui/gallery-index.md) row.
 
 | Id | Pattern without a Gallery example | Standard | Interim copy source | Review / expiry | Status |
 | --- | --- | --- | --- | --- | --- |

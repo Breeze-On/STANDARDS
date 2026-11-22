@@ -11,7 +11,7 @@
 | **Rationale** | Separating unshipped engine behaviour from shipped authoring capability so administrators and AI agents treat PF as a business capability today without mistaking engine runtime for shipped product. |
 | **Expiry / review** | Until the engine ships (then promote into AA architecture) or the vision is withdrawn |
 | **Owner area** | Architecture |
-| **Related** | ADR-019 · D12 content review |
+| **Related** | ADR-019 |
 
 ## Approved exception (normative)
 
