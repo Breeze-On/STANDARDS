@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Platform; Capability: Environments -->
 # Environments
 
 Owner: Engineering

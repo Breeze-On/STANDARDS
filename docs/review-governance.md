@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Engineering; Capability: ReviewGovernance -->
 # Review governance — owner-oriented findings
 
 Owner: Architecture

@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: Layout -->
 # UI — Workspace panels (`BoPanelHost` / `BoPanel` / `BoPanelNavigation`)
 
 Owner: UI

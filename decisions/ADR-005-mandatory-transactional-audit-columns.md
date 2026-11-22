@@ -1,4 +1,4 @@
-<!-- Classification: DEC; Scope: platform -->
+<!-- Classification: DEC; Scope: platform; Domain: Engineering; Capability: AdrProcess -->
 # ADR-005: Mandatory transactional audit columns
 
 Status: Accepted

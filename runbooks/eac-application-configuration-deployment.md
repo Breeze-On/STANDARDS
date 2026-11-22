@@ -1,4 +1,4 @@
-<!-- Classification: OPS; Scope: platform -->
+<!-- Classification: OPS; Scope: platform; Domain: Operations; Capability: ConfigPromote -->
 # Runbook — Application Configuration deployment
 
 Owner: Operations

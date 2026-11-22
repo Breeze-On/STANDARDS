@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: application:eac -->
+<!-- Classification: AA; Scope: application:eac; Domain: Platform; Capability: AppConfiguration -->
 # Construct selection — Variables, Data Entities, Process Framework, Business Entities, Security Groups
 
 Owner: Architecture (EAC)

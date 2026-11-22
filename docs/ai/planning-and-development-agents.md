@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Engineering; Capability: PlanningDevelopmentAgents -->
 # Planning Agent and Development Agent rules
 
 Owner: Documentation
@@ -248,6 +248,8 @@ Examples:
 - developer documentation
 
 Documentation updates are part of feature completion.
+
+When catalog-eligible markdown is added, moved, renamed, or deleted (or Domain/Capability banners change), regenerate [`ai-catalog.json`](ai-catalog.json) in the **same change set** via [`scripts/docs/Generate-AiCatalog.ps1`](../../scripts/docs/Generate-AiCatalog.ps1). Do not hand-edit the catalog. SSOT: [`documentation.md`](../documentation.md) § AI documentation catalog.
 
 ### Knowledge transfer
 

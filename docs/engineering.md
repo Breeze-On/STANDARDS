@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Engineering; Capability: Stack -->
 # Engineering standards
 
 Owner: Engineering

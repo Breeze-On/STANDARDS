@@ -1,4 +1,4 @@
-<!-- Classification: OPS; Scope: platform -->
+<!-- Classification: OPS; Scope: platform; Domain: Operations; Capability: CustomerOnboarding -->
 # Customer authentication onboarding
 
 Owner: Architecture

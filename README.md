@@ -1,4 +1,4 @@
-<!-- Classification: ENT; Scope: platform -->
+<!-- Classification: ENT; Scope: platform; Domain: Engineering; Capability: DocStandards -->
 # Breeze On — STANDARDS
 
 Organization-wide **standards** and **current-state architecture** for every Breeze On repository.

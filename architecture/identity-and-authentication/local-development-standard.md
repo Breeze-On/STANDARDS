@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Security; Capability: Authentication -->
 # Local development standard — authentication
 
 Owner: Architecture

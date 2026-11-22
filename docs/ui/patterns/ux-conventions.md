@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: Patterns -->
 # UI — UX conventions (cross-control)
 
 Owner: UI

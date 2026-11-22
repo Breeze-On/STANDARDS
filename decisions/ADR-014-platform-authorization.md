@@ -1,4 +1,4 @@
-<!-- Classification: DEC; Scope: platform -->
+<!-- Classification: DEC; Scope: platform; Domain: Security; Capability: Authorization -->
 # ADR-014: Platform authorization
 
 Status: Accepted

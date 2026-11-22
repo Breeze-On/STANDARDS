@@ -1,4 +1,4 @@
-<!-- Classification: TPL; Scope: platform -->
+<!-- Classification: TPL; Scope: platform; Domain: Engineering; Capability: Stack -->
 # Onboarding operator templates
 
 Owner: Operations

@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Engineering; Capability: DocStandards -->
 # Documentation standards
 
 Owner: Documentation
@@ -32,13 +32,16 @@ Every applicable markdown document in the BreezeOn documentation ecosystem (STAN
 
 ### Banner format (standardized)
 
-```html
+```text
+<!-- Classification: <CLASS>; Scope: <SCOPE>; Domain: <DOMAIN>; Capability: <CAPABILITY> -->
 ```
 
 | Token | Values |
 | --- | --- |
 | `<CLASS>` | `AA` · `AN` · `H` · `OPS` · `DEC` · `ENT` · `TPL` |
 | `<SCOPE>` | `platform` · `shared-ui` · `application:<app>` (e.g. `application:eac`) · `org` |
+| `<DOMAIN>` | Closed enum — see [AI documentation catalog](#ai-documentation-catalog) |
+| `<CAPABILITY>` | Seed list under that Domain — see [AI documentation catalog](#ai-documentation-catalog) |
 
 ### Classification meanings
 
@@ -133,6 +136,46 @@ Allowed values (documentation ownership areas only):
 **What this is not:** an approval workflow, a permission model, a review board, named individuals or teams, or a gate before merging.
 
 Do not invent additional owner labels or assign personal names. Omit the Owner line on trivial stubs/redirects when it adds no value; **do not** omit the classification banner.
+
+## AI documentation catalog
+
+**Purpose:** machine-readable inventory for AI routing (Domain → Entry Point → Capability → docs). Not a human handbook.
+
+| Artifact | Role |
+| --- | --- |
+| Banner `Domain` + `Capability` | Metadata SSOT on each catalog-eligible `.md` |
+| [`ai/ai-catalog.json`](ai/ai-catalog.json) | **Generated** org inventory — do **not** hand-edit |
+| [`ai/ai-catalog.schema.json`](ai/ai-catalog.schema.json) | JSON Schema |
+| [`scripts/docs/Generate-AiCatalog.ps1`](../scripts/docs/Generate-AiCatalog.ps1) | Generator (+ optional banner migrate) |
+| [`scripts/docs/Test-AiCatalog.ps1`](../scripts/docs/Test-AiCatalog.ps1) | Validator (CI-friendly) |
+
+**Domains (closed — 6 only):** `Security` · `Platform` · `UI` · `Engineering` · `Operations` · `Org`
+
+Adding/renaming/removing a Domain requires an explicit delta to this section + schema/generator and is rare.
+
+### Capability seed lists (machine-readable)
+
+Prefer an existing Capability. Add a new Capability only when no current token fits and the concept needs durable multi-doc routing. Same change set as first banner use: add the PascalCase token below (one line — no RFC/board). CI rejects banners whose Capability is not listed under its Domain. Do not create a Capability for a single stub.
+
+```text
+<!-- AI-CATALOG-TAXONOMY-BEGIN -->
+Domains: Security, Platform, UI, Engineering, Operations, Org
+Security: Authentication, Authorization, DependencyGovernance, SqlAccessSecrets
+Platform: Hosting, Environments, Applications, AppConfiguration, Database, DataPortability, DataEntities, ProcessFramework, Variables
+UI: ShellNavigation, Foundations, Layout, Controls, Patterns, PageDevelopment, PublicComponentApi, Gallery
+Engineering: ApplicationModel, Naming, Stack, DocStandards, Deviations, ReviewGovernance, AdrProcess, Glossary, AgentGovernance, PlanningDevelopmentAgents, AiOnboarding
+Operations: CustomerOnboarding, ConfigPromote
+Org: OrgProfile
+<!-- AI-CATALOG-TAXONOMY-END -->
+```
+
+### Entry points
+
+`isEntryPoint` / `entryPointPriority` are **generator-derived** from a path allow-list (e.g. Security: `architecture/identity-and-authentication/README.md` + authz README; Platform: `architecture/landscape.md`; UI: `docs/ui/overview.md`; Engineering: this file + `docs/ai/README.md`; Operations: `runbooks/README.md`; Org: `.github` profile README). Do **not** put EntryPoint tokens on banners. Every Domain must have ≥1 entry point after generation.
+
+### Same-change-set catalog duty
+
+When adding, moving, renaming, or deleting catalog-eligible markdown: update the banner (Domain/Capability) as needed, then run `Generate-AiCatalog.ps1` and commit the regenerated [`ai/ai-catalog.json`](ai/ai-catalog.json). The catalog is a projection of banners + path rules — never a hand-curated parallel inventory.
 
 ## Review governance (mandatory finding format)
 
@@ -285,6 +328,7 @@ Prefer fewer living artifacts. Do **not**:
 - Put technical contracts in `README` / `README_AI` / `AGENTS` (routing only; product `README_AI` task maps stay **app-local**)
 - Keep historical review reports, roadmaps, or fully transferred plans once knowledge is in permanent docs
 - Add meta-documentation whose primary purpose is maintaining documentation process (extend this file or existing AI SSOTs instead)
+- Hand-edit [`ai/ai-catalog.json`](ai/ai-catalog.json) (always regenerate)
 
 Create a new markdown file only when no existing AA/AN/ENT/OPS/DEC covers the need. Prefer link over new file. Prefer delete over archive when reasonable.
 
@@ -294,9 +338,10 @@ A change is incomplete until **all affected documentation reflects current reali
 
 - Product `README` / `README_AI` / `AGENTS` as applicable (entry allow-lists; no new technical contracts)
 - STANDARDS `docs/` (including modular `docs/ui/` when UI standards change) and/or `architecture/` as applicable
-- Classification banners present and accurate on new/moved docs
+- Classification banners present and accurate on new/moved docs (including Domain + Capability)
 - **ADRs** created, updated, or superseded when architectural decisions are affected (update [`decisions/README.md`](../decisions/README.md) Category / Impact Area columns)
 - Indexes and cross-references kept accurate
+- AI catalog regenerated when catalog-eligible docs change ([`ai/ai-catalog.json`](ai/ai-catalog.json))
 
 Updates must occur in the **same change set** as the implementation change. Documentation maintenance is part of **Definition of Done**.
 
@@ -311,8 +356,10 @@ Use this as a lightweight reminder (not a review program). Map the change to the
 | New BreezeOn application | [`BREEZEON-AI-APPLICATION-ADOPTION.md`](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) pattern + landscape/applications + thin ENT trio (`README` / `README_AI` / `AGENTS`) |
 | New deployment requirement | [`hosted-deployment.md`](hosted-deployment.md) and/or owning runbook |
 | New dependency / vulnerability policy | [`security-governance.md`](security-governance.md) (+ Dependabot template under `templates/` if needed) |
+| New / moved / deleted catalog-eligible doc | Banner Domain+Capability + regenerate [`ai/ai-catalog.json`](ai/ai-catalog.json) |
+| New Capability token | Seed list in this file (under Domain) + first banner use + catalog regenerate |
 
-Do **not** invent mandatory review cycles, PR bots, ownership matrices, or committees to enforce this. Agent Development DoD + same-change-set habit are the enforcement model.
+Do **not** invent mandatory review cycles, ownership matrices, or committees to enforce this. Agent Development DoD + same-change-set habit + catalog CI validator are the enforcement model.
 
 ### Identity & Authentication DoD (platform)
 

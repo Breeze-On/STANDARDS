@@ -1,4 +1,4 @@
-<!-- Classification: AN; Scope: application:eac -->
+<!-- Classification: AN; Scope: application:eac; Domain: Platform; Capability: DataEntities -->
 # Using Data Entities (non-normative)
 
 Owner: Architecture (EAC)

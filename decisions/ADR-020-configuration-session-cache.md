@@ -1,4 +1,4 @@
-<!-- Classification: DEC; Scope: platform -->
+<!-- Classification: DEC; Scope: platform; Domain: Platform; Capability: AppConfiguration -->
 # ADR-020: Application Configuration Session Cache
 
 Status: Accepted

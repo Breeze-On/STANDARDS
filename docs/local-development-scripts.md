@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Engineering; Capability: Stack -->
 # BreezeOn Local Development Script Standard
 
 Owner: Engineering

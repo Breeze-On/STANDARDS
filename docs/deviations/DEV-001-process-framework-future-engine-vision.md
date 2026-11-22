@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: application:eac -->
+<!-- Classification: AA; Scope: application:eac; Domain: Platform; Capability: ProcessFramework -->
 # DEV-001 — Process Framework future engine vision
 
 | Field | Value |

@@ -1,4 +1,4 @@
-<!-- Classification: DEC; Scope: platform -->
+<!-- Classification: DEC; Scope: platform; Domain: Engineering; Capability: AdrProcess -->
 # ADR-001: Multi-repository model
 
 Status: Accepted

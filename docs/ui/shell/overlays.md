@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: ShellNavigation -->
 # Overlays
 
 Shared UI overlays hosted once in `BoProviders` (under `BoThemeProvider`, beside `BoAppShell`). Product apps must not mount these hosts themselves.

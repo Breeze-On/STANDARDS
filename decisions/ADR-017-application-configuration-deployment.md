@@ -1,4 +1,4 @@
-<!-- Classification: DEC; Scope: platform -->
+<!-- Classification: DEC; Scope: platform; Domain: Engineering; Capability: AdrProcess -->
 # ADR-017: Application Configuration deployment (synchronize-by-Code)
 
 Status: Accepted

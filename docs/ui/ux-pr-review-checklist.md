@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: Patterns -->
 # UI — UX pull request review checklist
 
 Owner: UI

@@ -1,4 +1,4 @@
-<!-- Classification: AN; Scope: platform -->
+<!-- Classification: AN; Scope: platform; Domain: UI; Capability: PageDevelopment -->
 # UI components (moved)
 
 UI standards live under [`docs/ui/`](ui/overview.md), organized by responsibility:

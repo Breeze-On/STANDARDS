@@ -1,4 +1,4 @@
-<!-- Classification: AN; Scope: platform -->
+<!-- Classification: AN; Scope: platform; Domain: Engineering; Capability: AiOnboarding -->
 # BreezeOn AI — Application adoption (EAC reference)
 
 Owner: Documentation

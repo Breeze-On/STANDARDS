@@ -1,4 +1,4 @@
-<!-- Classification: DEC; Scope: application:eac -->
+<!-- Classification: DEC; Scope: application:eac; Domain: Platform; Capability: ProcessFramework -->
 # ADR-019: Process Framework metadata
 
 Status: Accepted

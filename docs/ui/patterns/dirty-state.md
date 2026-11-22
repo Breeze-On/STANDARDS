@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: Patterns -->
 # UI — Dirty State (unsaved changes)
 
 Owner: UI / Architecture

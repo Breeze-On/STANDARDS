@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Security; Capability: Authentication -->
 # Cloud architecture — App Registration strategy
 
 Owner: Architecture

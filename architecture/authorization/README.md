@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Security; Capability: Authorization -->
 # Architecture — Authorization
 
 Owner: Architecture

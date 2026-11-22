@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: Patterns -->
 # DEV-002 — Example Governance approved exceptions
 
 | Field | Value |

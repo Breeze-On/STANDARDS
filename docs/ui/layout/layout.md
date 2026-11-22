@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: Layout -->
 # UI — Layout (Row + page composition)
 
 Owner: UI

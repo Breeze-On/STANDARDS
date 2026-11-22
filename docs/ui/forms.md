@@ -1,4 +1,4 @@
-<!-- Classification: AN; Scope: platform -->
+<!-- Classification: AN; Scope: platform; Domain: UI; Capability: PageDevelopment -->
 # Moved
 
 Forms documentation has moved to [`controls/forms.md`](controls/forms.md).

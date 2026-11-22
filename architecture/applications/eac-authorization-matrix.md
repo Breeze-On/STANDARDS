@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: application:eac -->
+<!-- Classification: AA; Scope: application:eac; Domain: Security; Capability: Authorization -->
 # EAC authorization matrix
 
 Owner: Architecture

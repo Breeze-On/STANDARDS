@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: application:eac -->
+<!-- Classification: AA; Scope: application:eac; Domain: Platform; Capability: DataEntities -->
 # Data Entities — AI Authoring Contract
 
 Owner: Architecture (EAC)

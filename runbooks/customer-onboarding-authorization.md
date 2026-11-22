@@ -1,4 +1,4 @@
-<!-- Classification: OPS; Scope: platform -->
+<!-- Classification: OPS; Scope: platform; Domain: Security; Capability: Authorization -->
 # Customer onboarding — authorization (Workflow G)
 
 Owner: Architecture / Operations

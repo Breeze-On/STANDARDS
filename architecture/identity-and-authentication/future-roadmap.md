@@ -1,4 +1,4 @@
-<!-- Classification: AN; Scope: platform -->
+<!-- Classification: AN; Scope: platform; Domain: Security; Capability: Authentication -->
 # Future roadmap — Identity & Authentication
 
 Owner: Architecture

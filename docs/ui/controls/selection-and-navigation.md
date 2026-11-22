@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: ShellNavigation -->
 # UI — Selection and navigation controls
 
 Owner: UI

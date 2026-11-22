@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: Layout -->
 # UI — Expandable / disclosure content
 
 Owner: UI

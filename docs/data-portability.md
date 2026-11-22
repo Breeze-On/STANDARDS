@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Platform; Capability: DataPortability -->
 # Data portability
 
 Owner: Engineering

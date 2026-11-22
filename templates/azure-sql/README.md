@@ -1,4 +1,4 @@
-<!-- Classification: TPL; Scope: platform -->
+<!-- Classification: TPL; Scope: platform; Domain: Engineering; Capability: Stack -->
 # Template: grant App Service Managed Identity on Azure SQL
 
 Idempotent T-SQL: [`grant-app-service-mi.sql`](grant-app-service-mi.sql).

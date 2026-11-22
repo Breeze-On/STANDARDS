@@ -1,4 +1,4 @@
-<!-- Classification: AN; Scope: platform -->
+<!-- Classification: AN; Scope: platform; Domain: Engineering; Capability: AiOnboarding -->
 # BreezeOn AI documentation
 
 Owner: Documentation
@@ -17,6 +17,17 @@ These documents summarize and point into STANDARDS. They do **not** replace deta
 | **4** | [`BREEZEON-AI-STANDARDS-SUMMARY.md`](BREEZEON-AI-STANDARDS-SUMMARY.md) | Before changing standards-sensitive behavior |
 | **5** | [`BREEZEON-AI-APPLICATION-ADOPTION.md`](BREEZEON-AI-APPLICATION-ADOPTION.md) | Before adopting or extending `BreezeOn.UI` in an app |
 | **6** | Repo `README_AI.md` + detailed STANDARDS links | Only after the above — drill into specifics |
+
+## Catalog-first retrieval (after the reading order)
+
+Do **not** ingest the full documentation corpus by default. Use [`ai-catalog.json`](ai-catalog.json):
+
+1. Identify **Domain** (`Security` · `Platform` · `UI` · `Engineering` · `Operations` · `Org`)
+2. Open the Domain **entry point** first (`indexes.entryPointsByDomain` — lowest `entryPointPriority`)
+3. Identify **Capability**
+4. Open only matching `documents` (prefer `documentType` AA, then OPS/DEC as needed)
+
+Schema: [`ai-catalog.schema.json`](ai-catalog.schema.json). Taxonomy + banner rules: [`documentation.md`](../documentation.md) § AI documentation catalog.
 
 ## Purpose
 

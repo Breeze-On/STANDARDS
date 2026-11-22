@@ -1,4 +1,4 @@
-<!-- Classification: AN; Scope: platform -->
+<!-- Classification: AN; Scope: platform; Domain: Engineering; Capability: PlanningDevelopmentAgents -->
 # Plans lifecycle
 
 Owner: Documentation

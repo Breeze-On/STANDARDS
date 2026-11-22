@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: application:eac -->
+<!-- Classification: AA; Scope: application:eac; Domain: Platform; Capability: Variables -->
 # Variables standard
 
 Owner: Architecture (EAC)

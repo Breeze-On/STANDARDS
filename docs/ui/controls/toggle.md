@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: Controls -->
 # UI — Toggle (`BoToggle`)
 
 Owner: UI

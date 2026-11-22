@@ -1,0 +1,59 @@
+name: docs-catalog
+
+on:
+  push:
+    paths:
+      - 'docs/**'
+      - 'architecture/**'
+      - 'decisions/**'
+      - 'runbooks/**'
+      - 'templates/**'
+      - 'README.md'
+      - 'README_AI.md'
+      - 'scripts/docs/**'
+      - '.github/workflows/docs-catalog.yml'
+  pull_request:
+    paths:
+      - 'docs/**'
+      - 'architecture/**'
+      - 'decisions/**'
+      - 'runbooks/**'
+      - 'templates/**'
+      - 'README.md'
+      - 'README_AI.md'
+      - 'scripts/docs/**'
+      - '.github/workflows/docs-catalog.yml'
+
+jobs:
+  validate:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout STANDARDS
+        uses: actions/checkout@v4
+        with:
+          path: STANDARDS
+
+      - name: Checkout SYSTEM-ADMIN-EAC
+        uses: actions/checkout@v4
+        with:
+          repository: Breeze-On/SYSTEM-ADMIN-EAC
+          path: SYSTEM-ADMIN-EAC
+
+      - name: Checkout SYSTEM-SHARED-UI
+        uses: actions/checkout@v4
+        with:
+          repository: Breeze-On/SYSTEM-SHARED-UI
+          path: SYSTEM-SHARED-UI
+
+      - name: Checkout .github profile
+        uses: actions/checkout@v4
+        with:
+          repository: Breeze-On/.github
+          path: Breeze-On-github
+
+      - name: Validate AI catalog
+        shell: pwsh
+        run: |
+          ./STANDARDS/scripts/docs/Test-AiCatalog.ps1 `
+            -StandardsRoot "${{ github.workspace }}/STANDARDS" `
+            -ProjectsRoot "${{ github.workspace }}"

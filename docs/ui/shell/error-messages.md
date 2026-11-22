@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: ShellNavigation -->
 # Error Message Pages (platform standard)
 
 Owner: UI / Architecture

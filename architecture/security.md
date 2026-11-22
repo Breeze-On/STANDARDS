@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Security; Capability: SqlAccessSecrets -->
 # Architecture — Security
 
 Owner: Architecture

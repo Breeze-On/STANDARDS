@@ -1,4 +1,4 @@
-<!-- Classification: AN; Scope: platform -->
+<!-- Classification: AN; Scope: platform; Domain: Engineering; Capability: AiOnboarding -->
 # BreezeOn AI Quickstart
 
 Owner: Documentation
@@ -6,6 +6,8 @@ Owner: Documentation
 **Mandatory first read** for every AI agent (Cursor, planning, build, documentation, generation) before any analysis, planning, design, or implementation in a Breeze-On repository.
 
 Goal: understand Breeze On in minutes. Then open **detailed** STANDARDS docs only as needed. Do not re-ingest the entire org corpus by default.
+
+**After this reading order:** route with [`ai-catalog.json`](ai-catalog.json) — Domain → Entry Point → Capability → selected docs (see [`README.md`](README.md) § Catalog-first retrieval).
 
 Current reality only. Summaries point to SSOT — do not invent rules here.
 

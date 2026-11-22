@@ -1,0 +1,128 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Breeze-On/STANDARDS/docs/ai/ai-catalog.schema.json",
+  "title": "BreezeOn AI Documentation Catalog",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "generatedAt",
+    "generator",
+    "repositories",
+    "taxonomy",
+    "documents",
+    "indexes"
+  ],
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "generatedAt": { "type": "string" },
+    "generator": { "type": "string" },
+    "repositories": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "taxonomy": {
+      "type": "object",
+      "required": ["domains", "capabilities"],
+      "properties": {
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["Security", "Platform", "UI", "Engineering", "Operations", "Org"]
+          },
+          "minItems": 6,
+          "maxItems": 6
+        },
+        "capabilities": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "repository",
+          "path",
+          "domain",
+          "capability",
+          "documentType",
+          "kind",
+          "scope",
+          "status",
+          "isEntryPoint",
+          "related",
+          "relatedAdrs",
+          "lastUpdated"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "repository": { "type": "string" },
+          "path": { "type": "string" },
+          "domain": {
+            "type": "string",
+            "enum": ["Security", "Platform", "UI", "Engineering", "Operations", "Org"]
+          },
+          "capability": { "type": "string" },
+          "documentType": {
+            "type": "string",
+            "enum": ["AA", "AN", "H", "OPS", "DEC", "ENT", "TPL"]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "Architecture",
+              "Standard",
+              "Governance",
+              "Reference",
+              "Product",
+              "Template",
+              "Entry",
+              "Decision",
+              "Runbook",
+              "Orientation"
+            ]
+          },
+          "owner": { "type": ["string", "null"] },
+          "scope": { "type": "string" },
+          "status": {
+            "type": "string",
+            "enum": ["active", "historical", "plan"]
+          },
+          "isEntryPoint": { "type": "boolean" },
+          "entryPointPriority": { "type": ["integer", "null"] },
+          "related": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "relatedAdrs": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "lastUpdated": { "type": "string" }
+        }
+      }
+    },
+    "indexes": {
+      "type": "object",
+      "required": [
+        "byDomain",
+        "byCapability",
+        "byRepository",
+        "entryPointsByDomain"
+      ],
+      "properties": {
+        "byDomain": { "type": "object" },
+        "byCapability": { "type": "object" },
+        "byRepository": { "type": "object" },
+        "entryPointsByDomain": { "type": "object" }
+      }
+    }
+  }
+}

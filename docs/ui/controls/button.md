@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: Controls -->
 # UI — Buttons (`BoButton`, `BoIconButton`)
 
 Owner: UI

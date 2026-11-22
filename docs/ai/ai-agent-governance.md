@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Engineering; Capability: AgentGovernance -->
 # AI Agent Governance Standard
 
 Owner: Engineering

@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: application:eac -->
+<!-- Classification: AA; Scope: application:eac; Domain: Platform; Capability: ProcessFramework -->
 # Architecture — Process Framework
 
 Owner: Architecture (EAC domain)

@@ -1,4 +1,4 @@
-<!-- Classification: ENT; Scope: platform -->
+<!-- Classification: ENT; Scope: platform; Domain: Engineering; Capability: DocStandards -->
 # README_AI — STANDARDS
 
 ## Mandatory AI reading order
@@ -24,6 +24,7 @@ Owns org-wide standards, platform architecture, ADRs, runbooks, deviations, and 
 | Task | Read |
 | --- | --- |
 | Doc architecture / classification / README rules | [`docs/documentation.md`](docs/documentation.md) |
+| AI doc catalog (Domain → Entry Point → Capability) | [`docs/ai/ai-catalog.json`](docs/ai/ai-catalog.json) · schema [`ai-catalog.schema.json`](docs/ai/ai-catalog.schema.json) |
 | Review finding format (ad-hoc) | [`docs/review-governance.md`](docs/review-governance.md) |
 | UI behavior / page construction | [`docs/ui/overview.md`](docs/ui/overview.md) · [`page-development.md`](docs/ui/page-development.md) |
 | Database / seed | [`docs/database.md`](docs/database.md) · [`local-database.md`](docs/local-database.md) |

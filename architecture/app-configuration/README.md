@@ -1,4 +1,4 @@
-<!-- Classification: AA; Scope: platform -->
+<!-- Classification: AA; Scope: platform; Domain: Platform; Capability: AppConfiguration -->
 # Architecture — Application Configuration
 
 Owner: Architecture

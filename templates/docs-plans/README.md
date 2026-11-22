@@ -1,4 +1,4 @@
-<!-- Classification: TPL; Scope: platform -->
+<!-- Classification: TPL; Scope: platform; Domain: Engineering; Capability: Stack -->
 # Product `docs/plans/` layout
 
 Owner: Documentation

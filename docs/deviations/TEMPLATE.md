@@ -1,4 +1,4 @@
-<!-- Classification: TPL; Scope: platform -->
+<!-- Classification: TPL; Scope: platform; Domain: Engineering; Capability: Deviations -->
 # Deviation entry template
 
 Copy this file to `DEV-NNN-short-name.md` and fill every field. Add a row to [`README.md`](README.md).
