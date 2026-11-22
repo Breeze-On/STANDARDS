@@ -27,7 +27,7 @@ Do **not** treat this document as a second SSOT for architecture or ADRs. When t
 - Local developer setup with `BreezeOn-LOCAL` → [local-development-standard.md](../architecture/identity-and-authentication/local-development-standard.md)
 - Inventing UAT/PRD Azure resource inventories that are not yet implemented → [environments.md](../docs/environments.md), [hosted-deployment.md](../docs/hosted-deployment.md)
 - Multi-customer shared-infra topology decisions → [landscape.md](../architecture/landscape.md)
-- Ad-hoc manual `Identity.Tenants` / `IsSyncEnabled` edits outside **Step 8** / Workflow F (login discovery remains Step 6; Step 7 grants admins only and must not enable sync)
+- Ad-hoc manual `Identity.Tenants` / `IsSyncEnabled` edits outside **Step 7 bootstrap** (listed tids) or **Step 8** / Workflow F (login discovery remains Step 6; Step 7 upserts listed tids with sync enabled and grants admins)
 
 ## Glossary (onboarding)
 
@@ -227,11 +227,11 @@ https://login.microsoftonline.com/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/v2.0/admi
 
 | Field | Content |
 | --- | --- |
-| **Purpose** | Create `GLOBAL-SYSTEM-ADMINISTRATORS` if missing and grant that group to **at least one admin UPN per tenant** so EAC Users Security (and Sync Now, when enabled) are usable. Does **not** set `IsSyncEnabled` — that is Step 8 / Workflow F only |
+| **Purpose** | Create `GLOBAL-SYSTEM-ADMINISTRATORS` if missing and grant that group to **at least one admin UPN per tenant** so EAC Users Security and Sync Now are usable. Upserts listed tids in `Identity.Tenants` with `IsSyncEnabled = 1`; skips users already in GSA |
 | **Responsible actor** | BreezeOn Admin |
 | **Preconditions** | Checkpoint E for each bootstrap admin (each listed UPN has an `Identity.Users` row from first login); Security schema applied |
 | **Actions** | 1) Edit `@TenantAdminPairs` in [bootstrap-global-system-administrators.sql](../templates/onboarding/bootstrap-global-system-administrators.sql) — semicolon-separated `{entra-tid}|{admin-upn}` pairs (**≥1 admin per distinct tenant**). 2) Apply the script to the customer database. 3) Verify each admin can open EAC `/users` after re-login or authZ cache expiry. Do **not** auto-promote the first login without this explicit SQL step. Detail: [customer-onboarding-authorization.md](customer-onboarding-authorization.md) |
-| **Expected outcome** | Named admin(s) in `GLOBAL-SYSTEM-ADMINISTRATORS`; listed tids present in `Identity.Tenants` if missing (with `IsSyncEnabled` unchanged / `0` on insert); `/users` reachable — ready for Step 8 when Graph = Yes |
+| **Expected outcome** | Named admin(s) in `GLOBAL-SYSTEM-ADMINISTRATORS` (existing members skipped safely); listed tids present in `Identity.Tenants` with `IsSyncEnabled = 1`; `/users` reachable — ready for Sync Now when Graph = Yes |
 | **Failure scenarios and recovery** | Placeholder pairs rejected → replace sample tids/UPNs. Missing `Identity.Users` → finish Step 6 first login for that UPN, re-run. Wrong UPN → fix pair and re-run (or remove wrong membership — Recovery appendix). Group still missing → confirm Security schema then re-run. Never seed hosted memberships via product seed by default |
 | **Checkpoint** | **Checkpoint G** |
 | **Evidence to retain** | `@TenantAdminPairs` used (tids + UPNs); operator name + date; confirmation admin accessed `/users` |
@@ -252,12 +252,12 @@ Run **only** when Customer Information lists Graph synchronization = **Yes**. If
 
 | Field | Content |
 | --- | --- |
-| **Purpose** | **Sole control point** for setting `IsSyncEnabled = 1` (when Graph = Yes), then first Sync Now and verification |
+| **Purpose** | Graph consent + first **Sync Now** verification (when Graph = Yes). Listed bootstrap tids are already `IsSyncEnabled = 1` from Step 7; Workflow F still covers additional tids |
 | **Responsible actor** | BreezeOn Admin (App Reg permission + SQL); Customer Entra Admin (application permission consent); System (Sync Now); bootstrapped admin (runs Sync Now in EAC) |
 | **Preconditions** | Checkpoint G (so `/users` and Sync Now are reachable under page security); Checkpoint E tenant row exists from login discovery; Identity schema present |
-| **Actions** | Add application permission `User.Read.All` on the App Registration; obtain **customer** admin consent for app-only Graph; **set `IsSyncEnabled = 1`** for customer tid(s) via the Workflow F SQL (hosted must not use `IDENTITY__SEEDTENANTIDS` on App Services); bootstrapped admin runs **Sync Now** in EAC `/users`. Detail: Workflow F |
+| **Actions** | Add application permission `User.Read.All` on the App Registration; obtain **customer** admin consent for app-only Graph; confirm listed tids are sync-enabled (Step 7) or set additional tids via Workflow F SQL (hosted must not use `IDENTITY__SEEDTENANTIDS` on App Services); bootstrapped admin runs **Sync Now** in EAC `/users`. Detail: Workflow F |
 | **Expected outcome** | Consent granted; `IsSyncEnabled = 1`; Sync Now Succeeded (also check soft-disable skip logs — Succeeded does not prove soft-disable ran); Users grid reflects Graph `accountEnabled` → `IsEnabled` |
-| **Failure scenarios and recovery** | Graph 403 → missing `User.Read.All` or customer app consent. No sync-enabled tenant → complete Workflow F SQL (`IsSyncEnabled = 1`) — do **not** re-run Step 7 for sync enablement. Soft-disable skipped / surprises → review directory-sync standard (50% safety) + session standards; check operator logs. Access Denied on `/users` → return to Step 7 |
+| **Failure scenarios and recovery** | Graph 403 → missing `User.Read.All` or customer app consent. No sync-enabled tenant → re-run Step 7 bootstrap for the tid\|upn pairs and/or Workflow F SQL for additional tids. Soft-disable skipped / surprises → review directory-sync standard (50% safety) + session standards; check operator logs. Access Denied on `/users` → return to Step 7 |
 | **Checkpoint** | **Checkpoint F** (or **F-N/A**) |
 | **Evidence to retain** | Sync Now Succeeded (or F-N/A sign-off); SQL `IsSyncEnabled` confirmation |
 
@@ -287,7 +287,7 @@ Run **only** when Customer Information lists Graph synchronization = **Yes**. If
 - [ ] Checkpoint C — Shared `AUTHENTICATION__*` on all products (secret handling followed)
 - [ ] Checkpoint D — Customer consent + Enterprise Application + interactive login
 - [ ] Checkpoint E — Identity Users / UsersLogins / Tenants evidence (login discovery)
-- [ ] Checkpoint G — Step 7 bootstrap applied (`tid|upn` pairs; ≥1 admin per tenant; admins granted; `IsSyncEnabled` **not** required here); `/users` accessible
+- [ ] Checkpoint G — Step 7 bootstrap applied (`tid|upn` pairs; ≥1 admin per tenant; admins granted/skipped if already GSA; listed tids `IsSyncEnabled = 1`); `/users` accessible
 - [ ] Checkpoint F — Graph sync + Sync Now Succeeded **or** Checkpoint F-N/A (Graph not required) signed
 - [ ] Optional: second product host login with same ClientId
 - [ ] Optional: login-time profile photo best-effort (does not block go-live)
@@ -314,7 +314,7 @@ Run **only** when Customer Information lists Graph synchronization = **Yes**. If
 | Missing `GLOBAL-SYSTEM-ADMINISTRATORS` group | Security schema missing or bootstrap not run | Confirm Security schema; re-run Step 7 bootstrap (creates group if missing) |
 | Bootstrap rejects placeholders / empty pairs | Sample `@TenantAdminPairs` not replaced | Edit Step 7 script pairs (`tid|upn`; ≥1 admin per tenant) |
 | Sync Now Graph 403 | Missing `User.Read.All` or customer app consent | Step 8 |
-| Sync Now "no sync-enabled tenant" | Step 8 / Workflow F SQL not applied (`IsSyncEnabled` still 0) | Set `IsSyncEnabled = 1` via Workflow F; do not treat Step 7 as sync enablement |
+| Sync Now "no sync-enabled tenant" | Listed tid missing from Step 7 pairs or `IsSyncEnabled` still 0 | Re-run Step 7 bootstrap for the tid\|upn pairs (sets `IsSyncEnabled = 1`); or apply Workflow F for additional tids |
 | Hosted seed confusion | `IDENTITY__SEEDTENANTIDS` on App Service | Remove; SQL enablement only |
 
 ---

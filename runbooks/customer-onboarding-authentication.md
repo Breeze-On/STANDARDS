@@ -26,7 +26,7 @@ Complete **Customer Information Required** and the go-live checklist only on the
 
 | Role | Owns |
 | --- | --- |
-| BreezeOn platform ops | App Registration create/name/secret; App Service `AUTHENTICATION__*` on all products; hosted `IsSyncEnabled` SQL (**Step 8 / Workflow F only**); secret rotation |
+| BreezeOn platform ops | App Registration create/name/secret; App Service `AUTHENTICATION__*` on all products; hosted `IsSyncEnabled` via Step 7 bootstrap (listed tids) and/or Step 8 / Workflow F; secret rotation |
 | Customer Entra administrator | Admin consent; Enterprise Application in customer tenant |
 | Product deployer | Product base URLs; redirect URI registration requests; deploy that uses shared ClientId/Secret |
 
@@ -97,7 +97,7 @@ After a successful interactive login by the designated customer admin, verify in
 | --- | --- |
 | `Identity.Users` | Row for `(TenantId, ExternalObjectId)` from claims; new insert has `IsEnabled = 1` |
 | `Identity.UsersLogins` | Successful login row (`IsSuccessful = 1`) |
-| `Identity.Tenants` | Row for claim `tid` (**discovered automatically**); `IsSyncEnabled` remains `0` until Workflow F |
+| `Identity.Tenants` | Row for claim `tid` (**discovered automatically** with `IsSyncEnabled = 0`); Step 7 bootstrap sets `IsSyncEnabled = 1` for listed tids |
 | Application cookie | Session established; protected routes work |
 
 `Identity.Tenants` registration is a platform registry + sync flag — **not** a login allowlist (Entra App Registration owns allowlisting).
@@ -112,7 +112,7 @@ Continue to [Workflow G](customer-onboarding-authorization.md) (Master Flow Step
 
 ## Workflow F — Optional Graph enablement (Phase 2)
 
-**Authoritative sync enablement:** Workflow F / Master Flow Step 8 is the **sole** control point for setting `IsSyncEnabled = 1` on hosted customer-environments. Workflow G must not enable sync.
+**Authoritative sync enablement:** Step 7 / Workflow G bootstrap sets `IsSyncEnabled = 1` for **listed** `tid|upn` tenants. Workflow F / Master Flow Step 8 remains the control point for additional hosted tenant enablement and first **Sync Now**.
 
 Run **only** when Master Flow intake lists Graph synchronization = **Yes**. If Graph = No, skip this workflow and record **Checkpoint F-N/A** on the Master Flow go-live sheet.
 
@@ -148,7 +148,7 @@ Go-live sign-off: [Customer Onboarding Master Flow](customer-onboarding-master-f
 | Login fails: `IsEnabled = 0` | Soft-disable or disabled directory user | Check `Identity.Users`; re-sync or correct Graph `accountEnabled`; mid-session rejection within ~60s after disable |
 | Sync Now Access Denied / cannot open `/users` | Workflow G not complete or authZ cache | Complete Master Flow Step 7; re-login or wait ~60s |
 | Sync Now Graph 403 | Missing `User.Read.All` or customer app consent | Workflow F steps 1–2 |
-| Sync Now “no sync-enabled tenant” | `IsSyncEnabled = 0` for all rows | Workflow F step 5 |
+| Sync Now “no sync-enabled tenant” | `IsSyncEnabled = 0` for all rows | Re-run Step 7 bootstrap for listed tids and/or Workflow F step 5 |
 | Hosted seed confusion | `IDENTITY__SEEDTENANTIDS` on App Service | Remove; use SQL enablement only |
 
 ## Ongoing operations

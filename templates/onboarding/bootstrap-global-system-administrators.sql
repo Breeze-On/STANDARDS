@@ -1,19 +1,21 @@
 -- =============================================================================
--- Customer onboarding — Step 7 / Workflow G (admin bootstrap; does NOT enable directory sync)
+-- Customer / DEV admin bootstrap (Workflow G + sync-enable listed tenants)
 -- =============================================================================
 -- SSOT procedure: STANDARDS runbooks/customer-onboarding-master-flow.md Step 7
 -- Detail: STANDARDS runbooks/customer-onboarding-authorization.md
 -- Operator copy: STANDARDS templates/onboarding/bootstrap-global-system-administrators.sql
 --
 -- What this script does (idempotent):
---   1) Ensure Identity.Tenants rows exist for each listed tid WITHOUT changing IsSyncEnabled
---      (insert with IsSyncEnabled = 0 if missing; never force sync enablement)
+--   1) Upsert Identity.Tenants for each listed tid and set IsSyncEnabled = 1
+--      (insert if missing; update existing rows so Sync Now can run for those tenants)
 --   2) Create Security.Groups GLOBAL-SYSTEM-ADMINISTRATORS if missing
 --   3) Grant that group to each listed admin UPN (must already exist in Identity.Users
---      from first login — Master Flow Step 6 — or local Graph UPN upsert)
+--      from first login — Master Flow Step 6 — or Graph UPN upsert).
+--      Existing GSA members are skipped (no error).
 --
--- IsSyncEnabled is owned exclusively by Master Flow Step 8 / Workflow F (Graph = Yes only).
--- After this script succeeds → Step 8 when Graph = Yes; otherwise Checkpoint F-N/A.
+-- Matching rules:
+--   - Entra tenant ids are parsed as UNIQUEIDENTIFIER (GUID string casing ignored)
+--   - Admin UPN / Email lookups are case-insensitive
 --
 -- Parameter format (@TenantAdminPairs): semicolon-separated pairs
 --   {entra-tenant-id}|{admin-upn}
@@ -70,7 +72,8 @@ BEGIN
     END
 
     SET @TenantToken = LTRIM(RTRIM(LEFT(@Pair, @Pipe - 1)));
-    SET @UpnToken = LTRIM(RTRIM(SUBSTRING(@Pair, @Pipe + 1, 320)));
+    SET @UpnToken = LOWER(LTRIM(RTRIM(SUBSTRING(@Pair, @Pipe + 1, 320))));
+    -- UNIQUEIDENTIFIER parse is case-insensitive for standard GUID string forms.
     SET @TenantId = TRY_CONVERT(UNIQUEIDENTIFIER, @TenantToken);
 
     IF @TenantId IS NULL
@@ -88,7 +91,10 @@ BEGIN
     END
 
     IF NOT EXISTS (
-        SELECT 1 FROM @BootstrapPairs WHERE [TenantId] = @TenantId AND [Upn] = @UpnToken
+        SELECT 1
+        FROM @BootstrapPairs
+        WHERE [TenantId] = @TenantId
+          AND LOWER([Upn]) = @UpnToken
     )
     BEGIN
         INSERT INTO @BootstrapPairs ([TenantId], [Upn]) VALUES (@TenantId, @UpnToken);
@@ -114,7 +120,7 @@ IF EXISTS (
             '00000000-0000-0000-0000-000000000001',
             '00000000-0000-0000-0000-000000000002'
         )
-       OR [Upn] LIKE N'replace-admin@%'
+       OR LOWER([Upn]) LIKE N'replace-admin@%'
 )
 BEGIN
     THROW 50008, N'Replace placeholder tenant ids and admin UPNs in @TenantAdminPairs before apply (Master Flow Step 7).', 1;
@@ -138,7 +144,7 @@ DECLARE @TenantCount INT =
 );
 DECLARE @AdminCount INT =
 (
-    SELECT COUNT(DISTINCT [Upn]) FROM @BootstrapPairs
+    SELECT COUNT(DISTINCT LOWER([Upn])) FROM @BootstrapPairs
 );
 
 PRINT N'Bootstrap pairs: '
@@ -147,7 +153,7 @@ PRINT N'Bootstrap pairs: '
     + CONVERT(NVARCHAR(11), @AdminCount)
     + N' admin UPN(s).';
 
--- 1) Identity.Tenants — insert if missing with IsSyncEnabled = 0; never enable sync here.
+-- 1) Identity.Tenants — upsert and ensure IsSyncEnabled = 1 for listed tids.
 DECLARE tenant_cursor CURSOR LOCAL FAST_FORWARD FOR
     SELECT DISTINCT [TenantId] FROM @BootstrapPairs;
 
@@ -169,15 +175,22 @@ BEGIN
         (
             @TenantId,
             NULL,
-            0,
+            1,
             @Now
         );
-        PRINT N'Inserted Identity.Tenants row (IsSyncEnabled=0; enable only in Step 8 / Workflow F): ' + CONVERT(NVARCHAR(36), @TenantId);
+        PRINT N'Inserted Identity.Tenants row (IsSyncEnabled=1): ' + CONVERT(NVARCHAR(36), @TenantId);
     END
     ELSE
     BEGIN
-        -- Do not mutate IsSyncEnabled — Workflow F / Step 8 is the sole enablement control point.
-        PRINT N'Identity.Tenants already present (IsSyncEnabled unchanged): ' + CONVERT(NVARCHAR(36), @TenantId);
+        UPDATE [Identity].[Tenants]
+        SET [IsSyncEnabled] = 1
+        WHERE [TenantId] = @TenantId
+          AND [IsSyncEnabled] <> 1;
+
+        IF @@ROWCOUNT > 0
+            PRINT N'Updated Identity.Tenants IsSyncEnabled=1: ' + CONVERT(NVARCHAR(36), @TenantId);
+        ELSE
+            PRINT N'Identity.Tenants already present with IsSyncEnabled=1: ' + CONVERT(NVARCHAR(36), @TenantId);
     END
 
     FETCH NEXT FROM tenant_cursor INTO @TenantId;
@@ -228,13 +241,15 @@ BEGIN
     THROW 50002, N'Security.Groups row GLOBAL-SYSTEM-ADMINISTRATORS could not be resolved after create-if-missing.', 1;
 END
 
--- 3) Grant membership for each distinct admin UPN
+-- 3) Grant membership for each distinct admin UPN (case-insensitive; skip existing members).
 DECLARE @Upn NVARCHAR(320);
 DECLARE @UserGUID UNIQUEIDENTIFIER;
 DECLARE @Missing INT = 0;
+DECLARE @Granted INT = 0;
+DECLARE @SkippedExisting INT = 0;
 
 DECLARE admin_cursor CURSOR LOCAL FAST_FORWARD FOR
-    SELECT DISTINCT [Upn] FROM @BootstrapPairs;
+    SELECT DISTINCT LOWER([Upn]) FROM @BootstrapPairs;
 
 OPEN admin_cursor;
 FETCH NEXT FROM admin_cursor INTO @Upn;
@@ -245,8 +260,9 @@ BEGIN
     (
         SELECT TOP (1) [UserGUID]
         FROM [Identity].[Users]
-        WHERE [UserPrincipalName] = @Upn
-           OR [Email] = @Upn
+        WHERE LOWER([UserPrincipalName]) = @Upn
+           OR LOWER([Email]) = @Upn
+        ORDER BY [UsersId]
     );
 
     IF @UserGUID IS NULL
@@ -254,35 +270,51 @@ BEGIN
         PRINT N'Missing Identity.Users row for: ' + @Upn;
         SET @Missing = @Missing + 1;
     END
-    ELSE IF NOT EXISTS (
+    ELSE IF EXISTS (
         SELECT 1
         FROM [Security].[GroupsMembers]
         WHERE [GroupGUID] = @GroupGUID AND [UserGUID] = @UserGUID
     )
     BEGIN
-        INSERT INTO [Security].[GroupsMembers]
-        (
-            [GroupGUID],
-            [UserGUID],
-            [CreatedBy],
-            [CreatedDate],
-            [LastUpdatedBy],
-            [LastUpdatedDate]
-        )
-        VALUES
-        (
-            @GroupGUID,
-            @UserGUID,
-            @Actor,
-            @Now,
-            @Actor,
-            @Now
-        );
-        PRINT N'Granted GLOBAL-SYSTEM-ADMINISTRATORS to: ' + @Upn;
+        PRINT N'Already a GLOBAL-SYSTEM-ADMINISTRATORS member; skipped: ' + @Upn;
+        SET @SkippedExisting = @SkippedExisting + 1;
     END
     ELSE
     BEGIN
-        PRINT N'Already a member: ' + @Upn;
+        BEGIN TRY
+            INSERT INTO [Security].[GroupsMembers]
+            (
+                [GroupGUID],
+                [UserGUID],
+                [CreatedBy],
+                [CreatedDate],
+                [LastUpdatedBy],
+                [LastUpdatedDate]
+            )
+            VALUES
+            (
+                @GroupGUID,
+                @UserGUID,
+                @Actor,
+                @Now,
+                @Actor,
+                @Now
+            );
+            PRINT N'Granted GLOBAL-SYSTEM-ADMINISTRATORS to: ' + @Upn;
+            SET @Granted = @Granted + 1;
+        END TRY
+        BEGIN CATCH
+            -- Concurrent / re-entrant apply: unique (GroupGUID, UserGUID) means already a member.
+            IF ERROR_NUMBER() IN (2627, 2601)
+            BEGIN
+                PRINT N'Already a GLOBAL-SYSTEM-ADMINISTRATORS member; skipped: ' + @Upn;
+                SET @SkippedExisting = @SkippedExisting + 1;
+            END
+            ELSE
+            BEGIN
+                THROW;
+            END
+        END CATCH
     END
 
     FETCH NEXT FROM admin_cursor INTO @Upn;
@@ -291,13 +323,21 @@ END
 CLOSE admin_cursor;
 DEALLOCATE admin_cursor;
 
+PRINT N'Bootstrap membership summary: granted='
+    + CONVERT(NVARCHAR(11), @Granted)
+    + N', already-member-skipped='
+    + CONVERT(NVARCHAR(11), @SkippedExisting)
+    + N', missing='
+    + CONVERT(NVARCHAR(11), @Missing)
+    + N'.';
+
 IF @Missing > 0
 BEGIN
-    THROW 50003, N'One or more bootstrap admin UPNs were not found in Identity.Users. Complete Master Flow Step 6 (first login) for each admin, then re-run this script before Sync Now.', 1;
+    THROW 50003, N'One or more bootstrap admin UPNs were not found in Identity.Users. Complete Master Flow Step 6 (first login) for each missing admin, then re-run this script. Existing GLOBAL-SYSTEM-ADMINISTRATORS members were skipped safely.', 1;
 END
 
 PRINT N'';
-PRINT N'Checkpoint G complete (GLOBAL-SYSTEM-ADMINISTRATORS granted; IsSyncEnabled unchanged — enable in Step 8 / Workflow F).';
-PRINT N'NEXT — Master Flow Step 8: sign in as a bootstrapped admin → EAC /users → Sync Now (when Graph = Yes).';
+PRINT N'Checkpoint G complete (GLOBAL-SYSTEM-ADMINISTRATORS granted/verified; listed tenants IsSyncEnabled=1).';
+PRINT N'NEXT — sign in as a bootstrapped admin → EAC /users → Sync Now (when Graph = Yes).';
 PRINT N'Authorization cache may lag ~60s; prefer sign out / sign in before opening /users.';
 GO
