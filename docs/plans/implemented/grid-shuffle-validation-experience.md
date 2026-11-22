@@ -1,3 +1,6 @@
+<!-- Classification: H; Scope: platform -->
+> **Historical — not authoritative.** Retained for implementation history after knowledge promotion.
+
 ---
 name: Grid Shuffle Validation
 overview: Define a platform-standard, reusable collapsible validation summary (with row/field navigation and existing field chrome) for BoGrid, BoShuffleCardGrid, and future configuration editors—standards and SHARED-UI first, then Process Framework remediations.
@@ -164,7 +167,7 @@ Lightweight usage matrix (same role as Dirty State / Configuration Session Cache
 - **Delta** `docs/ui/controls/forms.md` — cross-link; summary does not replace field chrome.
 - **Delta** `docs/ui/patterns/import-summary.md` — clarify sibling pattern (pre-apply vs live editor); shared severity concepts only.
 - **Delta** `docs/ui/patterns/dirty-state.md`, `docs/ui/page-development.md`, `docs/ui/patterns/ux-conventions.md`, `docs/ui/overview.md` — checklist / index links.
-- **Delta** Planning Agent guidance (`docs/planning-and-development-agents.md` and/or AI quickstart as applicable) — require Adoption Matrix evaluation (summary vs chrome vs toast vs navigate) before inventing validation UX.
+- **Delta** Planning Agent guidance (`docs/ai/planning-and-development-agents.md` and/or AI quickstart as applicable) — require Adoption Matrix evaluation (summary vs chrome vs toast vs navigate) before inventing validation UX.
 - **New ADR** under STANDARDS `decisions/` — Validation Summary as platform contract (ADR-004 alignment: Bo* + docs/ui currency).
 
 **Product docs (when remediating):** thin EAC `README_AI.md` / feature notes only if Process Framework / Security Groups behavior changes in that change set.

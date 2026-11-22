@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Example Governance
 
 Owner: UI
@@ -37,6 +38,10 @@ Gallery is the **primary discoverability** mechanism for developers and agents f
 4. Same change set: normative change → AI index update → Gallery update (or a labeled **example pending** note with owner).
 5. Every UI-bearing plan must include a **UX Standards Compliance Review** subsection before development — peer gate to architecture/data/security. Required fields: Shared UI components reused, Gallery examples reviewed, applicable UX standards, Page Freeze, placeholders, navigation-state, truncation, disabled/read-only, intentional deviations — [ux-conventions.md](patterns/ux-conventions.md).
 6. Architecture approval is **not** UX approval. Incomplete UX discovery is a planning defect.
+
+## Gallery coverage and registered gaps
+
+Pattern → Gallery path: [gallery-index.md](gallery-index.md). Patterns **without** a demo are registered as explicit time-boxed exceptions in [DEV-002 § Registry](../deviations/DEV-002-example-governance-approved-exceptions.md#registry).
 
 ## Approved exceptions (no Gallery requirement)
 

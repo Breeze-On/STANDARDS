@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Sections
 
 Owner: UI

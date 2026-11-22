@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Architecture — Ecosystem landscape
 
 Owner: Architecture
@@ -33,13 +34,13 @@ Current-reality only. For org identity and the repository table, see [ecosystem.
 | [STANDARDS](https://github.com/Breeze-On/STANDARDS) | Org standards | Conventions, current architecture descriptions, ADRs |
 | [.github](https://github.com/Breeze-On/.github) | Org profile | Vision / mission / ecosystem messaging only |
 | [SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) | Application | EAC Blazor app (no ASP.NET Core Identity), business schema, local SQL sandbox, DEV deploy |
-| [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | Shared library | `BreezeOn.UI` (`Bo*`) + local component gallery |
+| [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | Shared library (mandatory for apps) | `BreezeOn.UI`: UI framework (`Bo*` / shell) + authentication framework + authorization framework + Identity schema definitions + Security schema definitions + local component gallery |
 
 **Boundary rules in force today**
 
 - One repository per application or shared concern ([ADR-001](../decisions/ADR-001-multi-repository-model.md)).
 - Product repos stay thin and **link** to STANDARDS; they do not redefine org-wide rules.
-- `SYSTEM-SHARED-UI` does not own EAC business domains, workflows, or databases.
+- `SYSTEM-SHARED-UI` does not own EAC business domains, workflows, or business databases. It **does** own platform Identity/Security SQL **definitions** and auth/authZ runtime; EAC-named reserved group Code prefixes (`APP_*` / `BUSENT_*` / `APPENA_*` / `APPSG_*`) live in SHARED-UI as collision defense / EAC naming on the shared schema ([ADR-014](../decisions/ADR-014-platform-authorization.md), [ADR-015](../decisions/ADR-015-object-owned-administrator-groups.md)).
 - EAC does not own the design-system implementation.
 
 ```text

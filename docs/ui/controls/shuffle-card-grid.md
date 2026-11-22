@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Shuffle Card Grid (`BoShuffleCardGrid`)
 
 Owner: UI
@@ -36,7 +37,7 @@ The library **never** talks to SQL or application repositories.
 
 ## Add ownership (locked — host-owned)
 
-- **Add New stays on the host** in `BoSectionMain` / `BoSectionSub` `HeaderActions`.
+- **Add New stays on the host** in `BoSectionMain` / `BoSectionSub` `HeaderActions` (section header actions — not the page-level [Actions area](../patterns/actions-area.md)).
 - `BoShuffleCardGrid` does **not** render Add, expose `ShowAdd` / `OnAdd`, or own create workflow.
 - Empty state is display-only (no Add CTA inside the control).
 - **Mandatory Add New path:** host creates the DTO, then calls **`InsertNewAtTopAsync(item)`** on the grid ref (requires `Items` as `IList<TItem>`). Do **not** `_items.Add` + manual `RefreshSortableAsync` for new rows.
@@ -55,6 +56,8 @@ Public helpers: `InsertNewAtTopAsync`, `RefreshSortableAsync` (non–Add New add
 
 ## Parameters (`BoShuffleCardGrid<TItem>`)
 
+> **Informative.** Complete, authoritative parameter lists: SHARED-UI [`public-component-api.md` § BoShuffleCardGrid](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#boshufflecardgrid) and [§ BoShuffleCardGridColumn](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#boshufflecardgridcolumn) ([parameter-reference.md](parameter-reference.md)).
+
 | Parameter | Role |
 | --- | --- |
 | `Items` | Host working list (`IList<TItem>` or equivalent) |
@@ -62,8 +65,6 @@ Public helpers: `InsertNewAtTopAsync`, `RefreshSortableAsync` (non–Add New add
 | `Columns` | Child `BoShuffleCardGridColumn<TItem>` definitions |
 | `AllowReorder` | Default **true**. When false, hide handle and do not init Sortable |
 | `ItemReorderable` | Optional `Func<TItem, bool>`. When false for an item: disabled handle + `bo-shuffle-card-grid__row--locked`; Sortable `filter` excludes the row from drag. Null = all rows reorderable when `AllowReorder` is true |
-
-Cell content (Display / Field) is vertically centered in each column track (`display: flex; align-items: center` on `.bo-shuffle-card-grid__col`) so icons and text share one midline with the handle / row actions.
 | `ShowFiltersButton` | Default **false**. When true, enables the filter **card** (`BoTextField` row). Host places the Filters button in section `HeaderActions` (rightmost after Add New) |
 | `FiltersVisible` / `FiltersVisibleChanged` | Two-way bind for filter-card visibility; toggle via `ToggleFiltersAsync()` from the host Filters button |
 | `Disabled` | Gates editors + Sortable |
@@ -74,9 +75,11 @@ Cell content (Display / Field) is vertically centered in each column track (`dis
 | `ListAriaLabel` | Accessible name for the list |
 | `OnOrderChanged` | Raised with ordered keys after a drag |
 | `OnChanged` | Optional host signal when fields/order/structure mutate |
-| `Class`, `Style` | Optional host chrome on the root |
+| `Class`, `Style`, `AdditionalAttributes` | Optional host chrome on the root; unmatched attributes are captured |
 
-Public helpers: `InsertNewAtTopAsync` (Add New — top + focus); `RefreshSortableAsync` (other add/remove); `ReadDomOrderAsync` (before Save).
+Cell content (Display / Field) is vertically centered in each column track (`display: flex; align-items: center` on `.bo-shuffle-card-grid__col`) so icons and text share one midline with the handle / row actions.
+
+Public helpers: `InsertNewAtTopAsync` (Add New — top + focus); `RefreshSortableAsync` (other add/remove); `ReadDomOrderAsync` (before Save); `FocusRowAsync`; `ToggleFiltersAsync`; `GetSelectedItems`.
 
 ## Column (`BoShuffleCardGridColumn<TItem>`)
 
@@ -173,19 +176,19 @@ Shuffle Card–specific:
 
 - List: `role="list"` + `ListAriaLabel`.
 - Rows: `role="listitem"` + `data-key`.
-- Header row may be `aria-hidden="true"` when column titles are also conveyed via field placeholders/labels; prefer visible sentence-case headers for sighted users.
+- **Header row (current reality):** the shipped header row is `aria-hidden="true"` (visual only). `aria-hidden` is **not** conditional on placeholders or labels — placeholders must **not** echo column titles ([ux-conventions.md § Placeholders](../patterns/ux-conventions.md#placeholder-standards-locked)) and field labels inside cells are hidden, so the header is the only place the column title appears. This leaves cell editors without a programmatic column name; it is a **known accessibility gap** recorded as Future Validation FV-012 ([accessibility.md](../foundations/accessibility.md)), not a standard. Use sentence-case `Title` strings; CSS renders them uppercase.
 - Handle and icon actions require `title` / `aria-label`.
 - Keyboard reorder is a **follow-up** (not required for v1 standardization).
 
 ## Dirty State
 
-`BoShuffleCardGrid` does **not** embed Dirty State. Hosts wire page `EacDirtyStateGuard` (or equivalent) or dialog local discard confirm per [dirty-state.md](../patterns/dirty-state.md).
+`BoShuffleCardGrid` does **not** embed Dirty State. Hosts wire the page Dirty State guard (**EAC reference:** `EacDirtyStateGuard`; platform concept in [dirty-state.md](../patterns/dirty-state.md)) or a dialog-local discard confirm. Save / Discard live in the host [Actions area](../patterns/actions-area.md).
 
 ## Validation Summary (host composition — locked)
 
 `BoShuffleCardGrid` does **not** embed validation, Save, or Validation Summary. For multi-row editable Shuffle experiences the host **must**:
 
-1. Compose [`BoValidationSummary`](../patterns/validation-summary.md) as a dedicated **Errors** section **below Actions** and **above** the Shuffle content after a failed Save/Commit when failures exist.
+1. Compose [`BoValidationSummary`](../patterns/validation-summary.md) as a dedicated **Errors** section **below the [Actions area](../patterns/actions-area.md)** and **above** the Shuffle content after a failed Save/Commit when failures exist.
 2. Map domain errors to `BoValidationIssue` (one issue per failing row/field — do not collapse distinct rows into one string).
 3. Apply matching field chrome (`BoValidationContext` + `Validate()`, or per-field `ErrorText`).
 4. Show the co-required Alert toast.

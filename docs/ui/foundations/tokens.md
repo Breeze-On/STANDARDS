@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Design tokens
 
 Owner: UI
@@ -19,6 +20,8 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 2. Light mode: roles that need pure white or black (**card fill**, **nav text**, **section labels**, etc.) match semantic white/black.
 3. Dark mode: surfaces and labels that are not pure white/black use **independent** palette values (e.g. dark card fill, light section labels). Do not invent parallel pure `#FFFFFF` / `#000000` tokens.
 4. **Any color not listed in this document** must **not** be introduced as a new hex requirement. Update this file in the same change set when a new independent token is intentional.
+
+**Known gaps (recorded, not rules):** `breezeon-ui.css` still contains some literal hex values that are not named tokens (new work must derive from tokens per rule 4; migration is Minor Implementation). **Dark-mode contrast** across all components (focus ring, toast, field borders on dark surfaces) has not been audited — Future Validation FV-002 ([accessibility.md](accessibility.md)).
 
 ## Color tokens (current)
 
@@ -68,7 +71,7 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 
 Legacy aliases still emitted: `--bo-color-surface` → card-container-background; `--bo-color-surface-muted` → background; `--bo-color-border` → card-container-border; `--bo-color-nav-background` → primary.
 
-**Save / Discard action tokens:** soft blue (Save) and soft red (Discard) families for Dirty State Persist/Revert chrome. CSS names stay `--bo-color-*` (no `*-light` / `*-dark` suffixes; not `--semantic-*`). Rest foreground-on-background contrast is WCAG AA (≥4.5:1) in both themes; hover/pressed keep the same foreground on a deeper fill in the same family. **Consumers today:** EAC Data Entities Actions only — do not reuse for generic Primary/Secondary buttons until a wider product rollout.
+**Save / Discard action tokens:** soft blue (Save) and soft red (Discard) families for Dirty State Persist/Revert chrome. CSS names stay `--bo-color-*` (no `*-light` / `*-dark` suffixes; not `--semantic-*`). Rest foreground-on-background contrast is WCAG AA (≥4.5:1) in both themes; hover/pressed keep the same foreground on a deeper fill in the same family. The Save / Discard **pattern is platform** ([button.md § Save / Discard](../controls/button.md#save--discard-platform-pattern), [actions-area.md](../patterns/actions-area.md)); these tokens are the platform tokens for that pair. **Consumers today:** the **EAC reference** (Data Entities Actions, mapped onto `.bo-button` in EAC CSS) is the only consumer — do not reuse them for generic Primary / Secondary buttons.
 
 **Nav-stable tokens:** `color-nav-selected` and `color-nav-logo-divider` do **not** follow Dark `color-tertiary` / `color-card-container-border`. They keep Light values so selected page fill and the brand logo divider match Light chrome in Dark mode.
 
@@ -83,6 +86,44 @@ Legacy aliases still emitted: `--bo-color-surface` → card-container-background
 | `row-gap` | `--bo-space-row-gap` | Gap between field containers in a `BoRow` (default `16px`) — see [layout.md](../layout/layout.md) |
 | `page-freeze-blur` | `--bo-page-freeze-blur` | Page freeze backdrop blur radius (default `6px`; `BoThemeOptions.PageFreezeBlur`) |
 
+### Spacing scale
+
+Emitted by `BoThemeProvider` from `BoThemeOptions` (structural — same in Light and Dark). **Tier 2 — STANDARD:** use these tokens for padding, margin, and gap in custom CSS and new controls; do not hardcode other pixel spacing.
+
+| CSS variable | `BoThemeOptions` | Default | Typical use |
+| --- | --- | --- | --- |
+| `--bo-space-xs` | `SpaceXs` | `4px` | Tight gaps: field label to control, header-tab vertical padding, filter field margin |
+| `--bo-space-sm` | `SpaceSm` | `8px` | Tab horizontal padding, compact control padding |
+| `--bo-space-md` | `SpaceMd` | `16px` | Gap between header tabs (`--bo-tabs-gap`), default stack / column gap, body padding |
+| `--bo-space-lg` | `SpaceLg` | `24px` | Panel host gap (`--bo-panel-host-gap`), generous section separation |
+
+Component spacing tokens built on the scale (change once, applies everywhere):
+
+| CSS variable | Default | Defined as / where used |
+| --- | --- | --- |
+| `--bo-space-shell-margin` | `8px` | Outer margin on shell regions (`SpaceShellMargin`) |
+| `--bo-space-content-card-margin` | `16px` | In-body `BoCard` margin (`SpaceContentCardMargin`) |
+| `--bo-space-row-inset` | `4px` | `BoRow` + field container inset (`SpaceRowInset`) — [layout.md](../layout/layout.md) |
+| `--bo-space-row-gap` | `16px` | Gap between field containers (`SpaceRowGap`) — [layout.md](../layout/layout.md) |
+| `--bo-tabs-gap` | `var(--bo-space-md)` | Gap between header tabs — [shell.md](../shell/shell.md) |
+| `--bo-panel-host-gap` | `var(--bo-space-lg)` | `BoPanelHost` gap — [panels.md](../layout/panels.md) |
+| `--bo-field-label-gap` | `4px` | Field label to control (fallback literal in CSS; equals `--bo-space-xs`) |
+| `--bo-grid-action-col-width` | `4.75rem` (`5.5rem` in Shuffle Card scope) | Grid / action track width |
+
+Section-specific margins (Main: bottom 16px; Sub: top 8px / sides 6px / bottom 4px; body padding 6px) are documented in [sections.md](../layout/sections.md) and follow this scale.
+
+Known gap: some control CSS still carries literal `px` paddings that coincide with scale steps; token alignment is a Future Validation item (FV-013 alongside the type scale).
+
+### Motion tokens
+
+The complete **approved motion token system** (tokens, approved non-token durations, legacy tolerance, rules) is [motion.md § Approved motion tokens](motion.md#approved-motion-tokens-tier-2). Token index (all defined on `.bo-theme-root`):
+
+| CSS variable | Value | Detail |
+| --- | --- | --- |
+| `--bo-selection-travel-duration` / `-easing` | `240ms` / `cubic-bezier(0.2, 0.8, 0.2, 1)` | [Selection travel tokens](#selection-travel-tokens-current) |
+| `--bo-reorder-flip-duration` / `-easing` | `260ms` / `cubic-bezier(0.2, 0.8, 0.2, 1)` | [Reorder motion tokens](#reorder-motion-tokens-current) |
+| `--bo-reorder-settle-duration` | `220ms` | [Reorder motion tokens](#reorder-motion-tokens-current) |
+
 ### Corner radius tokens (current)
 
 Emitted by `BoThemeProvider` from `BoThemeOptions` (structural — same in Light and Dark):
@@ -92,9 +133,9 @@ Emitted by `BoThemeProvider` from `BoThemeOptions` (structural — same in Light
 | `--bo-radius-sm` | `RadiusSm` | `4px` | Compact chrome (nav links, collapse hit, profile menu items, toggle segments) |
 | `--bo-radius-md` | `RadiusMd` | `8px` | Fields, cards, dialogs, toasts, panels |
 | `--bo-radius-full` | `RadiusFull` | `9999px` | Pill / circular **non-button** chrome (theme switch track, circular header icon hits) — **not** header tabs |
-| `--bo-button-radius` | *(alias)* | `var(--bo-radius-md)` | **Hard standard for all `BoButton` variants, Shared UI action chrome** (grid toolbar / icon / pager buttons, shuffle card action buttons), **and header / section `BoTabs` selected/hover/indicator chrome**. Not independently tunable — always aliases `--bo-radius-md`. |
+| `--bo-button-radius` | *(alias)* | `var(--bo-radius-md)` | **Hard standard for all `BoButton` / `BoIconButton` variants, Shared UI action chrome** (grid toolbar / icon / pager buttons, shuffle card action buttons), **and header / section `BoTabs` selected/hover/indicator chrome**. Not independently tunable — always aliases `--bo-radius-md`. |
 
-**Button corner radius (locked):** every `BoButton` (Primary / Secondary / Stealth, including Dialog footer actions, toolbar actions, Import Summary footer, and product Save/Discard chrome that uses `.bo-button`) uses `--bo-button-radius`. Product apps and Gallery pages **must not** override `border-radius` on `.bo-button`. Circular non-button hits (`.bo-header-actions__icon-btn`, avatars, theme switch thumb) keep `--bo-radius-full` / `50%`. Header tabs use `--bo-button-radius` (not `--bo-radius-full`). See [forms.md](../controls/forms.md#button-bobutton), [shell.md](../shell/shell.md).
+**Button corner radius (locked) — token authority:** every `BoButton` / `BoIconButton` (Primary / Secondary / Stealth / Danger, including Dialog footer actions, toolbar actions, Import Summary footer, and product Save/Discard chrome that uses `.bo-button`) uses `--bo-button-radius`. This table is the **single value authority**; behavior rules (no product override of `border-radius` on `.bo-button`, scope) live in [button.md § Corner radius](../controls/button.md#corner-radius--single-authority-tier-2). Circular non-button hits (`.bo-header-actions__icon-btn`, avatars, theme switch thumb) keep `--bo-radius-full` / `50%`. Header tabs use `--bo-button-radius` (**not** `--bo-radius-full`) — [shell.md](../shell/shell.md).
 
 ### Reorder motion tokens (current)
 

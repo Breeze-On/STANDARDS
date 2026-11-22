@@ -1,4 +1,7 @@
-﻿# UX Standards Enforcement Review & Remediation
+<!-- Classification: H; Scope: platform -->
+> **Historical — not authoritative.** Retained for implementation history after knowledge promotion.
+
+# UX Standards Enforcement Review & Remediation
 
 **Status:** implemented  
 **Repos:** STANDARDS (normative), SYSTEM-SHARED-UI (component enforcement), SYSTEM-ADMIN-EAC (retroactive consumer remediation)  

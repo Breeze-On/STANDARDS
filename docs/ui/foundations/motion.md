@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Motion
 
 Owner: UI
@@ -10,7 +11,47 @@ Platform motion language for BreezeOn shared UI. Current reality only. Implement
 - Motion should feel **premium and responsive** (Toggle-quality), never laggy or flashy.
 - Selection travel must feel **professional, responsive, and enterprise-grade** — it reinforces navigation (“you moved here”), not decorative flourish (no bounce, overshoot, elastic easing, or attention-stealing delays).
 - Honor **`prefers-reduced-motion: reduce`** — instant state change; no lift / FLIP / settle / selection travel.
-- Control SSOTs keep surface-specific rules and **cite** this document for shared reorder and selection-travel motion. Do not invent per-control duration dialects.
+- Control SSOTs keep surface-specific rules and **cite** this document for shared reorder and selection-travel motion. Do not invent per-control duration dialects — use [approved motion tokens](#approved-motion-tokens-tier-2).
+
+## Approved motion tokens (Tier 2)
+
+**No arbitrary durations.** Every transition or animation in `BreezeOn.UI` and in product CSS uses a **token** or one of the **approved durations** below. Do not invent per-control timings or easings. Tier model: [normative-tiers.md](normative-tiers.md).
+
+### Tokens (defined on `.bo-theme-root`)
+
+| CSS variable | Value | Use |
+| --- | --- | --- |
+| `--bo-selection-travel-duration` | `240ms` | Indicator / thumb travel for Tabs, Toggle, future segmented controls ([Selection travel](#selection-travel-locked)) |
+| `--bo-selection-travel-easing` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | Selection travel easing (the platform easing family) |
+| `--bo-reorder-flip-duration` | `260ms` | Reorder sibling FLIP ([Reorder motion](#reorder-motion-locked)) |
+| `--bo-reorder-flip-easing` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | Reorder FLIP + settle easing (same family) |
+| `--bo-reorder-settle-duration` | `220ms` | Dragged-item shadow settle |
+| `--bo-toggle-thumb-duration` / `--bo-toggle-thumb-easing` | alias of the selection-travel tokens | Toggle thumb (kept for compatibility; do not set independently) |
+
+Defaults for moving selection, reordering, and settle **must** consume these tokens (never a literal).
+
+### Approved durations (non-token)
+
+These durations are approved for other transitions. Pick the matching row; do not add new values.
+
+| Name | Duration | Easing | Use |
+| --- | --- | --- | --- |
+| **Micro** | `150ms` | `ease` | Color / background / border / shadow changes on hover and focus |
+| **Standard** | `200ms` | `ease` | Chevron rotate, switch thumb / track, nav width, card hover lift, toast out (`200ms` `ease-in`) |
+| **Toast in** | `220ms` | `ease-out` | Toast entrance |
+| **Disclosure** | `240ms` | `ease` | Expand / collapse height (`grid-template-rows`) + `200ms` content opacity |
+| **Loop** | `1.6s` | `ease-in-out` | Page Freeze brand pulse / glow (infinite) |
+
+**Legacy values tolerated until touched:** `120ms` (Drop-Down option), `140ms` (field border), `160ms` (toggle / tab fills), `180ms` (tree-toggle icon), `220ms` (Home card icon). Normalize to **Micro** or **Standard** when the rule is edited. The Home card icon's springy easing (`cubic-bezier(0.34, 1.4, 0.64, 1)`) is a documented exception **limited to Home nav cards** — selection travel and reorder never overshoot.
+
+Token-izing the non-token durations (`--bo-motion-*`) and migrating legacy values is Future Validation (FV-014).
+
+### Rules
+
+1. Selection movement → `--bo-selection-travel-*`. Reorder → `--bo-reorder-*`. Everything else → an approved duration above.
+2. No bounce, overshoot, or elastic easing on navigation / selection motion (Home card icon exception above).
+3. Every animation honors `prefers-reduced-motion: reduce` (instant / no animation).
+4. Animate `transform` and `opacity` (and the approved `grid-template-rows` for disclosure); do not animate `left` / `top` / `width` of content for polish.
 
 ## Reorder motion (locked)
 
@@ -81,7 +122,7 @@ Defined on `.bo-theme-root` in `breezeon-ui.css` (geometry vars written on the c
 
 ### Host script
 
-Hosts load `_content/BreezeOn.UI/js/bo-sliding-selection.js` once (covers Toggle + Tabs). See [page-development.md](../page-development.md) § Host integration.
+Hosts load `_content/BreezeOn.UI/js/bo-sliding-selection.js` once (covers Toggle + Tabs). See [page-development.md](../page-development.md) § Host-script inventory.
 
 ### Anti-patterns (locked)
 
@@ -97,7 +138,7 @@ Hosts load `_content/BreezeOn.UI/js/bo-sliding-selection.js` once (covers Toggle
 | --- | --- | --- |
 | `BoToggle` thumb | Shared selection travel (`240ms` / shared easing) | Direct `boSlidingSelection` — [toggle.md](../controls/toggle.md) |
 | `BoTabs` indicator | Shared selection travel | Tertiary fill; button corner radius — [shell.md](../shell/shell.md) |
-| Disclosure / expandable | ~0.24s height + opacity | [expandable-section.md](../layout/expandable-section.md) |
-| Toast in/out | ~200–220ms | [overlays.md](../shell/overlays.md) |
+| Disclosure / expandable | **Disclosure** (`240ms` height + `200ms` opacity) | [expandable-section.md](../layout/expandable-section.md) |
+| Toast in/out | **Toast in** `220ms` / **Standard** `200ms` out | [overlays.md](../shell/overlays.md) |
 
 Reorder and selection travel share the same easing family so premium interactions feel like one platform.

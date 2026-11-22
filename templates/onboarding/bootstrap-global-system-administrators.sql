@@ -1,18 +1,19 @@
 -- =============================================================================
--- Customer onboarding — Step 7 / Workflow G (admin + sync-enable bootstrap)
+-- Customer onboarding — Step 7 / Workflow G (admin bootstrap; does NOT enable directory sync)
 -- =============================================================================
 -- SSOT procedure: STANDARDS runbooks/customer-onboarding-master-flow.md Step 7
--- Detail: STANDARDS architecture/authorization/customer-onboarding-authorization.md
+-- Detail: STANDARDS runbooks/customer-onboarding-authorization.md
 -- Operator copy: STANDARDS templates/onboarding/bootstrap-global-system-administrators.sql
 --
 -- What this script does (idempotent):
---   1) Upsert Identity.Tenants for each listed tid with IsSyncEnabled = 1
+--   1) Ensure Identity.Tenants rows exist for each listed tid WITHOUT changing IsSyncEnabled
+--      (insert with IsSyncEnabled = 0 if missing; never force sync enablement)
 --   2) Create Security.Groups GLOBAL-SYSTEM-ADMINISTRATORS if missing
 --   3) Grant that group to each listed admin UPN (must already exist in Identity.Users
 --      from first login — Master Flow Step 6 — or local Graph UPN upsert)
 --
--- After this script succeeds → Master Flow Step 8: bootstrapped admin opens EAC
--- /users and runs Sync Now (when intake Graph = Yes).
+-- IsSyncEnabled is owned exclusively by Master Flow Step 8 / Workflow F (Graph = Yes only).
+-- After this script succeeds → Step 8 when Graph = Yes; otherwise Checkpoint F-N/A.
 --
 -- Parameter format (@TenantAdminPairs): semicolon-separated pairs
 --   {entra-tenant-id}|{admin-upn}
@@ -146,7 +147,7 @@ PRINT N'Bootstrap pairs: '
     + CONVERT(NVARCHAR(11), @AdminCount)
     + N' admin UPN(s).';
 
--- 1) Identity.Tenants — insert if missing; force IsSyncEnabled = 1 for listed tids.
+-- 1) Identity.Tenants — insert if missing with IsSyncEnabled = 0; never enable sync here.
 DECLARE tenant_cursor CURSOR LOCAL FAST_FORWARD FOR
     SELECT DISTINCT [TenantId] FROM @BootstrapPairs;
 
@@ -168,22 +169,15 @@ BEGIN
         (
             @TenantId,
             NULL,
-            1,
+            0,
             @Now
         );
-        PRINT N'Inserted Identity.Tenants row (IsSyncEnabled=1): ' + CONVERT(NVARCHAR(36), @TenantId);
+        PRINT N'Inserted Identity.Tenants row (IsSyncEnabled=0; enable only in Step 8 / Workflow F): ' + CONVERT(NVARCHAR(36), @TenantId);
     END
     ELSE
     BEGIN
-        UPDATE [Identity].[Tenants]
-        SET [IsSyncEnabled] = 1
-        WHERE [TenantId] = @TenantId
-          AND [IsSyncEnabled] <> 1;
-
-        IF @@ROWCOUNT > 0
-            PRINT N'Updated Identity.Tenants IsSyncEnabled=1: ' + CONVERT(NVARCHAR(36), @TenantId);
-        ELSE
-            PRINT N'Identity.Tenants already sync-enabled: ' + CONVERT(NVARCHAR(36), @TenantId);
+        -- Do not mutate IsSyncEnabled — Workflow F / Step 8 is the sole enablement control point.
+        PRINT N'Identity.Tenants already present (IsSyncEnabled unchanged): ' + CONVERT(NVARCHAR(36), @TenantId);
     END
 
     FETCH NEXT FROM tenant_cursor INTO @TenantId;
@@ -303,7 +297,7 @@ BEGIN
 END
 
 PRINT N'';
-PRINT N'Checkpoint G complete (tenants sync-enabled + GLOBAL-SYSTEM-ADMINISTRATORS granted).';
+PRINT N'Checkpoint G complete (GLOBAL-SYSTEM-ADMINISTRATORS granted; IsSyncEnabled unchanged — enable in Step 8 / Workflow F).';
 PRINT N'NEXT — Master Flow Step 8: sign in as a bootstrapped admin → EAC /users → Sync Now (when Graph = Yes).';
 PRINT N'Authorization cache may lag ~60s; prefer sign out / sign in before opening /users.';
 GO

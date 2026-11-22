@@ -1,23 +1,24 @@
+<!-- Classification: OPS; Scope: platform -->
 # Customer authentication onboarding
 
 Owner: Architecture
 
 **Audience:** BreezeOn platform operators onboarding a **customer-environment** (DEV / UAT / PRD).
 
-This is the **detailed procedure SSOT for Workflows A–F** (App Registration through optional Graph sync). For the end-to-end sequence (intake → provisioning → A–G → go-live), **Customer Information Required**, and the **go-live checklist**, use the **[Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md)** — that document owns those SSOTs. This slice must not maintain a competing intake table or go-live checklist.
+This is the **detailed procedure SSOT for Workflows A–F** (App Registration through optional Graph sync). For the end-to-end sequence (intake → provisioning → A–G → go-live), **Customer Information Required**, and the **go-live checklist**, use the **[Customer Onboarding Master Flow](customer-onboarding-master-flow.md)** — that document owns those SSOTs. This slice must not maintain a competing intake table or go-live checklist.
 
 Architecture and policy remain in the linked standards and ADRs — do not treat this document as a second SSOT for those topics.
 
 **Out of scope**
 
-- Local developer setup with `BreezeOn-LOCAL` → [local-development-standard.md](local-development-standard.md)
-- Azure SQL Managed Identity / App Service deploy mechanics → [hosted-deployment.md](../../docs/hosted-deployment.md)
-- Authorization bootstrap (Workflow G) → [customer-onboarding-authorization.md](../authorization/customer-onboarding-authorization.md) (Master Flow Step 7)
+- Local developer setup with `BreezeOn-LOCAL` → [local-development-standard.md](../architecture/identity-and-authentication/local-development-standard.md)
+- Azure SQL Managed Identity / App Service deploy mechanics → [hosted-deployment.md](../docs/hosted-deployment.md)
+- Authorization bootstrap (Workflow G) → [customer-onboarding-authorization.md](customer-onboarding-authorization.md) (Master Flow Step 7)
 - Manual `Identity.Tenants` insert as normal onboarding (login discovery only; exceptional troubleshooting is Master Flow Recovery appendix)
 
 ## Intake and go-live
 
-Complete **Customer Information Required** and the go-live checklist only on the [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md). Before Workflow A, confirm intake is complete there (customer name, env, tid, admin contact, product URLs, Graph Yes/No, secret-expiry owner, Identity + Security schema readiness).
+Complete **Customer Information Required** and the go-live checklist only on the [Customer Onboarding Master Flow](customer-onboarding-master-flow.md). Before Workflow A, confirm intake is complete there (customer name, env, tid, admin contact, product URLs, Graph Yes/No, secret-expiry owner, Identity + Security schema readiness).
 
 **Identity schema readiness** is Master Flow Step 1 (provisioning) — distinct from tenant **discovery** on first login (Workflow E / Master Flow Step 6). Security schema is also required before Workflow G.
 
@@ -25,21 +26,21 @@ Complete **Customer Information Required** and the go-live checklist only on the
 
 | Role | Owns |
 | --- | --- |
-| BreezeOn platform ops | App Registration create/name/secret; App Service `AUTHENTICATION__*` on all products; hosted `IsSyncEnabled` SQL; secret rotation |
+| BreezeOn platform ops | App Registration create/name/secret; App Service `AUTHENTICATION__*` on all products; hosted `IsSyncEnabled` SQL (**Step 8 / Workflow F only**); secret rotation |
 | Customer Entra administrator | Admin consent; Enterprise Application in customer tenant |
 | Product deployer | Product base URLs; redirect URI registration requests; deploy that uses shared ClientId/Secret |
 
-Model summary (do not restate tables here): one App Registration per `{Customer}-{ENV}`, shared auth settings, shared Identity DB, separate product cookies — [cloud-architecture.md](cloud-architecture.md), [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md).
+Model summary (do not restate tables here): one App Registration per `{Customer}-{ENV}`, shared auth settings, shared Identity DB, separate product cookies — [cloud-architecture.md](../architecture/identity-and-authentication/cloud-architecture.md), [ADR-011](../decisions/ADR-011-app-registration-per-customer-environment.md).
 
-Secret handling (approved storage, prohibited channels, evidence): Master Flow Step 4 § Secret handling and [configuration-standard.md](configuration-standard.md).
+Secret handling (approved storage, prohibited channels, evidence): Master Flow Step 4 § Secret handling and [configuration-standard.md](../architecture/identity-and-authentication/configuration-standard.md).
 
 ---
 
 ## Workflow A — Create App Registration
 
 1. In the BreezeOn Entra tenant, create an App Registration named **`{Customer}-{ENV}`** (example: `Contoso-DEV`).
-2. Configure supported account types / home tenants so the customer (and optional BreezeOn support) tid(s) may sign in — **in Entra**, not in application code ([cloud-architecture.md](cloud-architecture.md)).
-3. Create a **client secret**; record secret id and expiry for rotation tracking; transfer the value only per Master Flow secret handling ([configuration-standard.md](configuration-standard.md)).
+2. Configure supported account types / home tenants so the customer (and optional BreezeOn support) tid(s) may sign in — **in Entra**, not in application code ([cloud-architecture.md](../architecture/identity-and-authentication/cloud-architecture.md)).
+3. Create a **client secret**; record secret id and expiry for rotation tracking; transfer the value only per Master Flow secret handling ([configuration-standard.md](../architecture/identity-and-authentication/configuration-standard.md)).
 4. Note the **Application (client) ID** for App Service settings.
 
 **Checkpoint A:** Registration exists; ClientId is available to operators; secret id/expiry/owner are tracked (value not retained as evidence).
@@ -51,7 +52,7 @@ On the **same** App Registration, for **each** product base URL `{base}` in this
 - `{base}/signin-oidc`
 - `{base}/signout-callback-oidc`
 
-Details and examples: [configuration-standard.md](configuration-standard.md) § Redirect URIs.
+Details and examples: [configuration-standard.md](../architecture/identity-and-authentication/configuration-standard.md) § Redirect URIs.
 
 **Checkpoint B:** Every product in the env has both URIs; no product uses a separate registration.
 
@@ -81,7 +82,7 @@ Never commit secrets to source control. Do not use a different ClientId per prod
    https://login.microsoftonline.com/{customer-tid}/v2.0/adminconsent?client_id={application-client-id}&redirect_uri={url-encoded-redirect-uri}&scope=.default
    ```
 
-2. Confirm an **Enterprise Application** appears in the **customer** tenant after consent ([business-vision.md](business-vision.md), [cloud-architecture.md](cloud-architecture.md)). Record consent timestamp and EA evidence for audit (Master Flow Step 5).
+2. Confirm an **Enterprise Application** appears in the **customer** tenant after consent ([business-vision.md](../architecture/identity-and-authentication/business-vision.md), [cloud-architecture.md](../architecture/identity-and-authentication/cloud-architecture.md)). Record consent timestamp and EA evidence for audit (Master Flow Step 5).
 3. Attempt interactive sign-in to one product host; complete Entra challenge and OIDC callback.
 
 **Phase 1 vs Phase 2:** This workflow covers interactive / delegated consent for sign-in. Application permission `User.Read.All` consent for Graph is **Workflow F** (Phase 2 / Master Flow Step 8) and requires **customer** Entra admin consent for app-only tokens against the customer tid.
@@ -103,20 +104,22 @@ After a successful interactive login by the designated customer admin, verify in
 
 **Normative path:** the platform creates the `Identity.Tenants` row on first login. If the row is missing, **stop** and complete a successful login — do **not** manually insert a tenant row as part of hosted onboarding. Manual insert is exceptional only (troubleshooting / local seed / future exception) — Master Flow Recovery appendix.
 
-Login behaviour SSOT: [authentication-standard.md](authentication-standard.md). Session policy: [session-management-standard.md](session-management-standard.md), [ADR-012](../../decisions/ADR-012-cookie-session-management.md).
+Login behaviour SSOT: [authentication-standard.md](../architecture/identity-and-authentication/authentication-standard.md). Session policy: [session-management-standard.md](../architecture/identity-and-authentication/session-management-standard.md), [ADR-012](../decisions/ADR-012-cookie-session-management.md).
 
 **Checkpoint E:** User, login history, and tenant discovery rows exist; cookie session works.
 
-Continue to [Workflow G](../authorization/customer-onboarding-authorization.md) (Master Flow Step 7) **before** Workflow F / Sync Now.
+Continue to [Workflow G](customer-onboarding-authorization.md) (Master Flow Step 7) **before** Workflow F / Sync Now.
 
 ## Workflow F — Optional Graph enablement (Phase 2)
+
+**Authoritative sync enablement:** Workflow F / Master Flow Step 8 is the **sole** control point for setting `IsSyncEnabled = 1` on hosted customer-environments. Workflow G must not enable sync.
 
 Run **only** when Master Flow intake lists Graph synchronization = **Yes**. If Graph = No, skip this workflow and record **Checkpoint F-N/A** on the Master Flow go-live sheet.
 
 **Preconditions:** Master Flow **Checkpoint G** complete (bootstrapped admin can open EAC `/users` under page security); Checkpoint E tenant row exists from login discovery.
 
 1. On the App Registration, add application permission **`User.Read.All`**.
-2. Obtain **admin consent in the customer tenant** for those application permissions (Customer Entra administrator). BreezeOn owns App Registration configuration; the customer grants app-only Graph access against their tid — [configuration-standard.md](configuration-standard.md), [directory-synchronization-standard.md](directory-synchronization-standard.md), [ADR-013](../../decisions/ADR-013-microsoft-graph-directory-synchronization.md). Re-use the adminconsent URL pattern from Workflow D after the permission is added.
+2. Obtain **admin consent in the customer tenant** for those application permissions (Customer Entra administrator). BreezeOn owns App Registration configuration; the customer grants app-only Graph access against their tid — [configuration-standard.md](../architecture/identity-and-authentication/configuration-standard.md), [directory-synchronization-standard.md](../architecture/identity-and-authentication/directory-synchronization-standard.md), [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md). Re-use the adminconsent URL pattern from Workflow D after the permission is added.
 3. Confirm platform Identity schema (including `Identity.Tenants`) is present in the customer database (Master Flow Step 1).
 4. Confirm the customer tid row exists from Workflow E discovery. If it does not, return to Workflow E — do not invent the row.
 5. Enable sync for the discovered customer tid (hosted — explicit SQL only):
@@ -127,12 +130,12 @@ SET [IsSyncEnabled] = 1
 WHERE [TenantId] = '<entra-tid>';
 ```
 
-6. In EAC, the bootstrapped admin runs **Sync Now**; confirm status Succeeded and users reflect Graph `accountEnabled` → `IsEnabled`.
+6. In EAC, the bootstrapped admin runs **Sync Now**; confirm status Succeeded and users reflect Graph `accountEnabled` → `IsEnabled`. Also check logs for soft-disable skip (50% safety / zero upserts) — **Succeeded does not prove soft-disable ran**.
 7. Do **not** set `IDENTITY__SEEDTENANTIDS` on hosted App Services.
 
-**Checkpoint F:** Consent granted; enabled tenant syncs; Users grid shows directory users; SoftDisable / mid-session `IsEnabled` behaviour per [session-management-standard.md](session-management-standard.md) (observable: disabled user loses session within ~60s).
+**Checkpoint F:** Consent granted; enabled tenant syncs; Users grid shows directory users; SoftDisable / mid-session `IsEnabled` behaviour per [session-management-standard.md](../architecture/identity-and-authentication/session-management-standard.md) (observable: disabled user loses session within ~60s).
 
-Go-live sign-off: [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) § Go-live readiness checklist (includes Workflow G and F / F-N/A).
+Go-live sign-off: [Customer Onboarding Master Flow](customer-onboarding-master-flow.md) § Go-live readiness checklist (includes Workflow G and F / F-N/A).
 
 ## Troubleshooting
 
@@ -150,20 +153,20 @@ Go-live sign-off: [Customer Onboarding Master Flow](../../runbooks/customer-onbo
 
 ## Ongoing operations
 
-- **Secret rotation / emergency revocation:** [configuration-standard.md](configuration-standard.md) § Client secret lifecycle (update **every** product App Service); Master Flow Recovery appendix.
-- **Session revocation after disable:** within ≤ 60 seconds per instance — [session-management-standard.md](session-management-standard.md), [ADR-012](../../decisions/ADR-012-cookie-session-management.md).
-- **Local development:** not this runbook — [local-development-standard.md](local-development-standard.md).
+- **Secret rotation / emergency revocation:** [configuration-standard.md](../architecture/identity-and-authentication/configuration-standard.md) § Client secret lifecycle (update **every** product App Service); Master Flow Recovery appendix.
+- **Session revocation after disable:** within ≤ 60 seconds per instance — [session-management-standard.md](../architecture/identity-and-authentication/session-management-standard.md), [ADR-012](../decisions/ADR-012-cookie-session-management.md).
+- **Local development:** not this runbook — [local-development-standard.md](../architecture/identity-and-authentication/local-development-standard.md).
 
 ## Related
 
-- [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) (end-to-end Steps 0–9; intake + go-live SSOT)
-- [Customer onboarding — authorization](../authorization/customer-onboarding-authorization.md) (Workflow G)
-- [Business vision](business-vision.md)
-- [Cloud architecture](cloud-architecture.md)
-- [Configuration standard](configuration-standard.md)
-- [Directory synchronization standard](directory-synchronization-standard.md)
-- [Authentication standard](authentication-standard.md)
-- [Session management standard](session-management-standard.md)
-- [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md)
-- [ADR-012](../../decisions/ADR-012-cookie-session-management.md)
-- [ADR-013](../../decisions/ADR-013-microsoft-graph-directory-synchronization.md)
+- [Customer Onboarding Master Flow](customer-onboarding-master-flow.md) (end-to-end Steps 0–9; intake + go-live SSOT)
+- [Customer onboarding — authorization](customer-onboarding-authorization.md) (Workflow G)
+- [Business vision](../architecture/identity-and-authentication/business-vision.md)
+- [Cloud architecture](../architecture/identity-and-authentication/cloud-architecture.md)
+- [Configuration standard](../architecture/identity-and-authentication/configuration-standard.md)
+- [Directory synchronization standard](../architecture/identity-and-authentication/directory-synchronization-standard.md)
+- [Authentication standard](../architecture/identity-and-authentication/authentication-standard.md)
+- [Session management standard](../architecture/identity-and-authentication/session-management-standard.md)
+- [ADR-011](../decisions/ADR-011-app-registration-per-customer-environment.md)
+- [ADR-012](../decisions/ADR-012-cookie-session-management.md)
+- [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md)

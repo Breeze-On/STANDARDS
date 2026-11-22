@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Application Configuration deployment
 
 Owner: Architecture
@@ -8,9 +9,21 @@ Decision: [ADR-017](../../decisions/ADR-017-application-configuration-deployment
 
 ## Purpose
 
-Exported JSON is **Application Configuration State**. Import **synchronizes** the selected Application so the target matches the file.
+Exported JSON is **Application Configuration State**. Import **synchronizes** the selected Application so participating sections match the file.
 
 This is **not** backup/restore and **not** merge. Applications and Business Entities JSON remain merge/upsert; Application Configuration is a separate semantic family.
+
+Synchronize is **section-participation based** ([ADR-017](../../decisions/ADR-017-application-configuration-deployment.md)):
+
+| | Meaning |
+| --- | --- |
+| **Participating section** (JSON key present, including empty) | Synchronizes **completely** — create / update / remove by Code for that section |
+| **Omitted section** (JSON key absent) | Does **not** participate — intentionally skipped; target left unchanged |
+| **“No partial imports”** | No subset-of-Codes and no merge-style behavior **inside** a participating section. Omitted sections are allowed and expected. |
+
+**Examples (allowed):** `dataEntities` present while `variables` omitted; `variables` present while `securityGroups` omitted; `processFramework` present while other optional sections omitted.
+
+**Not allowed:** importing only some Codes within a present `securityGroups` / `variables` / `processFramework` / `dataEntities` section.
 
 ## Principles
 
@@ -27,34 +40,52 @@ This is **not** backup/restore and **not** merge. Applications and Business Enti
 ## Portable unit (current)
 
 - Deployment identity is the **Application** (`UniqueCode`).
-- Business Entity selection on `/app-configuration` gates the workspace; it is not part of the v1 portable identity.
+- Business Entity selection on `/app-configuration` gates the workspace; it is **not** part of the portable identity and does **not** limit synchronize scope.
 - Definitions owned by `ApplicationGUID` (Data Entities + Columns, Process Framework Roles / Steps / Options + metadata columns) are in scope ([ADR-016](../../decisions/ADR-016-data-entity-ownership.md), [ADR-019](../../decisions/ADR-019-process-framework-metadata.md)).
 
-## Included (current)
+### Operator hazard — Application-scoped synchronize
 
-| Section | Contents |
+Synchronize is **Application-wide**, not limited to the currently selected Business Entity:
+
+- When `variables` participates, **values sync across all enablements** represented in the file (full replace for participating definitions).
+- When `securityGroups` participates, groups sync for **all Business Entity contexts** present in the file for that Application.
+- Selecting a Business Entity only opens the workspace; it does not scope the promote.
+
+Import Summary must surface this hazard when Variables or Security Groups participate.
+
+## Included / Excluded / Separate deployment
+
+| Classification | Contents |
 | --- | --- |
-| Data Entities | Definitions, Columns, SortOrder |
-| Security Groups | AttributeCode configuration per Business Entity (Application Context); synchronized Security.Groups Code/Name/Description; no memberships |
-| Process Framework | Metadata column catalog, Roles, Steps, Options (with metadata values + `TEXT` translations); Application-scoped; Codes only — [process-framework](../process-framework/README.md) |
+| **Included** (App Config JSON when section participates) | Data Entity **configuration** (definitions + columns); Process Framework Roles / Steps / Options + metadata columns + **metadata values** (incl. TEXT language maps); Variables **definitions** + **values** (incl. TEXT language maps); Security Groups **definitions** (AttributeCode / portable Name / Description / Metadata / SortOrder; configuration-owned APPSG); **Enabled languages** (`languages` — replace per context; `en-CA` required) |
+| **Excluded** from App Config JSON | Data Entity **row** data; Security Group **memberships**; environment GUIDs; runtime / audit data |
+| **Separate deployment path** | **Translations Excel** (DE row Descriptions; also PF labels / PF TEXT metadata / Variable TEXT — dual path with JSON language maps where those kinds also travel in App Config JSON). SG members: kind `breezeon.eac.security-group-members`. DE Values Excel: [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md). |
 
-## Explicitly excluded
+**Replace (not merge):** Participating sections replace target state. Target-only translator languages/values for participating PF/Variables/Languages sections are removed. Import Summary warns.
 
-- Data Entity Rows, Translations, Metadata values (Data Entity row data; Process Framework metadata values **are** included, nested under their Role / Step / Option; Variable **values** are included under `variables.values`)
-- Security Group memberships / user assignments
-- Application runtime / operational / audit data
-- Environment-specific GUIDs
+Contract detail: [`docs/data-portability.md`](../../docs/data-portability.md).
 
 ## Section participation (current)
 
 | Section | In JSON | Synchronized |
 | --- | --- | --- |
-| `dataEntities` | Yes | Yes |
-| `securityGroups` | Yes (export always; import when present) | Yes when key present; skipped when omitted |
-| `variables` | Yes (export always as `{ definitions, values }`; import when present) | Yes when key present (both arrays required); skipped when omitted |
-| `processFramework` | Yes (export always as nested tree; import when present) | Per-owner `metadataColumns` / `values` present/omit; skipped when `processFramework` omitted |
+| `dataEntities` | Yes (required) | Always — complete section sync |
+| `securityGroups` | Export always; import when present | Complete sync when key present (incl. `[]`); **skipped** when omitted |
+| `variables` | Export always as `{ definitions, values }`; import when present | Complete sync when key present (both arrays required); **skipped** when omitted |
+| `processFramework` | Export always as nested tree; import when present | Complete sync of participating nested owners when key present; **skipped** when omitted |
+| `languages` | Export always; import when present | Complete replace of enabled languages for listed contexts when key present; **skipped** when omitted |
 
 Legacy schemaVersion **1** flat keys (`processMetadataColumns` / `roles` / `steps` / `options`) are still accepted on import (dual-read). Export writes schemaVersion **2** nested only. Non-empty legacy `systemConfiguration` is rejected (replaced by `variables`).
+
+### Omitted-section warnings (Import Summary)
+
+When an optional section key is **absent**, Import Summary shows a **Warning** (does not block Synchronize), for example:
+
+- Variables section omitted → “Variables will not be updated.”
+- Security Groups section omitted → “Security Groups will not be updated.”
+- Process Framework section omitted → “Process Framework will not be updated.”
+
+Translations are never part of App Config JSON participation (Excel / dual-path); omission of Translations is not an App Config JSON warning.
 
 ### Process Framework sections
 
@@ -75,6 +106,8 @@ Legacy schemaVersion **1** flat keys (`processMetadataColumns` / `roles` / `step
 2. Validate file-level schema / application match (toasts on hard file failures — summary never opens).
 3. Build sync plan; open standard **Import Summary** (`BoImportSummaryDialog`) with App Config **custom** Changes Summary (`ChangesSummaryContent`) + Errors and Warnings. See [Import Analysis Summary](#import-analysis-summary).
 4. Administrator confirms **Synchronize** (disabled when Errors exist or there are no changes). Warnings do not block.
+
+**Process Framework warnings (non-blocking):** when `processFramework` participates, Import Analysis may warn for graph lint (no terminal Step; unreachable Steps from Entry Step = lowest `sortOrder`; Step with Role and zero Options) and for Role `securityGroupAttributeCode` values missing from the file’s `securityGroups` when that section also participates. See [process-framework README](../process-framework/README.md).
 5. Apply in one SQL transaction, or apply nothing.
 
 Pattern: [import-summary.md](../../docs/ui/patterns/import-summary.md).
@@ -142,11 +175,11 @@ and must extend the envelope, planner, apply path, and this documentation. Shrin
 
 ## Local Docker seed
 
-EAC local `dev-reset` / `local-db-seed` may apply the same deployment JSON after Applications/BE/enablement SQL, via `tools/BreezeOn.Eac.LocalAppConfigurationSeed` (validator + synchronizer + `P_POST_EACApplicationConfigurationSync`). This is **local sandbox only** — never hosted DEV/TEST/PP/PROD. Product details: EAC [`sql/seed/README.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/sql/seed/README.md).
+EAC local `dev-reset` / `local-db-seed` may apply the same deployment JSON after Applications/BE/enablement SQL, via `tools/BreezeOn.Eac.LocalAppConfigurationSeed` (validator + synchronizer + `P_POST_EACApplicationConfigurationSync`). This is **local sandbox only** — never hosted **DEV / UAT / PRD**. Product details: EAC [`sql/seed/README.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/sql/seed/README.md).
 
 ## Related
 
 - Operations: [`runbooks/eac-application-configuration-deployment.md`](../../runbooks/eac-application-configuration-deployment.md)
-- Product surface: [architecture/eac.md](../eac.md)
+- Product surface: [architecture/applications/eac.md](../applications/eac.md)
 - Data Entities: [architecture/data-entities/README.md](../data-entities/README.md)
 - Process Framework: [architecture/process-framework/README.md](../process-framework/README.md)

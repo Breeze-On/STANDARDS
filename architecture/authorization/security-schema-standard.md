@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Security schema standard
 
 Owner: Architecture
@@ -16,7 +17,7 @@ Owner: Architecture
 | --- | --- | --- |
 | `GroupsId` | `INT` IDENTITY | Physical PK |
 | `GroupGUID` | `UNIQUEIDENTIFIER` NOT NULL UNIQUE | Relationship key |
-| `Code` | `NVARCHAR(700)` NULL UNIQUE | e.g. `GLOBAL-SYSTEM-ADMINISTRATORS`, `APP_{UniqueCode}`, `BUSENT_{Code}`, `APPENA_{UniqueCode}_{BusinessEntityCode}` |
+| `Code` | `NVARCHAR(700)` NULL UNIQUE | e.g. `GLOBAL-SYSTEM-ADMINISTRATORS`, `APP_{UniqueCode}`, `BUSENT_{Code}`, `APPENA_{UniqueCode}_{BusinessEntityCode}`, `APPSG_{…}` (EAC App Config); legacy `EACSG_{…}` reserved |
 | `Name` | `NVARCHAR(600)` NULL | Immutable when `IsManuallyCreated = 0` |
 | `Description` | `NVARCHAR(600)` NULL | |
 | `Metadata` | `NVARCHAR(250)` NULL | |
@@ -29,7 +30,7 @@ Owner: Architecture
 
 **APPENA composite length (platform limitation):** `APPENA_{UniqueCode}_{BusinessEntityCode}` can exceed 700 in theory (`7 + 600 + 1 + 250 = 858`). Application Enabled creation may fail if the generated APPENA administrator group code exceeds the maximum supported security group code length. This limitation is evaluated during Application Enabled creation because APPENA group creation is required as part of the lifecycle ownership model. Practical budget: UniqueCode + Business Entity Code ≤ 692. Do not widen `Groups.Code` or shrink UniqueCode / BE Code columns for this.
 
-**System Code prefixes:** Reserve `APPENA_` (check before `APP_`), `APP_`, `BUSENT_`, and the exact Code `GLOBAL-SYSTEM-ADMINISTRATORS` against manual group create (`allowSystemOwnedCode`). That gate is independent of `IsManuallyCreated`. Membership changes remain Global System Administrator only ([ADR-015](../../decisions/ADR-015-object-owned-administrator-groups.md), [eac-authorization-matrix.md](eac-authorization-matrix.md)).
+**System Code prefixes:** Reserve `APPENA_` (check before `APP_`), `APP_`, `BUSENT_`, **`APPSG_`**, legacy **`EACSG_`**, and the exact Code `GLOBAL-SYSTEM-ADMINISTRATORS` against manual group create (`allowSystemOwnedCode`). That gate is independent of `IsManuallyCreated`. **`APPSG_*` groups are configuration-owned** (`IsManuallyCreated = 0`) — App Config is the lifecycle owner; reserved prefix is collision defense. **Membership default:** Global System Administrator only via Groups UI/API; **named EAC exception:** Application administrators may mutate APPSG-linked membership through App Config **interactive Manage Members and members portability** ([authorization-standard.md](authorization-standard.md), [eac-authorization-matrix.md](../applications/eac-authorization-matrix.md)). **Code immutability:** automatically created groups keep Code immutable after create via Groups UI; **EAC exception:** App Config may rewrite `APPSG_*` Code when AttributeCode changes and may set portable Name. **APPSG Code length budget:** `LEN('APPSG_') + UniqueCode + '_' + BusinessEntityCode + '_' + AttributeCode` ≤ 700 — Save and Synchronize hard-fail (no silent truncation).
 
 **Migration (existing DBs):** add `IsManuallyCreated` with DEFAULT `1`, then set `0` where Code is GSA or literal prefixes `APP_*` / `BUSENT_*` / `APPENA_*` using escaped LIKE (`APP[_]%`, etc. — unescaped `_` is a wildcard). SHARED-UI: `sql/security/migration_scripts/20261116_add_Groups_IsManuallyCreated.sql`. If an earlier run used unescaped `LIKE`, apply corrective `20261116_correct_Groups_IsManuallyCreated_prefix_classifier.sql` (do not re-run the original). EAC hosted GroupGUID: Applications / Business Entities / enablement scripts under `SYSTEM-ADMIN-EAC/sql/migration_scripts/` (order: IsManuallyCreated → App → BE → APPENA).
 
@@ -47,4 +48,4 @@ Unique `(GroupGUID, UserGUID)`. Indexes on `UserGUID`, `GroupGUID`, and composit
 
 ## Seed
 
-Idempotent seed of `GLOBAL-SYSTEM-ADMINISTRATORS` only. No memberships. Bootstrap: [customer-onboarding-authorization.md](customer-onboarding-authorization.md).
+Idempotent seed of `GLOBAL-SYSTEM-ADMINISTRATORS` only. No memberships. Bootstrap: [customer-onboarding-authorization.md](../../runbooks/customer-onboarding-authorization.md).

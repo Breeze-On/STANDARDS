@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Query-driven retrieval
 
 Owner: UI
@@ -6,7 +7,7 @@ Normative standard for retrieving **queryable datasets** (filterable / sortable 
 
 Related: [grids.md](grids.md) (Server `QueryMode`), [forms.md](forms.md) (filter controls), [database.md](../../database.md) (query-driven paged list stored procedures), [page-development.md](../page-development.md), [overview.md](../overview.md), [ADR-004](../../../decisions/ADR-004-breezeon-ui-abstraction-layer.md).
 
-Current reality only. Product implementations (for example EAC Applications) are described in [architecture/eac.md](../../../architecture/eac.md).
+Current reality only. Product implementations (for example EAC Applications) are described in [architecture/applications/eac.md](../../../architecture/applications/eac.md).
 
 ## Ownership (ADR-004)
 
@@ -115,7 +116,7 @@ An exception to the One Dataset standard (for example a justified secondary cont
 2. The rationale is **documented** (product `docs/db-model.md` / architecture doc; ADR if it sets a pattern);
 3. The primary-contract default was **challenged** first.
 
-**Known approved exception:** EAC **Business Entities → Business Hierarchy** loads the **full tree** (hierarchy path, cycle checks, cascade selection require it). Keyword filtering on that tab still follows [Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) with **client-side** result selection over the loaded tree (no server-paged Hierarchy contract). See [architecture/eac.md](../../../architecture/eac.md#business-entities).
+**Known approved exception:** EAC **Business Entities → Business Hierarchy** loads the **full tree** (hierarchy path, cycle checks, cascade selection require it). Keyword filtering on that tab still follows [Nested View keyword filtering](grids.md#nested-view-keyword-filtering-org-standard) with **client-side** result selection over the loaded tree (no server-paged Hierarchy contract). See [architecture/applications/eac.md](../../../architecture/applications/eac.md#business-entities).
 
 ## Planning Agent rules
 

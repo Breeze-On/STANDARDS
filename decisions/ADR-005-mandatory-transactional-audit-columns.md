@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-005: Mandatory transactional audit columns
 
 Status: Accepted

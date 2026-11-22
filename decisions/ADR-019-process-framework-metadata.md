@@ -1,10 +1,11 @@
+<!-- Classification: DEC; Scope: application:eac -->
 # ADR-019: Process Framework metadata
 
 Status: Accepted
 
 ## Context
 
-EAC Application Configuration includes the **Process Framework**: Application-scoped **Roles**, **Steps**, and **Options** — configuration metadata that a future workflow engine will consume ([architecture/process-framework](../architecture/process-framework/README.md)). Each of the three entities needs administrator-defined extra fields (labels, categories, thresholds, a data-entity-backed choice, a responsible person).
+EAC Application Configuration includes the **Process Framework** (EAC business capability — not a platform workflow engine): Application-scoped **Roles**, **Steps**, and **Options** — one process definition per Application — that a future workflow engine may consume ([architecture/process-framework](../architecture/process-framework/README.md)). Each of the three entities needs administrator-defined extra fields (labels, categories, thresholds, a data-entity-backed choice, a responsible person).
 
 Data Entity custom columns ([ADR-016](ADR-016-data-entity-ownership.md)) already provide a sparse-metadata pattern, but their type set (`TEXT` / `DECIMAL` / `BOOLEAN` / `DATE` / `DATETIME`) is deliberately about master-data values and must not change. Process Framework metadata additionally needs a **reference to a Data Entity row** and a **reference to a person**, and every definition must remain deployable across environments through Application Configuration JSON ([ADR-017](ADR-017-application-configuration-deployment.md)). GUIDs are environment-local ([ADR-006](ADR-006-application-context-ownership.md)); `Identity.Users.UserGUID` is minted per database and can change on an Identity rebuild, while the Entra object id (`ExternalObjectId`) is stable ([identity-schema-standard](../architecture/identity-and-authentication/identity-schema-standard.md)).
 
@@ -44,11 +45,17 @@ Deleting a metadata column is **always allowed** and deletes translations → va
 
 ### Deployment participation
 
-Application Configuration JSON gains optional sections `processMetadataColumns`, `roles`, `steps`, `options` — synchronize by `(code, processFrameworkEntity)` for columns (and by Code for roles/steps; options by stepCode+code); key absent = skipped, present (including `[]`) = synchronized. No separate import/export feature exists for Process Framework.
+Application Configuration JSON uses nested `processFramework.{steps|options|roles}.{metadataColumns|values}` (schemaVersion **2**). Legacy schemaVersion **1** dual-read accepts flat root keys `processMetadataColumns`, `roles`, `steps`, `options`. Synchronize by `(code, owner)` for columns (and by Code for roles/steps; options by stepCode+code); key absent = skipped, present (including `[]`) = synchronized. No separate import/export feature exists for Process Framework.
+
+Import Analysis may emit **non-blocking warnings** for graph lint (no terminal Step, unreachable Steps, Role Step with zero Options) and dangling `securityGroupAttributeCode` when Security Groups participate in the same file.
+
+### Display name conventions
+
+Metadata column Codes **`name`** and **`description`** are the conventional display labels for Roles, Steps, and Options (not first-class fields). TEXT metadata authoring uses authoritative language **`en-CA`**.
 
 ### Not in scope
 
-No workflow engine, task assignment, or instance/runtime tables. Role `Type` is `Group` only.
+No workflow engine, task assignment, or instance/runtime tables. Role `Type` is `Group` only. No multi-application PF consumption contract (Future Validation). No Process entity table in v1 (one process definition per Application).
 
 ## Consequences
 
@@ -56,7 +63,7 @@ No workflow engine, task assignment, or instance/runtime tables. Role `Type` is 
 - Adding a Process Framework metadata type is a Process Framework decision (amend this ADR); it does not widen Data Entity column types.
 - Resolving `ExternalObjectId` → `UserGUID` is an environment-local lookup (`(TenantId, ExternalObjectId)` within the target tenant registry) performed by EAC UI and, in future, the workflow engine.
 - Column delete cascade deliberately favors configuration cleanup over preserving orphaned values.
-- Platform SSOT: [`architecture/process-framework/`](../architecture/process-framework/README.md). JSON contract: [`docs/data-portability.md`](../docs/data-portability.md). Schema inventory: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md).
+- EAC-domain SSOT: [`architecture/process-framework/`](../architecture/process-framework/README.md). JSON contract: [`docs/data-portability.md`](../docs/data-portability.md). Schema inventory: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md).
 
 ## Related
 

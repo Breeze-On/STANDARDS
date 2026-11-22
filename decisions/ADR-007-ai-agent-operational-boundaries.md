@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-007: AI agent operational boundaries
 
 Status: Accepted
@@ -12,7 +13,7 @@ Existing STANDARDS already define how humans deploy and how documentation must s
 
 ## Decision
 
-Adopt an organization-wide **AI Agent Governance Standard** ([docs/ai-agent-governance.md](../docs/ai-agent-governance.md)):
+Adopt an organization-wide **AI Agent Governance Standard** ([docs/ai/ai-agent-governance.md](../docs/ai/ai-agent-governance.md)):
 
 - AI agents are **development assistants** only — not release managers, cloud operators, or repository administrators.
 - By default, agents may analyze, plan, implement locally, document current reality, add diagnostics, test locally, and prepare recommendations.

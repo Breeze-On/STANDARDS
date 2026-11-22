@@ -1,3 +1,4 @@
+<!-- Classification: TPL; Scope: platform -->
 # Product `docs/plans/` layout
 
 Owner: Documentation
@@ -9,8 +10,10 @@ docs/
 └─ plans/                         # parent lifecycle folder only
    ├─ README.md                   # optional thin pointer to STANDARDS
    ├─ in-progress/                # new + active plans
+   │  ├─ .gitkeep                 # keep empty folder in git clones
    │  └─ <feature-plan>.md
    └─ implemented/                # completed plans (Option A archive)
+      ├─ .gitkeep                 # optional when folder otherwise empty
       └─ <feature-plan>.md
 ```
 
@@ -18,10 +21,11 @@ docs/
 
 - Create **new** plans under `docs/plans/in-progress/`.
 - Keep **active** plans under `docs/plans/in-progress/`.
+- Track empty lifecycle folders with `.gitkeep` so clones retain `in-progress/` (and `implemented/` when empty).
 - After successful implementation + documentation + knowledge transfer: move to `docs/plans/implemented/` (preferred) or delete if fully transferred.
 - Do **not** store plan markdown directly in the flat parent `docs/plans/` folder.
 - One authoritative active plan per feature.
 - When updating an existing plan: **in-place delta updates only** — edit the existing file; do not regenerate, rewrite unchanged sections, or create V2/duplicate plans.
 - Never dump plan bodies into chat — see org SSOT:
 
-https://github.com/Breeze-On/STANDARDS/blob/main/docs/planning-and-development-agents.md
+https://github.com/Breeze-On/STANDARDS/blob/main/docs/ai/planning-and-development-agents.md

@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Page development checklist
 
 Owner: UI
@@ -8,6 +9,8 @@ This document does **not** replace detailed standards. It is the authoritative *
 
 **Entry / inventory:** [overview.md](overview.md). **Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BreezeOn.UI`). **Decision:** [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md).
 
+**Before you build:** pick the page shape in [page-archetypes.md](patterns/page-archetypes.md) (Home / List / Detail-Edit / Workspace / Error / Access Denied). **Parameters, events, and types** come from SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) — do **not** read Razor for API ([parameter-reference.md](controls/parameter-reference.md)). **Working examples:** [gallery-index.md](gallery-index.md). **How strongly a rule binds:** [normative-tiers.md](foundations/normative-tiers.md) (Tier 1 LOCKED / 2 STANDARD / 3 GUIDANCE).
+
 ## Goals
 
 - Improve consistency across applications.
@@ -16,32 +19,82 @@ This document does **not** replace detailed standards. It is the authoritative *
 - Ensure new pages follow Breeze On UI standards.
 - Stay useful for both humans and AI agents.
 
-## Host integration (required)
+## Product Host Contract (required)
 
-Every app host that renders `BreezeOn.UI` must wire the following once (reference: SYSTEM-SHARED-UI Gallery `App.razor` + `MainLayout.razor`). Pages inherit this; do not repeat per page.
+**This section is the AA Product Host Contract** for every BreezeOn application that consumes `BreezeOn.UI`. Do not leave host onboarding spread only across architecture trees — wire the checklist here, then follow deep links for Identity/Auth/AuthZ detail.
+
+### Reference model
+
+| Reference | Role |
+| --- | --- |
+| **Gallery** (`SYSTEM-SHARED-UI` `App.razor` + `MainLayout`) | **UI chrome / asset reference only** — providers, shell, CSS/JS inventory. Does **not** demonstrate product authentication or authorization. |
+| **EAC** (`SYSTEM-ADMIN-EAC` `Program.cs`, `App.razor`, `MainLayout`, `Routes`, page catalog) | **Complete product host reference** — UI + auth + AuthZ + page catalog + Data Protection + Error Message options + app-owned resources. |
+
+### UI host requirements
 
 | Concern | Requirement |
 | --- | --- |
-| Services | `services.AddBreezeOnUI()` or `AddBreezeOnUI(opts => …)` — registers Fluent internally; `configureTheme` is honored via `IOptions<BoThemeOptions>` ([tokens.md § Theme options](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
-| Localization | Supported cultures `en` / `fr` + `UseRequestLocalization()` — [i18n.md](foundations/i18n.md) |
-| Layout | Render **`BoThemeProvider`** (CSS variables) and **`BoProviders`** (Fluent providers, theme/locale bootstrap, dialog + toast + **page-freeze** hosts) around the app; pages live inside **`BoAppShell`** |
-| CSS (in `<head>`) | `_content/Microsoft.FluentUI.AspNetCore.Components/Microsoft.FluentUI.AspNetCore.Components.bundle.scp.css` and `_content/BreezeOn.UI/breezeon-ui.css` |
-| JS (in `<head>`) | `_content/BreezeOn.UI/js/bo-theme-mode.js`, `bo-locale.js`, `bo-popup.js`, `bo-number-field.js`, `bo-grid.js`, `bo-dialog.js` (**required for `BoDialog`**), `bo-sliding-selection.js` (**required for sliding `BoToggle` / `BoTabs` selection**); when using **`BoShuffleCardGrid`**, also `js/lib/sortable.min.js` + `bo-sortable.js` |
+| Services | `services.AddBreezeOnUI()` or `AddBreezeOnUI(opts => …)` — registers Fluent internally; `configureTheme` via `IOptions<BoThemeOptions>` ([tokens.md](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
+| Layout | **`BoThemeProvider`** → **`BoAppShell`** (nav + header + body + optional footer) → **`BoProviders`** (Fluent providers, theme/locale bootstrap, dialog + toast + **page-freeze**) |
+| CSS (in `<head>`) | Fluent bundle CSS + `_content/BreezeOn.UI/breezeon-ui.css` |
+| JS (in `<head>`) | **Seven** core scripts in the host-script inventory below; Shuffle optionals when used |
 
-JS file roles:
+### Host-script inventory (SSOT)
+
+**This table is the single authoritative host-script inventory.** Summaries elsewhere must match it. Do **not** load `bo-toggle.js` (retired).
 
 | Script | Needed for |
 | --- | --- |
 | `bo-theme-mode.js` | Theme-mode cookie helpers; sets `document.documentElement.dataset.boThemeMode` |
 | `bo-locale.js` | Locale cookie helpers for `bo-culture` / `bo-timezone` |
 | `bo-popup.js` | Fixed-position panels for `BoDropDownList`, `BoPeoplePicker`, and `BoDateField` |
-| `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge to the Fluent input, display sync). Caret/selection stay native (no select-all on focus). Without it number entry does not behave per standard |
+| `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge, display sync) |
 | `bo-grid.js` | `BoGrid` truncated-cell hover titles + Add New first-editable focus |
-| `bo-dialog.js` | **Required for `BoDialog`** (Enter suppress checks, `InitialFocusFieldKey`, focus restore) |
-| `bo-sliding-selection.js` | **Required for sliding `BoToggle` / `BoTabs` selection** (shared selection travel; controls call `boSlidingSelection` directly). Without it, selected chrome uses a static fill (no slide) |
-| `js/lib/sortable.min.js` + `bo-sortable.js` | **Required for `BoShuffleCardGrid`** reorder (SortableJS + `boSortableInit` / Destroy / ReadOrder) |
+| `bo-dialog.js` | **Required for `BoDialog`** |
+| `bo-sliding-selection.js` | **Required for sliding `BoToggle` / `BoTabs` selection** (shared `boSlidingSelection`) |
+| `js/lib/sortable.min.js` + `bo-sortable.js` | **Required for `BoShuffleCardGrid`** only |
 
-Include **all seven** core `bo-*.js` scripts even if a page does not use every control — shell chrome and future pages depend on them. Add Sortable + `bo-sortable.js` when the host uses Shuffle Card Grid. Note: the early scripts reduce theme/locale flash only partly; CSS variables are still emitted by `BoThemeProvider` after the circuit renders (see [tokens.md](foundations/tokens.md)).
+Include **all seven** core `bo-*.js` scripts even if a page does not use every control. Paths: `_content/BreezeOn.UI/js/…`.
+
+**Cache-busting:** Do **not** append `?v=` (or similar) query strings to Shared UI host scripts in product/Gallery `App.razor`. Script identity is the library file path; cache invalidation follows Shared UI package / ProjectReference updates. Remove any legacy `?v=` attributes when touching host markup.
+
+**Maintenance DoD (same change set):** any host script **addition, removal, or rename** must update:
+
+1. This section (`page-development.md` — SSOT)
+2. [`overview.md`](overview.md) Host requirements summary
+3. SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) host assets list
+4. Gallery `Components/App.razor`
+5. EAC `Components/App.razor`
+
+### Authentication requirements
+
+| Concern | Requirement | Deep SSOT |
+| --- | --- | --- |
+| Registration | `AddBreezeOnAuthentication(configuration, …)` | [Identity & Authentication](../../architecture/identity-and-authentication/README.md) |
+| Config | `AUTHENTICATION__AUTHORITY` / `CLIENTID` / `CLIENTSECRET` (User Secrets local; App Service hosted) | [configuration-standard.md](../../architecture/identity-and-authentication/configuration-standard.md) |
+| Identity DB | Register `IBoIdentityConnectionFactory` (e.g. `AddBreezeOnSqlIdentityConnection`) against the shared customer database | [identity-schema-standard.md](../../architecture/identity-and-authentication/identity-schema-standard.md) |
+| Endpoints | `MapBreezeOnAuthentication()` | [authentication-standard.md](../../architecture/identity-and-authentication/authentication-standard.md) |
+
+### Authorization requirements
+
+| Concern | Requirement | Deep SSOT |
+| --- | --- | --- |
+| Registration | `AddBreezeOnAuthorization(pageCatalog)` with the app’s page definitions | [Authorization](../../architecture/authorization/README.md) |
+| Page catalog | Register **every** authenticated route; fail closed on miss | [page-security-standard.md](../../architecture/authorization/page-security-standard.md) |
+| Route view | Host authenticated routing through **`BoAuthorizeRouteView`** | Same |
+| Required groups | `RequiredGroupCodes` use platform Codes; empty = any authenticated user | Same |
+
+### Product host requirements
+
+| Concern | Requirement | Deep SSOT |
+| --- | --- | --- |
+| Data Protection | `AddDataProtection().SetApplicationName("<Product>")` (isolate purpose strings per app) | [session-standard.md](../../architecture/identity-and-authentication/session-standard.md) |
+| Error Message options | `Configure<BoErrorMessageOptions>(o => o.ApplicationDisplayName = "…")` after `AddBreezeOnUI` | [error-messages.md](shell/error-messages.md) |
+| Access Denied footer | Whenever `BoAccessDenied` is shown (route deny or in-page), **`BoAppShell.ShowFooter = false`** — MUST means implemented on the product host | [error-messages.md](shell/error-messages.md) |
+| Localization | Supported cultures `en` / `fr` + `UseRequestLocalization()` | [i18n.md](foundations/i18n.md) |
+| App-owned resources | Product `.resx` + locale-aware localizer; never use Gallery `BoUi` as the product glossary | [i18n.md](foundations/i18n.md) |
+
+Platform consumption summary: [application-model.md](../application-model.md). Note: early scripts reduce theme/locale flash only partly; CSS variables are still emitted by `BoThemeProvider` after the circuit renders (see [tokens.md](foundations/tokens.md)).
 
 ## New page development checklist
 
@@ -87,7 +140,32 @@ When the page is a **Home** (or equivalent landing hub):
 - [ ] Stack Sections/Rows with **`BoStack Gap="0"`** so outside margins are not doubled.
 - [ ] Do not invent free-floating fields or custom width CSS. Use **`Weight`** for proportional sizing; **`IsHidden`** collapses by default; **`PreserveLayoutWhenHidden`** only when reserved space is justified; **`BoEmptyField`** for permanent alignment holes — [layout.md](layout/layout.md).
 
-Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout.md#page-composition-json-planning-agent-input) (optional `weight` / `preserveLayoutWhenHidden`); nest Sub Sections in Razor even when flat JSON is used.
+Planning agents: emit **`schemaVersion "1"`** JSON per [layout.md](layout/layout.md#page-composition-json-planning-agent-input) (optional `weight` / `preserveLayoutWhenHidden`). The schema is **forms-only** ([layout.md § Schema scope](layout/layout.md#schema-scope-forms-only)): a `"sub"` section nests under the nearest preceding `"main"` section in Razor. Grids, Shuffle, Toggle, Tabs, Buttons, and panels are described in prose per [page-archetypes.md](patterns/page-archetypes.md), not in the JSON.
+
+### Selection and navigation controls
+
+Contract: [selection-and-navigation.md](controls/selection-and-navigation.md) (decision matrix, Selection Authority Model, keyboard / ARIA).
+
+- [ ] Control chosen with the **decision matrix** — Left nav (routes) vs Drop-Down (record value) vs Toggle (2–4 modes) vs Tabs (page sections) vs Panel Navigation (10–30 workspace sections). Do **not** use Toggle as navigation or Tabs for field values.
+- [ ] **Host owns selected state** (`SelectedToggleKey` / `SelectedTab` / `SelectedItem`); no optimistic UI.
+- [ ] Guarded abandon points (Dirty State, permissions) use the **intent event** — `ToggleRequested` / `TabRequested` (`Cancel`) — **not** change-then-revert. Panel Navigation has no intent callback yet: keep the guard in one method (interim; FV-008).
+- [ ] Tabs: `SelectedTab` bound on `BoTabs` **and** `BoTabPanels`; `TabKey` ≡ `ValidationGroup`; optional `AriaLabel`; keep `RenderAriaControls` on when panels exist.
+- [ ] Toggle: **≥ 2** items, each with icon + label.
+- [ ] Keyboard and ARIA behavior is the platform default — do not re-implement key handling in product code ([accessibility.md](foundations/accessibility.md)).
+
+### Buttons and actions
+
+Contract: [button.md](controls/button.md). Page-level Save / Discard: [actions-area.md](patterns/actions-area.md).
+
+- [ ] Actions use `BoButton` / **`BoIconButton`** only — no raw `<button>`, no hex `BackgroundColor` for semantic roles.
+- [ ] **One Primary per action group**; Secondary / Stealth for the rest; **Danger** (`BoButtonVariant.Danger`) for destructive actions; icon-only controls set `AriaLabel`.
+- [ ] Order per [button.md § Ordering](controls/button.md#ordering-tier-2--standard) (dialog footer: Secondary then Primary; section / Actions area: Primary first).
+- [ ] Editable working copy: **Actions area** with Save (Primary) + Discard (Secondary) above any Validation Summary; grids on that page set `ShowSave="false"`.
+- [ ] Immediate irreversible deletes confirm in a `BoDialog` with a Danger confirm.
+
+### Page states
+
+- [ ] Empty / loading / error / toast mechanism per [page-states.md](patterns/page-states.md) — Page Freeze for perceptible work, Alert toast for validation failure, Error toast for system failure, no page-local overlays.
 
 ### Workspace panels (App Config / onboarding / admin)
 
@@ -111,7 +189,7 @@ When the page includes a data grid:
 - [ ] Uses **`BoGrid`** / **`BoGridColumn`** / **`BoGridCache`** — [grids.md](controls/grids.md).
 - [ ] Lightweight column filters (optional): set `ShowFiltersButton` when needed; supply `FilterText` with the **displayed** string for textual columns; Client pipeline Filter → Sort → Page; Server hosts bind `ColumnFilters` → `BoQueryFilter` Contains — [grids.md § Filtering](controls/grids.md#filtering-lightweight--locked).
 - [ ] Treats the grid as a **section-level** surface (not a `BoRow` child; not Section → Row → Field for the grid body).
-- [ ] If multi-select is needed: `EnableSelection` (flat: select-all = all cache rows; Nested Scenario 1: `SelectedNodeKeys` + cascade select/expand) — [grids.md](controls/grids.md#row-selection).
+- [ ] If multi-select is needed: `EnableSelection` (flat: Select All on the **column-header** row; scope = the **filtered working set** when column filters are active, otherwise all cache rows; Server mode = current page; Nested Scenario 1: `SelectedNodeKeys` + cascade select/expand) — [grids.md](controls/grids.md#row-selection), [selection-and-navigation.md](controls/selection-and-navigation.md#grid-selection-brief).
 - [ ] Binds a typed cache with **`CacheId`**; rows expose **`CacheRowId`** + nullable **`PrimaryKey`**.
 - [ ] Chooses **`Mode`**: ReadOnly (default), RowEdit, InlineEdit, or NestedView per requirements.
 - [ ] **`IsPagination`** only when required (default false); sort is over the full cache; display order stays frozen while editing; uncommitted Add New stays at **top** — [grids.md § Sort](controls/grids.md#sort-locked).
@@ -212,15 +290,18 @@ Cross-control SSOT: [ux-conventions.md](patterns/ux-conventions.md). UI plans re
 - [ ] No ad-hoc hardcoded colors (derive from tokens; update `tokens.md` if a new independent token is intentional).
 - [ ] Supports Light and Dark mode via **`IBoThemeModeService`** (dual palettes; same semantic names).
 - [ ] Uses semantic Breeze On colors; nav-stable tokens (`nav-selected`, `nav-logo-divider`) stay Light values in both modes.
-- [ ] **`BoButton` corner radius:** use Shared UI default (`--bo-button-radius`); do **not** override `border-radius` on `.bo-button` in product/page CSS — [forms.md § Button](controls/forms.md#button-bobutton), [tokens.md § Corner radius](foundations/tokens.md#corner-radius-tokens-current).
-- [ ] Default typeface **Calibri** — [typography.md](foundations/typography.md).
+- [ ] **Button corner radius:** use Shared UI default (`--bo-button-radius`); do **not** override `border-radius` on `.bo-button` in product/page CSS — SSOT [button.md § Corner radius](controls/button.md#corner-radius--single-authority-tier-2).
+- [ ] Default typeface **Calibri**; sizes from the type scale — [typography.md](foundations/typography.md). Spacing from `--bo-space-*` — [tokens.md § Spacing scale](foundations/tokens.md#spacing-scale). Motion from approved duration tokens — [motion.md](foundations/motion.md#approved-motion-tokens-tier-2).
+- [ ] Icons through `BoIcon` at an approved size (16 / 20 / 24 / 32 / 48) — [icons.md](foundations/icons.md).
+- [ ] Accessibility baseline (WCAG 2.2 AA; visible focus; accessible names; reduced motion) — [accessibility.md](foundations/accessibility.md).
 
 ### Documentation
 
 When page structure introduces or changes **org** standards:
 
 - [ ] Update STANDARDS documentation under `docs/ui/` (and ADRs when architecture changes).
-- [ ] Update gallery / product examples where appropriate.
+- [ ] Update gallery / product examples where appropriate, and the [gallery-index.md](gallery-index.md) row (or [DEV-002](../deviations/DEV-002-example-governance-approved-exceptions.md) exception).
+- [ ] Public API change → update SHARED-UI `public-component-api.md` in the same change set ([parameter-reference.md](controls/parameter-reference.md)).
 - [ ] Update UI overview indexes when new documentation files are added — [overview.md](overview.md).
 - [ ] Same change set as code — [documentation.md](../documentation.md).
 - [ ] UI-bearing PRs: run [ux-pr-review-checklist.md](ux-pr-review-checklist.md).

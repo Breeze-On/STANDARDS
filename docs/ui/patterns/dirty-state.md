@@ -1,8 +1,21 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Dirty State (unsaved changes)
 
 Owner: UI / Architecture
 
-Centralized abandon-guard for working copies. Related: [toggle.md](../controls/toggle.md), [grids.md](../controls/grids.md), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), Data Entities architecture.
+Centralized abandon-guard for working copies. Related: [toggle.md](../controls/toggle.md), [selection-and-navigation.md](../controls/selection-and-navigation.md), [actions-area.md](actions-area.md), [button.md](../controls/button.md), [grids.md](../controls/grids.md), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), Data Entities architecture.
+
+## Status — platform concept, EAC reference implementation
+
+| Aspect | Status |
+| --- | --- |
+| **Concept and flow** (one guard, one `IsDirty`, Save / Discard / Cancel, abandon points call the same gate) | **Platform** standard — the Philosophy and Flow sections below |
+| **Implementation** | **EAC reference only**: `EacDirtyStateGuard`, the Dirty State dialog, and `EacSaveDiscardActions` live in SYSTEM-ADMIN-EAC. **There is no Dirty State service or `IBo*Dirty*` type in SHARED-UI.** A new application builds its own equivalent from this concept |
+| What is platform today | The **flow / dialog contract** (Save | Discard | Cancel behavior, failure = stay) and the intent hooks on controls (`ToggleRequested`, `TabRequested`) |
+| Promotion to a SHARED-UI service | **Future Validation (FV-001)** — only after application #2 validates the need and the shape |
+| Validation (`Future Validation`) at app #2 | Confirm: guard lifetime, multi-dirty workspaces, Panel Navigation intent hook (FV-008), whether the Actions area becomes a shared component |
+
+Sections below titled "EAC" describe the reference implementation, not a platform API.
 
 ## Philosophy (locked)
 
@@ -14,11 +27,11 @@ Any action that would abandon the active working copy must resolve Dirty State f
 | Present Unsaved Changes: Save / Discard / Cancel | Invent separate rules for tab vs toggle vs import |
 | Let future abandon points call the same gate | Couple Save/Discard to BoToggle |
 
-## Product shape (EAC)
+## EAC reference implementation (not a platform API)
 
-- Service: `EacDirtyStateGuard` (scoped)
-- Dialog: Compact `BoDialog` — Save | Discard | Cancel
-- Actions chrome: `EacSaveDiscardActions` (Save + Discard only; independent of `BoToggle`)
+- Service: `EacDirtyStateGuard` (scoped) — **EAC reference**
+- Dialog: Compact `BoDialog` — Save | Discard | Cancel (platform dialog shell; EAC composition)
+- [Actions area](actions-area.md) chrome: `EacSaveDiscardActions` (Save Primary + Discard Secondary; independent of `BoToggle`) — **EAC reference**; the pattern is platform ([button.md § Save / Discard](../controls/button.md#save--discard-platform-pattern))
 
 ### Values workspace
 
@@ -44,9 +57,9 @@ Abandon requested (toggle, nav, tab, selectors, import, route leave, …)
        Cancel → stay
 ```
 
-`BoToggle` only raises `ToggleRequested`. The host calls `RequestAsync` and updates `SelectedToggleKey` only when allowed.
+`BoToggle` only raises `ToggleRequested`. The host calls `RequestAsync` and updates `SelectedToggleKey` only when allowed. `BoTabs` raises `TabRequested`; the host calls `RequestAsync` from that handler and sets `args.Cancel = true` when blocked. `BoPanelNavigation` has no intent callback yet (interim guard in `SelectedItemChanged`; FV-008) — see [selection-and-navigation.md § Selection Authority Model](../controls/selection-and-navigation.md#selection-authority-model-tier-1--locked). (`RequestAsync` is the **EAC reference** guard's method name.)
 
-## Configuration Session interaction
+## Configuration Session interaction (EAC reference)
 
 When a surface uses Application Configuration Session Cache ([configuration-session-cache.md](../../../architecture/app-configuration/configuration-session-cache.md) · [ADR-020](../../../decisions/ADR-020-configuration-session-cache.md)):
 

@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-021: Validation Summary experience (live editors)
 
 Status: Accepted

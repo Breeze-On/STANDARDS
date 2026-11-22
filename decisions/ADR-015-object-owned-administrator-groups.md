@@ -1,6 +1,9 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-015: Object-owned administrator groups (Applications, Business Entities & Application Enabled)
 
 Status: Accepted
+
+**Ownership boundary:** Platform owns the shared `Security` schema and SHARED-UI APIs. **EAC owns** the Application / Business Entity / Application Enabled domain model and the `APP_*` / `BUSENT_*` / `APPENA_*` Code naming. Other BreezeOn applications are **not** required to adopt these Codes. Multi-app consumption of object-owned administrator groups is undefined (Future Validation) — do not invent a platform consumption standard from this ADR alone.
 
 ## Context
 
@@ -23,18 +26,19 @@ EAC needs independent administrator groups per Application, per Business Entity,
 - Page catalog routes `/applications` and `/business-entities` stay any-authenticated; empty authorized set for a non-GSA yields Access Denied. Entity Types tab is Access Denied for non-GSA.
 - Central **provisioning** creates/reuses the admin group then persists `GroupGUID` (UI, JSON import, seed, future API). Import reuses an existing group by Code without renaming, description overwrite, membership, or metadata changes. No auto-members.
 - Delete order: dependents → object row(s) → group members → group. Application Enabled delete: future AE dependents → capture GroupGUID → DELETE enablement → members → APPENA group.
-- Normative capability matrix: [eac-authorization-matrix.md](../architecture/authorization/eac-authorization-matrix.md).
+- Normative capability matrix: [eac-authorization-matrix.md](../architecture/applications/eac-authorization-matrix.md).
 
 ## Consequences
 
 - SHARED-UI Security schema and EAC `System` tables/procs change in the same initiative; docs and ADR-014 are amended to point here for object scope.
 - Application Context–scoped **edit** permissions beyond App Configuration selector visibility remain future work under [ADR-006](ADR-006-application-context-ownership.md); APPENA remains the ownership hook for context-scoped Configuration security.
 - Empty admin groups are valid until GSA assigns members.
+- **Batch Application Enabled create:** APPENA group provisioning uses SHARED-UI group APIs on a connection separate from the EF enablement transaction. If a later pair in a batch fails (for example APPENA Code length > 700), earlier enablement rows may roll back while already-created APPENA groups remain as automatic (`IsManuallyCreated = 0`) unused groups. Compensate-delete covers the failing pair only. **Retry reuses an existing group by Code** (not data corruption). Operators should treat leftover unused APPENA groups after a failed batch as expected until reused or cleaned via provisioning compensate APIs. Detail: EAC `db-model.md` § Application Enabled.
 
 ## Related
 
 - [ADR-014](ADR-014-platform-authorization.md)
 - [ADR-006](ADR-006-application-context-ownership.md)
 - [authorization-standard.md](../architecture/authorization/authorization-standard.md)
-- [eac-authorization-matrix.md](../architecture/authorization/eac-authorization-matrix.md)
-- [architecture/eac.md](../architecture/eac.md)
+- [eac-authorization-matrix.md](../architecture/applications/eac-authorization-matrix.md)
+- [architecture/applications/eac.md](../architecture/applications/eac.md)

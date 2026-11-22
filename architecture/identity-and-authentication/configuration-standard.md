@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Configuration standard — authentication
 
 Owner: Architecture
@@ -70,7 +71,7 @@ Local multi-app redirects on `BreezeOn-LOCAL` follow the same pattern (one regis
 ## Related
 
 - [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) (end-to-end cutover)
-- [Customer authentication onboarding](customer-onboarding-authentication.md) (Workflows A–F detail)
+- [Customer authentication onboarding](../../runbooks/customer-onboarding-authentication.md) (Workflows A–F detail)
 - [Cloud architecture](cloud-architecture.md)
 - [Local development standard](local-development-standard.md)
 - [Session management standard](session-management-standard.md)

@@ -1,3 +1,4 @@
+<!-- Classification: AN; Scope: platform -->
 # Domain modeling
 
 Owner: Documentation

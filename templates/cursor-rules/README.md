@@ -1,3 +1,4 @@
+<!-- Classification: TPL; Scope: platform -->
 # Cursor rules templates
 
 Owner: Engineering
@@ -10,15 +11,15 @@ Copy-paste starters for Breeze-On product and platform repositories. **Organizat
 | [`breezeon-planning-agent.mdc`](breezeon-planning-agent.mdc) | Lightweight bootstrap → Planning Agent SSOT |
 | [`breezeon-development-agent.mdc`](breezeon-development-agent.mdc) | Lightweight bootstrap → Development Agent SSOT |
 
-## Install
+## Install (required order)
 
-1. Create `.cursor/rules/` in the target repository if missing.
-2. Copy the `.mdc` files above into that folder (keep names).
-3. Create `docs/plans/in-progress/` and `docs/plans/implemented/` — see [`../docs-plans/`](../docs-plans/).
-4. Add thin pointers in `AGENTS.md` / `README_AI.md` to:
-   - [`docs/ai-agent-governance.md`](../../docs/ai-agent-governance.md)
-   - [`docs/planning-and-development-agents.md`](../../docs/planning-and-development-agents.md)
+**Repository governance is authoritative.** Prefer the versioned reading chain over local copies.
 
-Do not fork or weaken STANDARDS rules in product copies.
+1. **Governance reading chain** — agents start at [`docs/ai/README.md`](../../docs/ai/README.md) (Quickstart → governance → planning).
+2. **`AGENTS.md`** — thin pointer to that chain (and product facts only).
+3. **`README_AI.md`** — thin pointers to [`ai-agent-governance.md`](../../docs/ai/ai-agent-governance.md) / [`planning-and-development-agents.md`](../../docs/ai/planning-and-development-agents.md) as needed; do **not** duplicate full matrices.
+4. **Optional** `.cursor/rules/` — create the folder and copy the `.mdc` files above only as **defense-in-depth**. Optional; never weaker than STANDARDS; never machine-specific paths.
 
-SSOT: [`docs/ai-agent-governance.md`](../../docs/ai-agent-governance.md) · [`docs/planning-and-development-agents.md`](../../docs/planning-and-development-agents.md) · [ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md)
+Also create `docs/plans/in-progress/` and `docs/plans/implemented/` — see [`../docs-plans/`](../docs-plans/).
+
+SSOT: [`docs/ai/ai-agent-governance.md`](../../docs/ai/ai-agent-governance.md) · [`docs/ai/planning-and-development-agents.md`](../../docs/ai/planning-and-development-agents.md) · [ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md)

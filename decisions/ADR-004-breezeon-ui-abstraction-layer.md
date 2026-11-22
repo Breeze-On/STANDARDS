@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-004: BreezeOn.UI abstraction layer
 
 Status: Accepted

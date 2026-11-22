@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-002: Blazor Interactive Server
 
 Status: Accepted

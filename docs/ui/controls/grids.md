@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Grid (`BoGrid`) + Grid Family
 
 Owner: UI
@@ -73,7 +74,7 @@ Lightweight consolidation — implementation details stay in control docs + [for
 | Required indicators | Consistent header/column `*` rules per control; no invented second asterisk system |
 | Disabled state | Disabled fields/rows are non-editable and skip mandatory participation per forms rules |
 | Errors vs warnings | **Errors** block destructive/commit actions; **warnings** do not block unless a product standard explicitly says so |
-| Validation Summary | Multi-row editable Save/Commit failures use [Validation Summary](../patterns/validation-summary.md) as a dedicated Errors section below Actions / above the grid (with field chrome + Alert toast + navigate-to-error; inline field messages suppressed via HighlightOnly). Adoption Matrix is Required for editable multi-row BoGrid / Shuffle hosts |
+| Validation Summary | Multi-row editable Save/Commit failures use [Validation Summary](../patterns/validation-summary.md) as a dedicated Errors section below the [Actions area](../patterns/actions-area.md) / above the grid (with field chrome + Alert toast + navigate-to-error; inline field messages suppressed via HighlightOnly). Adoption Matrix is Required for editable multi-row BoGrid / Shuffle hosts |
 
 Control a11y extras (Nested View keys, Shuffle Card `role="list"`, icon `aria-label`) remain in each control section.
 
@@ -123,6 +124,8 @@ The library **never** talks to SQL or application repositories.
 
 ## Parameters (`BoGrid<TItem>`)
 
+> **Informative.** The complete, authoritative parameter list (every `[Parameter]`: name, type, default — including `QueryMode`, `TotalCount`, `SortFieldKey` / `SortDirection`, `FiltersVisible`, `ShowValidationSummary`, `ValidationIssues`, `SelectedNodeKeys`) is SHARED-UI [`public-component-api.md` § BoGrid](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bogrid) and [§ BoGridColumn](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bogridcolumn). The table below explains usage and may omit parameters ([parameter-reference.md](parameter-reference.md)).
+
 | Parameter | Role |
 | --- | --- |
 | `Cache` | Required `BoGridCache<TItem>` |
@@ -146,7 +149,7 @@ The library **never** talks to SQL or application repositories.
 | `ParentHasChildren` | Nested View different-columns: optional; default true when `ChildGridTemplate` is set |
 | `NewItemFactory` | Creates `TItem` for Add New (editable modes) |
 | `ShowAddNew` | Default **true** in editable modes (ignored in Nested View) |
-| `ShowSave` | Default **true**. When **false**, InlineEdit hides the section-header Save button so the host can own Save/Discard outside the grid (e.g. page Actions). Does not remove per-row RowEdit Save. |
+| `ShowSave` | Default **true**. When **false**, InlineEdit hides the section-header Save button so the host can own Save/Discard outside the grid (e.g. the page [Actions area](../patterns/actions-area.md)). Does not remove per-row RowEdit Save. |
 | `ShowDelete` | Default **true**. When **false**, hides the per-row Delete action. In Inline Edit, the actions column is omitted entirely when Delete is the only action. Use for value-maintenance grids that must not delete rows (e.g. EAC Variables values). |
 | `ActionsPlacement` | `BoGrid`-only. `BoGridActionsPlacement`: **`Trailing`** (default — actions after data columns) or **`Leading`** (actions before data columns, after selection when enabled). Use Leading when Delete must stay visible without horizontal scroll (e.g. wide dynamic columns). Does **not** apply to `BoShuffleCardGrid` — Shuffle Card handle/icons are always leading ([shuffle-card-grid.md](shuffle-card-grid.md)). |
 | `OnSave`, `OnRowDeleted`, `OnChanged` | Host callbacks |
@@ -198,7 +201,7 @@ Changing a column's `Title`, `FieldKey`, `Required`, `Align`, `Width`, or `Width
 - **Header separator:** **primary-tinted** gradient under headers (soft edge fade, reduced opacity, 1px) — branded anchor, not a grey table border. Transparent header band (no fill).
 - **Section rule:** standard section header rule **remains** when a section hosts a grid.
 - **Column width:** `table-layout: fixed` + `<colgroup>`; Flex = `100%/n`; Compact ≈12%; action Hug = CSS `--bo-grid-action-col-width` (default `4.75rem`; never `1px` — that clips Edit/Delete). Flex `%` + rem action together fill the table; avoid `calc()` on `<col>`. Table **always 100%** of container.
-- **Header actions:** when the grid owns a section and toolbar is shown: `Title [Add New] [Save] [Filters]` on one line (no dash; Filters only when `ShowFiltersButton`); buttons ~**16px** height, **equal width** (widest label / locale-safe); Add New = **primary** fill; Save / Filters = **secondary**; Filters is **rightmost**. Soft elevation. Extra header/body air only when the section has `HeaderActions` (`bo-section--with-header-actions`) — **not** on ancestor sections that merely nest a grid.
+- **Header actions:** when the grid owns a section and toolbar is shown: `Title [Add New] [Save] [Filters]` on one line (no dash; Filters only when `ShowFiltersButton`); buttons ~**16px** height, **equal width** (widest label / locale-safe); Add New = **primary** fill; Save / Filters = **secondary**; Filters is **rightmost** (variant hierarchy and ordering: [button.md](button.md); these are section `HeaderActions`, not the [Actions area](../patterns/actions-area.md)). Soft elevation. Extra header/body air only when the section has `HeaderActions` (`bo-section--with-header-actions`) — **not** on ancestor sections that merely nest a grid.
 - **Column header row:** tight padding; labels sit close to the header divider.
 - **Display overflow:** single-line ellipsis; hover `title` = full value when truncated (`bo-grid.js`); click expands that cell only (overlay); click elsewhere collapses. Edit cells are not truncated.
 - **Row separators:** inset hairlines only — never enclose cells. No vertical column lines.
@@ -261,7 +264,7 @@ Grid Family capability for administration, troubleshooting, data entry, and loca
 | Match | Case-insensitive **contains** only; multiple active columns AND together. No operators, builders, regex, or saved filters |
 | Pipeline (Client) | Data source → **Filters** → Sorting → Pagination → Display |
 | Uncommitted / editing | `IsNew` rows always remain visible; Row Edit keeps the row being edited visible |
-| Select All | When filters are active, Select All targets the **filtered working set**. When the filter row is visible, the Select All checkbox is on the **filter row** (selection column), aligned with filter inputs |
+| Select All | When filters are active, Select All targets the **filtered working set**. The Select All checkbox is **always on the column-header row** (selection column) — never on the filter row, even while the filter row is visible (see *Select All placement* above) |
 | Server `QueryMode` | Do **not** filter the current page client-side. Bind `ColumnFilters` / `ColumnFiltersChanged`; host maps to `BoQueryFilter` (`Contains`) on `BoQueryRequest` |
 | Non-text columns | Omit `FilterText` for Number / Boolean / Date / DateTime / Action unless a compelling display-string reason exists — those columns still show a **disabled** filter `BoTextField`. People / DDL / Lookup / Badge / Metadata participate only when the host supplies resolved display text. Action / selection chrome columns stay empty (not data columns) |
 
@@ -421,9 +424,9 @@ When the keyword is **cleared**:
 
 #### Reference implementation
 
-- EAC **Applications** NestedView (`P_GET_EACApplicationsGrid` RS1/RS2 + `Applications.razor` expansion binding) — server primary contract owns Rules 1–2; shallow one-level shape may use `DefaultExpansionState = Expanded` for Rule 3 — [architecture/eac.md](../../../architecture/eac.md).
-- EAC **Business Entities → Business Hierarchy** NestedView — approved full-load exception; page uses **`BoNestedViewKeywordFilter`** + `NestedExpandedSeedKeys` (ancestors of matches only) — [architecture/eac.md](../../../architecture/eac.md#business-entities).
-- Gallery Grid tab — Server QueryMode + Filters (`BoLatestWinsQuery`) and Nested View keyword demo ([example-governance.md](../example-governance.md)).
+- EAC **Applications** NestedView (`P_GET_EACApplicationsGrid` RS1/RS2 + `Applications.razor` expansion binding) — server primary contract owns Rules 1–2; shallow one-level shape may use `DefaultExpansionState = Expanded` for Rule 3 — [architecture/applications/eac.md](../../../architecture/applications/eac.md).
+- EAC **Business Entities → Business Hierarchy** NestedView — approved full-load exception; page uses **`BoNestedViewKeywordFilter`** + `NestedExpandedSeedKeys` (ancestors of matches only) — [architecture/applications/eac.md](../../../architecture/applications/eac.md#business-entities).
+- Gallery Components → Other → **Grid** — Server QueryMode + Filters (`BoLatestWinsQuery`) and Nested View keyword demo ([example-governance.md](../example-governance.md)).
 
 ### Keyboard (expand control focused)
 
@@ -465,7 +468,7 @@ Future extract candidates (do **not** extract in product apps): split `BoGrid.ra
 
 ## Gallery
 
-Components → **Grid** tab (`TabKey=grid`, `Table` icon). Parameters: Mode (includes Nested View), and when Nested View — **Do Child Rows Have Different Columns?** + **Default Expansion State**. Editable demos: Sub **Grid Control** with 4 sample rows (Text / Drop-Down / Date / Number) and **`ShowFiltersButton=true`** (text + DDL supply `FilterText`; Date / Number show disabled filter fields). Nested same-columns: Michael Jackson International Holdings tree (≥3 divisions; one branch ≥6 levels). Nested different-columns: 4 departments, each expands to an employee `BoGrid` (2 rows). Server demo binds `ColumnFilters` → `BoQueryFilter` Contains. Shuffle Card demo enables Filters with reorder disabled while filtered. Host loads `bo-grid.js`.
+Components (`/components`) → header tab **Other** → left panel-navigation item **Grid** (`Key=grid`; **not** a top-level header tab). Index: [gallery-index.md](../gallery-index.md). Parameters: Mode (includes Nested View), and when Nested View — **Do Child Rows Have Different Columns?** + **Default Expansion State**. Editable demos: Sub **Grid Control** with 4 sample rows (Text / Drop-Down / Date / Number) and **`ShowFiltersButton=true`** (text + DDL supply `FilterText`; Date / Number show disabled filter fields). Nested same-columns: Michael Jackson International Holdings tree (≥3 divisions; one branch ≥6 levels). Nested different-columns: 4 departments, each expands to an employee `BoGrid` (2 rows). Server demo binds `ColumnFilters` → `BoQueryFilter` Contains. Shuffle Card demo enables Filters with reorder disabled while filtered. Host loads `bo-grid.js`.
 
 ## Documentation governance
 

@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-017: Application Configuration deployment (synchronize-by-Code)
 
 Status: Accepted
@@ -16,7 +17,16 @@ GUIDs are environment-local runtime keys. Portable identity for configuration ob
 
 Exported JSON represents **Application Configuration State**. Import **synchronizes** the target Application so it matches the file: create missing Codes, update matched Codes, **remove** Codes present in the target but absent from the file.
 
-This is not a merge. Partial imports are not allowed.
+This is not a merge. Synchronize is **section-participation based**.
+
+**“No partial imports” means:**
+
+- A **participating** section (JSON key present, including empty) synchronizes **completely** — create / update / remove by Code for that section. Importing only a subset of Codes within a present section, or merge-style behavior inside a section, is **not** allowed.
+- An **omitted** section (JSON key absent) does **not** participate — that section is intentionally skipped and left unchanged on the target.
+
+**Allowed (omit = skip):** `dataEntities` present while `variables` omitted; `variables` present while `securityGroups` omitted; `processFramework` present while other optional sections omitted.
+
+**Not allowed:** synchronizing a subset of Codes within a present section; merge/upsert inside a participating section.
 
 ### Application identity
 
@@ -66,8 +76,8 @@ and must extend the deployment envelope, planner, apply path, and STANDARDS docu
 ## Consequences
 
 - EAC implements kind `breezeon.eac.application-configuration` with synchronize semantics, separate from Applications/BE merge portability.
-- `schemaVersion` 1 ships Data Entities + Columns, optional Security Groups, and the optional Process Framework sections `processMetadataColumns`, `roles`, `steps`, `options` ([ADR-019](ADR-019-process-framework-metadata.md)). Current export (`schemaVersion` 2) also ships optional nested `processFramework` and optional `variables` (`definitions` + `values`). Legacy non-empty `systemConfiguration` is rejected. Optional sections: key absent = skipped; present (including empty arrays / empty nested trees) = synchronized.
-- Administrators confirm via the standard Import Summary (`BoImportSummaryDialog`: Changes Summary + Errors/Warnings) before synchronize executes. Errors block Synchronize; warnings do not.
+- `schemaVersion` 1 ships Data Entities + Columns, optional Security Groups, and the optional Process Framework sections `processMetadataColumns`, `roles`, `steps`, `options` ([ADR-019](ADR-019-process-framework-metadata.md)). Current export (`schemaVersion` 2) also ships optional nested `processFramework` and optional `variables` (`definitions` + `values`). Legacy non-empty `systemConfiguration` is rejected. Optional sections: key absent = skipped; present (including empty arrays / empty nested trees) = synchronized **completely** (see “No partial imports” above).
+- Administrators confirm via the standard Import Summary (`BoImportSummaryDialog`: Changes Summary + Errors/Warnings) before synchronize executes. Errors block Synchronize; warnings do not. Import Summary **must** warn when optional sections are omitted and when Application-scoped sections affect enablements beyond the selected Business Entity.
 - Platform SSOT: [`architecture/app-configuration/`](../architecture/app-configuration/README.md).
 
 ## Related
@@ -77,4 +87,4 @@ and must extend the deployment envelope, planner, apply path, and STANDARDS docu
 - [ADR-019](ADR-019-process-framework-metadata.md)
 - [architecture/app-configuration/README.md](../architecture/app-configuration/README.md)
 - [docs/data-portability.md](../docs/data-portability.md)
-- [architecture/eac.md](../architecture/eac.md)
+- [architecture/applications/eac.md](../architecture/applications/eac.md)

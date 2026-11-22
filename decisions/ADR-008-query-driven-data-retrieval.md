@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-008: Query-driven data retrieval
 
 Status: Accepted
@@ -8,13 +9,13 @@ Category: UI + Data
 
 Breeze On applications present searchable, filterable, sortable, paged lists (grids, Nested View hierarchies, drop-down catalogs). Without an org standard, each page tends to add its own retrieval shape: a grid stored procedure **plus** a companion “filter options” procedure, generic “distinct values for any schema / table / column” procedures, Apply buttons, per-keystroke queries, and UI code that talks to SQL. That multiplies contracts per dataset, makes behavior inconsistent (debounce, stale responses, sorting rules), and invites unsafe dynamic SQL.
 
-[ADR-004](ADR-004-breezeon-ui-abstraction-layer.md) already establishes that the UI library (`BreezeOn.UI`) never talks to SQL or application repositories; the host application owns persistence and load. [database.md](../docs/database.md) already requires a documented need before introducing stored procedures. Neither defined how a **queryable dataset** should be retrieved end-to-end.
+[ADR-004](ADR-004-breezeon-ui-abstraction-layer.md) establishes that **UI controls** in `BreezeOn.UI` do not talk to SQL or application repositories; the host application owns product persistence and load. Separately, the SHARED-UI **identity/authorization framework** (same library) executes **parameterized** SQL against platform `Identity` / `Security` tables — that is not a contradiction of ADR-004’s UI-control boundary. [database.md](../docs/database.md) documents EF vs stored-procedure doctrine for application data access. Neither ADR defined how a **queryable dataset** should be retrieved end-to-end.
 
 ## Decision
 
 Adopt the **Query-Driven Data Retrieval Standard** ([docs/ui/controls/query-driven-retrieval.md](../docs/ui/controls/query-driven-retrieval.md)):
 
-- **One queryable dataset = one primary retrieval contract.** This is the approved org standard. The contract is owned by the **host application** (ADR-004); `BreezeOn.UI` never calls SQL.
+- **One queryable dataset = one primary retrieval contract.** This is the approved org standard. The contract is owned by the **host application** (ADR-004); UI controls never call SQL. Platform identity/authorization framework SQL remains SHARED-UI-owned.
 - **Approved retrieval hierarchy** (prefer in this order):
   1. **Primary contract** — one contract may return the page of rows, `TotalCount`, Nested View children, and optional metadata.
   2. **Optional `@IncludeFilterMetadata`** — filter metadata may be requested on **initial load** only, not on every query.

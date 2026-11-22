@@ -1,13 +1,13 @@
 ---
 description: >-
-  Breeze-On only — Planning Agent: follow docs/planning-and-development-agents.md
+  Breeze-On only — Planning Agent: follow docs/ai/planning-and-development-agents.md
   (docs/plans/in-progress/; delta updates only; never dump plans in chat).
 alwaysApply: true
 ---
 
 # Breeze-On — Planning Agent
 
-**SSOT:** [docs/planning-and-development-agents.md](../../docs/planning-and-development-agents.md)
+**SSOT:** [docs/ai/planning-and-development-agents.md](../../docs/ai/planning-and-development-agents.md)
 
 Read and follow that document. Key constraints:
 

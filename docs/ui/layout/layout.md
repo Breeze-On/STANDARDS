@@ -1,8 +1,9 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Layout (Row + page composition)
 
 Owner: UI
 
-Row layout and the Page → Section → Row → Field composition contract. Related: [sections.md](sections.md), [forms.md](../controls/forms.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md).
+Row layout and the Page → Section → Row → Field composition contract. Related: [sections.md](sections.md), [forms.md](../controls/forms.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [page-archetypes.md](../patterns/page-archetypes.md) (page shapes: Home / List / Detail-Edit / Workspace / Error). Parameters for `BoRow` and field controls: [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#layout-and-sections).
 
 ## Page composition (locked — hard standard)
 
@@ -153,6 +154,19 @@ Older SHARED-UI treated every `IsHidden` as a reserved slot. That legacy behavio
 
 **Runtime note:** This JSON is a **requirements / planning** shape. It is **not** the Blazor working-model cache. Apps bind fields with `@bind-Value` to a typed DTO / entity. Each field’s `fieldKey` is mapping metadata for that property. Persistence JSON (if any) is an application concern outside SHARED-UI.
 
+### Schema scope (forms only)
+
+`schemaVersion "1"` describes **form content only**: Sections → Rows → form fields. It is deliberately **not** a general page schema.
+
+| In scope (v1) | Out of scope (describe in prose per [page-archetypes.md](../patterns/page-archetypes.md)) |
+| --- | --- |
+| `BoSectionMain` / `BoSectionSub`, `BoRow`, and the field controls in the `control` enum (`TextField`, `ReadOnlyField`, `EmptyField`, `DateField`, `NumberField`, `DropDownList`, `PeoplePicker`, `Checkbox`) | `BoGrid`, `BoShuffleCardGrid`, `BoToggle`, `BoTabs` / `BoTabPanels`, `BoPanelNavigation` / panels, `BoButton` / `BoIconButton`, Actions area, dialogs, Home hub |
+| Per-field `weight`, `hidden`, `preserveLayoutWhenHidden`, `required`, type-specific flags | Page archetype, shell / footer settings, validation groups, data retrieval, Drop-Down item catalogs (host-supplied) |
+
+Planning agents **must not** invent additional `control` values. For List and Workspace pages, state the archetype and grid / panel intent in prose, and emit JSON only for the form sections (for example the Filters section of a List page).
+
+**Nesting (flat schema, nested Razor):** `sections` is a **flat ordered array** — there is no `sections[].sections`. A `"sub"` section is nested, in Razor, inside the **nearest preceding `"main"`** section; a `"sub"` with no preceding `"main"` is invalid. Order in the array is render order.
+
 ### Schema version
 
 | Field | Required | Meaning |
@@ -173,7 +187,7 @@ Older SHARED-UI treated every `IsHidden` as a reserved slot. That legacy behavio
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
-| `kind` | string | Yes | `"main"` → `BoSectionMain`; `"sub"` → `BoSectionSub` |
+| `kind` | string | Yes | `"main"` → `BoSectionMain`; `"sub"` → `BoSectionSub` **nested inside the nearest preceding `"main"`** (flat array; see [Schema scope](#schema-scope-forms-only)) |
 | `title` | string | Optional | Section header label |
 | `icon` | object | Optional | `{ "name": "<FluentSystemIconName>", "variant": "Regular" \| "Filled" }` via `BoIcon` |
 | `rows` | array | Yes | Ordered rows (each row becomes a `BoRow`; fields in a row become direct children / field containers) |
@@ -206,6 +220,7 @@ Older SHARED-UI treated every `IsHidden` as a reserved slot. That legacy behavio
 | `currencyIsoCode` | string | No | Number Field only: `CAD` / `USD` / `GBP` when `isCurrency` |
 | `isPercent` | boolean | No | Number Field only; UI 0–100, bind ÷100; mutually exclusive with `isCurrency` |
 | `alignment` | string | No | Number Field only: `"Left"` \| `"Center"` \| `"Right"` (default `"Right"`) |
+| `allowMultiple` | boolean | No | Drop-Down List / People Picker only: multi-select; bound value is `;`-joined Codes / UserGUIDs (default false) |
 
 ### Translation rules (JSON → Razor)
 
@@ -222,6 +237,9 @@ Older SHARED-UI treated every `IsHidden` as a reserved slot. That legacy behavio
 | `control: "DateField"` | `BoDateField` with `Label`, `FieldKey`, `Required`, optional `Mode` (`Date` / `DateTime`) + `@bind-Value` (**`DateTime?` only** — never `DateOnly`; Date mode → midnight) |
 | `control: "NumberField"` | `BoNumberField` with `Label`, `FieldKey`, `Required`, optional `isInteger` / `numberOfDecimals` / `isCurrency` / `currencyIsoCode` / `isPercent` / `alignment` + `@bind-Value` (**`decimal?` only**; percent UI 0–100 → bind ÷100) |
 | `control: "PeoplePicker"` | `BoPeoplePicker` with `Label`, `FieldKey`, `Required`, optional `AllowMultiple` + `@bind-Value` (**UserGUID** `string?` / `;`-joined) |
+| `control: "DropDownList"` | `BoDropDownList` with `Label`, `FieldKey`, `Required`, optional `AllowMultiple` + `@bind-Value` (**Code** `string?` / `;`-joined). Items (`Items` or `ItemsProvider`) are **host-supplied** — not expressible in the JSON |
+| `control: "Checkbox"` | `BoCheckbox` with `Label`, `FieldKey`, `Required` + `@bind-Value` (`bool`) |
+| `sections[].kind: "sub"` | `BoSectionSub` inside the nearest preceding `"main"` section's body |
 | `weight` (when ≠ 1) | `Weight="N"` on the field |
 | `hidden: true` | `IsHidden="true"` (collapses unless preserve) |
 | `preserveLayoutWhenHidden: true` | `PreserveLayoutWhenHidden="true"` |
@@ -307,7 +325,7 @@ Expected: Keyword ≈ 60%; Code / Description ≈ 20% each.
 
 ### Example — Theme Primary Color Light (gallery)
 
-Each Theme color tab stacks Main `{Name} Color (Light Theme)` then Main `{Name} Color (Dark Theme)`. Nested `sections` under a parent is not in schemaVersion `"1"` — Gallery Razor nests `BoSectionSub` inside each `BoSectionMain`. Attributes use `BoFieldReadOnly` (`control: "ReadOnlyField"`).
+Each Theme color tab stacks Main `{Name} Color (Light Theme)` then Main `{Name} Color (Dark Theme)`. The JSON below follows the **flat-array nesting rule** ([Schema scope](#schema-scope-forms-only)): each `"sub"` section nests inside the nearest preceding `"main"` — Gallery Razor nests `BoSectionSub` inside each `BoSectionMain` accordingly. Attributes use `BoFieldReadOnly` (`control: "ReadOnlyField"`).
 
 ```json
 {

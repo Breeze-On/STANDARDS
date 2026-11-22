@@ -1,13 +1,13 @@
 ---
 description: >-
-  Breeze-On only — Development Agent: follow docs/planning-and-development-agents.md
+  Breeze-On only — Development Agent: follow docs/ai/planning-and-development-agents.md
   (Build Locally from docs/plans/in-progress/; docs + knowledge transfer; archive).
 alwaysApply: true
 ---
 
 # Breeze-On — Development Agent
 
-**SSOT:** [docs/planning-and-development-agents.md](../../docs/planning-and-development-agents.md)
+**SSOT:** [docs/ai/planning-and-development-agents.md](../../docs/ai/planning-and-development-agents.md)
 
 Read and follow that document. Key constraints:
 

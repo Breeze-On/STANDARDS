@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-001: Multi-repository model
 
 Status: Accepted
@@ -13,6 +14,7 @@ Use a **multi-repository** model: one repository per application or shared conce
 ## Consequences
 
 - Clear ownership and boundaries per repository (e.g. EAC vs Shared UI vs STANDARDS).
-- Shared UI and other packages are consumed across repos rather than via a monorepo project graph.
+- **Interim cross-repo consumption of SHARED-UI (current reality):** product apps use a **sibling repository checkout** and a **`ProjectReference`** to `SYSTEM-SHARED-UI` sources; CI typically checks out the **unpinned default branch HEAD**. This is **not** a NuGet/versioned package graph yet. Package versioning, pinning, and compatibility policy are **Future Validation** at application #2 kickoff — see [application-model.md](../docs/application-model.md) § Cross-repo consumption.
 - Documentation and ADRs for org-wide decisions belong in STANDARDS; product `README_AI` remains repo-specific.
 - Agents must respect repository boundaries and not add unrelated domains into an existing product repo.
+- Every BreezeOn application **must consume** `BreezeOn.UI` (shell, `Bo*`, auth, authZ, page catalog) — mandatory, not optional ([application-model.md](../docs/application-model.md) § Platform consumption requirements).

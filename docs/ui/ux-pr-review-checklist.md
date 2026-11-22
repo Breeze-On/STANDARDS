@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — UX pull request review checklist
 
 Owner: UI
@@ -14,7 +15,10 @@ Short human / agent checklist for UI-bearing PRs. Normative detail: [ux-conventi
 - [ ] Product pages use `Bo*` only (no Fluent types)
 - [ ] No page-local loading overlays (use `IBoPageFreezeService`)
 - [ ] No product CSS forks of Shared UI header/track alignment or truncation
-- [ ] No product CSS `border-radius` overrides on `.bo-button` (hard standard: `--bo-button-radius`)
+- [ ] No product CSS `border-radius` overrides on `.bo-button` (hard standard: `--bo-button-radius` — [button.md](controls/button.md))
+- [ ] Actions use `BoButton` / `BoIconButton` (no raw `<button>`); destructive = `Danger`; one Primary per group
+- [ ] Selection / navigation control chosen per [selection-and-navigation.md](controls/selection-and-navigation.md); guards use the intent event, not change-then-revert
+- [ ] Public API facts taken from `public-component-api.md` (no Razor spelunking); new/changed parameters documented there
 
 ## Conventions
 

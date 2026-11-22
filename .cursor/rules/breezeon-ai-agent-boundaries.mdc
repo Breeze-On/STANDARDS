@@ -9,7 +9,7 @@ alwaysApply: true
 
 **Scope:** GitHub org **Breeze-On** / namespaces **BreezeOn** only. Do **not** apply to unrelated orgs.
 
-**SSOT:** [docs/ai-agent-governance.md](../../docs/ai-agent-governance.md) · [ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md)
+**SSOT:** [docs/ai/ai-agent-governance.md](../../docs/ai/ai-agent-governance.md) · [ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md)
 
 ## Role
 

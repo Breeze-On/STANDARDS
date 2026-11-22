@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-012: Cookie and session management (SHARED-UI)
 
 Status: Accepted
@@ -41,7 +42,7 @@ Promoted from the Identity & Authentication future roadmap into current platform
 | Revocation | Soft-disable / `IsEnabled = 0` / missing row ends the application session within the 60s cache SLO |
 | Limits | Per-instance memory cache; no cross-app cookie clear; circuit caveat; fail-closed on recheck errors |
 
-Implementation: SYSTEM-SHARED-UI (`BoCookieAuthenticationDefaults`, `IBoIdentitySessionGate`). Operator onboarding: [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md).
+Implementation: SYSTEM-SHARED-UI (`BoCookieAuthenticationDefaults`, `IBoIdentitySessionGate`). Operator onboarding: [customer-onboarding-authentication.md](../runbooks/customer-onboarding-authentication.md).
 
 ## Amendment — UserGUID cookie reconciliation (2026-11-15)
 

@@ -1,3 +1,4 @@
+<!-- Classification: OPS; Scope: platform -->
 # Customer Onboarding Master Flow
 
 Owner: Operations
@@ -8,8 +9,8 @@ This is the **first-class end-to-end operational SSOT** for customer onboarding 
 
 | Slice | Document |
 | --- | --- |
-| Auth Workflows A–F | [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md) |
-| AuthZ Workflow G | [customer-onboarding-authorization.md](../architecture/authorization/customer-onboarding-authorization.md) |
+| Auth Workflows A–F | [customer-onboarding-authentication.md](customer-onboarding-authentication.md) |
+| AuthZ Workflow G | [customer-onboarding-authorization.md](customer-onboarding-authorization.md) |
 | Hosted deploy / MI | [hosted-deployment.md](../docs/hosted-deployment.md) |
 | Policy / ADRs | [Identity & Authentication](../architecture/identity-and-authentication/README.md), [Authorization](../architecture/authorization/README.md) |
 
@@ -26,7 +27,7 @@ Do **not** treat this document as a second SSOT for architecture or ADRs. When t
 - Local developer setup with `BreezeOn-LOCAL` → [local-development-standard.md](../architecture/identity-and-authentication/local-development-standard.md)
 - Inventing UAT/PRD Azure resource inventories that are not yet implemented → [environments.md](../docs/environments.md), [hosted-deployment.md](../docs/hosted-deployment.md)
 - Multi-customer shared-infra topology decisions → [landscape.md](../architecture/landscape.md)
-- Ad-hoc manual `Identity.Tenants` edits outside **Step 7** bootstrap (login discovery remains Step 6; Step 7 script is the approved path to ensure tids + `IsSyncEnabled = 1` with admins)
+- Ad-hoc manual `Identity.Tenants` / `IsSyncEnabled` edits outside **Step 8** / Workflow F (login discovery remains Step 6; Step 7 grants admins only and must not enable sync)
 
 ## Glossary (onboarding)
 
@@ -41,7 +42,7 @@ Do **not** treat this document as a second SSOT for architecture or ADRs. When t
 
 | Actor | Owns |
 | --- | --- |
-| **BreezeOn Admin / Platform Ops** | Intake gate; App Registration create/name/secret; App Service `AUTHENTICATION__*`; SQL Identity/Security apply; Workflow G; hosted `IsSyncEnabled`; go-live sign-off |
+| **BreezeOn Admin / Platform Ops** | Intake gate; App Registration create/name/secret; App Service `AUTHENTICATION__*`; SQL Identity/Security apply; Workflow G; hosted `IsSyncEnabled` (Step 8 only); go-live sign-off |
 | **Customer Entra Admin** | Admin consent; owns Enterprise Application in customer tenant |
 | **Product Deployer** | Product base URLs; redirect URI requests; product deploy that uses shared ClientId/Secret |
 | **System** | OIDC login upsert; tenant discovery (`IsSyncEnabled = 0`); Sync Now; mid-session `IsEnabled` gate |
@@ -69,7 +70,7 @@ Do **not** treat this document as a second SSOT for architecture or ADRs. When t
 ```text
 0 Intake → 1 Provision → 2 App Reg → 3 Redirects → 4 App Service auth
   → 5 Admin consent + EA → 6 First login / tenant discovery
-  → 7 Bootstrap admins + sync-enable tenants (Workflow G) → 8 Sync Now (if Graph=Yes)
+  → 7 Bootstrap admins (Workflow G) → 8 Sync enable + Sync Now (Workflow F; if Graph=Yes)
   → 9 Smoke + go-live
 ```
 
@@ -101,9 +102,9 @@ Do **not** treat this document as a second SSOT for architecture or ADRs. When t
 | **Purpose** | Runnable product hosts and platform Identity + Security schema in the customer database |
 | **Responsible actor** | BreezeOn Admin / Product Deployer |
 | **Preconditions** | Checkpoint 0 complete |
-| **Actions** | Provision or confirm App Service(s) and SQL catalog; grant App Service Managed Identity to SQL ([templates/azure-sql/](../templates/azure-sql/)); apply SHARED-UI Identity + Security scripts to the customer DB; deploy products per [hosted-deployment.md](../docs/hosted-deployment.md). This step does **not** create the customer’s Entra tenant. |
-| **Expected outcome** | HTTPS product hosts respond; `Identity.*` and `Security.*` tables present; hosts may still lack final `AUTHENTICATION__*` until Step 4 |
-| **Failure scenarios and recovery** | MI / SQL connection failures → fix grant and connection string before Step 2. Missing Identity/Security schema → re-apply SHARED-UI scripts; do not start Entra cutover |
+| **Actions** | Provision or confirm App Service(s) and SQL catalog; grant App Service Managed Identity to SQL ([templates/azure-sql/](../templates/azure-sql/)); apply platform schemas — **empty/new catalog:** SHARED-UI Identity + Security (+ platform `dbo.BreezeOnSchemaVersions`) `current_model` bootstrap; **populated catalog:** SHARED-UI **`migration_scripts/` only** (never DROP+CREATE re-apply `current_model` on a populated DB). Deploy products per [hosted-deployment.md](../docs/hosted-deployment.md). This step does **not** create the customer’s Entra tenant. Detail: [database.md](../docs/database.md) § Platform schema evolution. |
+| **Expected outcome** | HTTPS product hosts respond; `Identity.*` and `Security.*` present at required version; hosts may still lack final `AUTHENTICATION__*` until Step 4 |
+| **Failure scenarios and recovery** | MI / SQL connection failures → fix grant and connection string before Step 2. Missing/outdated Identity/Security → apply the correct **migration** (or bootstrap only if the catalog is still empty); do **not** DROP+CREATE platform `current_model` on populated DBs; do not start Entra cutover |
 | **Checkpoint** | **Checkpoint 1** |
 | **Evidence to retain** | Host URLs; confirmation Identity/Security schema applied (query pack § schema checks) |
 
@@ -118,7 +119,7 @@ Do **not** treat this document as a second SSOT for architecture or ADRs. When t
 | **Purpose** | Create the BreezeOn-owned Entra App Registration for this customer-environment |
 | **Responsible actor** | BreezeOn Admin |
 | **Preconditions** | Checkpoints 0–1; customer name + env + tid known |
-| **Actions** | In the BreezeOn Entra tenant, create App Registration **`{Customer}-{ENV}`**; configure supported account types / home tenants for the customer (and optional BreezeOn support) tid(s) **in Entra**; create client secret; record secret id and expiry. Handle the secret value per **Secret handling** below. Detail: [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md) Workflow A |
+| **Actions** | In the BreezeOn Entra tenant, create App Registration **`{Customer}-{ENV}`**; configure supported account types / home tenants for the customer (and optional BreezeOn support) tid(s) **in Entra**; create client secret; record secret id and expiry. Handle the secret value per **Secret handling** below. Detail: [customer-onboarding-authentication.md](customer-onboarding-authentication.md) Workflow A |
 | **Expected outcome** | Registration exists; ClientId available; secret value transferred only via approved channels; expiry tracked by secret-expiry owner |
 | **Failure scenarios and recovery** | Wrong account types → fix Entra allowlisting (not app code). Lost or compromised secret → rotate per [configuration-standard.md](../architecture/identity-and-authentication/configuration-standard.md) and Recovery appendix |
 | **Checkpoint** | **Checkpoint A** |
@@ -160,7 +161,7 @@ Aligned with [configuration-standard.md](../architecture/identity-and-authentica
 
 | Topic | Practice |
 | --- | --- |
-| **Approved storage** | Hosted: Azure App Service **application settings** for `AUTHENTICATION__CLIENTSECRET` (same value on every product host in the customer-environment). Local only: .NET User Secrets / local `.env` — never for hosted DEV/UAT/PRD cutover. |
+| **Approved storage** | Hosted: Azure App Service **application settings** for `AUTHENTICATION__CLIENTSECRET` (same value on every product host in the customer-environment). Local only: .NET **User Secrets** for OIDC credentials (not `.env`) — never for hosted DEV/UAT/PRD cutover. |
 | **Approved process** | Create the client secret in the Entra portal → in the **same operator session**, paste the value directly into each product App Service setting (Entra + Azure portals side-by-side is fine). Do not store the value in intermediate files. |
 | **Prohibited transmission** | Email, chat/IM, SMS, screenshots, shared docs/wikis, tickets/attachments, source control, CI logs, or any channel that retains the secret value. |
 | **Rotation** | Follow configuration-standard § Client secret lifecycle: create new secret → update **every** product App Service → verify login → remove old secret after overlap. Named secret-expiry owner tracks expiry. |
@@ -222,15 +223,15 @@ https://login.microsoftonline.com/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee/v2.0/admi
 
 ---
 
-## Step 7 — Admin + tenant sync-enable bootstrap (Workflow G)
+## Step 7 — Admin bootstrap (Workflow G)
 
 | Field | Content |
 | --- | --- |
-| **Purpose** | Ensure every customer Entra tid is in `Identity.Tenants` with `IsSyncEnabled = 1`, create `GLOBAL-SYSTEM-ADMINISTRATORS` if missing, and grant that group to **at least one admin UPN per tenant** so EAC Users Security and Sync Now are usable |
+| **Purpose** | Create `GLOBAL-SYSTEM-ADMINISTRATORS` if missing and grant that group to **at least one admin UPN per tenant** so EAC Users Security (and Sync Now, when enabled) are usable. Does **not** set `IsSyncEnabled` — that is Step 8 / Workflow F only |
 | **Responsible actor** | BreezeOn Admin |
 | **Preconditions** | Checkpoint E for each bootstrap admin (each listed UPN has an `Identity.Users` row from first login); Security schema applied |
-| **Actions** | 1) Edit `@TenantAdminPairs` in [bootstrap-global-system-administrators.sql](../templates/onboarding/bootstrap-global-system-administrators.sql) — semicolon-separated `{entra-tid}|{admin-upn}` pairs (**≥1 admin per distinct tenant**). 2) Apply the script to the customer database. 3) Verify each admin can open EAC `/users` after re-login or authZ cache expiry. Do **not** auto-promote the first login without this explicit SQL step. Detail: [customer-onboarding-authorization.md](../architecture/authorization/customer-onboarding-authorization.md) |
-| **Expected outcome** | Listed tids sync-enabled; named admin(s) in `GLOBAL-SYSTEM-ADMINISTRATORS`; `/users` reachable — ready for Step 8 Sync Now when Graph = Yes |
+| **Actions** | 1) Edit `@TenantAdminPairs` in [bootstrap-global-system-administrators.sql](../templates/onboarding/bootstrap-global-system-administrators.sql) — semicolon-separated `{entra-tid}|{admin-upn}` pairs (**≥1 admin per distinct tenant**). 2) Apply the script to the customer database. 3) Verify each admin can open EAC `/users` after re-login or authZ cache expiry. Do **not** auto-promote the first login without this explicit SQL step. Detail: [customer-onboarding-authorization.md](customer-onboarding-authorization.md) |
+| **Expected outcome** | Named admin(s) in `GLOBAL-SYSTEM-ADMINISTRATORS`; listed tids present in `Identity.Tenants` if missing (with `IsSyncEnabled` unchanged / `0` on insert); `/users` reachable — ready for Step 8 when Graph = Yes |
 | **Failure scenarios and recovery** | Placeholder pairs rejected → replace sample tids/UPNs. Missing `Identity.Users` → finish Step 6 first login for that UPN, re-run. Wrong UPN → fix pair and re-run (or remove wrong membership — Recovery appendix). Group still missing → confirm Security schema then re-run. Never seed hosted memberships via product seed by default |
 | **Checkpoint** | **Checkpoint G** |
 | **Evidence to retain** | `@TenantAdminPairs` used (tids + UPNs); operator name + date; confirmation admin accessed `/users` |
@@ -251,12 +252,12 @@ Run **only** when Customer Information lists Graph synchronization = **Yes**. If
 
 | Field | Content |
 | --- | --- |
-| **Purpose** | Enable Microsoft Graph directory sync for Users Security |
+| **Purpose** | **Sole control point** for setting `IsSyncEnabled = 1` (when Graph = Yes), then first Sync Now and verification |
 | **Responsible actor** | BreezeOn Admin (App Reg permission + SQL); Customer Entra Admin (application permission consent); System (Sync Now); bootstrapped admin (runs Sync Now in EAC) |
 | **Preconditions** | Checkpoint G (so `/users` and Sync Now are reachable under page security); Checkpoint E tenant row exists from login discovery; Identity schema present |
-| **Actions** | Add application permission `User.Read.All` on the App Registration; obtain **customer** admin consent for app-only Graph; confirm `IsSyncEnabled = 1` for customer tid(s) (normally already set by **Step 7** bootstrap — hosted must not use `IDENTITY__SEEDTENANTIDS` on App Services); bootstrapped admin runs **Sync Now** in EAC `/users`. Detail: Workflow F |
-| **Expected outcome** | Consent granted; Sync Now Succeeded; Users grid reflects Graph `accountEnabled` → `IsEnabled` |
-| **Failure scenarios and recovery** | Graph 403 → missing `User.Read.All` or customer app consent. “No sync-enabled tenant” → set `IsSyncEnabled = 1` on the discovered row. Soft-disable surprises → review directory-sync + session standards. Access Denied on `/users` → return to Step 7 |
+| **Actions** | Add application permission `User.Read.All` on the App Registration; obtain **customer** admin consent for app-only Graph; **set `IsSyncEnabled = 1`** for customer tid(s) via the Workflow F SQL (hosted must not use `IDENTITY__SEEDTENANTIDS` on App Services); bootstrapped admin runs **Sync Now** in EAC `/users`. Detail: Workflow F |
+| **Expected outcome** | Consent granted; `IsSyncEnabled = 1`; Sync Now Succeeded (also check soft-disable skip logs — Succeeded does not prove soft-disable ran); Users grid reflects Graph `accountEnabled` → `IsEnabled` |
+| **Failure scenarios and recovery** | Graph 403 → missing `User.Read.All` or customer app consent. No sync-enabled tenant → complete Workflow F SQL (`IsSyncEnabled = 1`) — do **not** re-run Step 7 for sync enablement. Soft-disable skipped / surprises → review directory-sync standard (50% safety) + session standards; check operator logs. Access Denied on `/users` → return to Step 7 |
 | **Checkpoint** | **Checkpoint F** (or **F-N/A**) |
 | **Evidence to retain** | Sync Now Succeeded (or F-N/A sign-off); SQL `IsSyncEnabled` confirmation |
 
@@ -286,7 +287,7 @@ Run **only** when Customer Information lists Graph synchronization = **Yes**. If
 - [ ] Checkpoint C — Shared `AUTHENTICATION__*` on all products (secret handling followed)
 - [ ] Checkpoint D — Customer consent + Enterprise Application + interactive login
 - [ ] Checkpoint E — Identity Users / UsersLogins / Tenants evidence (login discovery)
-- [ ] Checkpoint G — Step 7 bootstrap applied (`tid|upn` pairs; ≥1 admin per tenant; `IsSyncEnabled = 1`); `/users` accessible
+- [ ] Checkpoint G — Step 7 bootstrap applied (`tid|upn` pairs; ≥1 admin per tenant; admins granted; `IsSyncEnabled` **not** required here); `/users` accessible
 - [ ] Checkpoint F — Graph sync + Sync Now Succeeded **or** Checkpoint F-N/A (Graph not required) signed
 - [ ] Optional: second product host login with same ClientId
 - [ ] Optional: login-time profile photo best-effort (does not block go-live)
@@ -313,7 +314,7 @@ Run **only** when Customer Information lists Graph synchronization = **Yes**. If
 | Missing `GLOBAL-SYSTEM-ADMINISTRATORS` group | Security schema missing or bootstrap not run | Confirm Security schema; re-run Step 7 bootstrap (creates group if missing) |
 | Bootstrap rejects placeholders / empty pairs | Sample `@TenantAdminPairs` not replaced | Edit Step 7 script pairs (`tid|upn`; ≥1 admin per tenant) |
 | Sync Now Graph 403 | Missing `User.Read.All` or customer app consent | Step 8 |
-| Sync Now “no sync-enabled tenant” | Step 7 not applied or tid omitted from pairs | Re-run Step 7 bootstrap |
+| Sync Now "no sync-enabled tenant" | Step 8 / Workflow F SQL not applied (`IsSyncEnabled` still 0) | Set `IsSyncEnabled = 1` via Workflow F; do not treat Step 7 as sync enablement |
 | Hosted seed confusion | `IDENTITY__SEEDTENANTIDS` on App Service | Remove; SQL enablement only |
 
 ---
@@ -327,7 +328,7 @@ Use after go-live or when a step fails in a recoverable way. Normative cutover s
 1. Identify the wrong `UserGUID` in `Security.GroupsMembers` for `GLOBAL-SYSTEM-ADMINISTRATORS`.
 2. `DELETE` that membership row (operator SQL; retain ticket evidence).
 3. Confirm the correct admin has an `Identity.Users` row from login (Step 6).
-4. Re-run Workflow G bootstrap with the correct `@LookupUpn`.
+4. Re-run Workflow G bootstrap with the correct `@TenantAdminPairs` (`tid|upn` entries).
 
 ### Re-bootstrap procedure
 
@@ -390,8 +391,8 @@ No dedicated onboarding audit schema is required for the current process.
 
 ## Related
 
-- [Customer authentication onboarding](../architecture/identity-and-authentication/customer-onboarding-authentication.md) (Workflows A–F)
-- [Customer onboarding — authorization](../architecture/authorization/customer-onboarding-authorization.md) (Workflow G)
+- [Customer authentication onboarding](customer-onboarding-authentication.md) (Workflows A–F)
+- [Customer onboarding — authorization](customer-onboarding-authorization.md) (Workflow G)
 - [Directory synchronization standard](../architecture/identity-and-authentication/directory-synchronization-standard.md)
 - [Configuration standard](../architecture/identity-and-authentication/configuration-standard.md)
 - [hosted-deployment.md](../docs/hosted-deployment.md)

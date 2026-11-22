@@ -1,3 +1,4 @@
+<!-- Classification: TPL; Scope: platform -->
 # Template: local SQL Server (Docker)
 
 Copy `docker-compose.yml` and `.env.example` into an application repository root. Create a gitignored `.env` from `.env.example` and set `MSSQL_SA_PASSWORD`.

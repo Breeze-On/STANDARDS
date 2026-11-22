@@ -1,3 +1,4 @@
+<!-- Classification: AN; Scope: platform -->
 # Future roadmap — Identity & Authentication
 
 Owner: Architecture
@@ -9,14 +10,14 @@ The following are **not** part of the current platform implementation. Headings 
 | Topic | Notes |
 | --- | --- |
 | Scheduled directory synchronization | Optional timer/host calling the same SHARED-UI synchronizer; Sync Now remains |
-| Delta Graph synchronization | `/users/delta` + cursor persistence when directory size/frequency justifies it |
-| Tenants administration UI | Replaces V1 SQL `IsSyncEnabled` onboarding step (Master Flow Step 8) |
+| Delta Graph synchronization / large-tenant scalability | **Future Validation** — `/users/delta` + cursor persistence when directory size/frequency justifies it; V1 remains full sync |
+| Tenants administration UI | Replaces V1 SQL `IsSyncEnabled` onboarding step (**Master Flow Step 8 / Workflow F** — sole sync-enablement control point) |
 | Automated onboarding validation job | Hosted health check evolving from [templates/onboarding/validate-onboarding-readiness.sql](../../templates/onboarding/validate-onboarding-readiness.sql) (schema, tid, sync, admin membership) |
 | Self-service tenant onboarding / consent wizard | Customer-facing UX; requires Master Flow stabilization + ADR |
 | Automated consent verification | Graph app-only token probe + Enterprise Application Graph APIs |
 | Operational dashboard (per customer-environment readiness) | Cross-environment ops view; depends on observability standard + multi-env inventory |
 | Hard onboarding feature gates | Optional “environment not ready” banners / flags — **must not** block OIDC login without a superseding ADR; prefer soft indicators |
-| Azure Blob (or external) profile photo storage | Migrate behind SHARED-UI photo APIs; `Identity.UserPhotos` already migration-ready |
+| Azure Blob (or external) profile photo storage | **Future Validation** — migrate behind SHARED-UI photo APIs; `Identity.UserPhotos` already migration-ready (SQL VARBINARY login-time photos remain current) |
 | `Department` / `JobTitle` / `ManagerExternalObjectId` on `Identity.Users` | Deferred until a business consumer exists |
 | SCIM provisioning | Not designed |
 | Role management / authorization beyond authenticated | Shipped as platform Security Groups + page security — see [authorization/](../authorization/README.md), [ADR-014](../../decisions/ADR-014-platform-authorization.md) |
@@ -36,7 +37,7 @@ The following are **not** part of the current platform implementation. Headings 
 | Login-time profile photo refresh into `Identity.UserPhotos` (SQL bytes) | [identity-schema-standard.md](identity-schema-standard.md) |
 | `Identity.Tenants` discovery + explicit `IsSyncEnabled` | Not a login allowlist |
 | Mid-session `IsEnabled` revalidation (`IBoIdentitySessionGate`, 60s cache) | [session-management-standard.md](session-management-standard.md), [ADR-012](../../decisions/ADR-012-cookie-session-management.md) |
-| Customer authentication onboarding runbook (Workflows A–F) | [customer-onboarding-authentication.md](customer-onboarding-authentication.md) |
+| Customer authentication onboarding runbook (Workflows A–F) | [customer-onboarding-authentication.md](../../runbooks/customer-onboarding-authentication.md) |
 | Customer Onboarding Master Flow (end-to-end) | [customer-onboarding-master-flow.md](../../runbooks/customer-onboarding-master-flow.md) |
 | Operator onboarding validation SQL pack | [templates/onboarding/](../../templates/onboarding/) |
 | Soft onboarding readiness queries / EAC `/users` indicators | SHARED-UI `IBoOnboardingReadinessQueries` + EAC banner (read-only; does not block login) |

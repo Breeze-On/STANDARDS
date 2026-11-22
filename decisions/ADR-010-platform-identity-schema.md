@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-010: Platform Identity schema
 
 Status: Accepted
@@ -21,7 +22,8 @@ Earlier wording treated `UsersId` as the shared cross-application identity refer
   - **`Identity.UserPhotos`** — profile photo storage (V1 SQL bytes; migration-ready for external object store)
 - Authoritative Entra resolution key: **`(TenantId, ExternalObjectId)`** (Entra `tid` + `oid`). Email and UPN are attributes only.
 - Canonical BreezeOn user identifier: **`UserGUID`**. Hierarchy: Entra `(TenantId, ExternalObjectId)` → `UserGUID` → physical `UsersId`.
-- Cross-application references, authorization, integrations, and import/export contracts that identify a user **must use `UserGUID`**, not `UsersId`.
+- **Within a customer database:** cross-application references, authorization, and integrations that identify a user **must use `UserGUID`**, not `UsersId`.
+- **Cross-environment portable payloads** (import/export files, local seed JSON): do **not** require environment-local `UserGUID`. Prefer Codes; when a user reference is unavoidable, use environment-stable Entra keys (`ExternalObjectId`, and `TenantId` when needed). See [data-portability.md](../docs/data-portability.md).
 - Relationships:
   - `UsersLogins.UserGUID` → `Users.UserGUID`
   - `UserPhotos.UserGUID` → `Users.UserGUID` (1:1)

@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Expandable / disclosure content
 
 Owner: UI

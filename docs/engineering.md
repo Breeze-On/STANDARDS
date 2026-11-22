@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Engineering standards
 
 Owner: Engineering
@@ -12,7 +13,7 @@ Current technical defaults for Breeze On application work.
 | Shared UI | `BreezeOn.UI` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI); see [ui/overview.md](ui/overview.md), page checklist [ui/page-development.md](ui/page-development.md); [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 | Typography | **Calibri** default UI font (hard standard via `BreezeOn.UI` / `--bo-font-family`); see [ui/foundations/typography.md](ui/foundations/typography.md) |
 | Runtime | ASP.NET Core / C# / .NET 10 |
-| Auth (EAC today) | ASP.NET Core Identity |
+| Auth | Entra OIDC + cookies via SYSTEM-SHARED-UI; platform `Identity.*` / `Security.*` in the shared customer database ([Identity & Authentication](../architecture/identity-and-authentication/README.md), [ADR-009](../decisions/ADR-009-entra-oidc-cookie-authentication.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md)) — **not** ASP.NET Core Identity / `AspNet*` |
 | Database | Azure SQL / SQL Server (T-SQL) + local Docker; see [database.md](database.md), [local-database.md](local-database.md); [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.md) |
 
 ## Repository model

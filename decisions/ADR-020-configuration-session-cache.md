@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-020: Application Configuration Session Cache
 
 Status: Accepted
@@ -24,7 +25,7 @@ Session owns baselines; the active workspace owns the working copy; `EacDirtySta
 
 ### Mandatory Configuration Session Review
 
-Future configuration-heavy BreezeOn applications and modules **must** complete a Configuration Session Review (session key, lifetime, segments, Always/Conditional/Never classification, working copy vs baseline, Dirty State, invalidation matrix, Save/Discard/Import/Export, Page Freeze, rebuild events) before implementation. Outcome may be “no session cache” only with a documented matrix — skipping the review is non-compliant. SSOT: [configuration-session-cache.md](../architecture/app-configuration/configuration-session-cache.md) · [planning-and-development-agents.md](../docs/planning-and-development-agents.md).
+Future configuration-heavy BreezeOn applications and modules **must** complete a Configuration Session Review (session key, lifetime, segments, Always/Conditional/Never classification, working copy vs baseline, Dirty State, invalidation matrix, Save/Discard/Import/Export, Page Freeze, rebuild events) before implementation. Outcome may be “no session cache” only with a documented matrix — skipping the review is non-compliant. SSOT: [configuration-session-cache.md](../architecture/app-configuration/configuration-session-cache.md) · [planning-and-development-agents.md](../docs/ai/planning-and-development-agents.md).
 
 ## Consequences
 

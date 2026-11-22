@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Database standards
 
 Owner: Engineering
@@ -47,16 +48,18 @@ MI grant + connection string alone are **not** sufficient. Missing the extension
 
 ## Nullability (NOT NULL)
 
-Apply `NOT NULL` **only** when:
+Apply `NOT NULL` when the **model requires a value** — not only for primary keys and GUID columns.
 
-1. The column is part of the **primary key**, or
-2. The column **name contains `GUID`** (case-insensitive match, e.g. `ApplicationGUID`).
+| Rule | Guidance |
+| --- | --- |
+| **Required by model** | Columns the application always writes and reads as present (flags, status, sort order, required codes, audit columns, most Identity/Security attributes) are **`NOT NULL`**. |
+| **New natural / business keys** | New tables: natural keys that carry a **UNIQUE** constraint (e.g. `Code`, `UniqueCode`) should generally be **`NOT NULL`**. Prefer this over “nullable UNIQUE” (which allows a single NULL). |
+| **Optional attributes** | Columns that are truly optional remain **NULL**-allowed; document intentional optionality in `docs/db-model.md`. |
+| **Do not** | Do **not** use the obsolete rule “NOT NULL only on PK / GUID / audit.” That rule did not match platform practice. |
 
-All other business columns are **NULL**-allowed unless an explicit, documented exception is approved for that column.
+**Audit columns:** the four [mandatory audit columns](#mandatory-audit-columns) are always **`NOT NULL`**.
 
-**Explicit exception:** the four [mandatory audit columns](#mandatory-audit-columns) on transactional business tables are **always `NOT NULL`**, even though they are not part of the primary key and do not contain `GUID` in their names.
-
-Do not default every column to `NOT NULL`.
+Tightening existing nullable natural keys on shipped tables is a **separate migration decision** (not automatic).
 
 ## Mandatory audit columns
 
@@ -71,21 +74,33 @@ Every **transactional business table** (tables that hold business records create
 
 Rules:
 
-1. **Always `NOT NULL`.** These four columns are an explicit exception to the general [Nullability](#nullability-not-null) rule (`NOT NULL` only on primary key / `GUID` columns).
+1. **Always `NOT NULL`.** These four columns follow the [Nullability](#nullability-not-null) “required by model” rule.
 2. **Create** populates **all four** columns (`LastUpdatedBy` / `LastUpdatedDate` equal the created values on insert).
 3. **Update** refreshes **only** `LastUpdatedBy` and `LastUpdatedDate`. `CreatedBy` and `CreatedDate` are never changed after insert.
-4. **Actor** (`CreatedBy` / `LastUpdatedBy`) is the **logged-in user** when authentication exists. While a product has no authentication, an interim product stamp may be used: **`LOCAL`**. Replace the interim stamp with the real user when auth is implemented.
-5. **Migrations** that add these columns to an existing table must **backfill** existing rows first, then enforce `NOT NULL`.
-6. **No exceptions** unless formally documented and approved for that table (record the exception in the product `docs/db-model.md` and, if it sets a pattern, an ADR).
-7. Audit values are **system-managed**. They are not part of user-facing import/export file formats ([data-portability.md](data-portability.md)).
+4. **Actor** (`CreatedBy` / `LastUpdatedBy`) is the **logged-in user** (or other authenticated principal) when authentication exists.
+5. **`LOCAL` actor stamp — intentional vs accidental:**
+   - **Intentional:** Local Docker seed tools, App Configuration sync seed, and other **local-sandbox** callers may pass `@Actor = N'LOCAL'` (or rely on documented SP fallback) when no interactive user exists.
+   - **Accidental:** Hosted / authenticated product paths must pass a real actor. Long-term direction is to **eliminate silent `LOCAL` fallback** in write SPs (reject null/blank `@Actor`) once callers are audited.
+   - **Current EAC write SPs with silent fallback** (as of D03 remediation): `P_POST_EACApplicationConfigurationSync`, `P_POST_EACBusinessEntity`, `P_POST_EACBusinessEntityType`, `P_POST_EACDataEntities*`, `P_POST_EACDataEntity`, `P_POST_EACProcessMetadata*`, `P_POST_EACSecurityGroupsSave`, `P_POST_EACStep*`, `P_POST_EACVariablesSave`, `P_POST_EACVariableValuesSave`. Do not redesign these SPs in this change set; track removal of fallback as a follow-on.
+6. **Migrations** that add these columns to an existing table must **backfill** existing rows first, then enforce `NOT NULL`.
+7. **No exceptions** unless formally documented and approved for that table (record the exception in the product `docs/db-model.md` and, if it sets a pattern, an ADR).
+8. Audit values are **system-managed**. They are not part of user-facing import/export file formats ([data-portability.md](data-portability.md)).
 
 Decision record: [ADR-005](../decisions/ADR-005-mandatory-transactional-audit-columns.md). Product `sql/current_model/`, `docs/db-model.md`, and `sql/seed/` must reflect these columns in the same change set.
 
 ## Application data access
 
-- **Standard CRUD:** EF Core `SaveChanges` (audit columns stamped by the application layer before save).
-- **Bulk import:** batched EF Core operations (not row-at-a-time round trips where a batch is practical).
-- **No stored-procedure-per-table by default.** Introduce stored procedures only for a specific, documented need (for example hierarchy retrieval with path columns, cycle detection on re-parent, or recursive subtree delete).
+Platform doctrine reflects **shipped practice** (not “EF only”):
+
+| Pattern | Use when |
+| --- | --- |
+| **EF Core `SaveChanges`** | Straightforward CRUD and simple filter catalogs; audit stamped by the application layer before save |
+| **Stored procedures** | Bulk / JSON-set operations, multi-statement cascades, hierarchy retrieval, cycle checks, paging contracts (`@FiltersJson`), synchronizers, and other advanced business operations |
+
+- Prefer EF for simple single-entity writes when no multi-statement or set logic is required.
+- Prefer SPs when the operation is multi-statement, set-oriented, JSON-driven, hierarchical, or already established as the module’s write path (EAC `System.P_*` is the reference).
+- Product `docs/db-model.md` should state which surfaces use EF vs SP and why for non-obvious cases.
+- **Platform library SQL:** SYSTEM-SHARED-UI identity/authorization framework executes **parameterized** SQL against `Identity` / `Security` (and related platform tables). UI controls in `BreezeOn.UI` do **not** talk to SQL ([ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md), [ADR-008](../decisions/ADR-008-query-driven-data-retrieval.md)).
 
 ### Stored procedure naming (when used)
 
@@ -195,15 +210,17 @@ Standing platform rules (also summarized in [naming.md](naming.md)):
 | **GUID column** | Singular entity + `GUID` (e.g. `UserGUID`, `GroupMemberGUID`). Never plural table stem (`UsersGuid` is forbidden). |
 | **Logical relationships** | Use immutable GUID columns only (`UserGUID`, `GroupGUID`, `ApplicationGUID`, `BusinessEntityGUID`, `ApplicationEnabledGUID`, …). Integer `*Id` columns must not be used for logical relationships, cross-product contracts, authorization, or integrations. |
 | **Canonical user id** | **`UserGUID`**. Hierarchy: Entra `(TenantId, ExternalObjectId)` → `UserGUID` → physical `UsersId`. |
+| **User references — relational vs portable** | **Within a customer database:** authorization, FKs, and in-app contracts use **`UserGUID`**. **Cross-environment portable payloads** (import/export, seed JSON): do **not** require environment-local `UserGUID`; use Codes and, when a user reference is unavoidable, environment-stable Entra keys such as **`ExternalObjectId`** (and `TenantId` when needed). See [ADR-010](../decisions/ADR-010-platform-identity-schema.md), [data-portability.md](data-portability.md). |
 | **Identity / Security GUID type** | `UNIQUEIDENTIFIER` (typically `NEWSEQUENTIALID()` default). |
-| **EAC catalog GUID type** | `NVARCHAR(600)` today (type convergence with `UNIQUEIDENTIFIER` is a separate future decision). |
+| **EAC catalog GUID type (temporary)** | `NVARCHAR(600)` on EAC `System` catalog keys today. **Long-term direction:** converge to `UNIQUEIDENTIFIER` (same as Identity/Security). Do not invent a large migration program in day-to-day work; schedule convergence deliberately. Until then, treat values as **36-character upper-case `D` format** GUID strings (`XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX`) as generated by app/SP conventions. |
+| **Canonical GUID string format (interim)** | When stored as `NVARCHAR`, use uppercase `Guid.ToString("D")` / `UPPER(CONVERT(NVARCHAR(36), …))`. Format CHECKs are optional Future Validation. |
 
 ## Platform Identity schema ownership
 
 - The SQL schema **`Identity`** (`Identity.Users`, `Identity.UsersLogins`, `Identity.Tenants`, `Identity.UserPhotos`) is a **BreezeOn platform** directory model — not EAC-specific and not ASP.NET Core Identity / `AspNet*`.
 - **Definitions** (T-SQL current model + local seed) are owned by **SYSTEM-SHARED-UI** (`sql/identity/`). SHARED-UI does not host a database.
 - **Physical tables** live in the **customer database** (one catalog per customer-environment, shared by all product applications in that environment). Adopting apps apply the SHARED-UI scripts in local init / deploy order and must not fork competing user masters or create a second Identity catalog for the same customer.
-- **Cross-schema dependents:** `Identity.Users` current_model must drop `Security.GroupsMembers` (FK on `UserGUID`) before dropping `Users` so Identity+Security re-apply is idempotent (Database Deployment Standard — DROP dependents first).
+- **Bootstrap / reset only:** Identity (and Security) `current_model` scripts are for **new database creation** or **full database reset** (e.g. local `dev-reset` that drops the database). They are **not** safe to DROP+CREATE re-apply on a **populated** customer database that has application FKs into `Identity` / `Security`. Hosted evolution uses **migration scripts** + [schema-version tracking](#platform-schema-evolution-hosted). Within a full reset, `Identity.Users` must still drop `Security.GroupsMembers` before `Users` (DROP dependents first).
 - Authoritative Entra resolution key: `(TenantId, ExternalObjectId)`. Canonical BreezeOn user identifier: **`UserGUID`**. SSOT: [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md), [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
 
 ## Platform Security schema ownership
@@ -255,8 +272,9 @@ Org rule for applications that own SQL objects (reference implementation: EAC):
 1. **Source stays separated.** Tables, procedures, functions, views, schemas, etc. remain individual files under `sql/current_model/` for maintainability.
 2. **Maintain a committed single-file reset script.** Every schema-owning app keeps **`sql/current_model.sql`**: the concatenation of ordered `sql/current_model/` sources. Regenerate it whenever sources or deploy order change; **never edit `sql/current_model.sql` by hand**. Commit it in the **same change set** as the source edits (for SSMS / review / one-file apply).
 3. **Deploy through one consolidated script.** Local init / `dev-reset` regenerates the consolidated artifact (refreshing `sql/current_model.sql` and a gitignored `generated/current-model.sql` copy) and executes **one** `sqlcmd` against that file.
-4. **Ordering is explicit.** Maintain a deterministic dependency-order list in the app’s local DB helpers whenever objects are added, removed, renamed, or reordered. **CREATE order** is dependency order (parents before children). **DROP order** inside each table script must remove **dependents first** (children / FK referencers before the table being recreated) so Msg 3726 cannot occur when re-applying against a populated database.
+4. **Ordering is explicit.** Maintain a deterministic dependency-order list in the app’s local DB helpers whenever objects are added, removed, renamed, or reordered. **CREATE order** is dependency order (parents before children). **DROP order** inside each table script must remove **dependents first** within the **bootstrap/reset** graph (children before parents for objects in that reset set).
 5. **Logging lists sources.** Generation must print (and embed in the consolidated header) which source files were included and in what order.
+6. **`current_model` is not safe on populated hosted DBs.** See [Platform schema evolution (hosted)](#platform-schema-evolution-hosted).
 
 ### Definition of Done (schema change)
 
@@ -278,19 +296,29 @@ A database-object change is incomplete unless:
 
 - `sql/current_model/` represents the **current** database model only (editable SSOT).
 - One script per table or discrete object.
-- Each table script must be maintainable as a full recreate: **drop dependents if they exist, drop if exists, then create** (safe when re-applied in documented CREATE order against a database that already has the model).
+- Each table script is authored as a full recreate (**drop dependents if they exist, drop if exists, then create**) for **new database creation** and **full database reset** only (local `dev-reset` that drops the database, or empty catalog bootstrap).
+- **Do not** DROP+CREATE re-apply `current_model` (platform Identity/Security or product) against a **populated** hosted / customer database that already has cross-schema application FKs — that is **not** safe and is **not** idempotent in multi-schema reality.
 - Include schema-creation scripts as needed (e.g. `00_schema_*.sql`).
 - Use Transact-SQL idioms appropriate for Azure SQL (`IF OBJECT_ID` / `sys.schemas`, `IDENTITY`, `GO` batches as needed).
 - Nullability must follow the rules above.
-- **`sql/current_model.sql`** is the **committed** single-file reset script regenerated from those sources (see Database Deployment Standard). Local apply may also write a gitignored `generated/current-model.sql` copy for `sqlcmd`.
+- **`sql/current_model.sql`** is the **committed** single-file **reset** script regenerated from those sources (see Database Deployment Standard). Local apply may also write a gitignored `generated/current-model.sql` copy for `sqlcmd`.
+
+### Data categories: bootstrap, required reference, sample seed
+
+| Category | Meaning | Where |
+| --- | --- | --- |
+| **Bootstrap data** | Operator/onboarding scripts required to stand up platform admin (e.g. Workflow G GSA grant) | **SSOT:** STANDARDS [`templates/onboarding/bootstrap-global-system-administrators.sql`](../templates/onboarding/bootstrap-global-system-administrators.sql). Product copies under `sql/seed/` are apply convenience only and must stay byte-aligned with the SSOT. |
+| **Required reference data** | Rows every environment needs (e.g. SHARED-UI Security seed `GLOBAL-SYSTEM-ADMINISTRATORS` group **without** memberships) | SHARED-UI `sql/security/seed/`; may also be created by bootstrap if missing |
+| **Sample / local seed data** | Fake/demo rows for Docker local testing | Product `sql/seed/` — **local only**; do **not** apply to hosted DEV / UAT / PRD by default |
 
 ### `sql/seed/` (required for apps with owned business schema)
 
-Every application that owns business tables must keep a **local-ready** seed so developers and agents can exercise the app without Azure SQL or empty tables.
+Every application that owns business tables must keep a **local-ready** sample seed so developers and agents can exercise the app without Azure SQL or empty tables.
 
-- Sample/fake data for **local Docker SQL** only.
+- **Sample/fake data** for **local Docker SQL** only (see category table above).
 - Not the schema source of truth; keep scripts **idempotent** when practical.
-- Do **not** apply to hosted DEV / UAT / PRD by default.
+- Do **not** apply sample seed to hosted **DEV / UAT / PRD** by default.
+- Bootstrap scripts stored under `sql/seed/` for local tooling convenience remain **bootstrap**, not sample data — see category table.
 - **Keep in sync:** when `sql/current_model/` or `docs/db-model.md` changes, update `sql/seed/` in the **same change set** so local testing still works.
 - Seed assets are usually T-SQL under `sql/seed/`. Portable JSON payloads (same envelopes as import/export; [data-portability.md](data-portability.md)) are allowed when the app’s local seed scripts apply them to Docker SQL.
 - Local apply path: build consolidated `generated/seed.sql` → single `sqlcmd` (see Database Seed Maintenance Standard).
@@ -299,9 +327,10 @@ Every application that owns business tables must keep a **local-ready** seed so 
 
 ### `sql/migration_scripts/`
 
-- Holds one-off or incremental migration SQL used while evolving environments.
-- Not the source of truth for the model.
-- Clean up regularly after migrations have been applied to all relevant environments.
+- Holds **hosted / populated** incremental migration SQL (the authoritative evolution path for existing databases).
+- Not the source of truth for the full model (`current_model/` remains the model SSOT).
+- Platform Identity/Security/platform ledger migrations are owned by **SYSTEM-SHARED-UI** under `sql/*/migration_scripts/`.
+- Record applied versions in [`dbo.BreezeOnSchemaVersions`](#platform-schema-evolution-hosted).
 
 ### `docs/db-model.md` (required for apps with owned schema)
 
@@ -314,4 +343,27 @@ Each application that owns business database objects must maintain a **current**
 
 Database objects for EAC live in [Breeze-On/SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) under `sql/` and [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md).
 
-**Seed vs current model (reminder):** `sql/current_model/` is **current-state schema only**. Sample and development data belong only under `sql/seed/`. Do not mix seed inserts into current-model scripts.
+**Seed vs current model (reminder):** `sql/current_model/` is **current-state schema only**. Sample and development data belong only under `sql/seed/` (except bootstrap copies that mirror STANDARDS templates). Do not mix seed inserts into current-model scripts.
+
+## Platform schema evolution (hosted)
+
+Lightweight V1 rules for shared platform schemas (`Identity`, `Security`, and platform ledger objects):
+
+| Concern | Rule |
+| --- | --- |
+| **Bootstrap / reset** | Apply SHARED-UI `sql/*/current_model/` (and `sql/platform/current_model/`) only to a **new** catalog or after a **full database drop/recreate** (local `dev-reset`). |
+| **Hosted / populated** | Evolve with SHARED-UI-owned **`migration_scripts/`** only. **Never** DROP+CREATE re-apply platform `current_model` on a customer database that already holds application data/FKs. |
+| **Ownership** | SYSTEM-SHARED-UI owns platform definitions and migrations. Adopting apps apply them in documented order; they must not fork competing Identity/Security models. |
+| **Schema-version table** | Authoritative applied-state mechanism is **`dbo.BreezeOnSchemaVersions`** (`SchemaName`, `Version`, `ScriptName`, `AppliedUtc`). Definition: SHARED-UI `sql/platform/`. Hosted install: `sql/platform/migration_scripts/20261121_add_BreezeOnSchemaVersions.sql`. |
+| **Operator evidence logs** | Optional for tickets; **not** the authoritative applied-state record. |
+| **Product schemas** | Same bootstrap vs migration split applies to EAC `System` (and future app schemas): `current_model` for reset; `migration_scripts/` for populated hosted. |
+
+Master Flow Step 1 must apply platform schemas via bootstrap on empty catalogs, or migrations when schemas already exist — see [customer-onboarding-master-flow.md](../runbooks/customer-onboarding-master-flow.md).
+
+## Runtime database permissions (v1 posture)
+
+Hosted App Service Managed Identities currently share a DDL-capable runtime role (`breezeon_app` ∈ `db_datareader` / `db_datawriter` / `db_ddladmin` + `EXECUTE`) per [templates/azure-sql/README.md](../templates/azure-sql/README.md).
+
+**Accepted v1 posture:** schema ownership (`Identity` / `Security` / `System`) is **convention-based** — docs and ADRs state ownership; the database does **not** yet enforce per-schema grants. Runtime identities are intentionally DDL-capable for current ops maturity.
+
+**Future Validation:** more restrictive per-app / per-schema security before multiple product identities share a customer database at scale.

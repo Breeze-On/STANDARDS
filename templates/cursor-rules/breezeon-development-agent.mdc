@@ -9,7 +9,7 @@ alwaysApply: true
 
 **Scope:** Breeze-On / BreezeOn only.
 
-**SSOT (read and follow):** https://github.com/Breeze-On/STANDARDS/blob/main/docs/planning-and-development-agents.md
+**SSOT (read and follow):** https://github.com/Breeze-On/STANDARDS/blob/main/docs/ai/planning-and-development-agents.md
 
 Do not invent local planning/output rules that conflict with STANDARDS.
 

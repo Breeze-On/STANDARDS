@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Directory synchronization standard
 
 Owner: Architecture
@@ -17,11 +18,11 @@ Normative rules for Microsoft Graph → `Identity.Users` synchronization. Decisi
 | Item | Standard |
 | --- | --- |
 | Trigger | Manual **Sync Now** (EAC Users); no scheduler |
-| Algorithm | **Full** paged Graph `/users` enumeration (no delta) |
+| Algorithm | **Full** paged Graph `/users` enumeration — **current implemented reality** (no delta cursor in V1) |
 | Credentials | Same customer-environment App Registration; application `User.Read.All` |
 | Token authority | `https://login.microsoftonline.com/{enabledTenantId}/.default` per tenant |
 | Sync target | **All** `Identity.Tenants` rows with `IsSyncEnabled = 1` (sequential) |
-| Enablement | Explicit SQL onboarding (no auto-enable on login; no Tenants UI) |
+| Enablement | Explicit SQL in **Master Flow Step 8 / Workflow F only** (sole control point). No auto-enable on login; Workflow G must not set `IsSyncEnabled`; no Tenants UI in V1 |
 | Missing users | Soft-disable (`IsEnabled = 0`); never delete. Soft-disable watermark is the sync’s `@SyncStartUtc` compared to `Users.LastSyncUtc`; both must use **`datetime2`** (not legacy `datetime`) so just-upserted rows are not falsely treated as missing. **Safety:** skip soft-disable when the sync upserted **0** users, or when the prospective disable count would exceed **50%** of currently enabled users for that tenant (prevents mass lockout from empty/partial Graph results). Skipped soft-disable is logged; the sync may still complete as Succeeded when upserts applied |
 | `accountEnabled` | Graph `accountEnabled` → `Identity.Users.IsEnabled` on upsert; login path does **not** mutate `IsEnabled` |
 | Photos | Not during sync — login-time only ([identity-schema-standard.md](identity-schema-standard.md) `UserPhotos`) |
@@ -48,9 +49,18 @@ SET [IsSyncEnabled] = 1
 WHERE [TenantId] = '<entra-tid>';
 ```
 
-Enable each **discovered** tenant that should be synchronized (row created by login discovery). Login discovery never enables sync. Hosted onboarding does **not** manually insert `Identity.Tenants` rows — see Master Flow Step 6 / Recovery appendix.
+Enable each **discovered** tenant that should be synchronized (row created by login discovery) **only in Workflow F / Master Flow Step 8**. Login discovery never enables sync. Workflow G (admin bootstrap) must not set `IsSyncEnabled`. Hosted onboarding does **not** manually insert `Identity.Tenants` rows on the normative path — see Master Flow Step 6 / Recovery appendix.
 
 **Local development:** prefer `.env` `IDENTITY__SEEDTENANTIDS=<guid>[,<guid>…]` so EAC `local-db-seed` / `dev-reset` seeds `Identity.Tenants` only with **`IsSyncEnabled = 1` for every configured id**. Do not seed users or placeholder/fake tenant GUIDs. Hosted remains explicit SQL enablement only (no Identity seed).
+
+### Soft-disable operator visibility
+
+When soft-disable is skipped (zero upserts or prospective disable count > 50% of currently enabled users for that tenant):
+
+- The skip is **logged** by the synchronizer.
+- Sync status may still be **Succeeded** if upserts applied.
+- Operators must treat Sync Now **Succeeded** as "upsert path completed," not as "directory leavers were soft-disabled."
+- After Sync Now (Master Flow Step 8 / Workflow F), check application logs (or future sync diagnostics UI) for soft-disable skip messages before declaring directory truth.
 
 ## Future state
 
@@ -63,7 +73,7 @@ Enable each **discovered** tenant that should be synchronized (row created by lo
 ## Related
 
 - [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) (Step 8 — after Workflow G)
-- [Customer authentication onboarding](customer-onboarding-authentication.md) (Phase 2 Graph consent + `IsSyncEnabled`)
+- [Customer authentication onboarding](../../runbooks/customer-onboarding-authentication.md) (Phase 2 Graph consent + `IsSyncEnabled`)
 - Soft readiness: SHARED-UI `IBoOnboardingReadinessQueries` (EAC `/users` indicators; does not block login)
 - [identity-schema-standard.md](identity-schema-standard.md)
 - [authentication-standard.md](authentication-standard.md)

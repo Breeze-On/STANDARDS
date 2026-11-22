@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-006: Application Context ownership and lifecycle
 
 Status: Accepted
@@ -62,7 +63,7 @@ Application-scoped configuration promoted between environments must also follow 
 ## Related
 
 - EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md)
-- [architecture/eac.md](../architecture/eac.md)
+- [architecture/applications/eac.md](../architecture/applications/eac.md)
 - [docs/database.md](../docs/database.md)
 - [docs/glossary.md](../docs/glossary.md)
 - [ADR-005](ADR-005-mandatory-transactional-audit-columns.md)

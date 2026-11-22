@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Session management standard
 
 Owner: Architecture
@@ -71,7 +72,7 @@ Rely on supported ASP.NET Core OpenIdConnect middleware:
 
 ## Related
 
-- [Customer authentication onboarding](customer-onboarding-authentication.md)
+- [Customer authentication onboarding](../../runbooks/customer-onboarding-authentication.md)
 - [Configuration standard](configuration-standard.md)
 - [Identity schema standard](identity-schema-standard.md)
 - [Future roadmap](future-roadmap.md)

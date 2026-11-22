@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Architecture
 
 Owner: Architecture
@@ -12,7 +13,7 @@ Current reality only — do not place planned or speculative designs here. How w
 | --- | --- |
 | [Landscape](landscape.md) | Ecosystem map: repos, UI dependency position, Azure hosting, SQL relationships, boundaries |
 | [Ecosystem](ecosystem.md) | Org identity and existing repositories |
-| [EAC](eac.md) | Enterprise Administration Center (current) |
+| [EAC](applications/eac.md) | Enterprise Administration Center (current) |
 | [Data Entities](data-entities/README.md) | Configurable master / reference data framework owned by EAC ([ADR-016](../decisions/ADR-016-data-entity-ownership.md)) |
 | [Process Framework](process-framework/README.md) | Roles / Steps / Options configuration metadata (vision for the future Workflow Engine + current reality) owned by EAC ([ADR-019](../decisions/ADR-019-process-framework-metadata.md)) |
 | [Application Configuration](app-configuration/README.md) | Application Configuration deployment between environments ([ADR-017](../decisions/ADR-017-application-configuration-deployment.md)) |

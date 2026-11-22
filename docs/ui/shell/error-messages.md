@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Error Message Pages (platform standard)
 
 Owner: UI / Architecture
@@ -102,7 +103,7 @@ Product-specific remediation, if required, must be supplied by the **consuming a
 
 ### 4. Footer suppression
 
-Error Message Pages **must** use `BoAppShell.ShowFooter = false`. Rationale: reduce visual noise and keep focus on the error state. This is a platform UI standard, not a gallery-only detail. Product hosts that render `BoAccessDenied` via `BoAuthorizeRouteView` should suppress the footer for that layout (product wiring may follow in a later adoption phase).
+Error Message Pages **must** use `BoAppShell.ShowFooter = false`. Rationale: reduce visual noise and keep focus on the error state. This is a platform UI standard, not a gallery-only detail. Product hosts that render `BoAccessDenied` (via `BoAuthorizeRouteView` or in-page) **must** suppress the footer — **MUST means implemented** on the product host (EAC is the reference).
 
 ### 5. Showcase ≡ production
 
@@ -185,7 +186,8 @@ Same expandable panel chrome as Access Details; **collapsed by default**. Phase 
 
 Creating one-off product-specific error pages is discouraged unless formally justified in STANDARDS.
 
-## Phase notes
+## Adoption status
 
-- **Phase 1 (current):** SHARED-UI foundation, Access Denied, Gallery showcase, this standard.
-- **Phase 2 (future):** Product-app adoption (e.g. EAC footer when denied, `ApplicationDisplayName`, live authorization validation). Product-specific remediation chrome belongs in hosts only.
+- **Current (implemented):** SHARED-UI foundation, Access Denied, Gallery showcase, this standard; **product hosts must** configure `BoErrorMessageOptions.ApplicationDisplayName` and suppress footer whenever Access Denied is shown. EAC complies as the product host reference.
+- **Deferred (explicitly not yet required):** Additional Error Message page types beyond Access Denied (`BoPageNotFound`, session expired, maintenance, etc.); product-specific remediation chrome remains host-only when needed.
+- Do **not** use “Phase 2” language to imply EAC may remain intentionally non-compliant with MUST rules above.

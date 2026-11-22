@@ -1,89 +1,25 @@
-# Using Data Entities
+<!-- Classification: AN; Scope: application:eac -->
+# Using Data Entities (non-normative)
 
-Owner: Architecture
+Owner: Architecture (EAC)
 
-Developer consumption guide for applications that **read** Data Entity data owned by EAC.
+**Status: non-normative guidance** until a second consumer beyond EAC Process Framework exists. Do **not** treat this document as a platform API contract.
 
-Before inventing a custom lookup table, confirm the data qualifies: [What Qualifies as a Data Entity?](data-entities-standard.md#what-qualifies-as-a-data-entity).
+## Current reality
 
-## Expectations
-
-| Allowed | Not allowed |
+| Fact | Detail |
 | --- | --- |
-| Read / filter / search / display | Create or modify Data Entities or columns |
-| Use values in business processes | Insert / update / delete rows, translations, or metadata directly |
-| Resolve by `DataEntityGUID` / `Code` + Application Context | Alter Data Entity schema |
+| Only shipped consumer | Process Framework **DDL** metadata — stores Data Entity **row Code** (never GUID) |
+| Definitions | Application-scoped; portable via App Config JSON by **Code** |
+| Rows | Application Context–scoped; portable via **Excel** on hosted environments |
+| Multi-app consumption | **Future Validation** — do not invent |
 
-All writes belong to EAC.
+## Retrieval notes (EAC-internal)
 
-## Retrieval patterns
+Product UI uses paged Values SPs and Excel full-load paths. There is **no** org-wide consumer row-read SSOT. Prefer Codes for portable references.
 
-### Definitions (Application-scoped)
+If you previously saw guidance to treat `DataEntityRowGUID` as the integration key: that does **not** match the shipped PF DDL contract (Code). GUIDs are environment-local.
 
-List Data Entities for an Application ordered by `SortOrder`:
+## Expectations for a future second consumer
 
-- Contract today: `System.P_GET_EACDataEntitiesByApplication` (`@ApplicationGUID`)
-- Use for admin navigation and schema discovery
-
-### Rows (Application Context–scoped)
-
-Recommended filter:
-
-```text
-WHERE ApplicationEnabledGUID = @ApplicationEnabledGUID
-  AND DataEntityGUID = @DataEntityGUID
-ORDER BY SortOrder
-```
-
-Use the covering index on `(ApplicationEnabledGUID, DataEntityGUID, SortOrder)`. For large catalogs (e.g. Cities), page or Top-N search rather than loading the full set into UI memory unless an approved full-load exception exists ([ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md)).
-
-### Translation retrieval
-
-```text
-LEFT JOIN System.EACDataEntitiesRowsTranslations t
-  ON t.DataEntityRowGUID = r.DataEntityRowGUID
- AND t.LanguageCode = @LanguageCode
-```
-
-Fall back to a default language or row `Code` when no translation exists (product rule; document per app if different).
-
-### Metadata retrieval
-
-Batch by row set:
-
-```text
-WHERE DataEntityRowGUID IN (…)
-```
-
-Join to `EACDataEntitiesColumns` for `Code` / `Type`. Map typed columns:
-
-| Column.Type | Value column |
-| --- | --- |
-| TEXT | ValueText |
-| DECIMAL | ValueNumber |
-| DATE | ValueDateTime (date @ midnight) |
-| DATETIME | ValueDateTime |
-| BOOLEAN | ValueBoolean |
-
-Missing metadata row ⇒ NULL. Do not expect placeholder NULL rows.
-
-## Recommended query patterns
-
-1. Resolve Application Context (`ApplicationEnabledGUID`) for the user’s operational BE + Application.
-2. Resolve Data Entity by Application + `Code` (e.g. `regions`).
-3. Load rows for that context + entity (paged/search as needed).
-4. Attach translations for the UI locale.
-5. Optionally attach metadata for displayed custom columns only.
-
-Prefer EAC-owned stored procedures or shared read contracts as they are introduced; do not duplicate write paths in consumer apps.
-
-## Usage examples
-
-- Invoice app: Cost Centers and WBS as Data Entities; invoice headers remain transactional tables that **reference** row codes/GUIDs.
-- Timesheet app: Departments as a Data Entity; timesheet entries remain transactional.
-
-## Future app expectations
-
-- Prefer Data Entities for administrator-maintained lookups.
-- Do not create `InvoiceRegions`-style tables when a Data Entity already exists or should exist in EAC.
-- Treat `DataEntityRowGUID` as the stable reference for integrations; treat `Code` as the human/business key (editable).
+When a second app needs DE data, define a read contract in the same change set as first real usage — and update this document from non-normative to AA. Until then, keep consumption inside EAC.

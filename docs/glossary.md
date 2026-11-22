@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Glossary
 
 Owner: Documentation
@@ -67,7 +68,7 @@ Short business identifier for an application (e.g. `EAC`, `HRM`, `AP`). Distinct
 Enterprise Administration Center — centralized hub for system configuration, business drop-down (DDL) / reference data, security access, and role assignments. Repository: `SYSTEM-ADMIN-EAC` (`BreezeOn.Eac`). Owns the SQL schema **`System`** (application registry and related platform tables).
 
 Related:
-- [architecture/eac.md](../architecture/eac.md)
+- [architecture/applications/eac.md](../architecture/applications/eac.md)
 - [architecture/landscape.md](../architecture/landscape.md)
 - [database.md](database.md)
 
@@ -116,7 +117,7 @@ Related:
 A node within the organizational hierarchy representing an operational context (corporate unit, geography, department, acquisition unit, and similar). Stored in EAC as `System.EACBusinessEntities`.
 
 Related:
-- [architecture/eac.md](../architecture/eac.md)
+- [architecture/applications/eac.md](../architecture/applications/eac.md)
 - [domain-modeling.md](domain-modeling.md)
 - EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md)
 
@@ -126,12 +127,16 @@ An Application enabled for a specific Business Entity. Stored in `System.EACAppl
 
 ## Business Reference Data
 
-Configuration / lookup values managed for the ecosystem (often via EAC). Implemented as [Data Entities](#data-entity) / [DDL](#ddl).
+Administrator-maintained **reference** lists (lookups) managed in EAC. Implemented as [Data Entities](#data-entity). Prefer “reference data” over “master data platform.” Distinct from [Variable](#variable) (one setting per context) and transactional tables.
 
 Related:
-- [architecture/eac.md](../architecture/eac.md)
+- [architecture/applications/eac.md](../architecture/applications/eac.md)
 - [Data Entity](#data-entity)
 - [DDL](#ddl)
+
+## Variable
+
+One named, typed Application setting whose value may differ per Application Context (or be Unset). May hold business or environment configuration — **not** secrets. Distinct from [Data Entity](#data-entity) (many items) and [Process Framework](#process-framework) (routing). SSOT: [architecture/variables/](../architecture/variables/README.md) · [construct-selection.md](../architecture/app-configuration/construct-selection.md).
 
 ## Current Reality Only
 
@@ -143,20 +148,30 @@ Related:
 
 ## Data Entity
 
-Configurable master / reference data definition owned by EAC (`System.EACDataEntities*`). Definitions are Application-scoped; rows are Application Context–scoped. Distinct from [Business Entity](#business-entity) (organizational hierarchy). Prefer Data Entities for administrator-maintained lookups before custom tables.
+EAC **reference-data** list: administrator-maintained named items (Code, Description, order, optional flat attributes). Definitions are Application-scoped; rows are Application Context–scoped. Distinct from [Business Entity](#business-entity) (org hierarchy). Not for Customer/Vendor/Employee/Project/Equipment/Vehicle until richer modelling exists. SSOT: [architecture/data-entities/](../architecture/data-entities/README.md).
 
 Related:
 - [architecture/data-entities/README.md](../architecture/data-entities/README.md)
 - [ADR-016](../decisions/ADR-016-data-entity-ownership.md)
 - [DDL](#ddl)
 - [Business Reference Data](#business-reference-data)
+- [Row (Data Entity)](#row-data-entity)
+- [Column (Data Entity)](#column-data-entity)
+
+## Row (Data Entity)
+
+One item in a Data Entity list for an Application Context (Values). Portable via Excel on hosted environments; excluded from App Config JSON.
+
+## Column (Data Entity)
+
+One flat attribute on a Data Entity (Settings). Author-chosen kebab Code; types TEXT / DECIMAL / BOOLEAN / DATE / DATETIME. UI “Settings” = Columns; UI “Values” = Rows.
 
 ## DDL
 
-Business drop-down list values (lookup / configuration lists) managed through EAC. Distinct from the UI control **Drop-Down List** (`BoDropDownList`). Implemented via the **Data Entities** platform capability.
+Business drop-down list backed by a [Data Entity](#data-entity) (especially Process Framework metadata type `DDL`, which stores a row **Code**). Distinct from the UI control **Drop-Down List** (`BoDropDownList`).
 
 Related:
-- [architecture/eac.md](../architecture/eac.md)
+- [architecture/applications/eac.md](../architecture/applications/eac.md)
 - [Data Entity](#data-entity)
 - [Drop-Down List](#drop-down-list)
 
@@ -184,18 +199,42 @@ Related:
 - [ui/controls/forms.md](ui/controls/forms.md)
 - [domain-modeling.md](domain-modeling.md)
 
+## Environment Label
+
+Lifecycle stage vocabulary used across seed rules, governance, and Azure resource tokens: **`DEV`**, **`UAT`**, **`PRD`** (plus **Local** for the workstation sandbox). An Environment Label is **not** one global Azure estate — many [Customer-Environments](#customer-environment) may share the same label. SSOT: [environments.md](environments.md).
+
+Related:
+- [environments.md](environments.md)
+- [naming.md](naming.md)
+
+## Customer-Environment
+
+SaaS isolation unit for a customer at a given Environment Label: **one** App Registration (`{Customer}-{ENV}`), **one** shared customer database, and **N** product App Services. Distinct from the Environment Label and from the [GitHub Environment](#github-environment) deploy binding. Topology: [cloud-architecture.md](../architecture/identity-and-authentication/cloud-architecture.md), [ADR-011](../decisions/ADR-011-app-registration-per-customer-environment.md).
+
+Related:
+- [environments.md](environments.md)
+- [Customer Onboarding Master Flow](../runbooks/customer-onboarding-master-flow.md)
+
+## GitHub Environment
+
+Product-repository deploy binding for GitHub Actions secrets and workflow `environment:` — exact names **`DEV`**, **`UAT`**, **`PRD`**. Spelling matches the Environment Label but the object is the repo’s credential/environment binding, not the Azure customer estate. SSOT: [hosted-deployment.md](hosted-deployment.md).
+
+Related:
+- [hosted-deployment.md](hosted-deployment.md)
+- [environments.md](environments.md)
+
 ## DEV Environment
 
-Hosted development environment (**DEV**). GitHub Environment name: `DEV`. Azure resource token: **`dev`** (not `dv`). For EAC today: App Service `breezeon-system-admin-eac-dev` + Azure SQL (`BreezeOnDV` is a legacy physical DB name), Managed Identity for the app. Local seed scripts must not be applied to DEV / UAT / PRD by default. Labels and suffixes: [naming.md](naming.md) § Environments.
+Hosted development **Environment Label** (**DEV**). Azure resource token: **`dev`** (not `dv`). GitHub Environment name for product deploy binding: `DEV`. Today’s physical inventory (`breezeon-system-admin-eac-dev`, `BreezeOnDV`, `RG-BREEZEON-DEV`) is **both** the internal BreezeOn-operated shared DEV **and** the first implemented [Customer-Environment](#customer-environment) — keep those concepts distinct in docs ([environments.md](environments.md) § Current DEV inventory). Local seed scripts must not be applied to DEV / UAT / PRD by default.
 
 Related:
 - [environments.md](environments.md)
 - [hosted-deployment.md](hosted-deployment.md)
-- [architecture/eac.md](../architecture/eac.md)
+- [architecture/applications/eac.md](../architecture/applications/eac.md)
 
 ## UAT Environment
 
-Hosted user-acceptance / pre-production label (**UAT**). GitHub Environment name: `UAT`. Azure resource token: **`uat`**. Reserved in seed/governance language; separate UAT Azure resources are not documented as implemented yet.
+Hosted user-acceptance / pre-production **Environment Label** (**UAT**). GitHub Environment name: `UAT`. Azure resource token: **`uat`**. Reserved in seed/governance language; separate UAT Azure resources / customer-environments are not documented as implemented yet.
 
 Related:
 - [environments.md](environments.md)
@@ -203,7 +242,7 @@ Related:
 
 ## PRD Environment
 
-Hosted production label (**PRD**). GitHub Environment name: `PRD`. Azure resource token: **`prd`**. Reserved in seed/governance language; separate PRD Azure resources are not documented as implemented yet.
+Hosted production **Environment Label** (**PRD**). GitHub Environment name: `PRD`. Azure resource token: **`prd`**. Reserved in seed/governance language; separate PRD Azure resources / customer-environments are not documented as implemented yet.
 
 Related:
 - [environments.md](environments.md)
@@ -211,7 +250,7 @@ Related:
 
 ## Local Environment
 
-Developer / agent sandbox on the workstation. For apps with SQL: SQL Server in Docker (`{Logical}Local`, e.g. `BreezeOnLocal`); apply `sql/current_model/` then `sql/seed/`. Default path for routine local runs — not Azure SQL.
+Developer / agent sandbox on the workstation (not an Environment Label for hosted Azure). For apps with SQL: SQL Server in Docker (`{Logical}Local`, e.g. `BreezeOnLocal`); apply `sql/current_model/` then `sql/seed/`. Default path for routine local runs — not Azure SQL.
 
 Related:
 - [environments.md](environments.md)
@@ -229,9 +268,51 @@ Related:
 
 Step in the organization principles chain: Objective → **Process** → Decision → Action → Outcome. Not a formal domain-modeling artifact in STANDARDS today.
 
+**Disambiguation:** This organization-principles “Process” is **not** a [Process Framework](#process-framework) process definition. In PF v1, the process definition is the Application itself (see [Process (Process Framework)](#process-process-framework)).
+
 Related:
 - [architecture/ecosystem.md](../architecture/ecosystem.md)
 - [domain-modeling.md](domain-modeling.md)
+
+## Process Framework
+
+EAC business capability for defining **one process definition per Application**: who acts ([Role](#role-process-framework)), what happens ([Step](#step-process-framework)), and how work moves ([Option](#option-process-framework) / [Route](#route-process-framework)). Not a platform workflow engine; runtime engine is Future Validation. SSOT: [architecture/process-framework/README.md](../architecture/process-framework/README.md).
+
+## Process (Process Framework)
+
+In Process Framework v1: the **Application** is the single process definition. There is no separate Process entity. Multiple business processes require multiple Applications. Distinct from organization-principles [Process](#process).
+
+## Step (Process Framework)
+
+Business activity or state in a Process Framework definition. Valid shapes: Actionable (Role + Options), Terminal (no Options), Informational (no Role). See [architecture/process-framework/README.md](../architecture/process-framework/README.md).
+
+## Option (Process Framework)
+
+Business decision or response on a Step; routes to a Next Step ([Route](#route-process-framework)).
+
+## Role (Process Framework)
+
+Business actor group — who is expected to act. **Not** an authorization permission grant. Soft-links to an App Config Security Group via Attribute Code.
+
+## Route (Process Framework)
+
+Directed edge from an Option to its Next Step (explicit routing).
+
+## Entry Step
+
+In Process Framework: the Step with the **lowest `sortOrder`**. Start of the authored flow.
+
+## Terminal Step
+
+Process Framework Step with **no outgoing Options** — an outcome / end state.
+
+## Informational Step
+
+Process Framework Step with **no Role** and no action required (state / notice).
+
+## Outcome (Process Framework)
+
+Reaching a [Terminal Step](#terminal-step) in a Process Framework definition (business end state).
 
 ## Row
 
@@ -271,7 +352,7 @@ A UI / query standard is fully implemented only when normative STANDARDS + AI gu
 
 ## System (SQL schema)
 
-EAC-owned SQL schema for platform administration / shared catalog tables (for example `System.EACApplications`). Other apps consume; they do not fork duplicate catalogs. See [database.md](database.md), [architecture/eac.md](../architecture/eac.md).
+EAC-owned SQL schema for platform administration / shared catalog tables (for example `System.EACApplications`). Other apps consume; they do not fork duplicate catalogs. See [database.md](database.md), [architecture/applications/eac.md](../architecture/applications/eac.md).
 
 ## UniqueCode
 

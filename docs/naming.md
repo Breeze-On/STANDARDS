@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Naming standards
 
 Owner: Documentation

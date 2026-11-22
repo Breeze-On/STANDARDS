@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Navigation and routes
 
 Owner: UI
@@ -11,6 +12,8 @@ Left navigation and URL path standards. Related: [shell.md](shell.md), [tokens.m
 **Required structure (top to bottom):** brand logos (expanded + minimized) → horizontal divider → nav pages with Fluent icons via `BoIcon` → fixed collapse control.
 
 **Fixed (not per-app):** Fluent icons through `BoIcon` for page items; logo divider; page hover (lift); selected fill using **`color-nav-selected`** (`#D8F3DC` Light tertiary — **same hex in Light and Dark**) with **black bold** text/icon; unselected **white** text/icon on **primary** nav panel; brand logo divider using **`color-nav-logo-divider`** (`#E8EDF1` Light card border — **same hex in both modes**); collapse control (transparent background, **white** icon, hover like unselected nav; `PanelRightExpand` when expanded, `PanelLeftExpand` when collapsed). Hover/selected patterns are **left-nav only**.
+
+**Fixed values (Tier 2):** *Default expanded width* `192px` (`BoThemeOptions.SizeNavExpanded` / `--bo-size-nav-expanded`); *collapsed icon rail* `56px` (`SizeNavCollapsed` / `--bo-size-nav-collapsed`); default logos ship in `_content/BreezeOn.UI/brand/`. Collapse label: none (no "Minimize" text). Page URL = page name (below).
 
 **Per-application customization:** logo image URLs (`LogoExpandedSrc` / `LogoMinimizedSrc`); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; optional `PrimaryColor` / `TertiaryColor` (soft surfaces / primary rail — not selected-nav fill).
 
@@ -37,7 +40,7 @@ Left navigation and URL path standards. Related: [shell.md](shell.md), [tokens.m
 
 Accent tokens: [tokens.md](../foundations/tokens.md). Shell regions: [shell.md](shell.md).
 
-Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Left navigation standard).
+**This document is the UX SSOT for left navigation** (structure, fixed behavior, per-app customization, branding, collapsed a11y). The SHARED-UI README no longer carries a left-nav section, and [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) holds only the API ([BoNavPane](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bonavpane) / [BoNavLink](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bonavlink) parameters). Left navigation is **not** a tab / panel-navigation control — see [selection-and-navigation.md](../controls/selection-and-navigation.md).
 
 ## Route / URL (hard standard)
 

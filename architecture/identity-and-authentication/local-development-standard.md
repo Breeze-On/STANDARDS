@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Local development standard — authentication
 
 Owner: Architecture
@@ -40,7 +41,7 @@ Add the corresponding pair for every other local product host (Gallery, future V
 5. Confirm `Identity.Users` upsert, `Identity.Tenants` discovery (without auto-enabling sync unless seeded), `LastLoginUtc`, and `Identity.UsersLogins` success row in local SQL.
 6. Sign out via profile menu → cookie cleared + Entra end-session → re-challenge on next request.
 
-Customer-environment (hosted) onboarding is **not** this document — use [customer-onboarding-authentication.md](customer-onboarding-authentication.md).
+Customer-environment (hosted) onboarding is **not** this document — use [customer-onboarding-authentication.md](../../runbooks/customer-onboarding-authentication.md).
 
 ### Directory sync (local)
 

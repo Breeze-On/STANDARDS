@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — App shell
 
 Owner: UI
@@ -17,7 +18,7 @@ App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.
 
 `BoShellCard` provides floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None. Token names: [tokens.md](../foundations/tokens.md).
 
-Authoritative product-facing detail also lives in the [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md).
+Public `Bo*` API / host-integration parameters: [SYSTEM-SHARED-UI `docs/public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md). UX/behavior SSOT remains this STANDARDS `docs/ui/` tree.
 
 ## Header actions (locked)
 
@@ -47,11 +48,11 @@ Theme mode / dual palettes: [tokens.md](../foundations/tokens.md). Locale prefs:
 
 Footer is **optional per page** via `BoAppShell.ShowFooter` (default `true`). When `ShowFooter` is true, use the fixed bottom footer shell region (`BoAppFooter` / `FooterContent`) — same floating-card chrome family as the header. When false, omit the footer region (gallery: Home and Error Message Page have no footer; Components / Theme keep it).
 
-**Error Message Pages** (Access Denied and future standardized error states) **must** use `ShowFooter = false` to keep focus on the error experience. Product hosts that render `BoAccessDenied` via `BoAuthorizeRouteView` should suppress the footer for that layout as well (EAC and other apps: Phase 2 — document now, wire later).
+**Error Message Pages** (Access Denied and future standardized error states) **must** use `ShowFooter = false` to keep focus on the error experience. Product hosts that render `BoAccessDenied` (via `BoAuthorizeRouteView` or in-page) **must** suppress the footer — EAC implements this as the product host reference ([page-development.md](../page-development.md#product-host-contract-required)).
 
 ## Header tabs (optional page sections)
 
-Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTabs` / `BoTab` and body `BoTabPanels` / `BoTabPanel`. Tabs are page sections, not left-nav routes. For large multi-section **workspace** navigation (App Config, onboarding, admin), use `BoPanelNavigation` + `BoKeepAlivePanels` instead — [panels.md](../layout/panels.md). Do not conflate header tabs with workspace panel navigation.
+Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTabs` / `BoTab` and body `BoTabPanels` / `BoTabPanel`. Tabs are page sections, not left-nav routes. **Choosing Tabs vs Toggle vs Panel Navigation, the selection authority model (`TabRequested` intent / `SelectedTabChanged`), and keyboard / ARIA:** [selection-and-navigation.md](../controls/selection-and-navigation.md). Parameters: [`public-component-api.md` § BoTabs](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#botabs). For large multi-section **workspace** navigation (App Config, onboarding, admin), use `BoPanelNavigation` + `BoKeepAlivePanels` instead — [panels.md](../layout/panels.md). Do not conflate header tabs with workspace panel navigation.
 
 **Section-hosted tabs:** When `BoTabs` is placed inside a `BoSectionMain` / `BoSectionSub` body (e.g. EAC Application Configuration area segmentation), Shared UI applies `margin-bottom: var(--bo-space-md)` (~16px) under `.bo-section .bo-tabs` so content is not flush with the strip. Header `TabsContent` is unaffected. Selection chrome: exactly one `bo-tab--selected` at a time — `BoTabs` notifies all registered `BoTab` instances on change (fixed cascading owner + click re-render only the clicked tab otherwise).
 
@@ -74,7 +75,7 @@ Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTab
 | `SelectedTab` | Bindable in-memory key (`@bind-SelectedTab`); defaults to first tab; persists across switches |
 | Validation fail chrome | After Submit attempt, tabs whose `TabKey` is in `FailedGroups` show `BoValidationFailBadge` in the **left icon slot** (replaces `IconContent` while failed). Clears live when that group no longer fails (`NotifyFieldChanged`) |
 
-Authoritative detail: [SYSTEM-SHARED-UI README](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README.md) (Header tabs standard).
+Authoritative detail: this section + [motion.md](../foundations/motion.md) § Selection travel; host script SSOT: [page-development.md](../page-development.md#host-script-inventory-ssot). Library inventory: [public-component-api.md](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md).
 
 ## Home / navigation hub (locked platform pattern)
 

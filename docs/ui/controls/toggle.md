@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Toggle (`BoToggle`)
 
 Owner: UI
@@ -5,6 +6,8 @@ Owner: UI
 Presentation-only segmented toggle for mutually exclusive options. Related: [forms.md](forms.md), [motion.md](../foundations/motion.md) (selection travel + easing family shared with reorder), [overview.md](../overview.md), [dirty-state.md](../patterns/dirty-state.md).
 
 **Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoToggle`, `BoToggleItem` (`BreezeOn.UI.Inputs`). Gallery: Components → Other → Toggle.
+
+**Choosing a control and the selection contract:** [selection-and-navigation.md](selection-and-navigation.md) — Tabs vs Toggle vs Panel Navigation vs Drop-Down decision matrix, Selection Authority Model (`ToggleRequested` is the platform intent pattern), keyboard / ARIA. **Complete parameter list:** [`public-component-api.md` § BoToggle](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#botoggle); the API table below is informative ([parameter-reference.md](parameter-reference.md)).
 
 ## Philosophy (locked)
 
@@ -62,11 +65,11 @@ Clicking the already-selected item is a no-op (no event).
 
 ## Host script
 
-Hosts that render `BoToggle` (or `BoTabs`) must load `_content/BreezeOn.UI/js/bo-sliding-selection.js` (see [page-development.md](../page-development.md) § Host integration). Without it, selected segments fall back to a static primary fill (no slide). Do **not** load a separate `bo-toggle.js`.
+Hosts that render `BoToggle` (or `BoTabs`) must load `_content/BreezeOn.UI/js/bo-sliding-selection.js` (see [page-development.md](../page-development.md) § Host-script inventory). Without it, selected segments fall back to a static primary fill (no slide). Do **not** load a separate `bo-toggle.js`.
 
 ## Intended use
 
 - Workspace mode switches (e.g. Values / Settings)
 - Compact exclusive choices where Tabs would over-communicate navigation
 
-Do **not** use for multi-page navigation (use `BoTabs` / `BoPanelNavigation`).
+Do **not** use for multi-page navigation (use `BoTabs` / `BoPanelNavigation`) — see the [decision matrix](selection-and-navigation.md#decision-matrix-tier-1-for-the-control-categories-tier-3-for-count-thresholds).

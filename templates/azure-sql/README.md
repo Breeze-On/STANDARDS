@@ -1,3 +1,4 @@
+<!-- Classification: TPL; Scope: platform -->
 # Template: grant App Service Managed Identity on Azure SQL
 
 Idempotent T-SQL: [`grant-app-service-mi.sql`](grant-app-service-mi.sql).
@@ -16,6 +17,8 @@ After creating a data-owning App Service with system-assigned Managed Identity a
 | App Service MI | `CREATE USER … FROM EXTERNAL PROVIDER`, then member of **`breezeon_app` only** |
 
 Additional App Services / slots share the same role; only create the user and add it to `breezeon_app`.
+
+**v1 honesty:** this is a **DDL-capable shared runtime identity**. Schema ownership (`Identity` / `Security` / `System`) is **convention-based** in STANDARDS — not enforced by per-schema SQL grants. Accepted platform posture for current maturity; more restrictive per-app / per-schema security is **Future Validation** ([database.md](../../docs/database.md) § Runtime database permissions).
 
 ## Steps
 

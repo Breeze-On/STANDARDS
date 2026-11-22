@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # Architecture Decision Records
 
 Owner: Architecture

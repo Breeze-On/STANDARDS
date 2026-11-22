@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Architecture Decision Records (ADR)
 
 Owner: Architecture

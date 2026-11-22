@@ -1,3 +1,4 @@
+<!-- Classification: AN; Scope: platform -->
 # BreezeOn AI — Standards summary
 
 Owner: Documentation
@@ -32,9 +33,13 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Stack | Follow implemented engineering conventions | [engineering.md](../engineering.md) |
 | Database | Schema scripts + product `docs/db-model.md`; seed with schema changes | [database.md](../database.md) |
 | Local SQL | Do not default Development to Azure SQL | [local-database.md](../local-database.md) |
-| Local scripts | Every runnable host: `scripts/dev-reset.ps1` only; secrets via `.env`; keep script + README aligned when local needs change | [local-development-scripts.md](../local-development-scripts.md) |
-| Dependencies / vulns | NuGet audit, Dependabot, severity policy, remediation order | [security-governance.md](../security-governance.md) |
+| Local scripts | Every runnable host: `scripts/dev-reset.ps1` only; script config via `.env`, OIDC via User Secrets; keep script + README aligned when local needs change | [local-development-scripts.md](../local-development-scripts.md), [application-model.md](../application-model.md) |
+| Dependencies / vulns | NuGet audit, Dependabot, severity policy, remediation order — Phase 1 gates | [security-governance.md](../security-governance.md) |
 | Placeholders | testing / observability / versioning / domain-modeling — **not formally defined**; do not invent | Placeholder files under `docs/` |
+| Review findings | Owner-oriented finding shape; severity; Closed reports → `docs/plans/implemented/` (H) | [review-governance.md](../review-governance.md) |
+| Runbooks / Templates | OPS procedures index; operator/agent/SQL/Dependabot starters | [runbooks/README.md](../../runbooks/README.md) · [templates/](../../templates/) |
+| Construct selection (**EAC-scoped**, not platform-promoted) | Variable vs DE vs PF vs BE vs SG; envelope `[]` hazards | [construct-selection.md](../../architecture/app-configuration/construct-selection.md) |
+| AI authoring contracts (**EAC-scoped**) | Field contracts + hazards for Variables / DE / PF | [variables](../../architecture/variables/ai-authoring-contract.md) · [data-entities](../../architecture/data-entities/ai-authoring-contract.md) · [process-framework](../../architecture/process-framework/ai-authoring-contract.md) |
 
 ---
 
@@ -42,11 +47,11 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 
 | Topic | Rule (short) | SSOT |
 | --- | --- | --- |
-| Agent role | Development assistant — not release manager / cloud / repo admin | [ai-agent-governance.md](../ai-agent-governance.md), [ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md) |
+| Agent role | Development assistant — not release manager / cloud / repo admin | [ai-agent-governance.md](ai-agent-governance.md), [ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md) |
 | Default deny | No push, PR lifecycle, CI/CD trigger, deploy, cloud, secrets, or repo-admin without **current-prompt** authorization | Same |
 | Stop condition | After local work, recommend next steps and return control to the human | Same |
 | Debugging | Local diagnostics only; debug does not authorize publish/deploy | Same |
-| Planning Agent | Plans only in `docs/plans/in-progress/`; **in-place delta updates only** (no V2/duplicates); never render plan bodies in chat; reply with path + Build Locally only | [planning-and-development-agents.md](../planning-and-development-agents.md) |
+| Planning Agent | Plans only in `docs/plans/in-progress/`; **in-place delta updates only** (no V2/duplicates); never render plan bodies in chat; reply with path + Build Locally only | [planning-and-development-agents.md](planning-and-development-agents.md) |
 | Development Agent | Build Locally from `docs/plans/in-progress/`; update permanent docs; knowledge transfer; move completed plans to `docs/plans/implemented/` | Same |
 | Precedence | Org planning/output rules supersede repo-specific plan chat behavior unless current prompt overrides | Same |
 
@@ -62,7 +67,7 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | ADRs for significant decisions; index Category / Impact Area | [adr.md](../adr.md) |
 | Shared vocabulary | [glossary.md](../glossary.md) |
 | AI onboarding path | [`docs/ai/README.md`](README.md) |
-| AI operational boundaries | [ai-agent-governance.md](../ai-agent-governance.md) |
+| AI operational boundaries | [ai-agent-governance.md](ai-agent-governance.md) |
 
 ---
 
@@ -88,6 +93,13 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Controls | Shipped `Bo*` field types only | [ui/controls/forms.md](../ui/controls/forms.md) |
 | Shuffle Card Grid | Grid-family specialized renderer (`BoShuffleCardGrid`); Gallery Grid Type; header-only required `*`; page-first; host-owned Add | [shuffle-card-grid.md](../ui/controls/shuffle-card-grid.md) |
 | Tokens / type | Semantic CSS vars; Calibri | [ui/foundations/tokens.md](../ui/foundations/tokens.md), [typography.md](../ui/foundations/typography.md) |
+| Authority split | UX = STANDARDS `docs/ui`; API = SHARED-UI `public-component-api.md`; never read Razor for API | [ui/overview.md](../ui/overview.md#authority-split-ux-vs-api), [parameter-reference.md](../ui/controls/parameter-reference.md) |
+| Normative tiers | Tier 1 LOCKED / 2 STANDARD / 3 GUIDANCE | [normative-tiers.md](../ui/foundations/normative-tiers.md) |
+| Selection / navigation | Tabs vs Toggle vs Panel Nav vs Drop-Down; intent-based authority; keyboard | [selection-and-navigation.md](../ui/controls/selection-and-navigation.md) |
+| Buttons / Actions | Hierarchy, Danger, `BoIconButton`, Save / Discard, Actions area | [button.md](../ui/controls/button.md), [actions-area.md](../ui/patterns/actions-area.md) |
+| Page shape / states | Archetypes; empty / loading / error / toast | [page-archetypes.md](../ui/patterns/page-archetypes.md), [page-states.md](../ui/patterns/page-states.md) |
+| Icons / a11y / motion | Icon sizes; WCAG 2.2 AA; approved motion tokens | [icons.md](../ui/foundations/icons.md), [accessibility.md](../ui/foundations/accessibility.md), [motion.md](../ui/foundations/motion.md) |
+| Gallery coverage | Pattern → Gallery path; DEV-002 gaps | [gallery-index.md](../ui/gallery-index.md) |
 
 ---
 

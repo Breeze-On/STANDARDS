@@ -1,14 +1,15 @@
+<!-- Classification: TPL; Scope: platform -->
 # Onboarding operator templates
 
 Owner: Operations
 
 Operator aids for the [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md). These are **not** product features and must not be applied as hosted product seed.
 
-Typical run order after cutover steps: schema (Step 1) → tenant discovery / first login (Checkpoint E / Step 6) → **admin + sync-enable bootstrap** (Checkpoint G / Step 7) → **Sync Now** when Graph = Yes (Checkpoint F / Step 8).
+Typical run order after cutover steps: schema (Step 1) → tenant discovery / first login (Checkpoint E / Step 6) → **admin bootstrap** (Checkpoint G / Step 7; does **not** enable sync) → **`IsSyncEnabled` + Sync Now** when Graph = Yes (Checkpoint F / Step 8 — sole sync-enablement control point).
 
 ## bootstrap-global-system-administrators.sql
 
-**Master Flow Step 7 / Workflow G apply script.** Edit `@TenantAdminPairs` (`{entra-tid}|{admin-upn}` semicolon-separated; **≥1 admin per tenant**), apply to the customer database, then proceed to Sync Now (Step 8) when Graph = Yes. Detail: [customer-onboarding-authorization.md](../../architecture/authorization/customer-onboarding-authorization.md).
+**Master Flow Step 7 / Workflow G apply script.** Edit `@TenantAdminPairs` (`{entra-tid}|{admin-upn}` semicolon-separated; **≥1 admin per tenant**), apply to the customer database, then proceed to Sync Now (Step 8) when Graph = Yes. Detail: [customer-onboarding-authorization.md](../../runbooks/customer-onboarding-authorization.md).
 
 Same script body is maintained for EAC local bootstrap at `SYSTEM-ADMIN-EAC/sql/seed/BootstrapGlobalSystemAdministrators.sql`.
 
@@ -28,7 +29,7 @@ Interpret failures using the Master Flow failure catalog. Do not enable `IsSyncE
 https://login.microsoftonline.com/{customer-tid}/v2.0/adminconsent?client_id={application-client-id}&redirect_uri={url-encoded-redirect-uri}&scope=.default
 ```
 
-Full guidance: Master Flow Step 5 and [customer-onboarding-authentication.md](../../architecture/identity-and-authentication/customer-onboarding-authentication.md) Workflow D.
+Full guidance: Master Flow Step 5 and [customer-onboarding-authentication.md](../../runbooks/customer-onboarding-authentication.md) Workflow D.
 
 ## App Service configuration checklist
 

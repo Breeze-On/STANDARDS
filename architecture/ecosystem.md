@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Architecture — Ecosystem
 
 Owner: Architecture
@@ -27,7 +28,7 @@ Multi-repo: one repository per application or shared concern. Unrelated products
 | [Breeze-On/STANDARDS](https://github.com/Breeze-On/STANDARDS) | Org standards (`docs/`) and current architecture (`architecture/`) |
 | [Breeze-On/.github](https://github.com/Breeze-On/.github) | Organization profile README (`profile/README.md`) |
 | [Breeze-On/SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) | EAC — administration application (DEV hosted on Azure App Service + Azure SQL) |
-| [Breeze-On/SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | Shared UI library (`BreezeOn.UI`) and local component gallery |
+| [Breeze-On/SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | Shared UI library (`BreezeOn.UI`): UI + auth + authorization frameworks; Identity/Security SQL definitions; local component gallery — **mandatory** for BreezeOn applications |
 
 ## Governance
 

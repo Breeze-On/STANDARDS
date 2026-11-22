@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Authentication standard
 
 Owner: Architecture
@@ -49,7 +50,7 @@ Clear the application cookie and redirect to Entra end-session (`signout-callbac
 
 ## Related
 
-- [Customer authentication onboarding](customer-onboarding-authentication.md)
+- [Customer authentication onboarding](../../runbooks/customer-onboarding-authentication.md)
 - [Session management standard](session-management-standard.md)
 - [Identity schema standard](identity-schema-standard.md)
 - [Directory synchronization standard](directory-synchronization-standard.md)

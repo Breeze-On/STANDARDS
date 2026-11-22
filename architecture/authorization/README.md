@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Architecture — Authorization
 
 Owner: Architecture
@@ -10,12 +11,12 @@ Authentication / Identity remain under [Identity & Authentication](../identity-a
 
 | Document | Covers |
 | --- | --- |
-| [Authorization standard](authorization-standard.md) | Groups model, `IBoAuthorizationService`, evaluation, page vs data boundary |
+| [Authorization standard](authorization-standard.md) | Groups model, dual evaluation paths, convention-based mutation APIs, named EAC exceptions, page vs data boundary |
 | [Security schema standard](security-schema-standard.md) | `Security.Groups` / `GroupsMembers` |
 | [Page security standard](page-security-standard.md) | Code-based page catalog; nav / home / route / Access Denied |
-| [EAC authorization matrix](eac-authorization-matrix.md) | Capability × persona for Applications, Business Entities, enablement, groups |
-| [Customer onboarding — authorization](customer-onboarding-authorization.md) | Workflow G bootstrap administrator (slice detail) |
-| [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) | End-to-end onboarding (Step 7 = Workflow G; Step 8 = optional Sync Now) |
+| [EAC authorization matrix](../applications/eac-authorization-matrix.md) | Capability × persona for Applications, Business Entities, enablement, groups |
+| [Customer onboarding — authorization](../../runbooks/customer-onboarding-authorization.md) | Workflow G bootstrap administrator (slice detail) |
+| [Customer Onboarding Master Flow](../../runbooks/customer-onboarding-master-flow.md) | End-to-end onboarding (Step 7 = Workflow G admins only; Step 8 / Workflow F = sole `IsSyncEnabled` + optional Sync Now) |
 
 Decisions: [ADR-014](../../decisions/ADR-014-platform-authorization.md) (platform authorization), [ADR-015](../../decisions/ADR-015-object-owned-administrator-groups.md) (object-owned administrator groups).
 

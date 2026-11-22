@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Hosted deployment
 
 Owner: Engineering
@@ -23,16 +24,18 @@ Current Reality Only: documents the **approved implementation in use today**. Fu
 - GitHub Environment naming and secrets used for deploy
 - Azure App Service configuration required for the current publish-profile path
 - Workflow file naming and trigger convention
-- Manual operator deploy steps (GitHub Actions)
+- **Full hosted deployment flow** — including **mandatory schema evolution** for data-owning apps, then publish, then smoke test
 - What product repos may document vs must link here
 
 **Out of scope**
 
 - Local development (`dev-reset.ps1`, Docker SQL) — see [local-development-scripts.md](local-development-scripts.md), [local-database.md](local-database.md)
-- Application data model and end-user Identity auth / Entra customer onboarding — see [Customer Onboarding Master Flow](../runbooks/customer-onboarding-master-flow.md), [customer-onboarding-authentication.md](../architecture/identity-and-authentication/customer-onboarding-authentication.md), and product `docs/` (this document is App Service / SQL MI deploy, not Entra cutover)
+- Application data model and end-user Identity auth / Entra customer onboarding — see [Customer Onboarding Master Flow](../runbooks/customer-onboarding-master-flow.md), [customer-onboarding-authentication.md](../runbooks/customer-onboarding-authentication.md), and product `docs/` (this document is App Service / SQL MI / schema-gate deploy, not Entra cutover)
 - UAT / PRD Azure resource inventories (those hosts are not documented as implemented yet) — naming pattern only
+- Multi-customer provisioning procedures — Master Flow / Identity architecture; do not invent here
+- Deep migration script authorship rules — [database.md](database.md) § Platform schema evolution; this document owns the **deploy-time gate**
 
-**In this document for data-owning apps:** App Service connection string name **`SQLAzureConnection`** and how to set it. SQL Managed Identity **grant script** lives under [`templates/azure-sql/`](../templates/azure-sql/); access model: [architecture/security.md](../architecture/security.md).
+**In this document for data-owning apps:** App Service connection string name **`SQLAzureConnection`** and how to set it; **schema evolution before publish**. SQL Managed Identity **grant script** lives under [`templates/azure-sql/`](../templates/azure-sql/); access model: [architecture/security.md](../architecture/security.md).
 
 ---
 
@@ -48,7 +51,15 @@ Current Reality Only: documents the **approved implementation in use today**. Fu
 
 ## Environment Standards
 
-Hosted environment **labels** and GitHub Environment **names** are **`DEV`**, **`UAT`**, and **`PRD`**. Meaning and seed rules: [environments.md](environments.md).
+Three layers — do **not** conflate ([environments.md](environments.md), [glossary.md](glossary.md)):
+
+| Layer | Role in deploy |
+| --- | --- |
+| **Environment Label** | Lifecycle stage: **`DEV`**, **`UAT`**, **`PRD`** (seed exclusion, Azure tokens) |
+| **Customer-Environment** | Isolation unit `{Customer}-{ENV}` (App Registration + customer DB + product hosts) |
+| **GitHub Environment** | Product-repo deploy binding / secrets: exact names **`DEV`**, **`UAT`**, **`PRD`** |
+
+Today’s physical DEV inventory is **both** the internal BreezeOn-operated shared DEV **and** the first implemented customer-environment — see [environments.md](environments.md) § Current DEV inventory. Do not invent multi-customer Azure inventories here.
 
 Azure **resource** environment tokens are always **`dev`**, **`uat`**, and **`prd`** (never `dv` / `pp` / `pr`). Naming table: [naming.md](naming.md) § Environments. List physical names as they exist in product or architecture docs; legacy names (for example database `BreezeOnDV`) are exceptions until renamed.
 
@@ -118,9 +129,17 @@ Repo `appsettings.json` keeps **`ConnectionStrings:SQLAzureConnection`** empty. 
 | 2 | App Service → **Settings → Environment variables → Connection strings** (or `az webapp config connection-string set`). |
 | 3 | Add name **`SQLAzureConnection`**, type **SQLAzure**, value: `Server=tcp:<sql-server>.database.windows.net,1433;Initial Catalog=<database>;Authentication=Active Directory Managed Identity;Encrypt=True;TrustServerCertificate=False;` |
 | 4 | Grant the App Service MI as a SQL user (name = App Service name) — template [`templates/azure-sql/grant-app-service-mi.sql`](../templates/azure-sql/grant-app-service-mi.sql). |
-| 5 | **MUST (SqlClient 7+) — not optional:** data-owning apps that use `Authentication=Active Directory Managed Identity` (or other Entra modes) **must** reference **`Microsoft.Data.SqlClient.Extensions.Azure`** at the same major/minor as `Microsoft.Data.SqlClient`, **and** register `ActiveDirectoryAuthenticationProvider` before any SQL open (including EF `Database.Migrate()`). Do not treat the connection string + MI SQL grant as complete without this package. Without it, startup throws `Cannot find an authentication provider for 'ActiveDirectoryManagedIdentity'` and the App Service container exits — on Free F1 that quickly becomes **QuotaExceeded**. |
+| 5 | **MUST (SqlClient 7+) — not optional for data-owning apps:** applications that own a business database and use `Authentication=Active Directory Managed Identity` (or other Entra modes) **must** reference **`Microsoft.Data.SqlClient.Extensions.Azure`** at the same major/minor as `Microsoft.Data.SqlClient`, **and** register `ActiveDirectoryAuthenticationProvider` before any SQL open (including EF `Database.Migrate()`). Do not treat the connection string + MI SQL grant as complete without this package. Without it, startup throws `Cannot find an authentication provider for 'ActiveDirectoryManagedIdentity'` and the App Service container exits — on Free F1 that quickly becomes **QuotaExceeded**. **Does not apply** to the SHARED-UI Gallery host (or other non–data-owning hosts). Supply-chain policy: [security-governance.md](security-governance.md). |
 
 Equivalent app setting name: `ConnectionStrings__SQLAzureConnection`. Apps without a business database skip this section. Full access model: [architecture/security.md](../architecture/security.md). Environment suffixes: [naming.md](naming.md).
+
+### Sibling SHARED-UI checkout (when used)
+
+When a product workflow checks out SYSTEM-SHARED-UI for `ProjectReference` restore/publish: the checkout tracks the **default branch** (accepted risk today). Do not invent package distribution. Pinning / versioned artifacts are Future Validation when app #2, production environments, or an independent SHARED-UI release cadence appear — see [security-governance.md § Sibling shared-library consumption](security-governance.md#sibling-shared-library-consumption-projectreference).
+
+### Dependency update waves
+
+Bump SYSTEM-SHARED-UI first, then consumer applications, in the **same upgrade wave** — [security-governance.md § Dependency update-wave convention](security-governance.md#dependency-update-wave-convention).
 
 ---
 
@@ -140,13 +159,41 @@ Product workflows may include app-specific steps (e.g. checkout a sibling Shared
 
 ## Manual Deployment Procedure
 
-After Azure App Service, GitHub Environment, secret, and workflow are configured:
+Schema evolution is a **mandatory** part of hosted deployment for **data-owning** apps. This document is the deployment SSOT — do not treat migrations as an optional side runbook disconnected from publish.
 
-1. Open the product repository on GitHub → **Actions**.
-2. Select **Deploy DEV** (workflow from `deploy-dev.yml`).
-3. **Run workflow** on the intended branch (usually `main`).
-4. Confirm the job uses Environment **`DEV`** and completes publish + deploy.
-5. Smoke-check the App Service public URL.
+### Rules (populated hosted databases)
+
+- **`sql/current_model/` is not used** to evolve a **populated** hosted / customer database.
+- Hosted environments use **`sql/migration_scripts/`** (SHARED-UI platform scripts + product scripts) recorded in **`dbo.BreezeOnSchemaVersions`**.
+- First-time **empty** catalog bootstrap (or full reset) follows Master Flow Step 1 / [database.md](database.md) — then this procedure for subsequent releases.
+
+Detail SSOT for migration authorship, ledger, and bootstrap-vs-migration doctrine: [database.md](database.md) § Platform schema evolution (hosted). First-time customer-environment catalog: [Customer Onboarding Master Flow](../runbooks/customer-onboarding-master-flow.md) Step 1.
+
+### Deployment flow (data-owning apps)
+
+After Azure App Service, GitHub Environment, secrets, MI SQL access, and workflow are configured:
+
+1. **Evaluate pending migrations** — compare SHARED-UI and product `migration_scripts/` to applied rows in `dbo.BreezeOnSchemaVersions` for the target customer database.
+2. **Apply required SHARED-UI migrations** — platform ledger / Identity / Security (and any other SHARED-UI-owned scripts) in documented ownership order: platform → Identity → Security (see [database.md](database.md)).
+3. **Apply required product migrations** — application schemas (e.g. EAC `System`) from the product repo `sql/migration_scripts/`.
+4. **Validate `BreezeOnSchemaVersions` state** — confirm expected scripts are recorded; do not publish if required migrations failed or remain pending.
+5. **Publish application** — GitHub Actions:
+   - Open the product repository → **Actions**.
+   - Select **Deploy DEV** (workflow from `deploy-dev.yml`; same pattern for UAT/PRD when those Environments exist).
+   - **Run workflow** on the intended branch (usually `main`).
+   - Confirm the job uses the matching GitHub Environment (e.g. **`DEV`**) and completes publish + deploy.
+6. **Execute smoke testing** — hit the App Service public URL; confirm sign-in / critical routes as applicable.
+
+### Ordered migration checklist (minimal)
+
+| Order | Apply from | Notes |
+| --- | --- | --- |
+| 1 | SHARED-UI `sql/platform/migration_scripts/` | Includes schema-version ledger when not yet present |
+| 2 | SHARED-UI `sql/identity/migration_scripts/` | Platform Identity |
+| 3 | SHARED-UI `sql/security/migration_scripts/` | Platform Security |
+| 4 | Product `sql/migration_scripts/` | Application schemas only |
+
+Apps **without** a business / customer database skip steps 1–4 and publish + smoke only (Gallery pattern).
 
 Failures such as **“No credentials found”** usually mean the workflow’s `environment:` name does not match a GitHub Environment that holds `AZURE_WEBAPP_PUBLISH_PROFILE`, or the secret is missing/empty.
 
@@ -195,6 +242,7 @@ Do not update only a product README or a one-off workflow comment and leave this
 
 - **Not current reality:** OIDC / federated credentials to Azure, deployment slots, container-based App Service, Front Door, auto-deploy on push. When adopted, update this file and then product workflows/metadata.
 - **UAT / PRD:** Same conventions (`deploy-uat.yml` / `deploy-prd.yml`, Environments `UAT` / `PRD`, same secret name per Environment) when those hosts exist.
+- **Publish credential scaling (Future Validation):** today’s model is one `AZURE_WEBAPP_PUBLISH_PROFILE` per GitHub Environment bound to a single hard-coded App Service per product repo. Do **not** choose OIDC vs parameterized secrets vs Environment naming changes until **customer-environment #2** exists **or** a **second App Service target** is required under the same Environment Label. Trigger an ADR / this-document update at that time.
 - Operational incident runbooks may appear under [`runbooks/`](../runbooks/README.md); they link here for the deploy standard rather than forking procedure.
 
 ---
@@ -203,10 +251,13 @@ Do not update only a product README or a one-off workflow comment and leave this
 
 | Document | Role |
 | --- | --- |
-| [environments.md](environments.md) | Environment meaning; seed exclusion; GitHub name spelling |
+| [environments.md](environments.md) | Environment Label / customer-environment / GitHub Environment; seed exclusion; current DEV inventory |
+| [glossary.md](glossary.md) | Term definitions for the three layers |
+| [database.md](database.md) | Hosted schema evolution; `BreezeOnSchemaVersions`; bootstrap vs migrations |
+| [Customer Onboarding Master Flow](../runbooks/customer-onboarding-master-flow.md) | First-time catalog bootstrap (Step 1) |
 | [application-model.md](application-model.md) | What a Breeze On app includes; deploy expectations point here |
 | [engineering.md](engineering.md) | Runtime stack (.NET 10) |
 | [architecture/landscape.md](../architecture/landscape.md) | Implemented hosted topology |
-| [architecture/eac.md](../architecture/eac.md) | EAC DEV App Service / SQL names |
+| [architecture/applications/eac.md](../architecture/applications/eac.md) | EAC DEV App Service / SQL names |
 | [ADR-002](../decisions/ADR-002-blazor-interactive-server.md) | Interactive Server hosting model |
 | [documentation.md](documentation.md) | Current-reality and same-change-set rules |

@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Validation Summary (live editors)
 
 Owner: UI
@@ -40,7 +41,7 @@ Gallery: Components Library → Other → Validation Summary.
 
 ### Placement
 
-Dedicated **`Errors` `BoSectionSub`** (via `BoValidationSummary`), rendered **below Actions** and **above** editable sections (`BoGrid` / `BoShuffleCardGrid` / Settings). In dialogs, place the summary in the dialog body above the editable grid — not a competing footer-only bullet list. Visible only when failures exist after a validation attempt; empty → not rendered.
+Dedicated **`Errors` `BoSectionSub`** (via `BoValidationSummary`), rendered **below the [Actions area](actions-area.md)** and **above** editable sections (`BoGrid` / `BoShuffleCardGrid` / Settings). In dialogs, place the summary in the dialog body above the editable grid — not a competing footer-only bullet list. Visible only when failures exist after a validation attempt; empty → not rendered.
 
 ### Chrome
 

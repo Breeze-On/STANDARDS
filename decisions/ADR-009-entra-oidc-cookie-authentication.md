@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-009: Entra OIDC cookie authentication (SHARED-UI)
 
 Status: Accepted

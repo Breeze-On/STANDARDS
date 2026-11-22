@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-018: Data Entity Values Excel portability
 
 Status: Accepted
@@ -28,7 +29,7 @@ The portable artifact is an official **`.xlsx`** workbook generated and read wit
 
 ### Scope: one Application Context, one language
 
-Export and import operate on the selected **Application Context** (`ApplicationEnabledGUID`). Row Description is the translation for **one language** only — the current UI language (`IBoLocaleService.FormatCulture.Name`). Other languages are neither exported nor changed by import.
+Export and import operate on the selected **Application Context** (`ApplicationEnabledGUID`). Row Description uses the authoritative metadata language **`en-CA`** (same rule as the Values grid — D11 / D13). Other languages are neither exported nor changed by import.
 
 ### Analyze, then confirm
 

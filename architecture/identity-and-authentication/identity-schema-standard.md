@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Identity schema standard
 
 Owner: Architecture

@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Cloud architecture — App Registration strategy
 
 Owner: Architecture
@@ -43,7 +44,7 @@ Distinguish **customer-environment registrations** from **internal BreezeOn regi
 
 | Concern | Practice |
 | --- | --- |
-| Secret blast radius | One client secret compromise affects all products in that customer-environment. Rotate once on the App Registration; update `AUTHENTICATION__CLIENTSECRET` on **every** product App Service (and local User Secrets when applicable). |
+| Secret blast radius | **Accepted concentration tradeoff:** one client secret (and shared Graph `User.Read.All`) compromise affects all products in that customer-environment — intentional for suite-wide shared identity, not an oversight. Rationale: one registration per customer-environment keeps redirect/consent/ops coherent across products ([ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md)). Rotate once on the App Registration; update `AUTHENTICATION__CLIENTSECRET` on **every** product App Service (and local User Secrets when applicable). |
 | Redirect URI sprawl | Every product base URL registers `{base}/signin-oidc` and `{base}/signout-callback-oidc` on the shared App Registration. Entra supports many redirect URIs on one registration. |
 | Logout coupling | Entra end-session for that client ends IdP SSO for all products on the registration. Other products’ application cookies remain until idle/absolute expiry or the next challenge. |
 | Cookie SSO | Shared ClientId enables Entra-level silent re-auth across products. It does **not** share `BreezeOn.Auth` across hosts. Cross-app application-cookie SSO remains [future roadmap](future-roadmap.md). |
@@ -53,7 +54,7 @@ Per-product App Registrations within a customer-environment are **not** the plat
 
 ## Related
 
-- [Customer authentication onboarding](customer-onboarding-authentication.md) (operator runbook)
+- [Customer authentication onboarding](../../runbooks/customer-onboarding-authentication.md) (operator runbook)
 - [Configuration standard](configuration-standard.md)
 - [Local development standard](local-development-standard.md)
 - [Session management standard](session-management-standard.md)

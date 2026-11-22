@@ -1,10 +1,13 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — UX conventions (cross-control)
 
 Owner: UI
 
 Organization standards that apply across `Bo*` controls and product pages. Control-specific details remain in [forms.md](../controls/forms.md), [grids.md](../controls/grids.md), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), [validation-summary.md](validation-summary.md), and [overlays.md](../shell/overlays.md). Related: [page-development.md](../page-development.md), [example-governance.md](../example-governance.md).
 
-Current reality only. Incomplete without Gallery working examples for library-scoped patterns ([example-governance.md](../example-governance.md)).
+Current reality only. Incomplete without Gallery working examples for library-scoped patterns ([example-governance.md](../example-governance.md); index: [gallery-index.md](../gallery-index.md)).
+
+**Rule strength:** headings marked "(locked)" here are **Tier 1 — LOCKED** for behavior rules and **Tier 2 — STANDARD** for any visual literal they quote (the token is the authority). Definitions, change control, and precedence: [normative-tiers.md](../foundations/normative-tiers.md). Chrome-level deviation is justified in the Compliance Review below; behavior deviation needs a [registered deviation](../../deviations/README.md).
 
 ## UX Standards Compliance Review (locked — before development)
 
@@ -24,12 +27,24 @@ Planning Agents must document a **UX Standards Compliance** subsection in every 
 | Disabled / read-only | Which path for each non-editable value |
 | Deviations | Any intentional deviation with justification |
 | Validation Summary Adoption Matrix | Required / Optional / Not Recommended for Save/Commit validation UX ([validation-summary.md](validation-summary.md)) |
+| Selection / navigation control | Which control and why, per the [decision matrix](../controls/selection-and-navigation.md); intent event used for guarded surfaces |
+| Buttons / Actions | Variants per [button.md](../controls/button.md); [Actions area](actions-area.md) when a working copy exists |
+| Page archetype / states | [page-archetypes.md](page-archetypes.md) shape chosen; [page-states.md](page-states.md) mechanisms |
 
 Development Agents must confirm an existing Shared UI component, Gallery example, or documented pattern does **not** already solve the problem before introducing custom UX. Undocumented deviations in a plan are refused at Build Locally. Multi-row Save validation must use `BoValidationSummary` when the Adoption Matrix says Required — do not invent host error lists.
 
 ## Button corner radius (locked)
 
-All `BoButton` variants and Shared UI action chrome use `--bo-button-radius` (aliases `--bo-radius-md`, default **8px** — less-rounded, **not** pill). Product apps must not fork `border-radius` on `.bo-button`. Header / section `BoTabs` also use `--bo-button-radius` (selected/hover/indicator). Circular non-button chrome (header Settings hit, theme switch, avatars) may keep `--bo-radius-full` / `50%`. SSOT: [forms.md § Button](../controls/forms.md#button-bobutton), [tokens.md § Corner radius](../foundations/tokens.md#corner-radius-tokens-current), [shell.md](../shell/shell.md) (header tabs).
+Single authority: [button.md § Corner radius](../controls/button.md#corner-radius--single-authority-tier-2) (behavior) and [tokens.md § Corner radius](../foundations/tokens.md#corner-radius-tokens-current) (value). All buttons and Shared UI action chrome — and header / section `BoTabs` — use `--bo-button-radius`; product apps must not fork `border-radius` on `.bo-button`. Not restated here.
+
+## Buttons, selection, and page states (cross-reference)
+
+| Concern | SSOT |
+| --- | --- |
+| Button hierarchy, ordering, destructive, icon-only, Save / Discard | [button.md](../controls/button.md) |
+| Tabs vs Toggle vs Panel Navigation vs Drop-Down; selection authority; keyboard | [selection-and-navigation.md](../controls/selection-and-navigation.md) |
+| Empty / loading / error / toast semantics | [page-states.md](page-states.md) |
+| Page / workspace Actions area | [actions-area.md](actions-area.md) |
 
 ## Column header alignment (locked)
 
@@ -110,5 +125,5 @@ Prefer `IBoPageFreezeService.RunAsync`. Do **not** invent page-local loading ove
 
 - Shared UI owns CSS/behavior defaults where possible.
 - [page-development.md](../page-development.md) checklist items cover these conventions.
-- Planning / Dev agent rules require the Compliance Review and reuse-first checks — [planning-and-development-agents.md](../../planning-and-development-agents.md).
+- Planning / Dev agent rules require the Compliance Review and reuse-first checks — [planning-and-development-agents.md](../../ai/planning-and-development-agents.md).
 - Human / agent PR gate: [ux-pr-review-checklist.md](../ux-pr-review-checklist.md).

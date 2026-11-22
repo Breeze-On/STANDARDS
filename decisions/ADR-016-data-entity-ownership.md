@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-016: Data Entity ownership and scope
 
 Status: Accepted
@@ -33,5 +34,5 @@ EAC exclusively owns Data Entity definitions, columns, rows, translations, valid
 
 - [ADR-006](ADR-006-application-context-ownership.md)
 - [architecture/data-entities/README.md](../architecture/data-entities/README.md)
-- [architecture/eac.md](../architecture/eac.md)
+- [architecture/applications/eac.md](../architecture/applications/eac.md)
 - EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md)

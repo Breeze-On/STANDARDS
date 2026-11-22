@@ -1,8 +1,51 @@
+<!-- Classification: AA; Scope: platform -->
 # Data portability
 
 Owner: Engineering
 
 Current conventions for portable payloads used to import and export application registry data, Application Configuration (JSON), and Data Entity Values (Excel) owned by EAC.
+
+## Kind catalog (semantic families)
+
+| Kind / path | Semantics | Empty / missing behavior | Primary surface | Hosted? |
+| --- | --- | --- | --- | --- |
+| `breezeon.eac.applications` | **Merge/upsert** by `uniqueCode` | Enablement is **additive only** (never disables contexts) | EAC Applications Import/Export | Yes |
+| `breezeon.eac.business-entity-types` | **Merge/upsert** by `code` | Absent codes in DB are **retained** (never synchronize-delete) | EAC Business Entity Types | Yes |
+| `breezeon.eac.business-entities` | **Merge/upsert** by `code` (parent-before-child) | Absent codes in DB are **retained** | EAC Business Entities | Yes |
+| `breezeon.eac.application-configuration` | **Synchronize** participating sections (create/update/**remove** by Code) | Optional keys **omit = skip**; present incl. `[]` = full section sync. **`dataEntities` always syncs** — missing key ≡ `[]` (see hazards) | EAC App Config Import/Export | Yes |
+| `breezeon.eac.security-group-members` (+ Excel) | Membership-only Add Missing / Overwrite | Groups omitted from file = untouched; Overwrite + `members: []` clears that group (JSON) | EAC SG Bulk Actions | Yes |
+| Data Entity Values Excel | Add/Update or Overwrite by row Code | Overwrite deletes rows absent from sheet for included entities | EAC Data Entities Excel Tool | Yes |
+| Translations Excel | Catalog dual-path with JSON language maps | See path-by-kind matrix below / Translations section | EAC Translations | Yes |
+| `breezeon.eac.data-entity-values` (local seed JSON) | Synchronize-by-Code at **local Docker seed** only | N/A as product import/export | Seed tooling only | **Never hosted** |
+
+**`schemaVersion` typing (do not unify without a breaking bump):** Applications / BE Types / BE / SG members use string **`"1.0"`**. Application Configuration uses integer **`2`** (import also accepts `1` legacy flat PF). AI authors must emit the type shown for that kind.
+
+### Promote sequence (operators / AI)
+
+1. Applications JSON (registry)  
+2. Business Entity Types + Business Entities JSON (hierarchy)  
+3. Application enablement (Applications JSON `BusinessEntitiesEnabled` — **additive**)  
+4. Application Configuration JSON (definitions + PF + Variables + SG defs + languages)  
+5. Data Entity Values Excel (rows) — definitions must already exist  
+6. Security Group Members JSON/Excel (memberships)  
+7. Translations Excel as needed (dual path with JSON maps for PF/Variable TEXT)
+
+Prefer **export-then-edit** for Application Configuration: export the full envelope, change only the intended section, leave other sections intact (especially `dataEntities`).
+
+### Envelope hazards (destructive shapes)
+
+| Shape | Effect |
+| --- | --- |
+| **Missing `dataEntities` key** | Coerced to **`[]`** → **full Data Entity synchronize** (remove Codes absent from file). **Not** omit=skip. Documented intentional behavior; reject-missing = Future Validation (schema bump only). |
+| `dataEntities: []` | Same as missing key — plans removal of all DE definitions (blocked when rows exist). |
+| `variables` present + `values: []` | Deletes **all** Variable values Application-wide |
+| `variables` / `securityGroups` / `processFramework` / `languages` **omitted** | Section **skipped** (target unchanged) |
+| `securityGroups: []` | Synchronize removes all App Config SG definitions for the Application (delete-with-config) |
+| PF owner present + `values: []` or `metadataColumns: []` | Synchronizes that half (can wipe); **absent** half under a present owner = skip that half only |
+| SG members Overwrite + `members: []` | Clears membership for that group (JSON only) |
+| Values Excel Overwrite | Deletes destination rows absent from included sheets |
+
+Authoring JSON locally is allowed. Executing hosted Import/Sync requires current-prompt authorization ([ai-agent-governance.md](ai/ai-agent-governance.md)). Construct-level pointer: [construct-selection.md](../architecture/app-configuration/construct-selection.md).
 
 ## Applications JSON (`breezeon.eac.applications`)
 
@@ -12,7 +55,7 @@ Human-readable, versionable envelope supporting **multiple applications** in one
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `schemaVersion` | Yes | Current: `"1.0"` |
+| `schemaVersion` | Yes | String **`"1.0"`** (not an integer — see Kind catalog) |
 | `kind` | Yes | `"breezeon.eac.applications"` |
 | `exportedAt` | No | ISO-8601 UTC on export; import ignores |
 | `applications` | Yes | Non-empty array |
@@ -25,7 +68,7 @@ Human-readable, versionable envelope supporting **multiple applications** in one
 | `code` | Yes | Short business code; uppercase A–Z, 0–9 |
 | `description` | Yes | Max 250 |
 | `metadata` | No | Max 250 |
-| `BusinessEntitiesEnabled` | No | Array of Business Entity **Code** values (not GUIDs). Portable Application Context links. Omitted when empty on export. |
+| `BusinessEntitiesEnabled` | No | **PascalCase** property name (not `businessEntitiesEnabled`). Array of Business Entity **Code** values (not GUIDs). Portable Application Context links. Omitted when empty on export. Unknown camelCase property names are ignored — enablements would silently not apply. |
 
 **Not accepted from files:** `ApplicationGUID`, `ApplicationEnabledGUID`, `BusinessEntityGUID`, surrogate ids, audit columns (`CreatedBy`, `CreatedDate`, `LastUpdatedBy`, `LastUpdatedDate`). Those are server-owned.
 
@@ -60,7 +103,8 @@ Upsert rules:
 - Match by **current** `UniqueCode` in the database.
 - Found → **update** `Code`, `Description`, `Metadata` (preserve `ApplicationGUID` and `GroupGUID`; never reassign the administrator group).
 - Not found → **create** with a new `ApplicationGUID` and provision/reuse administrator group `APP_{UniqueCode}` via the same central provisioner as UI create (reuse existing group by Code without renaming, description overwrite, membership, or metadata changes; no auto-members).
-- After application upsert: for each Code in `BusinessEntitiesEnabled`, resolve to `BusinessEntityGUID`, create missing Application Contexts; ignore Codes already enabled; skip Codes that do not resolve to an existing Business Entity. Exclusivity `(ApplicationGUID, BusinessEntityGUID)` still applies. Application Enabled mutations on import are **Global System Administrator** only ([eac-authorization-matrix.md](../architecture/authorization/eac-authorization-matrix.md)).
+- After application upsert: for each Code in `BusinessEntitiesEnabled`, resolve to `BusinessEntityGUID`, create missing Application Contexts; ignore Codes already enabled; skip Codes that do not resolve to an existing Business Entity. Exclusivity `(ApplicationGUID, BusinessEntityGUID)` still applies. Application Enabled mutations on import are **Global System Administrator** only ([eac-authorization-matrix.md](../architecture/applications/eac-authorization-matrix.md)).
+- **Enablement is additive only.** Omitting `BusinessEntitiesEnabled`, or supplying `[]` / null, does **not** disable existing Application Contexts. Disabling a context is an interactive/admin action — not portable via this kind.
 
 There is **no** rename detection, alias lookup, or historical UniqueCode mapping.
 
@@ -83,7 +127,7 @@ Renaming a `UniqueCode` in the UI is an administrative action. Re-importing a fi
 
 ### Related
 
-- EAC architecture: [architecture/eac.md](../architecture/eac.md)
+- EAC architecture: [architecture/applications/eac.md](../architecture/applications/eac.md)
 - Audit columns (not in portability files): [database.md](database.md) § Mandatory audit columns
 - Registry identity: [database.md](database.md) § Application registry identity columns
 
@@ -91,13 +135,13 @@ Renaming a `UniqueCode` in the UI is an administrative action. Re-importing a fi
 
 ## Business entity types JSON (`breezeon.eac.business-entity-types`)
 
-Envelope for EAC Entity Types import/export. Business key is `code`. Upsert by current `code`. GUIDs and audit columns are server-owned.
+Envelope for EAC Entity Types import/export. Business key is `code`. Upsert by current `code`. GUIDs and audit columns are server-owned. **Merge/upsert only — never synchronize-delete** (absent target codes are retained).
 
 ### Envelope
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `schemaVersion` | Yes | `"1.0"` |
+| `schemaVersion` | Yes | String **`"1.0"`** |
 | `kind` | Yes | `"breezeon.eac.business-entity-types"` |
 | `exportedAt` | No | ISO-8601 UTC on export; import ignores |
 | `types` | Yes | Non-empty array |
@@ -134,7 +178,7 @@ Envelope for EAC Business Hierarchy import/export. Business keys only (`code`, `
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `schemaVersion` | Yes | `"1.0"` |
+| `schemaVersion` | Yes | String **`"1.0"`** |
 | `kind` | Yes | `"breezeon.eac.business-entities"` |
 | `exportedAt` | No | ISO-8601 UTC on export; import ignores |
 | `entities` | Yes | Non-empty array |
@@ -180,6 +224,7 @@ Envelope for EAC Business Hierarchy import/export. Business keys only (`code`, `
 - Create provisions/reuses `BUSENT_{Code}` via the same central provisioner as UI create (reuse by Code without mutation; no auto-members).
 - Validate then apply in **parent-before-child** order.
 - Reject unknown `businessEntityTypeCode`, missing `parentCode`, in-file duplicate codes, and circular relationships.
+- **Merge/upsert only — never synchronize-delete.** Codes present only in the target database are **retained**. This is not Application Configuration synchronize.
 - Fail-fast: any failure aborts the entire import and **rolls back** all rows from that import (single database transaction). Import is **Global System Administrator** only.
 - Max size: `BusinessEntitiesImport:MaxFileSizeMb` (default **10**); in-memory only.
 
@@ -192,7 +237,7 @@ Envelope for EAC Business Hierarchy import/export. Business keys only (`code`, `
 
 ## Application Configuration JSON (`breezeon.eac.application-configuration`)
 
-Environment **deployment** envelope for Application Configuration State. Import **synchronizes** the target Application to match the file (create / update / **remove** by Code). This is **not** merge/upsert and **not** backup/restore. Semantic SSOT: [architecture/app-configuration/application-configuration-deployment.md](../architecture/app-configuration/application-configuration-deployment.md) · [ADR-017](../decisions/ADR-017-application-configuration-deployment.md).
+Environment **deployment** envelope for Application Configuration State. Import **synchronizes** participating sections of the target Application to match the file (create / update / **remove** by Code). This is **not** merge/upsert and **not** backup/restore. Synchronize is **section-participation based**: omitted optional keys are skipped; a present section synchronizes completely (“no partial imports” = no subset-of-Codes inside a present section). Semantic SSOT: [architecture/app-configuration/application-configuration-deployment.md](../architecture/app-configuration/application-configuration-deployment.md) · [ADR-017](../decisions/ADR-017-application-configuration-deployment.md).
 
 Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 
@@ -200,19 +245,28 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `schemaVersion` | Yes | Integer. **Current export: `2`**. Import accepts `1` (legacy flat Process Framework) and `2` (nested `processFramework`). |
+| `schemaVersion` | Yes | **Integer** (not a string). **Current export: `2`**. Import accepts `1` (legacy flat Process Framework) and `2` (nested `processFramework`). |
 | `kind` | Yes | `"breezeon.eac.application-configuration"` |
 | `exportedAt` | No | ISO-8601 UTC on export; import ignores |
 | `applicationUniqueCode` | Yes | Match key = Application `UniqueCode` (must equal selected Application on import) |
 | `applicationCode` | Export: yes; Import: when present | Short Application `Code`; when present on import must match selected Application |
-| `dataEntities` | Yes | Array (may be empty). Synchronized |
+| `dataEntities` | Yes | Array (may be empty). **Always synchronized.** Missing property ≡ `[]` ≡ full DE sync (remove Codes absent from file) — **not** omit=skip. Prefer export-then-edit; never omit this key for “PF-only” files. |
 | `securityGroups` | Export: yes; Import: when present | Array (may be empty). When **present** (including `[]`), synchronized for the Application. When **omitted**, security-group sync is skipped (backward compatible). |
 | `variables` | Export: yes; Import: when present | Object with required `definitions` + `values` arrays (may be empty). When **present**, both are synchronized. When **omitted**, Variables sync is skipped. See below. |
 | `processFramework` | Export: yes; Import: when present | Object. Canonical Process Framework node (schemaVersion **2**). Absent = skip all Process Framework sync. See below. |
+| `languages` | Export: yes; Import: when present | Array of `{ businessEntityCode, languageCode, sortOrder }`. When **present**, enabled languages are **replaced** per listed Application Context (`en-CA` required). When **omitted**, language enablement is skipped. |
 
 **Legacy flat keys (schemaVersion 1 import only):** `processMetadataColumns`, `roles`, `steps`, `options` at the root. Dual-read normalizes them into the nested ownership model. **Reject** files that mix flat Process Framework keys with `processFramework`. Export never writes the flat keys.
 
-**Not accepted from files:** Application/Data Entity/Column/SecurityGroup/Variable/Role/Step/Option/metadata-column GUIDs, surrogate ids, audit columns, Data Entity rows, Data Entity translations, group members. (Process Framework metadata values **are** carried, inside each Role / Step / Option `metadata` object under `values`. Variable **values** are carried under `variables.values`.)
+### Included / Excluded / Separate deployment
+
+| Classification | Contents |
+| --- | --- |
+| **Included** (when section participates) | Data Entity configuration (definitions + columns); Process Framework Roles / Steps / Options + metadata columns + **metadata values** (incl. TEXT language maps); Variables **definitions** + **values** (incl. TEXT language maps); Security Groups **definitions** (portable Name; no memberships) |
+| **Excluded** from this kind | Data Entity **row** data; Security Group **memberships**; environment GUIDs; runtime / audit |
+| **Separate path** | Translations Excel (DE row Descriptions Excel-only; PF labels / PF TEXT metadata / Variable TEXT also editable via Excel — dual path with JSON language maps). SG members: `breezeon.eac.security-group-members`. DE Values Excel: ADR-018. |
+
+**Not accepted from files:** Application/Data Entity/Column/SecurityGroup/Variable/Role/Step/Option/metadata-column GUIDs, surrogate ids, audit columns, Data Entity rows, Data Entity row translations (Excel), group members.
 
 **Legacy reject:** non-empty `systemConfiguration` — still rejected if present with items (replaced by `variables`; never shipped with rows).
 
@@ -240,12 +294,13 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 | Field | Required | Notes |
 | --- | --- | --- |
 | `businessEntityCode` | Yes | Must be enabled for the Application; resolves to Application Context |
-| `attributeCode` | Yes | `[A-Z0-9_]+`; unique within that Business Entity for the Application |
+| `attributeCode` | Yes | `[A-Z0-9_]+`; unique within that Business Entity for the Application; **mutable** (portable rename = remove+create match-key change) |
+| `name` | No (export always; import optional) | Portable `Security.Groups.Name` (max 600). Export always emits. Import/sync **preserves** curated Name when present; when omitted on create, defaults to `{ApplicationCode} / {BusinessEntityCode} — {AttributeCode}`. Sync does **not** overwrite an existing Name with the formula when `name` is supplied. |
 | `description` | Yes | Stored on `Security.Groups.Description` (max 600) |
 | `metadata` | No | Stored on `EACSecurityGroups.Metadata` (max 250). **Export always emits** the property (`null` when unset) so round-trip matches import. |
 | `sortOrder` | Yes | Positive integer; unique within the same `businessEntityCode` |
 
-Creates `Security.Groups` with Code `APPSG_{UniqueCode}_{BusinessEntityCode}_{AttributeCode}`, Name `{ApplicationCode} / {BusinessEntityCode} — {AttributeCode}`, **`IsManuallyCreated = 1`**. Memberships are never imported. Removing a portable item deletes the EAC configuration row only (not the Security group).
+Creates `Security.Groups` with Code `APPSG_{UniqueCode}_{BusinessEntityCode}_{AttributeCode}` (**`IsManuallyCreated = 0`**, configuration-owned). **Code length budget** ≤ 700 (Save and Synchronize hard-fail; no silent truncation). Memberships are never imported via this kind. **Delete-with-config:** removing a portable item deletes the EAC configuration row **and** the linked APPSG `Security.Groups` row + memberships.
 
 ### Variables
 
@@ -293,7 +348,9 @@ processFramework.roles.values            → Role rows (Values)
 | --- | --- |
 | `processFramework` absent | Skip all Process Framework sync |
 | Owner (`steps` / `options` / `roles`) absent | Skip that owner (both Settings and Values) |
-| `metadataColumns` / `values` absent under a present owner | Skip that half only; present including `[]` = synchronize |
+| `metadataColumns` / `values` absent under a present owner | Skip that half only; present including `[]` = synchronize (**can wipe** that half) |
+
+**Half-skip hazard:** Under a present owner, do **not** copy example `"values": []` / `"metadataColumns": []` into production promotes unless wipe is intended. Prefer export-then-edit of the full tree. See [Envelope hazards](#envelope-hazards-destructive-shapes).
 
 Export always writes the full `processFramework` tree (all three owners, both arrays).
 
@@ -359,36 +416,30 @@ Root keys `processMetadataColumns`, `roles`, `steps`, `options` (present/omit se
   "processFramework": {
     "steps": {
       "metadataColumns": [
-        {
-          "code": "step-description",
-          "description": "Description",
-          "dataType": "TEXT",
-          "isRequired": false,
-          "displayOrder": 1
-        }
+        { "code": "name", "description": "Display name", "dataType": "TEXT", "isRequired": true, "displayOrder": 1 },
+        { "code": "description", "description": "What happens", "dataType": "TEXT", "isRequired": false, "displayOrder": 2 }
       ],
       "values": []
     },
     "options": {
-      "metadataColumns": [],
+      "metadataColumns": [
+        { "code": "name", "description": "Display name", "dataType": "TEXT", "isRequired": true, "displayOrder": 1 },
+        { "code": "description", "description": "Decision meaning", "dataType": "TEXT", "isRequired": false, "displayOrder": 2 }
+      ],
       "values": []
     },
     "roles": {
       "metadataColumns": [
-        {
-          "code": "role-name",
-          "description": "Name",
-          "dataType": "TEXT",
-          "isRequired": true,
-          "displayOrder": 1
-        }
+        { "code": "name", "description": "Display name", "dataType": "TEXT", "isRequired": true, "displayOrder": 1 },
+        { "code": "description", "description": "Purpose", "dataType": "TEXT", "isRequired": false, "displayOrder": 2 }
       ],
       "values": [
         {
-          "code": "role0",
+          "code": "initiator",
           "type": "Group",
           "sortOrder": 1,
-          "metadata": { "role-name": "Initiator" }
+          "securityGroupAttributeCode": "INITIATE",
+          "metadata": { "name": { "en-CA": "Initiator" }, "description": { "en-CA": "Submits requests" } }
         }
       ]
     }
@@ -397,6 +448,7 @@ Root keys `processMetadataColumns`, `roles`, `steps`, `options` (present/omit se
     {
       "businessEntityCode": "FIN",
       "attributeCode": "INITIATE",
+      "name": "EAC / FIN — INITIATE",
       "description": "Can initiate requests.",
       "metadata": null,
       "sortOrder": 1
@@ -410,7 +462,7 @@ Root keys `processMetadataColumns`, `roles`, `steps`, `options` (present/omit se
 - Validate selected Application `UniqueCode` == `applicationUniqueCode` (blocking).
 - Match Data Entities and Columns by **current** `Code` within the Application.
 - Create missing Codes; update matched Codes (description, sortOrder); **remove** Codes in the target that are absent from the file.
-- When `securityGroups` is present: match by `businessEntityCode` + `attributeCode`; create missing (including `Security.Groups`); update matched; remove absent EAC rows (not Security groups/memberships). `businessEntityCode` must be enabled for the Application.
+- When `securityGroups` is present: match by `businessEntityCode` + `attributeCode`; create missing (including configuration-owned `Security.Groups`); update matched (including portable `name`); remove absent rows with **delete-with-config** (EAC + APPSG members + groups). `businessEntityCode` must be enabled for the Application. Code length > 700 hard-fails.
 - When Process Framework sections are present (nested or legacy flat): match metadata columns by `(code, owner)`; roles/steps by `code`; options by `stepCode` + `code`; sync order metadata columns → roles → steps → options, removals in reverse. Removing a metadata column is always allowed (cascades translations → values → column); removing a Step / Role is blocked while a remaining Option / Step references it; a Data Entity referenced by a `DDL` column cannot be removed.
 - No rename detection.
 - Removing a Data Entity is blocked when any rows exist in any Application Context.
@@ -438,7 +490,9 @@ Distinct from other Data Entity payloads:
 | --- | --- | --- |
 | Application Configuration JSON (`breezeon.eac.application-configuration`) | Data Entity definitions + columns | Synchronize (create / update / remove by Code) — [above](#application-configuration-json-breezeoneacapplication-configuration) |
 | **Values Excel** (`.xlsx`, this section) | Rows, row Description (one language), custom-column values | Analyze → confirm; Add/Update or Overwrite by row Code |
-| Local Values JSON (`breezeon.eac.data-entity-values`) | Rows for local Docker seed | Synchronize-by-Code at seed time; **local only**, never hosted; not an import/export feature |
+| Local Values JSON (`breezeon.eac.data-entity-values`) | Rows for local Docker seed | Synchronize-by-Code at seed time; **local only**, **never hosted**; **not** a product import/export feature |
+
+**Never hosted:** Do not attempt to import `breezeon.eac.data-entity-values` into DEV/UAT/PRD. Hosted Values travel via Excel only.
 
 Synchronize definitions (Application Configuration) **before** importing Values into a target environment.
 
@@ -568,7 +622,25 @@ Flow: upload → parse (JSON or Excel) → shared document → validate → bulk
 
 ## Translations Excel (EAC-owned catalog)
 
-Bulk maintenance for **EAC-owned** translations only (Data Entity row Description, Process Framework column labels + TEXT metadata, Variable TEXT values). Surfaced by Application Configuration → **Translations** → **Bulk Actions**. Implementation: **SYSTEM-ADMIN-EAC** (`Components/Translations/Excel`, ClosedXML). **Not** part of Application Configuration JSON (`breezeon.eac.application-configuration`); PF/Variable language maps in that envelope remain a separate dual path.
+Bulk maintenance for **EAC-owned** translations only. Surfaced by Application Configuration → **Translations** → **Bulk Actions**. Implementation: **SYSTEM-ADMIN-EAC** (`Components/Translations/Excel`, ClosedXML).
+
+| Kind | App Config JSON | Translations Excel |
+| --- | --- | --- |
+| Data Entity row Description | No (excluded) | Yes |
+| Process Framework column labels | Yes (`description` language map when PF participates) | Yes |
+| Process Framework TEXT metadata | Yes (in Role/Step/Option `metadata` when PF participates) | Yes |
+| Variable TEXT values | Yes (in `variables.values` when Variables participates) | Yes |
+| Enabled languages | Yes (`languages` when section participates — replace) | No (Settings UI / portable JSON) |
+
+**Authoritative language:** `en-CA` source required; clearing `en-CA` blocked. Status in Excel/grid: **Translated** / **Missing** only.
+
+**Excel concurrency:** **Last Writer Wins**. No export baseline token. Import Summary warns that a stale workbook can overwrite newer values (including `en-CA`). Default-language column remains writable.
+
+**JSON promote:** Replace (not merge). When Variables / Process Framework / Languages participate, target-only translation maps or languages for those sections are removed. Import Summary warns about replacement semantics.
+
+**Scale:** Intended for PF, Variables, and moderate DE volumes; very large DE catalogs are Future Validation.
+
+**SourceKey** natural-key cross-environment import: Future Validation (environment-local GUIDs today).
 
 **Ownership boundary:** business-application string catalogs and EAC UI `.resx` chrome are out of scope.
 

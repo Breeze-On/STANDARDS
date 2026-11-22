@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # UI standards — overview
 
 Owner: UI
@@ -5,6 +6,34 @@ Owner: UI
 Entry point for Breeze On shared UI conventions. Standards are organized by **responsibility** under `docs/ui/` so the tree can grow without a single ever-expanding document.
 
 Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BreezeOn.UI`). Decision record: [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md).
+
+## Authority split (UX vs API)
+
+Two documents, two jobs. Each fact has **one** home.
+
+| Authority | Owns | Does **not** own |
+| --- | --- | --- |
+| **STANDARDS `docs/ui/`** (this tree) | UX, behavior, visual design, decision matrices ("which control?"), accessibility, page composition, tokens | The complete parameter / event / type list |
+| **SHARED-UI [`docs/public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md)** | **API surface only**: component inventory, every `[Parameter]` (name, type, default), events, enums, services, public methods, host assets | Any UX, behavior, visual, or accessibility rule |
+
+Consequences:
+
+1. **Agents must not inspect Razor / C# source** to learn the public API — the parameter model is generated or CI-validated against SHARED-UI source ([controls/parameter-reference.md](controls/parameter-reference.md)).
+2. STANDARDS control docs explain *why and how* a parameter is used; for completeness they **defer** to `public-component-api.md`.
+3. The SHARED-UI README holds neither. Left navigation UX is [shell/navigation.md](shell/navigation.md).
+4. Conflicts are resolved by [Normative tiers § Precedence](foundations/normative-tiers.md#precedence).
+
+## Normative tiers
+
+Every rule in `docs/ui/` binds at one of three tiers — full definition, change control, and precedence in [foundations/normative-tiers.md](foundations/normative-tiers.md):
+
+| Tier | Name | Expectation | Compliance | Change |
+| --- | --- | --- | --- | --- |
+| **1** | **LOCKED** | Behavior / contract rules (selection authority, keyboard, validation flow, host contract, `Bo*`-only) | Mandatory; PR blocker | STANDARDS + owner approval + same-change-set API / Gallery / AI index; deviation only via [registered deviation](../deviations/README.md) |
+| **2** | **STANDARD** | Org-default visual / structural conventions via tokens | Required by default; justified deviation in the UX Compliance Review | STANDARDS review + Gallery update |
+| **3** | **GUIDANCE** | Recommendations, rationale, examples | Advisory | Edit freely |
+
+Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "org standard" → Tier 2; "should" / "prefer" → Tier 3; a "locked" visual literal is Tier 2 with the **token** as authority.
 
 ## UI documentation index
 
@@ -14,10 +43,14 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | [example-governance.md](example-governance.md) | Example Governance — normative + AI guidance + Gallery working example DoD |
 | [page-development.md](page-development.md) | Page-construction checklist for humans and AI agents (links to detailed standards) |
 | [ux-pr-review-checklist.md](ux-pr-review-checklist.md) | Short UX PR review checklist (Compliance Review, freeze, placeholders, truncation) |
+| [gallery-index.md](gallery-index.md) | Pattern → Gallery path index; patterns without a demo (DEV-002) |
 | **Foundations** | |
-| [foundations/tokens.md](foundations/tokens.md) | Design / shell tokens |
-| [foundations/motion.md](foundations/motion.md) | Platform motion — reorder FLIP / settle tokens; reduced-motion; anti-patterns |
-| [foundations/typography.md](foundations/typography.md) | Default typeface |
+| [foundations/normative-tiers.md](foundations/normative-tiers.md) | Tier 1 LOCKED / Tier 2 STANDARD / Tier 3 GUIDANCE — compliance, change control, precedence |
+| [foundations/tokens.md](foundations/tokens.md) | Design / shell tokens; spacing scale; corner radius; motion token index |
+| [foundations/motion.md](foundations/motion.md) | Platform motion — approved duration tokens, reorder FLIP / settle, selection travel; reduced-motion; anti-patterns |
+| [foundations/typography.md](foundations/typography.md) | Default typeface and type scale |
+| [foundations/icons.md](foundations/icons.md) | Icon technology and approved sizes (16 / 20 / 24 / 32 / 48) |
+| [foundations/accessibility.md](foundations/accessibility.md) | WCAG 2.2 AA target; keyboard / focus / contrast baseline |
 | [foundations/i18n.md](foundations/i18n.md) | Culture / timezone cookies; per-app resource libraries; no hardcoded labels |
 | **Shell** | |
 | [shell/shell.md](shell/shell.md) | App shell chrome, footer, header tabs |
@@ -32,7 +65,13 @@ Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.
 | **Controls** | |
 | [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, People Picker, Date Field, and form controls |
 | [controls/toggle.md](controls/toggle.md) | Segmented Toggle (`BoToggle`) — presentation-only; host-owned selection |
-| [patterns/dirty-state.md](patterns/dirty-state.md) | Centralized unsaved-changes gate (Save / Discard / Cancel) |
+| [controls/selection-and-navigation.md](controls/selection-and-navigation.md) | Tabs vs Toggle vs Panel Navigation vs Drop-Down decision matrix; Selection Authority Model (intent-based); keyboard / ARIA |
+| [controls/button.md](controls/button.md) | Buttons — hierarchy (Primary / Secondary / Danger / Stealth / Icon-only), ordering, destructive guidance, Save / Discard, radius authority |
+| [controls/parameter-reference.md](controls/parameter-reference.md) | Parameter-model authority: complete API in `public-component-api.md`; component → API section map |
+| [patterns/actions-area.md](patterns/actions-area.md) | Definition of the page / workspace **Actions** area (Save / Discard) |
+| [patterns/page-states.md](patterns/page-states.md) | Empty / loading / error mechanisms; toast variant semantics |
+| [patterns/page-archetypes.md](patterns/page-archetypes.md) | Home, List, Detail / Edit, Workspace, Error, Access Denied |
+| [patterns/dirty-state.md](patterns/dirty-state.md) | Centralized unsaved-changes gate (Save / Discard / Cancel) — platform concept, EAC reference implementation |
 | [patterns/import-summary.md](patterns/import-summary.md) | Import Summary review dialog (`BoImportSummaryDialog`) — Changes Summary + Errors/Warnings; explicit confirm |
 | [patterns/validation-summary.md](patterns/validation-summary.md) | Validation Summary (`BoValidationSummary`) — live-editor collapsible errors above grids/Shuffle; Adoption Matrix; [ADR-021](../../decisions/ADR-021-validation-summary-experience.md) |
 | [patterns/ux-conventions.md](patterns/ux-conventions.md) | Cross-control UX conventions — placeholders, truncation, disabled/read-only, navigation state, Page Freeze summary, UX Compliance Review |
@@ -50,7 +89,7 @@ Former single file [`docs/ui-components.md`](../ui-components.md) redirects here
 | Package / project | `BreezeOn.UI` (`src/BreezeOn.UI`) |
 | Approach | Option B+: BreezeOn public API on top of Fluent UI Blazor (Fluent is internal) |
 | Registration | `services.AddBreezeOnUI()` or `AddBreezeOnUI(configureTheme)` — `configureTheme` is honored via `IOptions<BoThemeOptions>` ([tokens.md § Theme options](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
-| Host requirements | Render `BoThemeProvider` and `BoProviders` in the app layout; include `breezeon-ui.css`, the Fluent bundle CSS, and the **seven** core `bo-*.js` scripts (`bo-theme-mode`, `bo-locale`, `bo-popup`, `bo-number-field`, `bo-grid`, `bo-dialog`, `bo-toggle`; plus Sortable + `bo-sortable` when using Shuffle Card) — [page-development.md § Host integration](page-development.md#host-integration-required) |
+| Host requirements | **Product Host Contract** (UI + auth + AuthZ + catalog + Error Message options): [page-development.md § Product Host Contract](page-development.md#product-host-contract-required). UI assets: `BoThemeProvider` / `BoProviders` / `BoAppShell`; Fluent + `breezeon-ui.css`; **seven** core scripts (`bo-theme-mode`, `bo-locale`, `bo-popup`, `bo-number-field`, `bo-grid`, `bo-dialog`, `bo-sliding-selection`; plus Sortable + `bo-sortable` when using Shuffle Card). Gallery = chrome/assets reference; EAC = complete product host. |
 | Decision record | [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 
 Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not reference `Microsoft.FluentUI.AspNetCore.Components` types from product pages.
@@ -58,6 +97,8 @@ Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not refer
 Dependency position (landscape): [architecture/landscape.md](../../architecture/landscape.md).
 
 ## Shipped components
+
+Inventory with UX pointers only. **Parameters, events, and types** for every component below: SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) ([Authority split](#authority-split-ux-vs-api)).
 
 | Component | Purpose | Detail |
 | --- | --- | --- |
@@ -74,7 +115,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoHeaderActions` | Theme switch + Settings + Profile cluster | [shell.md](shell/shell.md) |
 | `BoThemeSwitch` | Apple-style Light/Dark switch (`BrightnessLow` icon) | [shell.md](shell/shell.md), [tokens.md](foundations/tokens.md) |
 | `BoProfileMenu` | Avatar (initials; photo store via Identity) + Sign out via Account endpoints | [shell.md](shell/shell.md) |
-| `BoTabs` / `BoTab` | Optional page-section tabs under the header title row | [shell.md](shell/shell.md) |
+| `BoTabs` / `BoTab` | Optional page-section tabs under the header title row; `TabRequested` intent (veto) + `SelectedTabChanged`; keyboard roving focus | [shell.md](shell/shell.md), [selection-and-navigation.md](controls/selection-and-navigation.md) |
 | `BoTabPanels` / `BoTabPanel` | Keep-alive body sections keyed to tabs (`SelectedTab`) | [shell.md](shell/shell.md) |
 | `BoPanelHost` / `BoPanel` | Independently scrolling workspace layout regions (`Dock` Left/Right/Fill); not coupled to `BoAppBody` | [panels.md](layout/panels.md) |
 | `BoPanelNavigation` | Navigator-only workspace section list (card chrome + validation badges); 10–30 items | [panels.md](layout/panels.md) |
@@ -84,7 +125,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoAccessDenied` | Styled Access Denied body (`.bo-error-message*` foundation; Access/Support Details; localized); used by `BoAuthorizeRouteView` and Gallery Error Message Page | [error-messages.md](shell/error-messages.md) |
 | `BoCard` | Content card with optional title/footer; uses `card-container-*` tokens; optional `MarginDensity` | [tokens.md](foundations/tokens.md) |
 | `BoNavHub` | Home hub host (~33%·67%, gradient + dots, brand logo `80cqmin`) | [shell.md](shell/shell.md#home--navigation-hub-locked-platform-pattern) |
-| `BoNavCardStyleHyperlink` | Home destination card (internal SPA or external new-tab); locked chrome | [shell.md](shell/shell.md#home--navigation-hub-locked-platform-pattern) |
+| `BoNavCardStyleHyperlink` | Home destination card (internal SPA or external new-tab); card chrome Tier 2 (tokens), internal / external link behavior Tier 1 | [shell.md](shell/shell.md#home--navigation-hub-locked-platform-pattern) |
 | `BoSectionMain` | **Main Section** — optional header; `SectionKey` for validation fail badge / ancestry; optional `IsCollapsible` / `Expanded` | [sections.md](layout/sections.md) |
 | `BoSectionSub` | **Sub Section** — nested grouping; `SectionKey` + cascaded Main/Sub keys to fields; optional `IsCollapsible` / `Expanded` | [sections.md](layout/sections.md) |
 | `BoExpandableSection` | Disclosure expand/collapse (Error Message, filters, support blocks); shared engine with Section collapse | [expandable-section.md](layout/expandable-section.md) |
@@ -102,8 +143,9 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 | `BoDateField` | Date / DateTime UI; bound type always `DateTime?` (never `DateOnly`); `ReadOnly`; locale (`FormatCulture`) + fixed calendar popover | [forms.md](controls/forms.md) |
 | `BoDateDisplay` | Format culture for wall-clock values (`Format`); UTC→user timezone + culture for instants (`FormatUtc`) — standard for grids / read-only datetime text | [i18n.md](foundations/i18n.md) |
 | `BoNumberField` | Number UI; bound type always `decimal?`; integer/decimals; currency/% (mutex); focus raw / blur formatted; `ReadOnly`; alignment default Right; needs host `bo-number-field.js` | [forms.md](controls/forms.md) |
-| `BoButton` | Button (primary / secondary / stealth); corner radius `--bo-button-radius` (aliases `--bo-radius-md`, not pill); `HtmlType` (`BoButtonType`); shorter+wider padding; shadow + hover lift; optional icon | [forms.md](controls/forms.md), [tokens.md](foundations/tokens.md) |
-| `BoToggle` | Presentation-only segmented toggle; host-owned `SelectedToggleKey`; `ToggleRequested` intent; required icon+label per item; sliding selection pill via shared `bo-sliding-selection.js` | [toggle.md](controls/toggle.md) |
+| `BoButton` | Button (`BoButtonVariant`: Primary / Secondary / Stealth / **Danger**); corner radius `--bo-button-radius`; `HtmlType` (`BoButtonType`); optional icon | [button.md](controls/button.md) |
+| `BoIconButton` | Icon-only button (required `AriaLabel`; default Stealth; any `BoButtonVariant`) | [button.md](controls/button.md) |
+| `BoToggle` | Presentation-only segmented toggle; host-owned `SelectedToggleKey`; `ToggleRequested` intent; required icon+label per item; sliding selection pill via shared `bo-sliding-selection.js` | [toggle.md](controls/toggle.md), [selection-and-navigation.md](controls/selection-and-navigation.md) |
 | `BoDialog` / `BoDialogCloseButton` | Product dialog shell (Enter/Escape, `InitialFocusFieldKey`, focus restore) | [overlays.md](shell/overlays.md) |
 | `BoImportSummaryDialog` | Presentational Import Summary (Changes Summary + Errors/Warnings; Stealth confirm; `ChangesSummaryContent`) | [import-summary.md](patterns/import-summary.md) |
 | `BoValidationSummary` / `BoValidationIssue` | Live-editor collapsible validation summary above grids/Shuffle; navigate-to-error; Adoption Matrix | [validation-summary.md](patterns/validation-summary.md) |
@@ -119,7 +161,17 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Pages: Home (`BoNavHub`); Components (`/components` — header tabs Text Field / Drop-Down List / People Picker / Checkbox / Date Field / Number Field / **Other**; Main → Parameters / Preview / Documentation; **Parameters** Sub rows always have **6** `BoRow` slots — pad with `BoEmptyField`, wrap every 6 when knobs exceed capacity; Preview = editable \| read-only \| **Backend Value**; **Other** tab demos workspace `BoPanelHost` + `BoPanelNavigation` + `BoKeepAlivePanels` with Grid, Page Freeze, Dialog, and Toggle as nav items (demo vehicle for [panels.md](layout/panels.md) — not the design target); Grid demos include Server `QueryMode`, Filters, Nested View keyword, and **Grid Type = Shuffle Card** (populated static preview) where shipped; Page Freeze demos `IBoPageFreezeService.RunAsync` then Success toast; **Drop-Down List** includes static Items and async `ItemsProvider` demos when shipped; **People Picker** tab demos Mandatory / Disabled / AllowMultiple / Loading with an in-memory fake provider (no database); Submit = `Validate(null)` + Alert toast + fail badges); Theme (Light + Dark Main sections per color; Submit has no Theme field validation); Error Message Page (`/error-message-page` — Access Denied tab hosts shared `BoAccessDenied` with Access/Support Details; footer off; tab framework retained for future error scenarios; SSOT [error-messages.md](shell/error-messages.md)). Nav: Home / Components / Theme / Error Message Page (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
+`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Full **pattern → Gallery path** index (including patterns without a demo): **[gallery-index.md](gallery-index.md)**.
+
+| Gallery page | Route | Contents | Standards |
+| --- | --- | --- | --- |
+| **Home** | `/` | `BoNavHub` hub; footer off | [shell.md](shell/shell.md) |
+| **Components** | `/components` | Header tabs: Text Field, Drop-Down List, People Picker, Checkbox, Date Field, Number Field, **Other**. Main → Parameters / Preview / Documentation; Parameters rows have 6 `BoRow` slots (pad with `BoEmptyField`); Preview = editable \| read-only \| Backend Value; Submit = `Validate(null)` + Alert toast + fail badges | [forms.md](controls/forms.md), [layout.md](layout/layout.md) |
+| **Components → Other** | `/components` | Workspace `BoPanelHost` + `BoPanelNavigation` + `BoKeepAlivePanels` (demo vehicle for [panels.md](layout/panels.md), not the design target). Items: **Grid** (incl. Server `QueryMode`, Filters, Nested keyword, Grid Type = Shuffle Card), **Page Freeze**, **Dialog**, **Toggle**, **Import Summary**, **Validation Summary**, **Button** (variants, `BoIconButton`, Tabs keyboard + `TabRequested`) | [grids.md](controls/grids.md), [overlays.md](shell/overlays.md), [toggle.md](controls/toggle.md), [button.md](controls/button.md) |
+| **Theme** | `/theme` | Light + Dark Main sections per palette color | [tokens.md](foundations/tokens.md) |
+| **Error Message Page** | `/error-message-page` | Access Denied tab (shared `BoAccessDenied`); footer off | [error-messages.md](shell/error-messages.md) |
+
+Nav: Home / Components / Theme / Error Message Page (starts collapsed). URL = page name — [navigation.md](shell/navigation.md).
 
 **Ownership:** Gallery is the primary working-example host for library-scoped UI / query patterns. Product pages are product reference only. Full rules: [example-governance.md](example-governance.md).
 

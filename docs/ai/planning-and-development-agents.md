@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Planning Agent and Development Agent rules
 
 Owner: Documentation
@@ -6,7 +7,7 @@ Owner: Documentation
 
 **Precedence:** These organization rules **supersede** any repository-specific planning or plan-output behavior unless the current prompt **explicitly** overrides them for that turn.
 
-Related: [documentation.md](documentation.md) · [ai-agent-governance.md](ai-agent-governance.md) · [ADR-007](../decisions/ADR-007-ai-agent-operational-boundaries.md)
+Related: [documentation.md](../documentation.md) · [ai-agent-governance.md](ai-agent-governance.md) · [ADR-007](../../decisions/ADR-007-ai-agent-operational-boundaries.md)
 
 ---
 
@@ -162,6 +163,47 @@ Permanent documentation must represent **implemented reality**.
 - Do **not** leave implementation plans referenced inside standards documentation.
 - Do **not** leave speculative content in permanent documentation.
 
+### UX Standards Compliance Review (mandatory peer gate)
+
+For every **UI-bearing** plan, Planning Agents **must** complete a **UX Standards Compliance Review** before development — peer gate to architecture, data, and security. Architecture approval is **not** UX approval.
+
+**Document in the plan (required):**
+
+- Shared UI (`Bo*`) components reused
+- Gallery examples reviewed
+- Applicable UX standards ([page-development.md](../ui/page-development.md), [ux-conventions.md](../ui/patterns/ux-conventions.md), control SSOTs)
+- Page Freeze expectations
+- Placeholder strategy
+- Navigation-state behavior
+- Truncation strategy
+- Disabled / read-only behavior
+- Intentional deviations with justification
+
+SSOT detail: [ux-conventions.md](../ui/patterns/ux-conventions.md) · [page-development.md](../ui/page-development.md).
+
+### Configuration Session Review (mandatory peer gate)
+
+For every **configuration-heavy** plan (Application Configuration modules, or any future product workspace with circuit-scoped configuration baselines), Planning Agents **must** complete a **Configuration Session Review** before development — peer to Dirty State and UX Standards Compliance.
+
+**Trigger:** The plan introduces or changes configuration catalogs, values workspaces, import/export sync, or tabbed configuration surfaces that retain baselines across navigation.
+
+**Document in the plan (required fields):**
+
+- Session Key · Session Lifetime · Cache Segments
+- Cache Classification (Always / Conditionally / Never)
+- Working Copy vs Baseline ownership · Dirty State interaction
+- Cache Invalidation Matrix
+- Save · Discard · Import · Export behavior
+- Page Freeze interaction · Session rebuild events
+
+**Governing question:** What should be cached, what should not be cached, and when must cache be invalidated?
+
+**Acceptable outcome — “no session cache”:** Allowed only when the plan documents the classification matrix and an explicit Never Cache rationale for every segment. Skipping the review entirely is non-compliant.
+
+SSOT: [configuration-session-cache.md](../../architecture/app-configuration/configuration-session-cache.md) · [ADR-020](../../decisions/ADR-020-configuration-session-cache.md).
+
+Development Agents must refuse undocumented deviations from an approved Configuration Session Review when implementing configuration-heavy work.
+
 ---
 
 ## Development Agent
@@ -177,7 +219,18 @@ When **Build Locally** is executed:
 3. Do **not** request the plan again through chat.
 4. Implement directly from the markdown plan.
 5. Preserve architecture decisions documented in the plan.
-6. Update the plan status throughout implementation if appropriate (delta updates only).
+6. For UI work: require the plan’s **UX Standards Compliance** subsection; follow [page-development.md](../ui/page-development.md) and [ux-conventions.md](../ui/patterns/ux-conventions.md).
+7. Update the plan status throughout implementation if appropriate (delta updates only).
+
+### Before custom UX (reuse first)
+
+Before inventing placeholders, overlays, alignment CSS, Fluent usage, or other custom UX:
+
+1. Confirm no existing Shared UI (`Bo*`) component, Gallery example, or documented STANDARDS pattern already solves the problem.
+2. Prefer Gallery as the copy source for library patterns.
+3. Refuse undocumented deviations (placeholders, overlays, alignment forks, direct Fluent on product pages).
+
+Follow Page Freeze MUST / MUST NOT in [overlays.md](../ui/shell/overlays.md).
 
 ### Documentation responsibilities
 
@@ -292,6 +345,6 @@ Plans are temporary working artifacts.
 
 This document is the **single source of truth**. Product repos must not redefine planning/output behavior.
 
-1. Add a lightweight bootstrap Cursor rule from [`templates/cursor-rules/`](../templates/cursor-rules/) that points agents here.
-2. Create `docs/plans/in-progress/` and `docs/plans/implemented/` — see [`templates/docs-plans/`](../templates/docs-plans/).
+1. Add a lightweight bootstrap Cursor rule from [`templates/cursor-rules/`](../../templates/cursor-rules/) that points agents here.
+2. Create `docs/plans/in-progress/` and `docs/plans/implemented/` — see [`templates/docs-plans/`](../../templates/docs-plans/).
 3. Point `README_AI.md` / `AGENTS.md` at this document (thin link only).

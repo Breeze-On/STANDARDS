@@ -1,8 +1,9 @@
+<!-- Classification: AA; Scope: application:eac -->
 # Data Entities architecture
 
-Owner: Architecture
+Owner: Architecture (EAC)
 
-Technical architecture for the Data Entities platform capability (EAC `System` schema).
+Technical architecture for the EAC **reference-data** capability (`System` schema).
 
 ## ERD
 
@@ -55,7 +56,7 @@ Full column inventory: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYS
 
 ## Performance decisions
 
-- Optimize for configurable master data; remain viable for large entities (e.g. ~200k Cities).
+- Optimize for configurable **reference data**; designed for thousands of rows per entity. ~200k-scale viability is **unproven** (Future Validation). PF DDL pickers cap at 1000 rows.
 - Sparse metadata: no row when value is NULL ([standard](data-entities-standard.md)).
 - Prefer indexed filters on `(ApplicationEnabledGUID, DataEntityGUID)` over scanning by Application alone for rows.
 - Avoid wide SQL pivots until a dedicated consumer retrieval contract exists.
@@ -105,7 +106,7 @@ Decision: [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability
 - Only **row Description** is translated (`EACDataEntitiesRowsTranslations`).
 - Data Entity and Column Description are **not** translated.
 - One translation row per `(DataEntityRowGUID, LanguageCode)`.
-- EAC Values UI persists/loads `LanguageCode = IBoLocaleService.FormatCulture.Name` (`en-CA` / `fr-CA`) — aligned with [i18n.md](../../docs/ui/foundations/i18n.md).
+- EAC Values UI and Excel Tool persist/load row Description with authoritative language **`en-CA`** — aligned with [i18n.md](../../docs/ui/foundations/i18n.md) and [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md).
 
 ## Ownership split
 

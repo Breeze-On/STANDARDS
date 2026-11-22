@@ -1,3 +1,4 @@
+<!-- Classification: DEC; Scope: platform -->
 # ADR-003: Azure SQL with local Docker SQL
 
 Status: Accepted

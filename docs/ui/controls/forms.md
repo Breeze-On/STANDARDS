@@ -1,8 +1,11 @@
+<!-- Classification: AA; Scope: platform -->
 # UI — Forms
 
 Owner: UI
 
 Form control standards. Related: [layout.md](../layout/layout.md) (Row + page composition JSON), [sections.md](../layout/sections.md), [typography.md](../foundations/typography.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [shell.md](../shell/shell.md) (toasts / Submit), [ux-conventions.md](../patterns/ux-conventions.md) (placeholders, disabled, truncation).
+
+**Parameters:** complete parameter lists for every form control live in SHARED-UI [`public-component-api.md` § Form fields](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#form-fields); parameter mentions below explain behavior and may be incomplete ([parameter-reference.md](parameter-reference.md)). Buttons: [button.md](button.md). Choosing Drop-Down vs Tabs / Toggle / Panel Navigation: [selection-and-navigation.md](selection-and-navigation.md).
 
 **Hard standard:** every Text Field, Drop-Down List, Checkbox, Date Field, Number Field, Read-Only Field, Empty Field, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
 
@@ -174,7 +177,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Label-to-input gap | **`--bo-field-label-gap`** (default **4px**) — same for Text Field and Drop-Down List |
 | Input typed text | **Calibri** (`--bo-font-family`); **14px** — see [typography.md](../foundations/typography.md) |
 | Mandatory mark | When `Required` and not `Disabled`: bold red `*` after the label; modest gap before the star (`margin-left` ~0.2em); color `--bo-color-danger` |
-| Rest border / outline | Grey using `--bo-color-card-container-border`; **fully rounded** control corners via `--bo-radius-md` (same as Drop-Down List closed box) |
+| Rest border / outline | Grey using `--bo-color-card-container-border`; rounded control corners via `--bo-radius-md` (same as Drop-Down List closed box) |
 | Hover | Subtle border only (`--bo-color-field-border-hover`); **no** fill change, glow, or lift |
 | Focus | **Full 1px border** in `--bo-color-field-border-focus` (Light = primary; Dark = brighter focus stroke for contrast on field fill). Same geometry for Text / Number / Date / DDL closed box. Fluent Text/Number: paint the border on **`::part(root)` only** — never also on `::part(control)`; suppress Fluent’s `::part(root)::after` bottom accent (that pair doubles/misaligns chrome). Not Fluent bottom-edge-only; not Fluent blue; do **not** add a separate underline, glow, or focus-ring stroke |
 | Caret | Themed via native CSS `caret-color` (`--bo-color-caret`) only — **no** custom caret widgets or JS caret rendering |
@@ -456,20 +459,6 @@ Planning JSON: `control: "NumberField"`; optional `isInteger`, `numberOfDecimals
 
 These Number Field rules are **org standards** for every `BoNumberField` usage.
 
-## Button (`BoButton`)
+## Button (`BoButton`) — moved
 
-**Component:** `BoButton` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI). Visual tokens in [tokens.md](../foundations/tokens.md).
-
-**Corner radius (hard standard):** all variants use `--bo-button-radius` (aliases `--bo-radius-md`, default **8px** — less-rounded, not pill). Applies to Primary / Secondary / Stealth, Dialog footer actions, grid toolbar actions, Import Summary footer, and any product chrome that renders `.bo-button`. There is **no** per-instance radius / shape API. Product apps and Gallery pages **must not** set `border-radius` on `.bo-button` (no page-level forks). Circular non-button chrome (header Settings hit, theme switch, avatars, header tabs) is out of scope and may keep `--bo-radius-full` / `50%`.
-
-| Parameter | Role |
-| --- | --- |
-| `Variant` | `BoButtonVariant`: `Primary` (default), `Secondary`, `Stealth` |
-| `HtmlType` | `BoButtonType` enum: `Button` (default — does not submit a form), `Submit`, `Reset`. Replaces the former string `Type`; do not pass raw strings |
-| `Disabled`, `OnClick`, `IconContent`, `ChildContent`, `Class`, `Style` | Standard button behavior |
-| `BackgroundColor` / `ForegroundColor` | Optional overrides |
-| `AdditionalAttributes` | Unmatched attributes are captured and forwarded |
-
-**Label wrapping (platform rule):** button labels stay on **one line**. `.bo-button` / `.bo-button__label` use `white-space: nowrap`; the control uses `width: max-content` (+ `align-self: flex-start`) so it **hugs the label** and does not stretch to the `BoRow` / `BoField` slot. When placing a button in a narrow slot, raise `Weight` (or reduce competing columns) so the label is not clipped by `max-width: 100%`.
-
-**Long-running operations:** \BoButton\ stays a button — no \IsBusy\ / embedded spinner API. Blocking UX for multi-second work uses **\IBoPageFreezeService\** from the click handler / workflow — [overlays.md](../shell/overlays.md).
+Buttons have a single source of truth: **[button.md](button.md)** — hierarchy (Primary / Secondary / Danger / Stealth / Icon-only), ordering, destructive guidance, Save / Discard, `BoIconButton`, and the **corner radius authority** (`--bo-button-radius`; see also [tokens.md § Corner radius](../foundations/tokens.md#corner-radius-tokens-current)). Parameters: [`public-component-api.md` § BoButton](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bobutton). This file no longer restates button rules.

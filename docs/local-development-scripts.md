@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # BreezeOn Local Development Script Standard
 
 Owner: Engineering
@@ -55,13 +56,14 @@ Steps that do not apply to a host (e.g. no SQL for Shared UI Gallery) are skippe
 
 ## Secrets
 
-- All secrets come from a local **gitignored** `.env` at the repo root.  
-- Ship `.env.example` documenting required variables (never real secrets).  
+- Script-oriented configuration (e.g. `MSSQL_SA_PASSWORD`) comes from a local **gitignored** `.env` at the repo root.  
+- OIDC credentials (`AUTHENTICATION__CLIENTID` / `AUTHENTICATION__CLIENTSECRET`) use .NET **User Secrets** locally — not `.env` ([local-development-standard.md](../architecture/identity-and-authentication/local-development-standard.md), [application-model.md](application-model.md)).  
+- Ship `.env.example` documenting required script variables (never real secrets).  
 - No passwords hardcoded in scripts or docs.  
 - No secrets committed.  
 - Missing required variables must produce clear errors.  
 
-Apps with no local secrets today still keep `.env` / `.env.example` so the script model is uniform (example may state “no required variables”).
+Apps with no script secrets today still keep `.env` / `.env.example` so the script model is uniform (example may state “no required variables”).
 
 ## Application vs Shared UI
 

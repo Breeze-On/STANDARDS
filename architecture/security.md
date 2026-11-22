@@ -1,3 +1,4 @@
+<!-- Classification: AA; Scope: platform -->
 # Architecture — Security
 
 Owner: Architecture
