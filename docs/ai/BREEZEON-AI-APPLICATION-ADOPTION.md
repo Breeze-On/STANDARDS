@@ -11,14 +11,16 @@ Prerequisite: [`BREEZEON-AI-QUICKSTART.md`](BREEZEON-AI-QUICKSTART.md).
 
 | Meaning | Use when | SSOT |
 | --- | --- | --- |
-| **Product application onboarding** | Creating App #2, App #3, … (new BreezeOn product repository consuming SHARED-UI) | [`application-development-process.md`](application-development-process.md) (Steps 1–6, including repository transition) + **This file** + [`application-model.md`](../application-model.md) |
+| **Product application onboarding** | Creating the next product application (**App #N** after EAC/INV) consuming SHARED-UI | [`application-development-process.md`](application-development-process.md) (Steps 1–6, including repository transition) + [`application-definition.schema.json`](application-definition.schema.json) (Step 1 inputs) + **This file** (adoption pattern) + [`application-model.md`](../application-model.md) |
 | **Customer-environment onboarding** | Provisioning a customer DEV/UAT/PRD environment (Entra, cutover, customer activation) | [`runbooks/customer-onboarding-master-flow.md`](../../runbooks/customer-onboarding-master-flow.md) |
 
 The **Customer Onboarding Master Flow is not used to create new BreezeOn applications.** Do not substitute one path for the other.
 
 ---
 
-## App #2 kickoff card
+## Next product application (App #N) kickoff card
+
+**Alias:** older docs said “App #2” for the first product app after EAC. **INV** is the first validated product application ([application-development-process.md](application-development-process.md) worked example). Use **App #N** for the next new product repository. Procedure ownership: process Steps 1–6 + schema — this file is the adoption pattern / reference-host guidance, not a competing procedure.
 
 ### Must
 
@@ -30,14 +32,16 @@ The **Customer Onboarding Master Flow is not used to create new BreezeOn applica
 - Create thin **`README_AI.md`** and **`AGENTS.md`** (reading-chain to [`docs/ai/README.md`](README.md))
 - Configure **Dependabot** from [`templates/dependabot/`](../../templates/dependabot/) (may extend; see [security-governance.md](../security-governance.md))
 - Add product **deploy workflow metadata** per [hosted-deployment.md](../hosted-deployment.md) (procedures stay centralized — do not fork)
+- Capture Step 1 inputs from [`application-definition.schema.json`](application-definition.schema.json) (schema first; do not copy INV example values as defaults)
 
 ### Must not
 
 - Defer Authentication or Authorization
 - Fork **Identity** or **Security** schemas / create an independent Identity catalog
 - Platformize EAC **Process Framework**, **Data Entities**, or **Variables** (EAC-scoped)
-- Require an unshipped platform workflow engine before Application #2 can proceed. Process Framework is metadata only; an application-owned runtime is an approved boundary when the product needs execution
+- Require an unshipped platform workflow engine before the next product app can proceed. Process Framework is metadata only; an application-owned runtime is an approved boundary when the product needs execution
 - Invent **NuGet** distribution mechanics or **registry** discovery/deploy-order workflows
+- Treat INV’s filled definition as the required shape of future applications
 
 ### Future Validation
 
@@ -54,7 +58,7 @@ The **Customer Onboarding Master Flow is not used to create new BreezeOn applica
 | Clear goal | Shell + navigation + Home hub only — no premature business UI |
 | Approved patterns only | Gallery-shaped host; no Fluent on product pages; locked Home/`BoAppShell` |
 | Thin app resources | EAC owns `EacResources` / `IEacLocalizer` instead of misusing Gallery `BoUi` |
-| Platform foundations | New apps assume Identity / Auth / AuthZ as **mandatory** platform consumption ([application-model.md](../application-model.md)) — historical EAC shell milestones that deferred auth are **not** a template for app #2 |
+| Platform foundations | New apps assume Identity / Auth / AuthZ as **mandatory** platform consumption ([application-model.md](../application-model.md)) — historical EAC shell milestones that deferred auth are **not** a template for App #N |
 | Docs updated together | STANDARDS landscape/eac/i18n + EAC README_AI + Shared UI README_AI |
 
 Success criterion for adoption: a separate application runs on Interactive Server with `BoAppShell`, BreezeOn branding, localized chrome, standards-compliant Home cards, and **platform authentication + authorization + page catalog** — without inventing alternate chrome or deferring Identity.
@@ -63,7 +67,7 @@ Success criterion for adoption: a separate application runs on Interactive Serve
 
 ## Required integration steps
 
-1. **Reference** `BreezeOn.UI` (**mandatory** — interim: sibling `ProjectReference` to `SYSTEM-SHARED-UI/src/BreezeOn.UI`; NuGet/pinning = Future Validation at app #2).
+1. **Reference** `BreezeOn.UI` (**mandatory** — interim: sibling `ProjectReference` to `SYSTEM-SHARED-UI/src/BreezeOn.UI`; NuGet/pinning = Future Validation for App #N).
 2. **Product Host Contract (AA SSOT):** follow [`page-development.md` § Product Host Contract](../ui/page-development.md#product-host-contract-required) end-to-end — UI + `AddBreezeOnAuthentication` / `MapBreezeOnAuthentication` + `AddBreezeOnAuthorization(pageCatalog)` + `BoAuthorizeRouteView` + Data Protection `SetApplicationName` + `BoErrorMessageOptions.ApplicationDisplayName` + Access Denied footer off + localization + app-owned resources. Gallery = chrome/assets only; **EAC = complete product host reference**.
 3. **Head assets:** Fluent bundle CSS, `breezeon-ui.css`, and the **seven** core scripts from the host-script inventory SSOT (`bo-sliding-selection.js`, **not** `bo-toggle.js`; no `?v=` cache-bust).
 4. **Nav / Home / titles:** `BoNavPane` + Home hub + per-route localized header titles — see page-development checklist.
@@ -110,26 +114,27 @@ Remove when adopting cleanly: default Blazor sidebar/`NavMenu`, Bootstrap-first 
 
 ---
 
-## Future application onboarding process
+## Future application onboarding (adoption pattern)
+
+**Procedure SSOT:** [`application-development-process.md`](application-development-process.md) Steps 1–6 + [`application-definition.schema.json`](application-definition.schema.json) for Step 1. Do **not** treat the list below as a competing procedure — it is the EAC-derived adoption pattern checklist that maps into those steps.
 
 ```text
 1. Read docs/ai/BREEZEON-AI-QUICKSTART.md (+ governance reading chain)
-2. Read this file (kickoff card) + docs/application-model.md + docs/ui/page-development.md
-3. Repo baselines: AGENTS.md + README_AI.md (thin reading-chain pointers); Dependabot from templates/dependabot (may extend); review docs/security-governance.md — do not duplicate governance text
-4. Clone / sibling SYSTEM-SHARED-UI for ProjectReference (NuGet/pinning = Future Validation)
-5. Wire host (Program, App.razor, MainLayout) with **BoAppShell + platform auth/authZ + page catalog**
-6. Add app-owned resources (en/fr) — never copy BoUi keys as the product glossary
-7. Define IA: Home hub cards + left nav routes (URL = page name)
-8. Ship destination pages inside BoAppShell with catalog registration
-9. Provide `scripts/dev-reset.ps1` + `.env.example`; OIDC secrets via User Secrets ([application-model.md](../application-model.md))
-10. Shared customer DB: Identity + Security schemas are **shared** (SHARED-UI definitions) — never fork. New customer-environment → Master Flow; new product app in an existing environment → consume the existing customer DB ([application-model.md](../application-model.md) § Database ownership)
-11. If the app owns Azure SQL: enable App Service MI, set `SQLAzureConnection`, run [`templates/azure-sql/grant-app-service-mi.sql`](../../templates/azure-sql/grant-app-service-mi.sql), and wire **`Microsoft.Data.SqlClient.Extensions.Azure`** + MI provider registration (SqlClient 7+)
-12. Add `.github/workflows/deploy-dev.yml` product metadata + GitHub Environment **DEV** per [hosted-deployment.md](../hosted-deployment.md) (procedures stay in STANDARDS — do not fork)
-13. Plan EAC `System` registry registration (`UniqueCode` = repo name); mechanics = Future Validation
-14. Update product README_AI + STANDARDS architecture/landscape in the same change set
-15. Verify (split):
-    - Agent-completable: `.\scripts\dev-reset.ps1`, build, launch, reach authentication boundary (e.g. 302 to Entra) — stop; hand back
-    - Human-assisted: sign-in, navigation, localization, theme, Home cards — no Fluent imports on product pages
+2. Step 1: fill application-definition.schema.json instance (schema first); then this kickoff card + docs/application-model.md + docs/ui/page-development.md
+3. Steps 2–3: plan + repository transition per application-development-process.md
+4. Repo baselines: AGENTS.md + README_AI.md (thin reading-chain pointers); Dependabot from templates/dependabot (may extend); review docs/security-governance.md — do not duplicate governance text
+5. Clone / sibling SYSTEM-SHARED-UI for ProjectReference (NuGet/pinning = Future Validation)
+6. Wire host (Program, App.razor, MainLayout) with **BoAppShell + platform auth/authZ + page catalog**
+7. Add app-owned resources (en/fr) — never copy BoUi keys as the product glossary
+8. Define IA from the Step 1 instance: Home hub cards + left nav routes (URL = page name)
+9. Ship destination pages inside BoAppShell with catalog registration
+10. Provide `scripts/dev-reset.ps1` + `.env.example`; OIDC secrets via User Secrets ([application-model.md](../application-model.md))
+11. Shared customer DB: Identity + Security schemas are **shared** (SHARED-UI definitions) — never fork. New customer-environment → Master Flow; new product app in an existing environment → consume the existing customer DB ([application-model.md](../application-model.md) § Database ownership)
+12. If the app owns Azure SQL: enable App Service MI, set `SQLAzureConnection`, run templates/azure-sql/grant-app-service-mi.sql, and wire **Microsoft.Data.SqlClient.Extensions.Azure** + MI provider registration (SqlClient 7+)
+13. Add `.github/workflows/deploy-dev.yml` product metadata + GitHub Environment **DEV** per hosted-deployment.md (Step 6 when authorized — do not fork procedures)
+14. Plan EAC `System` registry registration (`uniqueCode` = repositoryName.ToUpperInvariant()); mechanics = Future Validation
+15. Update product README_AI + STANDARDS architecture/landscape in the same change set
+16. Verify per process Steps 5–6 (local agent stop at Entra; hosted only when authorized)
 ```
 
 Optional defense-in-depth: copy [`templates/cursor-rules/`](../../templates/cursor-rules/) after the reading-chain pointers exist (not a substitute for AGENTS/README_AI).

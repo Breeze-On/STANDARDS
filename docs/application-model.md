@@ -9,7 +9,7 @@ Defines what constitutes a **standard Breeze On application** based on patterns 
 
 | Concern | Meaning | SSOT |
 | --- | --- | --- |
-| **Product application onboarding** | Creating App #2 / App #3 (new product repository) | [`application-development-process.md`](ai/application-development-process.md) · [`BREEZEON-AI-APPLICATION-ADOPTION.md`](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) |
+| **Product application onboarding** | Creating the next product application (**App #N**) | [`application-development-process.md`](ai/application-development-process.md) · [`application-definition.schema.json`](ai/application-definition.schema.json) · [`BREEZEON-AI-APPLICATION-ADOPTION.md`](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) |
 | **Customer-environment onboarding** | Provisioning / activating a customer DEV/UAT/PRD environment | [`runbooks/customer-onboarding-master-flow.md`](../runbooks/customer-onboarding-master-flow.md) |
 
 The Customer Onboarding Master Flow does **not** create new BreezeOn application repositories.
@@ -26,7 +26,7 @@ The Customer Onboarding Master Flow does **not** create new BreezeOn application
 
 - One **GitHub repository** per application or shared concern ([ADR-001](../decisions/ADR-001-multi-repository-model.md)).
 - Application code uses the `BreezeOn.*` namespace and `src/<Project>` layout (e.g. `src/BreezeOn.Eac`).
-- The **repository name** is the application technical identifier (`UniqueCode`); short `Code` and `ApplicationGUID` conventions: [naming.md](naming.md), [database.md](database.md).
+- The **repository name** is the application technical identifier; EAC registry `UniqueCode` is `repositoryName.ToUpperInvariant()` ([application-definition.schema.json](ai/application-definition.schema.json)); short `Code` and `ApplicationGUID` conventions: [naming.md](naming.md), [database.md](database.md).
 - Do not add unrelated products or business domains into an existing application repository.
 
 ## Platform consumption requirements
@@ -43,7 +43,7 @@ The Customer Onboarding Master Flow does **not** create new BreezeOn application
 | **Authorization framework** | `IBoAuthorizationService`, Security Groups, convention-based mutation guards | [Authorization](../architecture/authorization/README.md), [ADR-014](../decisions/ADR-014-platform-authorization.md) |
 | **Page catalog / page security** | Register every authenticated route; fail closed on miss; Code-based `RequiredGroupCodes` | [page-security-standard.md](../architecture/authorization/page-security-standard.md) |
 | **Platform Identity + Security schemas** | Apply SHARED-UI definitions into the **one shared customer database** per customer-environment. **Identity remains shared. Security remains shared.** Applications must **not** create independent Identity catalogs or fork Security schemas. New customer-environment → [Master Flow](../runbooks/customer-onboarding-master-flow.md); new product app in an existing environment → consume the existing customer DB | [database.md](database.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md) |
-| **Shared catalog registration** | Every BreezeOn application is **expected to be registered** in the EAC-owned `System` application registry (`UniqueCode` = repository name). **Registration / discovery / deploy-order mechanics are Future Validation** until application #2 — do not invent workflows or runtime consumption patterns here | [database.md](database.md) § Shared System schema, [naming.md](naming.md) |
+| **Shared catalog registration** | Every BreezeOn application is **expected to be registered** in the EAC-owned `System` application registry (`UniqueCode` = `repositoryName.ToUpperInvariant()`). **Registration / discovery / deploy-order mechanics are Future Validation** for subsequent apps — do not invent workflows or runtime consumption patterns here | [database.md](database.md) § Shared System schema, [naming.md](naming.md), [application-definition.schema.json](ai/application-definition.schema.json) |
 
 ### Must not own
 

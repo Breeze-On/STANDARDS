@@ -356,7 +356,7 @@ EAC-owned SQL schema for platform administration / shared catalog tables (for ex
 
 ## UniqueCode
 
-Application technical identifier in the EAC registry; value follows the GitHub **repository name** (e.g. `SYSTEM-ADMIN-EAC`). Distinct from short `Code`. See [naming.md](naming.md), [database.md](database.md).
+Application technical identifier in the EAC registry; `repositoryName.ToUpperInvariant()` (e.g. repo `breezeon-corp-fin-inv` → `BREEZEON-CORP-FIN-INV`). Distinct from short `Code`. See [naming.md](naming.md), [application-definition.schema.json](ai/application-definition.schema.json), [database.md](database.md).
 
 ## Shared Library
 

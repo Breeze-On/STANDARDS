@@ -5,26 +5,30 @@ Owner: Documentation
 
 Workflow for creating a new BreezeOn **product application**. This is distinct from **customer-environment onboarding** ([Master Flow](../../runbooks/customer-onboarding-master-flow.md)).
 
-Detail for host wiring, UI, auth, and local SQL lives in the linked standards — this file only defines the process order and required inputs.
+Detail for host wiring, UI, auth, and local SQL lives in the linked standards — this file defines the process order and explains the application-definition schema.
 
-Related: [BREEZEON-AI-APPLICATION-ADOPTION.md](BREEZEON-AI-APPLICATION-ADOPTION.md) · [application-model.md](../application-model.md) · [page-development.md](../ui/page-development.md) · [application-branding.md](../ui/shell/application-branding.md) · [application-theme-palette.md](../ui/foundations/application-theme-palette.md) · [local-development-scripts.md](../local-development-scripts.md) · [planning-and-development-agents.md](planning-and-development-agents.md)
+Related: [application-definition.schema.json](application-definition.schema.json) · [BREEZEON-AI-APPLICATION-ADOPTION.md](BREEZEON-AI-APPLICATION-ADOPTION.md) · [application-model.md](../application-model.md) · [page-development.md](../ui/page-development.md) · [application-branding.md](../ui/shell/application-branding.md) · [application-theme-palette.md](../ui/foundations/application-theme-palette.md) · [local-development-scripts.md](../local-development-scripts.md) · [planning-and-development-agents.md](planning-and-development-agents.md)
 
-**Process SSOT location:** this file (`STANDARDS/docs/ai/application-development-process.md`).
+**Process narrative SSOT:** this file (`STANDARDS/docs/ai/application-development-process.md`).
+
+**Step 1 input authority:** [application-definition.schema.json](application-definition.schema.json) is authoritative for required inputs, optional inputs, default values, and omission behavior. This markdown is the human-readable explanation. If schema and markdown conflict, **the schema wins**. Markdown must never introduce inputs, defaults, or behaviors absent from the schema.
 
 ---
 
 ## Required and optional application inputs
 
+**Agents:** consume [application-definition.schema.json](application-definition.schema.json) **first**. Use the tables below as supporting explanation only.
+
 ### Required
 
 | Input | Rule |
 | --- | --- |
-| Repository Name | GitHub repository name; technical identifier |
-| UniqueCode | Matches repository name (EAC registry stores uppercased form) |
+| Repository Name | GitHub repository name; technical identifier (case as created) |
+| UniqueCode | `repositoryName.ToUpperInvariant()` for EAC registry storage — must not diverge from the repository name ([naming.md](../naming.md)) |
 | Code | Short business identifier |
-| Hosted App Registration Name | Shared customer-environment / BreezeOn-operated registration for hosted hosts |
-| Local App Registration Name | Always `BreezeOn-LOCAL` for local development |
-| Pages | Initial IA (default: Home + New Request + Status Report + My Tasks unless overridden) |
+| Hosted App Registration Name | Shared customer-environment / BreezeOn-operated registration for hosted hosts (no platform default) |
+| Local App Registration Name | Always `BreezeOn-LOCAL` for local development (fixed) |
+| Pages | Initial IA (schema default: Home + New Request + Status Report + My Tasks unless overridden) |
 | Application Display Name | Human-readable product name — [application-branding.md](../ui/shell/application-branding.md) |
 
 Do not invent alternate technical ids that diverge from the repository name ([naming.md](../naming.md)).
@@ -37,7 +41,7 @@ Do not invent alternate technical ids that diverge from the repository name ([na
 | Navigation Logo | `nav-logo.svg`; independently configurable from Application Logo |
 | Theme Palette | Platform default Light/Dark accents — [application-theme-palette.md](../ui/foundations/application-theme-palette.md) |
 
-When optional inputs are omitted:
+When optional inputs are omitted (schema `x-breezeon.omissionBehavior`):
 
 - Standard default pages and **standard subtitles** are used ([application-branding.md](../ui/shell/application-branding.md))
 - Standard Theme Palette (platform defaults) is used
@@ -49,7 +53,7 @@ When optional inputs are omitted:
 
 ## Default UX rules (all new apps)
 
-Unless a plan explicitly overrides:
+Unless a plan explicitly overrides (encoded in schema defaults / omission behavior; detail in branding SSOT):
 
 | Rule | Standard |
 | --- | --- |
@@ -71,7 +75,12 @@ Unless a plan explicitly overrides:
 
 ### Step 1 — Application definition
 
-Capture required inputs (and any optional branding/theme inputs) before planning or coding.
+1. Load [application-definition.schema.json](application-definition.schema.json) for required / optional / defaults / omission behavior.
+2. Fill an instance from the user prompt; apply schema defaults for omitted optionals; derive `uniqueCode` from `repositoryName` via `ToUpperInvariant` when not supplied.
+3. Ask only for missing **non-defaulted required** fields (`repositoryName`, `uniqueCode`, `code`, `hostedAppRegistrationName`, `applicationDisplayName`).
+4. Do not require the user to read this markdown to discover inputs.
+
+Capture the completed instance before planning or coding.
 
 ### Step 2 — Implementation planning
 
@@ -99,6 +108,7 @@ Once the roadmap is approved:
 | Concern | Owner |
 | --- | --- |
 | Process authority (this document + linked standards) | **STANDARDS** |
+| Step 1 input contract | **[application-definition.schema.json](application-definition.schema.json)** |
 | Platform host reference | **SYSTEM-ADMIN-EAC** (EAC) |
 | Execution workspace (code, local reset, Build Locally) | **Target application repository** |
 
@@ -152,18 +162,33 @@ Perform Step 6 only when the current prompt explicitly requests it. Procedures: 
 
 ## Distinctions for agents
 
+### Classification legend (example vs standard)
+
+| Class | Meaning | Where it lives |
+| --- | --- | --- |
+| **Reusable BreezeOn standard** | Process order, schema inputs/defaults, linked platform AA | This process + [application-definition.schema.json](application-definition.schema.json) + linked standards |
+| **Application-specific input/decision** | One product’s Step 1 instance values | That app’s AA / ENT; schema instance for that app |
+| **Illustrative example** | Worked example only — **not** defaults | [examples/application-definition.inv.json](examples/application-definition.inv.json) + section below |
+
 1. **Existing platform standards** — follow; do not restate or redesign (STANDARDS remains process authority)
-2. **Application-specific inputs** — required + optional tables above
+2. **Application-specific inputs** — authoritative shape in [application-definition.schema.json](application-definition.schema.json); tables above explain
 3. **Planning vs execution** — planning may start outside the app repo; after Step 3, execution is only in the application repository
 4. **Local agent work** — Steps 4–5 in the application repository
 5. **Manual / hosted work** — Step 6, only when authorized in the current prompt
-6. **Reusable process** — this document; refine only when a new app validates a change
+6. **Reusable process** — this document + schema; refine only when a new app validates a change. Classify newly approved decisions (`inv-specific` / `application-specific` / `shared-app-dev-standard` / `shared-platform-standard`) per [documentation.md](../documentation.md) § Application-development change classifier; **ask** when class is ambiguous
+7. **Schema-first Step 1** — consume the schema first; markdown is supporting documentation only
+
+### Auto-update (anti-drift)
+
+When Step 1 inputs, defaults, or omission behavior change: update **schema first**, then sync this markdown in the **same change set**. Schema wins on conflict. Markdown must not invent inputs/defaults/behaviors absent from the schema.
 
 ---
 
-## First validated application (App #1)
+## Worked example: INV (illustrative instance)
 
-| Input | Value |
+**Agent banner:** INV values are **not** platform defaults. Do **not** copy `BreezeOn-DEV`, display name, Code, repo ids, or other INV fields into new apps. Durable INV current reality: [`architecture/applications/inv.md`](../../architecture/applications/inv.md). Machine instance: [examples/application-definition.inv.json](examples/application-definition.inv.json).
+
+| Input | Value (INV only) |
 | --- | --- |
 | Repository Name | `breezeon-corp-fin-inv` |
 | UniqueCode | `BREEZEON-CORP-FIN-INV` |

@@ -49,7 +49,7 @@ Future applications **must not** require Shared UI source changes to customize t
 
 ## Application Display Name
 
-- Required application-definition input ([application-development-process.md](../../ai/application-development-process.md)).
+- Required application-definition input ([application-definition.schema.json](../../ai/application-definition.schema.json); explained in [application-development-process.md](../../ai/application-development-process.md)).
 - Used throughout application branding and in **browser titles**.
 - Example: `Corporate Finance Investments`.
 - Localized chrome may still use resource keys; the **canonical display name** is the product’s human title.

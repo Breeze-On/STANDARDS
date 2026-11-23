@@ -1,0 +1,155 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Breeze-On/STANDARDS/docs/ai/application-definition.schema.json",
+  "title": "BreezeOn Application Definition",
+  "description": "Authoritative machine contract for Step 1 application-definition inputs, defaults, and omission behavior. Human-readable explanation: application-development-process.md. Agents must consume this schema first; markdown is supporting documentation only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "repositoryName",
+    "uniqueCode",
+    "code",
+    "hostedAppRegistrationName",
+    "localAppRegistrationName",
+    "pages",
+    "applicationDisplayName"
+  ],
+  "properties": {
+    "repositoryName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "GitHub repository name; technical identifier (case as created)."
+    },
+    "uniqueCode": {
+      "type": "string",
+      "minLength": 1,
+      "description": "EAC registry UniqueCode. Must equal repositoryName uppercased (ToUpperInvariant). Do not invent a divergent id.",
+      "pattern": "^[A-Z0-9][A-Z0-9._-]*$"
+    },
+    "code": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Short business identifier (product code)."
+    },
+    "hostedAppRegistrationName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Shared customer-environment / BreezeOn-operated App Registration name for hosted hosts. No platform default — must be supplied."
+    },
+    "localAppRegistrationName": {
+      "type": "string",
+      "const": "BreezeOn-LOCAL",
+      "description": "Always BreezeOn-LOCAL for local development. Fixed platform value; not a free-form ask."
+    },
+    "pages": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 },
+      "default": ["Home", "New Request", "Status Report", "My Tasks"],
+      "description": "Initial information architecture. Default when omitted: Home + New Request + Status Report + My Tasks."
+    },
+    "applicationDisplayName": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable product name. See docs/ui/shell/application-branding.md."
+    },
+    "applicationLogo": {
+      "type": "string",
+      "default": "app-logo.svg",
+      "description": "Application Logo asset filename. Locked name app-logo.svg when omitted; independently configurable from Navigation Logo."
+    },
+    "navigationLogo": {
+      "type": "string",
+      "default": "nav-logo.svg",
+      "description": "Navigation Logo asset filename. Locked name nav-logo.svg when omitted; independently configurable from Application Logo."
+    },
+    "browserFavicon": {
+      "type": "string",
+      "default": "favicon.svg",
+      "const": "favicon.svg",
+      "description": "Browser Favicon locked filename. Aligns with Navigation Logo branding by default; remains a separate asset."
+    },
+    "themePalette": {
+      "type": "string",
+      "default": "platform-default",
+      "description": "Theme Palette. Default: platform Light/Dark accents. See docs/ui/foundations/application-theme-palette.md."
+    }
+  },
+  "x-breezeon": {
+    "authority": {
+      "authoritativeFor": [
+        "requiredInputs",
+        "optionalInputs",
+        "defaultValues",
+        "omissionBehavior"
+      ],
+      "supportingDocumentation": "docs/ai/application-development-process.md",
+      "conflictRule": "If schema and markdown disagree, the schema is authoritative. Markdown must never introduce inputs, defaults, or behaviors absent from this schema."
+    },
+    "transforms": {
+      "uniqueCodeFromRepositoryName": "uniqueCode = repositoryName.ToUpperInvariant()"
+    },
+    "requiredInputs": [
+      "repositoryName",
+      "uniqueCode",
+      "code",
+      "hostedAppRegistrationName",
+      "localAppRegistrationName",
+      "pages",
+      "applicationDisplayName"
+    ],
+    "optionalInputs": [
+      "applicationLogo",
+      "navigationLogo",
+      "browserFavicon",
+      "themePalette"
+    ],
+    "fixedValues": {
+      "localAppRegistrationName": "BreezeOn-LOCAL",
+      "browserFavicon": "favicon.svg"
+    },
+    "defaults": {
+      "pages": ["Home", "New Request", "Status Report", "My Tasks"],
+      "applicationLogo": "app-logo.svg",
+      "navigationLogo": "nav-logo.svg",
+      "browserFavicon": "favicon.svg",
+      "themePalette": "platform-default",
+      "pageIcons": {
+        "New Request": { "name": "AddSquareMultiple", "variant": "Regular" },
+        "Status Report": { "name": "Dashboard", "variant": "Regular" },
+        "My Tasks": { "name": "AppsListDetail", "variant": "Regular" }
+      },
+      "homeSubtitle": null,
+      "browserTitleFormat": "<Page Title> - <Application Display Name>",
+      "platformDisplayName": "Breeze On",
+      "themes": ["Light", "Dark"]
+    },
+    "omissionBehavior": {
+      "pages": "Use defaults.pages (Home + New Request + Status Report + My Tasks).",
+      "applicationLogo": "Use locked filename app-logo.svg (platform/default or product asset).",
+      "navigationLogo": "Use locked filename nav-logo.svg.",
+      "browserFavicon": "Use locked filename favicon.svg.",
+      "themePalette": "Use platform default Light/Dark accents (application-theme-palette.md).",
+      "pageSubtitles": "Use standard reusable subtitles from application-branding.md.",
+      "brandingAssetFilenames": "Always rename uploads to app-logo.svg / nav-logo.svg / favicon.svg; never retain designer filenames.",
+      "logoVisualSharing": "Application Logo, Navigation Logo, and Browser Favicon may initially share visuals while remaining independently configured, referenced, and bound.",
+      "browserTitle": "Use <Page Title> - <Application Display Name> via BoDocumentTitle.",
+      "homeCardDescription": "Equals the destination page subtitle (same string / resource key).",
+      "brandingSplit": "Application Branding (Display Name + Application Logo) decoupled from Customer/Tenant Branding (Navigation Logo + Favicon)."
+    },
+    "agentConsumption": [
+      "Consume this schema first for required / optional / defaults / omission behavior.",
+      "Use application-development-process.md as supporting documentation only (explanation, Steps 1–6, Distinctions).",
+      "Fill an instance from the user prompt; apply schema defaults for omitted optionals.",
+      "Ask only for missing non-defaulted required fields (repositoryName, uniqueCode, code, hostedAppRegistrationName, applicationDisplayName). Derive uniqueCode from repositoryName via ToUpperInvariant when not supplied.",
+      "Do not require the user to read the markdown process doc to discover inputs.",
+      "Do not copy illustrative example instances (e.g. INV) as platform defaults."
+    ],
+    "relatedStandards": {
+      "naming": "docs/naming.md",
+      "branding": "docs/ui/shell/application-branding.md",
+      "themePalette": "docs/ui/foundations/application-theme-palette.md",
+      "process": "docs/ai/application-development-process.md"
+    }
+  }
+}

@@ -213,7 +213,7 @@ The Development Agent must integrate with the Planning Agent workflow.
 
 ### New product applications — repository transition
 
-For **new BreezeOn product applications**, follow [application-development-process.md](application-development-process.md).
+For **new BreezeOn product applications**, follow [application-development-process.md](application-development-process.md). Step 1 inputs: consume [application-definition.schema.json](application-definition.schema.json) **first** (markdown is supporting).
 
 **Checkpoint (Step 3):** after the implementation roadmap is approved and **before** Build Locally:
 

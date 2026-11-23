@@ -1,0 +1,15 @@
+{
+  "$schema": "../application-definition.schema.json",
+  "$comment": "ILLUSTRATIVE EXAMPLE ONLY — INV (breezeon-corp-fin-inv). Not platform defaults. Do not copy these values into new applications. Durable INV current reality: architecture/applications/inv.md",
+  "repositoryName": "breezeon-corp-fin-inv",
+  "uniqueCode": "BREEZEON-CORP-FIN-INV",
+  "code": "INV",
+  "hostedAppRegistrationName": "BreezeOn-DEV",
+  "localAppRegistrationName": "BreezeOn-LOCAL",
+  "pages": ["Home", "New Request", "Status Report", "My Tasks"],
+  "applicationDisplayName": "Invoice Approval Request",
+  "applicationLogo": "app-logo.svg",
+  "navigationLogo": "nav-logo.svg",
+  "browserFavicon": "favicon.svg",
+  "themePalette": "platform-default"
+}

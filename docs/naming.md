@@ -34,8 +34,8 @@ Current conventions across the organization.
 
 | Concept | Rule | Examples |
 | --- | --- | --- |
-| Repository name | The application’s **technical identifier** in GitHub and in the EAC registry `UniqueCode` | `SYSTEM-ADMIN-EAC`, `SYSTEM-HR-HRM`, `SYSTEM-FINANCE-AP` |
-| `UniqueCode` | Matches the repository name | same as above |
+| Repository name | The application’s **technical identifier** in GitHub (case as created) | `SYSTEM-ADMIN-EAC`, `breezeon-corp-fin-inv` |
+| `UniqueCode` | `repositoryName.ToUpperInvariant()` for EAC registry storage — must not diverge from the repository name ([application-definition.schema.json](ai/application-definition.schema.json)) | `SYSTEM-ADMIN-EAC`, `BREEZEON-CORP-FIN-INV` |
 | `Code` | Short business identifier for the application | `EAC`, `HRM`, `AP` |
 | `ApplicationGUID` | Immutable relationship key (see [database.md](database.md)) | generated GUID string |
 

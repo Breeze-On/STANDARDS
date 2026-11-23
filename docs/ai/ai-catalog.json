@@ -1,6 +1,6 @@
 {
     "schemaVersion":  1,
-    "generatedAt":  "2026-11-22T04:25:21.9113557Z",
+    "generatedAt":  "2026-11-23T04:45:56.0080353Z",
     "generator":  "scripts/docs/Generate-AiCatalog.ps1",
     "repositories":  [
                          "STANDARDS",
@@ -37,6 +37,7 @@
                                                        ],
                                           "UI":  [
                                                      "ShellNavigation",
+                                                     "ShellBranding",
                                                      "Foundations",
                                                      "Layout",
                                                      "Controls",
@@ -94,7 +95,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:README_AI.md",
@@ -122,7 +123,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:24-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/ecosystem.md",
@@ -150,7 +151,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/landscape.md",
@@ -167,6 +168,7 @@
                           "entryPointPriority":  10,
                           "related":  [
                                           "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
                                           "SYSTEM-ADMIN-EAC:AGENTS.md",
                                           "SYSTEM-ADMIN-EAC:README.md",
@@ -176,7 +178,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T23:27:09-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/README.md",
@@ -204,7 +206,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/security.md",
@@ -225,7 +227,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/app-configuration/application-configuration-deployment.md",
@@ -249,7 +251,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/app-configuration/configuration-session-cache.md",
@@ -273,7 +275,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/app-configuration/construct-selection.md",
@@ -297,7 +299,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/app-configuration/README.md",
@@ -321,7 +323,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/applications/eac-authorization-matrix.md",
@@ -348,7 +350,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/applications/eac.md",
@@ -365,6 +367,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
                                           "SYSTEM-ADMIN-EAC:AGENTS.md",
                                           "SYSTEM-ADMIN-EAC:README.md",
@@ -374,7 +377,34 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
+                      },
+                      {
+                          "id":  "STANDARDS:architecture/applications/inv.md",
+                          "repository":  "STANDARDS",
+                          "path":  "architecture/applications/inv.md",
+                          "domain":  "Platform",
+                          "capability":  "Applications",
+                          "documentType":  "AA",
+                          "kind":  "Architecture",
+                          "owner":  "Architecture",
+                          "scope":  "application:inv",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/README.md",
+                                          "SYSTEM-ADMIN-EAC:AGENTS.md",
+                                          "SYSTEM-ADMIN-EAC:README.md",
+                                          "SYSTEM-ADMIN-EAC:README_AI.md",
+                                          "SYSTEM-ADMIN-EAC:scripts/README.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/applications/README.md",
@@ -392,6 +422,7 @@
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
                                           "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
                                           "SYSTEM-ADMIN-EAC:AGENTS.md",
                                           "SYSTEM-ADMIN-EAC:README.md",
                                           "SYSTEM-ADMIN-EAC:README_AI.md",
@@ -400,7 +431,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/authorization/authorization-standard.md",
@@ -427,7 +458,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/authorization/page-security-standard.md",
@@ -454,7 +485,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/authorization/README.md",
@@ -481,7 +512,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/authorization/security-schema-standard.md",
@@ -508,7 +539,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/data-entities/ai-authoring-contract.md",
@@ -535,7 +566,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/data-entities/authoring-guide.md",
@@ -562,7 +593,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/data-entities/data-entities-architecture.md",
@@ -589,7 +620,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/data-entities/data-entities-standard.md",
@@ -616,7 +647,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/data-entities/README.md",
@@ -643,7 +674,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/data-entities/using-data-entities.md",
@@ -670,7 +701,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/data-entities/worked-examples.md",
@@ -697,7 +728,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/authentication-standard.md",
@@ -727,7 +758,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/business-vision.md",
@@ -757,7 +788,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/cloud-architecture.md",
@@ -787,7 +818,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/configuration-standard.md",
@@ -817,7 +848,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/directory-synchronization-standard.md",
@@ -847,7 +878,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/future-roadmap.md",
@@ -877,7 +908,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/identity-schema-standard.md",
@@ -907,7 +938,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/local-development-standard.md",
@@ -937,7 +968,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/README.md",
@@ -967,7 +998,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/session-management-standard.md",
@@ -997,7 +1028,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/process-framework/ai-authoring-contract.md",
@@ -1023,7 +1054,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/process-framework/authoring-guide.md",
@@ -1049,7 +1080,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/process-framework/README.md",
@@ -1075,7 +1106,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/process-framework/worked-examples.md",
@@ -1101,7 +1132,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/variables/ai-authoring-contract.md",
@@ -1126,7 +1157,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/variables/authoring-guide.md",
@@ -1151,7 +1182,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/variables/README.md",
@@ -1176,7 +1207,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/variables/variables-standard.md",
@@ -1201,7 +1232,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/variables/worked-examples.md",
@@ -1226,7 +1257,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-001-multi-repository-model.md",
@@ -1258,7 +1289,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-001-multi-repository-model.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-002-blazor-interactive-server.md",
@@ -1290,7 +1321,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-002-blazor-interactive-server.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-003-azure-sql-with-local-docker-sql.md",
@@ -1322,7 +1353,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-003-azure-sql-with-local-docker-sql.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-004-breezeon-ui-abstraction-layer.md",
@@ -1354,7 +1385,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-004-breezeon-ui-abstraction-layer.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-005-mandatory-transactional-audit-columns.md",
@@ -1386,7 +1417,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-005-mandatory-transactional-audit-columns.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-006-application-context-ownership.md",
@@ -1418,7 +1449,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-006-application-context-ownership.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-007-ai-agent-operational-boundaries.md",
@@ -1450,7 +1481,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-007-ai-agent-operational-boundaries.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-008-query-driven-data-retrieval.md",
@@ -1482,7 +1513,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-008-query-driven-data-retrieval.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-009-entra-oidc-cookie-authentication.md",
@@ -1514,7 +1545,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-009-entra-oidc-cookie-authentication.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-010-platform-identity-schema.md",
@@ -1546,7 +1577,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-010-platform-identity-schema.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-011-app-registration-per-customer-environment.md",
@@ -1578,7 +1609,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-011-app-registration-per-customer-environment.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-012-cookie-session-management.md",
@@ -1610,7 +1641,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-012-cookie-session-management.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-013-microsoft-graph-directory-synchronization.md",
@@ -1642,7 +1673,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-013-microsoft-graph-directory-synchronization.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-014-platform-authorization.md",
@@ -1669,7 +1700,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-014-platform-authorization.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-015-object-owned-administrator-groups.md",
@@ -1701,7 +1732,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-015-object-owned-administrator-groups.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-016-data-entity-ownership.md",
@@ -1733,7 +1764,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-016-data-entity-ownership.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-017-application-configuration-deployment.md",
@@ -1765,7 +1796,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-017-application-configuration-deployment.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-018-data-entity-values-excel-portability.md",
@@ -1797,7 +1828,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-018-data-entity-values-excel-portability.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:24-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-019-process-framework-metadata.md",
@@ -1823,7 +1854,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-019-process-framework-metadata.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-020-configuration-session-cache.md",
@@ -1847,7 +1878,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-020-configuration-session-cache.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-021-validation-summary-experience.md",
@@ -1879,7 +1910,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-021-validation-summary-experience.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/README.md",
@@ -1911,7 +1942,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/README.md"
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/adr.md",
@@ -1943,7 +1974,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/application-model.md",
@@ -1964,7 +1995,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/data-portability.md",
@@ -1985,7 +2016,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/database.md",
@@ -2008,7 +2039,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:24-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/documentation.md",
@@ -2036,7 +2067,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:24-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/domain-modeling.md",
@@ -2064,7 +2095,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/engineering.md",
@@ -2091,7 +2122,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/environments.md",
@@ -2112,7 +2143,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/glossary.md",
@@ -2133,7 +2164,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/hosted-deployment.md",
@@ -2154,7 +2185,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/local-database.md",
@@ -2177,7 +2208,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/local-development-scripts.md",
@@ -2204,7 +2235,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/naming.md",
@@ -2225,7 +2256,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/observability.md",
@@ -2253,7 +2284,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/review-governance.md",
@@ -2274,7 +2305,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:24-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/security-governance.md",
@@ -2295,7 +2326,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/testing.md",
@@ -2323,7 +2354,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui-components.md",
@@ -2353,7 +2384,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/versioning.md",
@@ -2381,7 +2412,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/ai-agent-governance.md",
@@ -2402,7 +2433,31 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                      },
+                      {
+                          "id":  "STANDARDS:docs/ai/application-development-process.md",
+                          "repository":  "STANDARDS",
+                          "path":  "docs/ai/application-development-process.md",
+                          "domain":  "Engineering",
+                          "capability":  "AiOnboarding",
+                          "documentType":  "AA",
+                          "kind":  "Standard",
+                          "owner":  "Documentation",
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
+                                          "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
+                                          "STANDARDS:docs/ai/BREEZEON-AI-STANDARDS-SUMMARY.md",
+                                          "STANDARDS:docs/ai/README.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
@@ -2418,6 +2473,7 @@
                           "isEntryPoint":  false,
                           "entryPointPriority":  null,
                           "related":  [
+                                          "STANDARDS:docs/ai/application-development-process.md",
                                           "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
                                           "STANDARDS:docs/ai/BREEZEON-AI-STANDARDS-SUMMARY.md",
                                           "STANDARDS:docs/ai/README.md"
@@ -2425,7 +2481,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
@@ -2441,6 +2497,7 @@
                           "isEntryPoint":  false,
                           "entryPointPriority":  null,
                           "related":  [
+                                          "STANDARDS:docs/ai/application-development-process.md",
                                           "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
                                           "STANDARDS:docs/ai/BREEZEON-AI-STANDARDS-SUMMARY.md",
                                           "STANDARDS:docs/ai/README.md"
@@ -2448,7 +2505,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-STANDARDS-SUMMARY.md",
@@ -2464,6 +2521,7 @@
                           "isEntryPoint":  false,
                           "entryPointPriority":  null,
                           "related":  [
+                                          "STANDARDS:docs/ai/application-development-process.md",
                                           "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
                                           "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
                                           "STANDARDS:docs/ai/README.md"
@@ -2471,7 +2529,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/planning-and-development-agents.md",
@@ -2494,7 +2552,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:24-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/README.md",
@@ -2510,6 +2568,7 @@
                           "isEntryPoint":  true,
                           "entryPointPriority":  20,
                           "related":  [
+                                          "STANDARDS:docs/ai/application-development-process.md",
                                           "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
                                           "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
                                           "STANDARDS:docs/ai/BREEZEON-AI-STANDARDS-SUMMARY.md"
@@ -2517,7 +2576,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/deviations/DEV-001-process-framework-future-engine-vision.md",
@@ -2543,7 +2602,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:24-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/deviations/DEV-002-example-governance-approved-exceptions.md",
@@ -2573,7 +2632,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:24-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/deviations/README.md",
@@ -2594,7 +2653,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/deviations/TEMPLATE.md",
@@ -2615,7 +2674,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/plans/README.md",
@@ -2638,7 +2697,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:24-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/example-governance.md",
@@ -2668,7 +2727,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/forms.md",
@@ -2698,7 +2757,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/gallery-index.md",
@@ -2728,7 +2787,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/grids.md",
@@ -2758,7 +2817,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/i18n.md",
@@ -2788,7 +2847,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/layout.md",
@@ -2812,7 +2871,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/motion.md",
@@ -2842,7 +2901,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/navigation.md",
@@ -2868,7 +2927,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/overlays.md",
@@ -2898,7 +2957,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/overview.md",
@@ -2928,7 +2987,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/page-development.md",
@@ -2958,7 +3017,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/sections.md",
@@ -2988,7 +3047,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/shell.md",
@@ -3014,7 +3073,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/tokens.md",
@@ -3044,7 +3103,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/typography.md",
@@ -3074,7 +3133,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/ux-pr-review-checklist.md",
@@ -3104,7 +3163,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/button.md",
@@ -3130,7 +3189,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/forms.md",
@@ -3156,7 +3215,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/grids.md",
@@ -3182,7 +3241,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/parameter-reference.md",
@@ -3208,7 +3267,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/query-driven-retrieval.md",
@@ -3234,7 +3293,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/selection-and-navigation.md",
@@ -3260,7 +3319,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/shuffle-card-grid.md",
@@ -3286,7 +3345,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/toggle.md",
@@ -3312,7 +3371,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/foundations/accessibility.md",
@@ -3328,6 +3387,7 @@
                           "isEntryPoint":  false,
                           "entryPointPriority":  null,
                           "related":  [
+                                          "STANDARDS:docs/ui/foundations/application-theme-palette.md",
                                           "STANDARDS:docs/ui/foundations/i18n.md",
                                           "STANDARDS:docs/ui/foundations/icons.md",
                                           "STANDARDS:docs/ui/foundations/motion.md",
@@ -3338,7 +3398,34 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                      },
+                      {
+                          "id":  "STANDARDS:docs/ui/foundations/application-theme-palette.md",
+                          "repository":  "STANDARDS",
+                          "path":  "docs/ui/foundations/application-theme-palette.md",
+                          "domain":  "UI",
+                          "capability":  "Foundations",
+                          "documentType":  "AA",
+                          "kind":  "Standard",
+                          "owner":  "UI",
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:docs/ui/foundations/accessibility.md",
+                                          "STANDARDS:docs/ui/foundations/i18n.md",
+                                          "STANDARDS:docs/ui/foundations/icons.md",
+                                          "STANDARDS:docs/ui/foundations/motion.md",
+                                          "STANDARDS:docs/ui/foundations/normative-tiers.md",
+                                          "STANDARDS:docs/ui/foundations/tokens.md",
+                                          "STANDARDS:docs/ui/foundations/typography.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/foundations/i18n.md",
@@ -3355,6 +3442,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:docs/ui/foundations/accessibility.md",
+                                          "STANDARDS:docs/ui/foundations/application-theme-palette.md",
                                           "STANDARDS:docs/ui/foundations/icons.md",
                                           "STANDARDS:docs/ui/foundations/motion.md",
                                           "STANDARDS:docs/ui/foundations/normative-tiers.md",
@@ -3364,7 +3452,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/foundations/icons.md",
@@ -3381,6 +3469,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:docs/ui/foundations/accessibility.md",
+                                          "STANDARDS:docs/ui/foundations/application-theme-palette.md",
                                           "STANDARDS:docs/ui/foundations/i18n.md",
                                           "STANDARDS:docs/ui/foundations/motion.md",
                                           "STANDARDS:docs/ui/foundations/normative-tiers.md",
@@ -3390,7 +3479,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/foundations/motion.md",
@@ -3407,6 +3496,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:docs/ui/foundations/accessibility.md",
+                                          "STANDARDS:docs/ui/foundations/application-theme-palette.md",
                                           "STANDARDS:docs/ui/foundations/i18n.md",
                                           "STANDARDS:docs/ui/foundations/icons.md",
                                           "STANDARDS:docs/ui/foundations/normative-tiers.md",
@@ -3416,7 +3506,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/foundations/normative-tiers.md",
@@ -3433,6 +3523,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:docs/ui/foundations/accessibility.md",
+                                          "STANDARDS:docs/ui/foundations/application-theme-palette.md",
                                           "STANDARDS:docs/ui/foundations/i18n.md",
                                           "STANDARDS:docs/ui/foundations/icons.md",
                                           "STANDARDS:docs/ui/foundations/motion.md",
@@ -3442,7 +3533,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/foundations/tokens.md",
@@ -3459,6 +3550,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:docs/ui/foundations/accessibility.md",
+                                          "STANDARDS:docs/ui/foundations/application-theme-palette.md",
                                           "STANDARDS:docs/ui/foundations/i18n.md",
                                           "STANDARDS:docs/ui/foundations/icons.md",
                                           "STANDARDS:docs/ui/foundations/motion.md",
@@ -3468,7 +3560,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/foundations/typography.md",
@@ -3485,6 +3577,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:docs/ui/foundations/accessibility.md",
+                                          "STANDARDS:docs/ui/foundations/application-theme-palette.md",
                                           "STANDARDS:docs/ui/foundations/i18n.md",
                                           "STANDARDS:docs/ui/foundations/icons.md",
                                           "STANDARDS:docs/ui/foundations/motion.md",
@@ -3494,7 +3587,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/layout/expandable-section.md",
@@ -3518,7 +3611,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/layout/layout.md",
@@ -3542,7 +3635,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/layout/panels.md",
@@ -3566,7 +3659,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/layout/sections.md",
@@ -3590,7 +3683,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/actions-area.md",
@@ -3620,7 +3713,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/dirty-state.md",
@@ -3650,7 +3743,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/import-summary.md",
@@ -3680,7 +3773,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -3710,7 +3803,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/page-states.md",
@@ -3740,7 +3833,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/ux-conventions.md",
@@ -3770,7 +3863,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/validation-summary.md",
@@ -3800,7 +3893,28 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                      },
+                      {
+                          "id":  "STANDARDS:docs/ui/shell/application-branding.md",
+                          "repository":  "STANDARDS",
+                          "path":  "docs/ui/shell/application-branding.md",
+                          "domain":  "UI",
+                          "capability":  "ShellBranding",
+                          "documentType":  "AA",
+                          "kind":  "Standard",
+                          "owner":  "UI",
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "SYSTEM-SHARED-UI:docs/application-branding-host-contract.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/shell/error-messages.md",
@@ -3826,7 +3940,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/shell/navigation.md",
@@ -3852,7 +3966,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/shell/overlays.md",
@@ -3878,7 +3992,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/shell/shell.md",
@@ -3904,7 +4018,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
                       },
                       {
                           "id":  "STANDARDS:runbooks/customer-onboarding-authentication.md",
@@ -3926,7 +4040,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
                           "id":  "STANDARDS:runbooks/customer-onboarding-authorization.md",
@@ -3953,7 +4067,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
                           "id":  "STANDARDS:runbooks/customer-onboarding-master-flow.md",
@@ -3975,7 +4089,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
                           "id":  "STANDARDS:runbooks/eac-application-configuration-deployment.md",
@@ -3996,7 +4110,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:runbooks/README.md",
@@ -4018,7 +4132,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:templates/azure-sql/README.md",
@@ -4045,7 +4159,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:templates/cursor-rules/README.md",
@@ -4072,7 +4186,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:templates/dependabot/README.md",
@@ -4099,7 +4213,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:templates/docs-plans/README.md",
@@ -4126,7 +4240,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:24-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:templates/local-sql/README.md",
@@ -4153,7 +4267,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "STANDARDS:templates/onboarding/README.md",
@@ -4180,7 +4294,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:30-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:AGENTS.md",
@@ -4198,6 +4312,7 @@
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
                                           "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
                                           "SYSTEM-ADMIN-EAC:README.md",
                                           "SYSTEM-ADMIN-EAC:README_AI.md",
@@ -4206,7 +4321,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:35-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:README.md",
@@ -4224,6 +4339,7 @@
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
                                           "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
                                           "SYSTEM-ADMIN-EAC:AGENTS.md",
                                           "SYSTEM-ADMIN-EAC:README_AI.md",
@@ -4232,7 +4348,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:35-05:00"
+                          "lastUpdated":  "2026-11-22T14:44:40-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:README_AI.md",
@@ -4250,6 +4366,7 @@
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
                                           "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
                                           "SYSTEM-ADMIN-EAC:AGENTS.md",
                                           "SYSTEM-ADMIN-EAC:README.md",
@@ -4258,7 +4375,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:35-05:00"
+                          "lastUpdated":  "2026-11-22T14:44:40-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:docs/data-entities.md",
@@ -4285,7 +4402,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:35-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:docs/db-model.md",
@@ -4308,7 +4425,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:35-05:00"
+                          "lastUpdated":  "2026-11-22T14:44:40-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:docs/process-framework.md",
@@ -4334,7 +4451,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:35-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:docs/variables.md",
@@ -4359,7 +4476,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:35-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:docs/plans/README.md",
@@ -4382,7 +4499,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:03-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:scripts/README.md",
@@ -4400,6 +4517,7 @@
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
                                           "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
                                           "SYSTEM-ADMIN-EAC:AGENTS.md",
                                           "SYSTEM-ADMIN-EAC:README.md",
@@ -4408,7 +4526,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:35-05:00"
+                          "lastUpdated":  "2026-11-22T14:44:40-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:sql/seed/README.md",
@@ -4431,7 +4549,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:35-05:00"
+                          "lastUpdated":  "2026-11-22T12:32:54-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:AGENTS.md",
@@ -4459,7 +4577,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:30-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:README.md",
@@ -4487,7 +4605,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:45-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:README_AI.md",
@@ -4515,7 +4633,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:30-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:assets/brand/README.md",
@@ -4543,7 +4661,28 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:45-05:00"
+                      },
+                      {
+                          "id":  "SYSTEM-SHARED-UI:docs/application-branding-host-contract.md",
+                          "repository":  "SYSTEM-SHARED-UI",
+                          "path":  "docs/application-branding-host-contract.md",
+                          "domain":  "UI",
+                          "capability":  "ShellBranding",
+                          "documentType":  "AN",
+                          "kind":  "Reference",
+                          "owner":  "Shared UI",
+                          "scope":  "shared-ui",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:docs/ui/shell/application-branding.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-22T22:57:45-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:docs/identity-model.md",
@@ -4573,7 +4712,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:30-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:docs/public-component-api.md",
@@ -4601,7 +4740,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T22:57:45-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:docs/security-model.md",
@@ -4628,7 +4767,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:30-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:docs/plans/README.md",
@@ -4651,7 +4790,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:47:00-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:30-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:scripts/README.md",
@@ -4679,7 +4818,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:30-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:sql/identity/seed/README.md",
@@ -4707,7 +4846,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:30-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:sql/platform/README.md",
@@ -4735,7 +4874,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:30-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:sql/security/seed/README.md",
@@ -4763,7 +4902,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-21T20:24:45-05:00"
+                          "lastUpdated":  "2026-11-22T10:28:30-05:00"
                       },
                       {
                           "id":  ".github:profile/README.md",
@@ -4784,7 +4923,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-10-22T16:20:47-04:00"
+                          "lastUpdated":  "2026-11-22T10:28:31-05:00"
                       }
                   ],
     "indexes":  {
@@ -4819,6 +4958,7 @@
                                                       "STANDARDS:architecture/app-configuration/construct-selection.md",
                                                       "STANDARDS:architecture/app-configuration/README.md",
                                                       "STANDARDS:architecture/applications/eac.md",
+                                                      "STANDARDS:architecture/applications/inv.md",
                                                       "STANDARDS:architecture/applications/README.md",
                                                       "STANDARDS:architecture/data-entities/ai-authoring-contract.md",
                                                       "STANDARDS:architecture/data-entities/authoring-guide.md",
@@ -4882,6 +5022,7 @@
                                                 "STANDARDS:docs/ui/controls/shuffle-card-grid.md",
                                                 "STANDARDS:docs/ui/controls/toggle.md",
                                                 "STANDARDS:docs/ui/foundations/accessibility.md",
+                                                "STANDARDS:docs/ui/foundations/application-theme-palette.md",
                                                 "STANDARDS:docs/ui/foundations/i18n.md",
                                                 "STANDARDS:docs/ui/foundations/icons.md",
                                                 "STANDARDS:docs/ui/foundations/motion.md",
@@ -4899,6 +5040,7 @@
                                                 "STANDARDS:docs/ui/patterns/page-states.md",
                                                 "STANDARDS:docs/ui/patterns/ux-conventions.md",
                                                 "STANDARDS:docs/ui/patterns/validation-summary.md",
+                                                "STANDARDS:docs/ui/shell/application-branding.md",
                                                 "STANDARDS:docs/ui/shell/error-messages.md",
                                                 "STANDARDS:docs/ui/shell/navigation.md",
                                                 "STANDARDS:docs/ui/shell/overlays.md",
@@ -4907,6 +5049,7 @@
                                                 "SYSTEM-SHARED-UI:README.md",
                                                 "SYSTEM-SHARED-UI:README_AI.md",
                                                 "SYSTEM-SHARED-UI:assets/brand/README.md",
+                                                "SYSTEM-SHARED-UI:docs/application-branding-host-contract.md",
                                                 "SYSTEM-SHARED-UI:docs/public-component-api.md",
                                                 "SYSTEM-SHARED-UI:scripts/README.md",
                                                 "SYSTEM-SHARED-UI:sql/identity/seed/README.md",
@@ -4950,6 +5093,7 @@
                                                          "STANDARDS:docs/testing.md",
                                                          "STANDARDS:docs/versioning.md",
                                                          "STANDARDS:docs/ai/ai-agent-governance.md",
+                                                         "STANDARDS:docs/ai/application-development-process.md",
                                                          "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
                                                          "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
                                                          "STANDARDS:docs/ai/BREEZEON-AI-STANDARDS-SUMMARY.md",
@@ -5016,6 +5160,7 @@
                                          "Platform/Applications":  [
                                                                        "STANDARDS:architecture/landscape.md",
                                                                        "STANDARDS:architecture/applications/eac.md",
+                                                                       "STANDARDS:architecture/applications/inv.md",
                                                                        "STANDARDS:architecture/applications/README.md",
                                                                        "SYSTEM-ADMIN-EAC:AGENTS.md",
                                                                        "SYSTEM-ADMIN-EAC:README.md",
@@ -5074,8 +5219,13 @@
                                                                     "STANDARDS:docs/ui/shell/overlays.md",
                                                                     "STANDARDS:docs/ui/shell/shell.md"
                                                                 ],
+                                         "UI/ShellBranding":  [
+                                                                  "STANDARDS:docs/ui/shell/application-branding.md",
+                                                                  "SYSTEM-SHARED-UI:docs/application-branding-host-contract.md"
+                                                              ],
                                          "UI/Foundations":  [
                                                                 "STANDARDS:docs/ui/foundations/accessibility.md",
+                                                                "STANDARDS:docs/ui/foundations/application-theme-palette.md",
                                                                 "STANDARDS:docs/ui/foundations/i18n.md",
                                                                 "STANDARDS:docs/ui/foundations/icons.md",
                                                                 "STANDARDS:docs/ui/foundations/motion.md",
@@ -5208,6 +5358,7 @@
                                                                                        "SYSTEM-SHARED-UI:docs/plans/README.md"
                                                                                    ],
                                          "Engineering/AiOnboarding":  [
+                                                                          "STANDARDS:docs/ai/application-development-process.md",
                                                                           "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
                                                                           "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
                                                                           "STANDARDS:docs/ai/BREEZEON-AI-STANDARDS-SUMMARY.md",
@@ -5239,6 +5390,7 @@
                                                            "STANDARDS:architecture/app-configuration/README.md",
                                                            "STANDARDS:architecture/applications/eac-authorization-matrix.md",
                                                            "STANDARDS:architecture/applications/eac.md",
+                                                           "STANDARDS:architecture/applications/inv.md",
                                                            "STANDARDS:architecture/applications/README.md",
                                                            "STANDARDS:architecture/authorization/authorization-standard.md",
                                                            "STANDARDS:architecture/authorization/page-security-standard.md",
@@ -5312,6 +5464,7 @@
                                                            "STANDARDS:docs/ui-components.md",
                                                            "STANDARDS:docs/versioning.md",
                                                            "STANDARDS:docs/ai/ai-agent-governance.md",
+                                                           "STANDARDS:docs/ai/application-development-process.md",
                                                            "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
                                                            "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
                                                            "STANDARDS:docs/ai/BREEZEON-AI-STANDARDS-SUMMARY.md",
@@ -5347,6 +5500,7 @@
                                                            "STANDARDS:docs/ui/controls/shuffle-card-grid.md",
                                                            "STANDARDS:docs/ui/controls/toggle.md",
                                                            "STANDARDS:docs/ui/foundations/accessibility.md",
+                                                           "STANDARDS:docs/ui/foundations/application-theme-palette.md",
                                                            "STANDARDS:docs/ui/foundations/i18n.md",
                                                            "STANDARDS:docs/ui/foundations/icons.md",
                                                            "STANDARDS:docs/ui/foundations/motion.md",
@@ -5364,6 +5518,7 @@
                                                            "STANDARDS:docs/ui/patterns/page-states.md",
                                                            "STANDARDS:docs/ui/patterns/ux-conventions.md",
                                                            "STANDARDS:docs/ui/patterns/validation-summary.md",
+                                                           "STANDARDS:docs/ui/shell/application-branding.md",
                                                            "STANDARDS:docs/ui/shell/error-messages.md",
                                                            "STANDARDS:docs/ui/shell/navigation.md",
                                                            "STANDARDS:docs/ui/shell/overlays.md",
@@ -5397,6 +5552,7 @@
                                                                   "SYSTEM-SHARED-UI:README.md",
                                                                   "SYSTEM-SHARED-UI:README_AI.md",
                                                                   "SYSTEM-SHARED-UI:assets/brand/README.md",
+                                                                  "SYSTEM-SHARED-UI:docs/application-branding-host-contract.md",
                                                                   "SYSTEM-SHARED-UI:docs/identity-model.md",
                                                                   "SYSTEM-SHARED-UI:docs/public-component-api.md",
                                                                   "SYSTEM-SHARED-UI:docs/security-model.md",

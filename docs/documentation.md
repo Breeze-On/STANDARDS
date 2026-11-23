@@ -162,7 +162,7 @@ Prefer an existing Capability. Add a new Capability only when no current token f
 Domains: Security, Platform, UI, Engineering, Operations, Org
 Security: Authentication, Authorization, DependencyGovernance, SqlAccessSecrets
 Platform: Hosting, Environments, Applications, AppConfiguration, Database, DataPortability, DataEntities, ProcessFramework, Variables
-UI: ShellNavigation, Foundations, Layout, Controls, Patterns, PageDevelopment, PublicComponentApi, Gallery
+UI: ShellNavigation, ShellBranding, Foundations, Layout, Controls, Patterns, PageDevelopment, PublicComponentApi, Gallery
 Engineering: ApplicationModel, Naming, Stack, DocStandards, Deviations, ReviewGovernance, AdrProcess, Glossary, AgentGovernance, PlanningDevelopmentAgents, AiOnboarding
 Operations: CustomerOnboarding, ConfigPromote
 Org: OrgProfile
@@ -353,13 +353,40 @@ Use this as a lightweight reminder (not a review program). Map the change to the
 | --- | --- |
 | New feature / behavior | Owning app or library AA + thin `README_AI` route **only if** discovery changes |
 | New architecture decision | New/updated ADR (+ owning `architecture/` AA) |
-| New BreezeOn application | [`BREEZEON-AI-APPLICATION-ADOPTION.md`](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) pattern + landscape/applications + thin ENT trio (`README` / `README_AI` / `AGENTS`) |
+| New BreezeOn application | [`application-development-process.md`](ai/application-development-process.md) Steps 1–6 + [`application-definition.schema.json`](ai/application-definition.schema.json) (Step 1) + [`BREEZEON-AI-APPLICATION-ADOPTION.md`](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) pattern + landscape/applications + thin ENT trio (`README` / `README_AI` / `AGENTS`) |
+| Step 1 inputs / defaults / omission | **[`application-definition.schema.json`](ai/application-definition.schema.json) first**, then sync explanatory tables in [`application-development-process.md`](ai/application-development-process.md) — same change set; schema wins on conflict; markdown must not invent inputs/defaults/behaviors absent from the schema |
 | New deployment requirement | [`hosted-deployment.md`](hosted-deployment.md) and/or owning runbook |
 | New dependency / vulnerability policy | [`security-governance.md`](security-governance.md) (+ Dependabot template under `templates/` if needed) |
 | New / moved / deleted catalog-eligible doc | Banner Domain+Capability + regenerate [`ai/ai-catalog.json`](ai/ai-catalog.json) |
 | New Capability token | Seed list in this file (under Domain) + first banner use + catalog regenerate |
 
 Do **not** invent mandatory review cycles, ownership matrices, or committees to enforce this. Agent Development DoD + same-change-set habit + catalog CI validator are the enforcement model.
+
+### Application-development change classifier
+
+When a newly approved decision might affect new-app process docs, **classify before writing**. If class is unclear, **ask the user** — do not guess-promote INV (or any single app) into platform defaults, and do not bury a shared standard only in an app AA.
+
+| Class | Meaning | Owns the update |
+| --- | --- | --- |
+| `inv-specific` | True only for INV product reality | [`architecture/applications/inv.md`](../architecture/applications/inv.md) (+ INV ENT trio if discovery changes); **not** schema defaults or process input tables |
+| `application-specific` | One product’s inputs/decisions | That app’s AA / ENT; optional illustrative instance under [`ai/examples/`](ai/examples/) only when used as an example |
+| `shared-app-dev-standard` | Reusable new-app process / input / default | **Inputs/defaults/omission →** [`application-definition.schema.json`](ai/application-definition.schema.json) **first**, then sync [`application-development-process.md`](ai/application-development-process.md); process-order-only → process markdown; branding/theme only if those SSOTs own the rule |
+| `shared-platform-standard` | Cross-product platform contract | Owning AA under `architecture/` / `docs/` / ADR — **not** the process file or application-definition schema |
+
+**When process/schema updates are required:** only when class is `shared-app-dev-standard` **and** a new app (or explicit approval) validates the change ([application-development-process.md](ai/application-development-process.md) Distinctions).
+
+**When process/schema updates are forbidden:** INV-only facts, single-app overrides, platform contracts owned elsewhere (identity, authz, hosted deploy, Shared UI).
+
+**Anti-drift (Step 1 contract):**
+
+```text
+IF touches inputs/defaults/omission:
+  patch application-definition.schema.json FIRST
+  patch application-development-process.md to MATCH schema (explanation only)
+  SAME change set — never schema-only or markdown-only for input contracts
+  IF conflict: schema wins; fix markdown
+  Markdown MUST NOT add inputs/defaults/behaviors absent from schema
+```
 
 ### Identity & Authentication DoD (platform)
 
