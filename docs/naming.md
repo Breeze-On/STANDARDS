@@ -27,6 +27,7 @@ Current conventions across the organization.
 | Application / library | Repo | Project / namespace |
 | --- | --- | --- |
 | EAC | `SYSTEM-ADMIN-EAC` | `BreezeOn.Eac` |
+| INV | `breezeon-corp-fin-inv` | `BreezeOn.CorpFinInv` |
 | Shared UI | `SYSTEM-SHARED-UI` | `BreezeOn.UI` |
 
 ## Application technical identifiers

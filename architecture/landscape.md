@@ -34,6 +34,7 @@ Current-reality only. For org identity and the repository table, see [ecosystem.
 | [STANDARDS](https://github.com/Breeze-On/STANDARDS) | Org standards | Conventions, current architecture descriptions, ADRs |
 | [.github](https://github.com/Breeze-On/.github) | Org profile | Vision / mission / ecosystem messaging only |
 | [SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) | Application | EAC Blazor app (no ASP.NET Core Identity), business schema, local SQL sandbox, DEV deploy |
+| [breezeon-corp-fin-inv](https://github.com/Breeze-On/breezeon-corp-fin-inv) | Application | INV (Invoice Approval Request) thin product host — AuthN/AuthZ + IA shell pages; UniqueCode `BREEZEON-CORP-FIN-INV` |
 | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | Shared library (mandatory for apps) | `BreezeOn.UI`: UI framework (`Bo*` / shell) + authentication framework + authorization framework + Identity schema definitions + Security schema definitions + local component gallery |
 
 **Boundary rules in force today**
@@ -66,6 +67,7 @@ Public UI contract: **`BreezeOn.UI`** in `SYSTEM-SHARED-UI` ([ADR-004](../decisi
 | --- | --- |
 | `BreezeOn.UI.Gallery` (in SYSTEM-SHARED-UI) | Interactive Server host; consumes `BreezeOn.UI` locally |
 | EAC (`SYSTEM-ADMIN-EAC`) | Blazor Interactive Server; **ProjectReference** to `BreezeOn.UI` (`BoAppShell` shell, Home `BoNavHub`, Applications `BoGrid` + JSON import/export, Business Entities NestedView + types tabs, other destination shells); **no** ASP.NET Core Identity |
+| INV (`breezeon-corp-fin-inv`) | Blazor Interactive Server; **ProjectReference** to `BreezeOn.UI` (`BoAppShell`, Home `BoNavHub`, empty Content Card destinations); platform AuthN/AuthZ; **no** ASP.NET Core Identity |
 
 UI conventions: [`docs/ui/overview.md`](../docs/ui/overview.md).
 

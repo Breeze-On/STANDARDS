@@ -40,8 +40,8 @@ Theme mode / dual palettes: [tokens.md](../foundations/tokens.md). Locale prefs:
 
 | Concern | Standard |
 | --- | --- |
-| `AppTitle` | Required for normal pages; localized |
-| `Subtitle` | Optional; when null/whitespace, **omit** the `  -  ` separator (implemented in `BoAppHeader`) |
+| `AppTitle` | Required for normal pages; localized. On **Home**, use the **Application Display Name** — [application-branding.md](application-branding.md) |
+| `Subtitle` | Optional on most pages; when null/whitespace, **omit** the `  -  ` separator (implemented in `BoAppHeader`). On **Home**, subtitle is **omitted by default** (do not supply a Home subtitle) — [application-branding.md](application-branding.md) |
 | Dash | Shown only between a non-empty title and a non-empty subtitle |
 
 ## App shell footer (optional per page)
@@ -119,22 +119,23 @@ Use for each product app’s **Home** (or equivalent landing hub). This is **not
 | Card bloom | Quiet radial behind the card stack (card-container + low tertiary) so cards stay the focal point |
 | Dark mode | Same structure; palette via `IBoThemeModeService` / dual tokens |
 
-### Brand / right panel (locked structure; per-app asset)
+### Brand / right panel (locked structure; **Application Logo**)
 
 | Concern | Standard |
 | --- | --- |
+| Concept | **Application Logo** — represents the **application**, not the customer/tenant — [application-branding.md](application-branding.md) |
 | Host | `BoNavHub` `LogoSrc` **or** `BrandContent` (custom fragment wins when set) |
 | Logo cell | Square sized to **`80cqmin`** (80% of the smaller brand-panel side); `object-fit: contain` |
 | Alt text | Required for `LogoSrc` via `LogoAlt` (localized) |
-| Asset | Per-app SVG (or equivalent) under that app’s `wwwroot` — gallery: `wwwroot/brand/home-hero.svg` |
-| Do not | Hardcode another app’s logo; invent a different right-panel layout |
+| Asset | Per-app Application Logo under that app’s `wwwroot` — independently configured from Navigation Logo |
+| Do not | Hardcode another app’s logo; invent a different right-panel layout; share a single config binding with Navigation Logo |
 
 ### `BoNavCardStyleHyperlink` (locked chrome)
 
 | Parameter | Required | Notes |
 | --- | --- | --- |
 | `Label` | Yes | Primary title — localized |
-| `Description` | Yes | Supporting copy — localized |
+| `Description` | Yes | Supporting copy — localized; **must equal** the destination page header **Subtitle** (same string / resource key) — [application-branding.md](application-branding.md) |
 | `Hyperlink` | Yes | Internal route or absolute URL |
 | `IsExternal` | When external | Default `false` |
 | `IconContent` | Yes (Home) | Prefer `BoIcon` (~Size **32**); never Fluent types from product apps |
@@ -157,17 +158,18 @@ Use for each product app’s **Home** (or equivalent landing hub). This is **not
 | Locked (all apps) | Per-app only |
 | --- | --- |
 | `BoNavHub` + `BoNavCardStyleHyperlink` composition | **Number of cards** and destination routes |
-| ~33/67 split, full-height body, no Home footer | **Card labels + descriptions** (each app’s own resource library) |
+| ~33/67 split, full-height body, no Home footer | **Card labels**; descriptions **= destination page subtitles** |
+| Home header: **no subtitle** | **Application Logo** asset + alt text (independent of Navigation Logo) |
 | Gradient stops + dot texture + card bloom | **Card icons** (`BoIcon` Name/Variant) |
-| Card chrome, header/rule/description styles | **Right-panel logo** asset + alt text |
-| Internal SPA vs external new-tab rules | Optional primary/tertiary accents (shared token roles) |
-| Dual Light/Dark via theme mode | App title / subtitle / left-nav page set |
+| Card chrome, header/rule/description styles | **Application Display Name** as Home `AppTitle` |
+| Internal SPA vs external new-tab rules | Theme Palette accents ([application-theme-palette.md](../foundations/application-theme-palette.md)) |
+| Dual Light/Dark via theme mode | Left-nav page set + Navigation Logo |
 
 **Not per-app:** inventing a different Home layout, using Fluent UI types in product pages, hardcoding user-visible strings, or putting form Section→Row on Home instead of the hub.
 
 ### Gallery reference
 
-SYSTEM-SHARED-UI Gallery Home (`/`): four cards (Components, Theme, Error Message Page, Google external — excludes Home itself); `LogoSrc="brand/home-hero.svg"`; `ShowFooter` false. Implementation SSOT for CSS: `breezeon-ui.css` (`.bo-nav-hub*`, `.bo-nav-card*`).
+SYSTEM-SHARED-UI Gallery Home (`/`): four cards (Components, Theme, Error Message Page, Google external — excludes Home itself); `ApplicationLogoSrc="brand/app-logo.svg"`; `ShowFooter` false. Implementation SSOT for CSS: `breezeon-ui.css` (`.bo-nav-hub*`, `.bo-nav-card*`).
 
 ## Error Message Pages
 

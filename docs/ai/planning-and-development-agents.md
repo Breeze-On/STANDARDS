@@ -211,11 +211,24 @@ Development Agents must refuse undocumented deviations from an approved Configur
 
 The Development Agent must integrate with the Planning Agent workflow.
 
+### New product applications — repository transition
+
+For **new BreezeOn product applications**, follow [application-development-process.md](application-development-process.md).
+
+**Checkpoint (Step 3):** after the implementation roadmap is approved and **before** Build Locally:
+
+- Create the target application repository if needed
+- Move the implementation conversation / agent workspace to that repository
+- Continue active plan deltas under that repository’s `docs/plans/in-progress/`
+- Do **not** continue application implementation inside STANDARDS or EAC planning conversations after ownership is established
+
+STANDARDS remains process authority. EAC remains the platform reference host. The application repository is the execution workspace.
+
 ### Build Locally behavior
 
 When **Build Locally** is executed:
 
-1. Automatically locate the corresponding plan file under `docs/plans/in-progress/`.
+1. Automatically locate the corresponding plan file under `docs/plans/in-progress/` (**in the application repository** after the repository-transition checkpoint for new product apps).
 2. Use the plan file as the implementation source.
 3. Do **not** request the plan again through chat.
 4. Implement directly from the markdown plan.

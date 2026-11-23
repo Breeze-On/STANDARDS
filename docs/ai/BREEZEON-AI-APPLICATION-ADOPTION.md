@@ -11,7 +11,7 @@ Prerequisite: [`BREEZEON-AI-QUICKSTART.md`](BREEZEON-AI-QUICKSTART.md).
 
 | Meaning | Use when | SSOT |
 | --- | --- | --- |
-| **Product application onboarding** | Creating App #2, App #3, … (new BreezeOn product repository consuming SHARED-UI) | **This file** + [`application-model.md`](../application-model.md) |
+| **Product application onboarding** | Creating App #2, App #3, … (new BreezeOn product repository consuming SHARED-UI) | [`application-development-process.md`](application-development-process.md) (Steps 1–6, including repository transition) + **This file** + [`application-model.md`](../application-model.md) |
 | **Customer-environment onboarding** | Provisioning a customer DEV/UAT/PRD environment (Entra, cutover, customer activation) | [`runbooks/customer-onboarding-master-flow.md`](../../runbooks/customer-onboarding-master-flow.md) |
 
 The **Customer Onboarding Master Flow is not used to create new BreezeOn applications.** Do not substitute one path for the other.
@@ -86,7 +86,7 @@ Page construction checklist: [`docs/ui/page-development.md`](../ui/page-developm
 | Imports | `Components/_Imports.razor` — `BreezeOn.UI.*` namespaces |
 | Shell | `Components/Layout/MainLayout.razor` — AppShell + nav + header resolution |
 | Pages | `Home.razor` (hub); empty destination pages for IA |
-| Brand | `wwwroot/brand/home-hero.svg` |
+| Brand | `wwwroot/brand/app-logo.svg`, `nav-logo.svg`, `favicon.svg` |
 | Resources | `Resources/EacResources.resx` (+ `.fr`), `IEacLocalizer` |
 | Styles | `wwwroot/app.css` — height/overflow + Calibri / tokens; strip template chrome |
 | Deploy | `.github/workflows/deploy-dev.yml` — product metadata + sibling Shared UI checkout; procedures: [hosted-deployment.md](../hosted-deployment.md) |

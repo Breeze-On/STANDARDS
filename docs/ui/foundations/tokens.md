@@ -7,6 +7,8 @@ Shell and accent tokens currently shipped by `BreezeOn.UI`. Related: [shell.md](
 
 Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Font family: [typography.md](typography.md).
 
+**Per-application Theme Palette** (which tokens apps may customize vs platform-controlled): [application-theme-palette.md](application-theme-palette.md).
+
 ## Theme mode (locked)
 
 - **Dual palettes, one semantic name per role.** CSS variables stay `--bo-color-primary` (etc.). Do **not** use `*-light` / `*-dark` suffixes on token names or markup.

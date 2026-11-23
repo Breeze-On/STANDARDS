@@ -30,7 +30,7 @@ Current reality only. Every archetype lives inside `BoAppShell` (Option B) with 
 
 ## Home
 
-`BoNavHub` with one `BoNavCardStyleHyperlink` per application destination; `ShowFooter = false`; no body scrollbar. Not a form layout — never Section → Row → Field. Per-app only: card count, routes, labels, icons, right-panel logo. Rules and chrome: [shell.md § Home](../shell/shell.md#home--navigation-hub-locked-platform-pattern). Checklist: [page-development.md § Home pages](../page-development.md#home-pages).
+`BoNavHub` with one `BoNavCardStyleHyperlink` per application destination; `ShowFooter = false`; no body scrollbar; **no Home subtitle**; card **Description** = destination page **Subtitle**; right-panel asset is **Application Logo** (independent of Navigation Logo). Not a form layout — never Section → Row → Field. Per-app only: card count, routes, labels, icons, Application Logo, Theme Palette. Rules: [shell.md § Home](../shell/shell.md#home--navigation-hub-locked-platform-pattern) · [application-branding.md](../shell/application-branding.md). Checklist: [page-development.md § Home pages](../page-development.md#home-pages).
 
 ## List
 

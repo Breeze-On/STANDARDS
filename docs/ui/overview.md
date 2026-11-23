@@ -47,6 +47,7 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | **Foundations** | |
 | [foundations/normative-tiers.md](foundations/normative-tiers.md) | Tier 1 LOCKED / Tier 2 STANDARD / Tier 3 GUIDANCE — compliance, change control, precedence |
 | [foundations/tokens.md](foundations/tokens.md) | Design / shell tokens; spacing scale; corner radius; motion token index |
+| [foundations/application-theme-palette.md](foundations/application-theme-palette.md) | Per-app Theme Palette model (customizable vs platform-controlled tokens; Light/Dark) |
 | [foundations/motion.md](foundations/motion.md) | Platform motion — approved duration tokens, reorder FLIP / settle, selection travel; reduced-motion; anti-patterns |
 | [foundations/typography.md](foundations/typography.md) | Default typeface and type scale |
 | [foundations/icons.md](foundations/icons.md) | Icon technology and approved sizes (16 / 20 / 24 / 32 / 48) |
@@ -54,6 +55,7 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | [foundations/i18n.md](foundations/i18n.md) | Culture / timezone cookies; per-app resource libraries; no hardcoded labels |
 | **Shell** | |
 | [shell/shell.md](shell/shell.md) | App shell chrome, footer, header tabs |
+| [shell/application-branding.md](shell/application-branding.md) | Application Display Name, Application Logo vs Navigation Logo, Home subtitle rules, default page subtitles |
 | [shell/error-messages.md](shell/error-messages.md) | Error Message Pages framework (Access Denied + future scenarios) |
 | [layout/expandable-section.md](layout/expandable-section.md) | `BoExpandableSection` + shared disclosure engine; Section `IsCollapsible`; page-default expand only on page load |
 | [shell/overlays.md](shell/overlays.md) | `BoDialog` (Enter/Escape, initial focus, focus restore), Settings, toasts, page freeze (`IBoPageFreezeService`) |
@@ -89,7 +91,7 @@ Former single file [`docs/ui-components.md`](../ui-components.md) redirects here
 | Package / project | `BreezeOn.UI` (`src/BreezeOn.UI`) |
 | Approach | Option B+: BreezeOn public API on top of Fluent UI Blazor (Fluent is internal) |
 | Registration | `services.AddBreezeOnUI()` or `AddBreezeOnUI(configureTheme)` — `configureTheme` is honored via `IOptions<BoThemeOptions>` ([tokens.md § Theme options](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
-| Host requirements | **Product Host Contract** (UI + auth + AuthZ + catalog + Error Message options): [page-development.md § Product Host Contract](page-development.md#product-host-contract-required). UI assets: `BoThemeProvider` / `BoProviders` / `BoAppShell`; Fluent + `breezeon-ui.css`; **seven** core scripts (`bo-theme-mode`, `bo-locale`, `bo-popup`, `bo-number-field`, `bo-grid`, `bo-dialog`, `bo-sliding-selection`; plus Sortable + `bo-sortable` when using Shuffle Card). Gallery = chrome/assets reference; EAC = complete product host. |
+| Host requirements | **Product Host Contract** (UI + auth + AuthZ + catalog + branding + Error Message options): [page-development.md § Product Host Contract](page-development.md#product-host-contract-required). UI assets: `BoThemeProvider` / `BoProviders` / `BoAppShell`; Fluent + `breezeon-ui.css`; **eight** core scripts (`bo-theme-mode`, `bo-branding`, `bo-locale`, `bo-popup`, `bo-number-field`, `bo-grid`, `bo-dialog`, `bo-sliding-selection`; plus Sortable + `bo-sortable` when using Shuffle Card). Gallery = chrome/assets reference; EAC = complete product host. |
 | Decision record | [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 
 Product applications must use **`BreezeOn.UI`** components (`Bo*`). Do not reference `Microsoft.FluentUI.AspNetCore.Components` types from product pages.

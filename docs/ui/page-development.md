@@ -37,7 +37,7 @@ This document does **not** replace detailed standards. It is the authoritative *
 | Services | `services.AddBreezeOnUI()` or `AddBreezeOnUI(opts => …)` — registers Fluent internally; `configureTheme` via `IOptions<BoThemeOptions>` ([tokens.md](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
 | Layout | **`BoThemeProvider`** → **`BoAppShell`** (nav + header + body + optional footer) → **`BoProviders`** (Fluent providers, theme/locale bootstrap, dialog + toast + **page-freeze**) |
 | CSS (in `<head>`) | Fluent bundle CSS + `_content/BreezeOn.UI/breezeon-ui.css` |
-| JS (in `<head>`) | **Seven** core scripts in the host-script inventory below; Shuffle optionals when used |
+| JS (in `<head>`) | **Eight** core scripts in the host-script inventory below; Shuffle optionals when used |
 
 ### Host-script inventory (SSOT)
 
@@ -46,6 +46,7 @@ This document does **not** replace detailed standards. It is the authoritative *
 | Script | Needed for |
 | --- | --- |
 | `bo-theme-mode.js` | Theme-mode cookie helpers; sets `document.documentElement.dataset.boThemeMode` |
+| `bo-branding.js` | Browser Favicon sync from Navigation Logo (`boBranding.setFavicon`) |
 | `bo-locale.js` | Locale cookie helpers for `bo-culture` / `bo-timezone` |
 | `bo-popup.js` | Fixed-position panels for `BoDropDownList`, `BoPeoplePicker`, and `BoDateField` |
 | `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge, display sync) |
@@ -54,7 +55,7 @@ This document does **not** replace detailed standards. It is the authoritative *
 | `bo-sliding-selection.js` | **Required for sliding `BoToggle` / `BoTabs` selection** (shared `boSlidingSelection`) |
 | `js/lib/sortable.min.js` + `bo-sortable.js` | **Required for `BoShuffleCardGrid`** only |
 
-Include **all seven** core `bo-*.js` scripts even if a page does not use every control. Paths: `_content/BreezeOn.UI/js/…`.
+Include **all eight** core `bo-*.js` scripts even if a page does not use every control. Paths: `_content/BreezeOn.UI/js/…`.
 
 **Cache-busting:** Do **not** append `?v=` (or similar) query strings to Shared UI host scripts in product/Gallery `App.razor`. Script identity is the library file path; cache invalidation follows Shared UI package / ProjectReference updates. Remove any legacy `?v=` attributes when touching host markup.
 
@@ -89,7 +90,11 @@ Include **all seven** core `bo-*.js` scripts even if a page does not use every c
 | Concern | Requirement | Deep SSOT |
 | --- | --- | --- |
 | Data Protection | `AddDataProtection().SetApplicationName("<Product>")` (isolate purpose strings per app) | [session-standard.md](../../architecture/identity-and-authentication/session-standard.md) |
-| Error Message options | `Configure<BoErrorMessageOptions>(o => o.ApplicationDisplayName = "…")` after `AddBreezeOnUI` | [error-messages.md](shell/error-messages.md) |
+| Branding options | `Configure<BoBrandingOptions>(…)` — Application Display Name, Application Logo, Navigation Logo (favicon tracks Navigation Logo) | [application-branding.md](shell/application-branding.md) |
+| Theme Palette | Optional `Configure<BoThemePaletteConfiguration>(…)` for Light/Dark accents | [application-theme-palette.md](foundations/application-theme-palette.md) |
+| Error Message options | `Configure<BoErrorMessageOptions>(o => o.ApplicationDisplayName = "…")` after `AddBreezeOnUI` (same Display Name as branding) | [error-messages.md](shell/error-messages.md) |
+| Browser title | Each page uses `<BoDocumentTitle PageTitle="…" />` → `<Page Title> - <Application Display Name>` | [application-branding.md](shell/application-branding.md) |
+| Browser Favicon script | Include `_content/BreezeOn.UI/js/bo-branding.js` in host `App.razor` | [application-branding.md](shell/application-branding.md) |
 | Access Denied footer | Whenever `BoAccessDenied` is shown (route deny or in-page), **`BoAppShell.ShowFooter = false`** — MUST means implemented on the product host | [error-messages.md](shell/error-messages.md) |
 | Localization | Supported cultures `en` / `fr` + `UseRequestLocalization()` | [i18n.md](foundations/i18n.md) |
 | App-owned resources | Product `.resx` + locale-aware localizer; never use Gallery `BoUi` as the product glossary | [i18n.md](foundations/i18n.md) |
@@ -112,10 +117,12 @@ Every new or changed Breeze On page should validate the following.
 
 - [ ] Page is hosted within **`BoAppShell`** (Option B floating cards) — [shell.md](shell/shell.md).
 - [ ] **Per-page** localized `AppTitle` provided — [shell.md § Header titles](shell/shell.md#header-titles-per-page).
-- [ ] `Subtitle` provided when appropriate; empty/whitespace subtitle **omits** the title dash.
+- [ ] `Subtitle` provided when appropriate; empty/whitespace subtitle **omits** the title dash. **Home:** omit subtitle — [application-branding.md](shell/application-branding.md).
 - [ ] Header actions remain platform-standard (`BoHeaderActions`: Theme → Settings → Profile) unless the host intentionally overrides `ActionsContent`.
 - [ ] Footer behavior follows standards (`ShowFooter`; Home typically **false**; Error Message Pages **must** be **false**) — [shell.md](shell/shell.md), [error-messages.md](shell/error-messages.md).
 - [ ] Error Message Pages follow the Error Message framework (shared `Bo*` + foundation CSS; no product-specific remediation in shared components; showcase ≡ production) — [error-messages.md](shell/error-messages.md).
+- [ ] Branding: Application Branding (Display Name + Application Logo) decoupled from Customer/Tenant Branding (Navigation Logo + Browser Favicon); Theme Palette independent — [application-branding.md](shell/application-branding.md), [application-theme-palette.md](foundations/application-theme-palette.md).
+- [ ] Browser title via `BoDocumentTitle` (no hardcoded app name in page-title resources).
 
 ### Home pages
 
@@ -124,11 +131,14 @@ When the page is a **Home** (or equivalent landing hub):
 - [ ] Uses **`BoNavHub`**.
 - [ ] Uses **`BoNavCardStyleHyperlink`** for destinations.
 - [ ] One card per application destination (internal SPA or external as required).
-- [ ] Follows the locked Home / navigation hub pattern — [shell.md § Home](shell/shell.md#home--navigation-hub-locked-platform-pattern).
+- [ ] Home **`AppTitle`** = Application Display Name; Home **`Subtitle` omitted**.
+- [ ] Each card **Description** equals that destination page’s header **Subtitle** (same resource key / string).
+- [ ] Right-panel asset is **Application Logo** (independent of Navigation Logo configuration).
+- [ ] Follows the locked Home / navigation hub pattern — [shell.md § Home](shell/shell.md#home--navigation-hub-locked-platform-pattern) · [application-branding.md](shell/application-branding.md).
 - [ ] Does **not** invent custom dashboard / markdown / Fluent card layouts.
 - [ ] Does **not** use Section → Row → Field as the Home layout (that composition is for forms).
 
-**Per-app only on Home:** card count/routes, localized Label/Description, card icons, right-panel logo asset, optional primary/tertiary accents.
+**Per-app only on Home:** card count/routes, localized labels (descriptions tied to page subtitles), card icons (defaults: New Request `AddSquareMultiple`, Status Report `Dashboard`, My Tasks `AppsListDetail` — [application-branding.md](shell/application-branding.md)), Application Logo asset, Theme Palette.
 
 ### Layout (forms and structured content)
 

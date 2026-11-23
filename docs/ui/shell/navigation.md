@@ -15,17 +15,22 @@ Left navigation and URL path standards. Related: [shell.md](shell.md), [tokens.m
 
 **Fixed values (Tier 2):** *Default expanded width* `192px` (`BoThemeOptions.SizeNavExpanded` / `--bo-size-nav-expanded`); *collapsed icon rail* `56px` (`SizeNavCollapsed` / `--bo-size-nav-collapsed`); default logos ship in `_content/BreezeOn.UI/brand/`. Collapse label: none (no "Minimize" text). Page URL = page name (below).
 
-**Per-application customization:** logo image URLs (`LogoExpandedSrc` / `LogoMinimizedSrc`); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; optional `PrimaryColor` / `TertiaryColor` (soft surfaces / primary rail — not selected-nav fill).
+**Per-application customization:** **Navigation Logo** URLs (`NavigationLogoExpandedSrc` / `NavigationLogoMinimizedSrc` — customer/tenant/environment); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; Theme Palette accents ([application-theme-palette.md](../foundations/application-theme-palette.md)). **Application Logo** (Home) is a **separate** concept — [application-branding.md](application-branding.md).
 
 ### Branding ownership (current)
 
 | Concern | Standard |
 | --- | --- |
-| Configuration surface | Set logos on **`BoNavPane`** (`LogoExpandedSrc` / `LogoMinimizedSrc`) — one place per app layout |
-| Shared state | `BoNavPane` publishes both URLs to scoped **`IBoBrandingService`** (`SetLogos`) |
-| Defaults | Null/whitespace → `BoBrandingDefaults` (`breezeon-wordmark.svg` / `breezeon-icon.svg`) |
-| Page freeze | Consumes **`LogoMinimizedSrc` only** (compact square icon) — [overlays.md](overlays.md) |
-| Do not | Configure a second freeze-specific logo URL; do not use `LogoExpandedSrc` for page freeze |
+| Navigation Logo | Set on **`BoNavPane`** from **`nav-logo.svg`** (`NavigationLogoExpandedSrc` / `NavigationLogoMinimizedSrc`) — Customer / Tenant Branding |
+| Application Logo | Set on **Home** from **`app-logo.svg`** (`BoNavHub` `ApplicationLogoSrc`) — Application Branding; **independent** of Navigation Logo |
+| Browser Favicon | **`favicon.svg`** via `IBoBrandingService.BrowserFaviconSrc` (separate from Navigation Logo; aligned by default) |
+| Shared state | `BoNavPane` publishes Navigation Logos; `BoBrandingBootstrap` applies `BoBrandingOptions` |
+| Defaults | Null/whitespace → `BoBrandingDefaults` (`app-logo.svg` / `nav-logo.svg` / `favicon.svg`) |
+| Platform display name | Default org chrome label **`Breeze On`** — [application-branding.md](application-branding.md) |
+| Page freeze | Consumes **Navigation** minimized logo only — [overlays.md](overlays.md) |
+| Do not | Configure a freeze-specific logo URL; use Application Logo for page freeze; merge Application Logo and Navigation Logo into one setting |
+
+**Decoupling (locked):** even when both logos temporarily use the same image file, configuration, references, bindings, and replacement paths **must** remain separate.
 
 ### Collapsed nav, tooltips, and accessibility (current)
 
