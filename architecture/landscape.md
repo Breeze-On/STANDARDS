@@ -88,6 +88,15 @@ Hosted **DEV** infrastructure documented today (GitHub Environment name: **`DEV`
            |            v
            |     Azure SQL BreezeOnDV
            |
+           +---> INV App Service
+           |     breezeon-corp-fin-inv-dev
+           |     (Linux, .NET 10)
+           |     RG: RG-BREEZEON-DEV
+           |            |
+           |            | Managed Identity (grant when SQL quota allows)
+           |            v
+           |     Azure SQL BreezeOnDV
+           |
            +---> Shared UI Gallery App Service
                  breezeon-system-shared-ui-dev
                  (Linux, .NET 10; no database)
@@ -97,11 +106,12 @@ Hosted **DEV** infrastructure documented today (GitHub Environment name: **`DEV`
 | --- | --- |
 | Resource group | `RG-BREEZEON-DEV` |
 | EAC App Service | `breezeon-system-admin-eac-dev` |
+| INV App Service | `breezeon-corp-fin-inv-dev` |
 | Gallery App Service | `breezeon-system-shared-ui-dev` |
 | App Service plan (EAC) | `asp-breezeon-dev` |
 | Azure SQL server | `sql-breezeon-dev.database.windows.net` |
-| Azure SQL database (EAC) | `BreezeOnDV` |
-| EAC App DB auth | System-assigned Managed Identity |
+| Azure SQL database (shared DEV catalog) | `BreezeOnDV` |
+| EAC / INV App DB auth | System-assigned Managed Identity |
 
 `BreezeOn.UI` remains a library consumed by product apps; the Gallery is also hosted on DEV for shared UI smoke.
 
