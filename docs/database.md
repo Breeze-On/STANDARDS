@@ -258,8 +258,10 @@ Each application repository that owns database objects maintains SQL under:
 sql/
   current_model/          # Editable source of truth (executable T-SQL; one file per object)
   current_model.sql       # Committed consolidated reset script (regenerated from current_model/; never hand-edit)
-  seed/                   # Required local-only sample data for local-ready testing (not for hosted envs by default)
+  seed/                   # Required local-only app business / non-EAC sample data (not for hosted envs by default)
   migration_scripts/      # Temporary deltas; clean up after applied
+seed/
+  eac/                    # EAC-consuming apps: portable EAC configuration (JSON / xlsx) imported by EAC local reset
 generated/                # Temporary local deploy copies (gitignored; produced by local scripts)
 docs/
   db-model.md             # Human/agent-readable current DB model (required when the app owns SQL objects)
@@ -309,11 +311,14 @@ A database-object change is incomplete unless:
 | --- | --- | --- |
 | **Bootstrap data** | Operator/onboarding scripts required to stand up platform admin (e.g. Workflow G GSA grant) | **SSOT:** STANDARDS [`templates/onboarding/bootstrap-global-system-administrators.sql`](../templates/onboarding/bootstrap-global-system-administrators.sql). Product copies under `sql/seed/` are apply convenience only and must stay byte-aligned with the SSOT. |
 | **Required reference data** | Rows every environment needs (e.g. SHARED-UI Security seed `GLOBAL-SYSTEM-ADMINISTRATORS` group **without** memberships) | SHARED-UI `sql/security/seed/`; may also be created by bootstrap if missing |
-| **Sample / local seed data** | Fake/demo rows for Docker local testing | Product `sql/seed/` — **local only**; do **not** apply to hosted DEV / UAT / PRD by default |
+| **Sample / local seed data** | Fake/demo rows for Docker local testing | Product `sql/seed/` (app business / non-EAC data) — **local only**; do **not** apply to hosted DEV / UAT / PRD by default |
+| **EAC configuration (local)** | Portable EAC registry / Application Configuration / Values / members for one app | That app's `seed/eac/` (JSON / xlsx) — imported by EAC local reset; see [`seed/eac/`](#seedeac-eac-consuming-apps) |
 
 ### `sql/seed/` (required for apps with owned business schema)
 
 Every application that owns business tables must keep a **local-ready** sample seed so developers and agents can exercise the app without Azure SQL or empty tables.
+
+`sql/seed/` holds **application business and non-EAC** data only. It must **not** contain `System.EAC*` SQL configuration or current-state seeds (inserts/updates into EAC tables, `P_POST_EAC*` calls, EAC Application/Business Entity/Data Entity/Security Group rows) — those are expressed as portable payloads under `seed/eac/`.
 
 - **Sample/fake data** for **local Docker SQL** only (see category table above).
 - Not the schema source of truth; keep scripts **idempotent** when practical.
@@ -324,6 +329,14 @@ Every application that owns business tables must keep a **local-ready** sample s
 - Local apply path: build consolidated `generated/seed.sql` → single `sqlcmd` (see Database Seed Maintenance Standard).
 - Ship a seed script (e.g. `scripts/local-db-seed.ps1`) and document it in the app README / README_AI.
 - Local sandbox workflow: [local-database.md](local-database.md).
+
+### `seed/eac/` (EAC-consuming apps)
+
+Every application that consumes EAC keeps its own local EAC configuration in a top-level **`seed/eac/`** folder (portable JSON / xlsx per [data-portability.md](data-portability.md) § Per-application `seed/eac`). It is **not** SQL, is distinct from `sql/seed/`, and has no per-app `README.md`.
+
+- EAC owns the importer: EAC `scripts/dev-reset.ps1` discovers sibling `seed/eac/` folders and imports them; the app's own `dev-reset.ps1` invokes EAC and does not import this content itself ([local-development-scripts.md](local-development-scripts.md)).
+- **Forbidden:** app-owned EAC SQL configuration or current-state seeds anywhere in a product repo (including `sql/seed/`), and EAC-owned copies of another app's configuration under `SYSTEM-ADMIN-EAC/sql/seed/`.
+- Local only; never applied to hosted DEV / UAT / PRD.
 
 ### `sql/migration_scripts/`
 
@@ -343,7 +356,7 @@ Each application that owns business database objects must maintain a **current**
 
 Database objects for EAC live in [Breeze-On/SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) under `sql/` and [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md).
 
-**Seed vs current model (reminder):** `sql/current_model/` is **current-state schema only**. Sample and development data belong only under `sql/seed/` (except bootstrap copies that mirror STANDARDS templates). Do not mix seed inserts into current-model scripts.
+**Seed vs current model (reminder):** `sql/current_model/` is **current-state schema only**. Sample and development data belong only under `sql/seed/` (app business / non-EAC) or `seed/eac/` (portable EAC configuration) (except bootstrap copies that mirror STANDARDS templates). Do not mix seed inserts into current-model scripts.
 
 ## Platform schema evolution (hosted)
 

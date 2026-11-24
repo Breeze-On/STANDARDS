@@ -136,7 +136,16 @@ The implementation agent, working **in the application repository**, implements 
 
 Mandatory host contract: [page-development.md](../ui/page-development.md) § Product Host Contract. Branding: [application-branding.md](../ui/shell/application-branding.md). Reference host: `SYSTEM-ADMIN-EAC`. Shared UI: `BreezeOn.UI`. Local entry: [local-development-scripts.md](../local-development-scripts.md) (`dev-reset.ps1` only).
 
-EAC `System` registry seed for applications that already appear in EAC sample seed remains under EAC ownership — do not fork Identity/Security schemas.
+Do not fork Identity/Security schemas.
+
+**New App Development checklist (EAC-consuming apps)** — all items required:
+
+- [ ] Sibling **`SYSTEM-ADMIN-EAC`** checkout is required locally (same parent folder as the app repo); `scripts/dev-reset.ps1` fails fast with a clear error when it is missing.
+- [ ] `scripts/dev-reset.ps1` **invokes EAC `scripts\dev-reset.ps1` as a subprocess** (EAC owns database drop/recreate, schema, bootstrap, and EAC configuration import), then applies the app's own business schema/seed if any, then launches the app. It does **not** reimplement EAC reset/bootstrap/import ([local-development-scripts.md](../local-development-scripts.md) § Consumer apps and EAC reset).
+- [ ] The app repo has a top-level **`seed/eac/`** folder (scaffold creates the folder only — **no** `seed/eac/README.md`) holding the app's portable EAC configuration (JSON / xlsx) that EAC discovers and imports ([data-portability.md](../data-portability.md) § Per-application `seed/eac`).
+- [ ] No `System.EAC*` SQL configuration or current-state seeds in the app repo (`sql/seed/` is app business / non-EAC data only — [database.md](../database.md) § `seed/eac/`); no EAC registry seed for the app under `SYSTEM-ADMIN-EAC/sql/seed/`.
+- [ ] Shared local SQL instance (`breezeon-sql-local` / `BreezeOnLocal`) is used — [local-database.md](../local-database.md).
+- [ ] Product `README.md` / `README_AI.md` document the sibling EAC prerequisite and `seed/eac/`.
 
 ### Step 5 — Local validation
 
@@ -148,7 +157,7 @@ Verify locally:
 - Navigation (Home cards + destination routes; card descriptions match page subtitles; Home has no subtitle)
 - Branding bindings (Application Logo vs Navigation Logo independently configured; favicon tracks Navigation Logo; browser title format)
 - Local bootstrap (including `GLOBAL-SYSTEM-ADMINISTRATORS` when seed tids / bootstrap UPNs are configured)
-- Seeding / reset for the product local database path documented in the product README
+- Seeding / reset for the product local database path documented in the product README (EAC consumers: EAC reset invoked via sibling checkout, `seed/eac/` imported)
 
 Agents stop at the Entra interactive boundary; humans complete authenticated smoke ([ai-agent-governance.md](ai-agent-governance.md)).
 
@@ -203,4 +212,4 @@ When Step 1 inputs, defaults, or omission behavior change: update **schema first
 
 **Repository transition:** execution workspace is [`breezeon-corp-fin-inv`](https://github.com/Breeze-On/breezeon-corp-fin-inv). STANDARDS remains process SSOT; EAC remains the platform reference host.
 
-EAC sample seed for INV remains **unchanged** in `SYSTEM-ADMIN-EAC`. Active roadmap: application repo `docs/plans/in-progress/`.
+INV's EAC configuration lives in the INV repo under `seed/eac/` and is imported by EAC's local reset. Active roadmap: application repo `docs/plans/in-progress/`.

@@ -175,7 +175,7 @@ and must extend the envelope, planner, apply path, and this documentation. Shrin
 
 ## Local Docker seed
 
-EAC local `dev-reset` / `local-db-seed` may apply the same deployment JSON after Applications/BE/enablement SQL, via `tools/BreezeOn.Eac.LocalAppConfigurationSeed` (validator + synchronizer + `P_POST_EACApplicationConfigurationSync`). This is **local sandbox only** — never hosted **DEV / UAT / PRD**. Product details: EAC [`sql/seed/README.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/sql/seed/README.md).
+EAC local `dev-reset` may apply the same deployment JSON after Applications/BE/enablement import, via `tools/BreezeOn.Eac.LocalAppConfigurationSeed` (validator + synchronizer + `P_POST_EACApplicationConfigurationSync`). The files live in each **consuming application's** `seed/eac/` folder (e.g. `breezeon-corp-fin-inv/seed/eac/`), not in EAC; **EAC discovers sibling repositories** (same parent folder) and imports each `seed/eac/`. Consumer apps invoke EAC `scripts/dev-reset.ps1` as a subprocess and never import this content themselves. Product apps must not carry EAC SQL configuration seeds. This is **local sandbox only** — never hosted **DEV / UAT / PRD**. Standards: [data-portability.md](../../docs/data-portability.md) § Per-application `seed/eac` · [local-database.md](../../docs/local-database.md). Product details: EAC [`sql/seed/README.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/sql/seed/README.md).
 
 ## Related
 

@@ -54,6 +54,15 @@ Steps that do not apply to a host (e.g. no SQL for Shared UI Gallery) are skippe
 
 `dev-reset` is **destructive** for local data when the app owns a local database. Product READMEs must state that clearly.
 
+## Consumer apps and EAC reset
+
+Applications that consume EAC (registry, Application Configuration, Security Groups, Data Entities) share the local SQL container and `BreezeOnLocal` database with **SYSTEM-ADMIN-EAC** ([local-database.md](local-database.md) § Shared local SQL instance and EAC dependency). For these apps:
+
+1. `dev-reset.ps1` locates the **sibling** `SYSTEM-ADMIN-EAC` checkout (same parent folder as the app repo) and fails fast with a clear error when it is missing.
+2. `dev-reset.ps1` invokes EAC `scripts\dev-reset.ps1` as a **subprocess**. EAC owns the destructive work: database drop/recreate, EAC and platform schema, bootstrap, and import of EAC configuration discovered in sibling `seed/eac/` folders ([data-portability.md](data-portability.md) § Per-application `seed/eac`).
+3. After EAC finishes, the consumer applies its own business schema/seed (`sql/current_model/`, `sql/seed/`) when it owns any, then launches itself.
+4. The consumer script **must not** reimplement EAC database drop, EAC/platform schema apply, bootstrap, or EAC configuration import, and must not keep a private copy of EAC SQL configuration or current-state seeds.
+
 ## Secrets
 
 - Script-oriented configuration (e.g. `MSSQL_SA_PASSWORD`) comes from a local **gitignored** `.env` at the repo root.  
@@ -71,7 +80,7 @@ Apps with no script secrets today still keep `.env` / `.env.example` so the scri
 | --- | --- | --- |
 | Docker SQL | Required | Not used |
 | Required `.env` vars | At least `MSSQL_SA_PASSWORD` | None required today |
-| Schema / seed | `sql/current_model/` + `sql/seed/` sources → `generated/*.sql` single sqlcmd | N/A |
+| Schema / seed | `sql/current_model/` + `sql/seed/` sources → `generated/*.sql` single sqlcmd (EAC consumers: EAC reset runs first via subprocess) | N/A |
 | EF migrations | Apply on recreate as configured | N/A |
 | Launch target | Product web project | `BreezeOn.UI.Gallery` |
 

@@ -1,6 +1,6 @@
 {
     "schemaVersion":  1,
-    "generatedAt":  "2026-11-23T04:45:56.0080353Z",
+    "generatedAt":  "2026-11-24T19:09:50.2457138Z",
     "generator":  "scripts/docs/Generate-AiCatalog.ps1",
     "repositories":  [
                          "STANDARDS",
@@ -404,7 +404,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/applications/README.md",
@@ -431,7 +431,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/authorization/authorization-standard.md",
@@ -1995,7 +1995,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/data-portability.md",
@@ -2033,6 +2033,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:docs/local-database.md",
+                                          "STANDARDS:templates/seed-eac/README.md",
                                           "SYSTEM-ADMIN-EAC:docs/db-model.md",
                                           "SYSTEM-ADMIN-EAC:sql/seed/README.md"
                                       ],
@@ -2067,7 +2068,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/domain-modeling.md",
@@ -2164,7 +2165,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/hosted-deployment.md",
@@ -2202,6 +2203,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:docs/database.md",
+                                          "STANDARDS:templates/seed-eac/README.md",
                                           "SYSTEM-ADMIN-EAC:docs/db-model.md",
                                           "SYSTEM-ADMIN-EAC:sql/seed/README.md"
                                       ],
@@ -2256,7 +2258,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/observability.md",
@@ -2457,7 +2459,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
@@ -2481,7 +2483,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
@@ -2552,7 +2554,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/README.md",
@@ -2576,7 +2578,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/deviations/DEV-001-process-framework-future-engine-vision.md",
@@ -3914,7 +3916,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/shell/error-messages.md",
@@ -4297,6 +4299,30 @@
                           "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
+                          "id":  "STANDARDS:templates/seed-eac/README.md",
+                          "repository":  "STANDARDS",
+                          "path":  "templates/seed-eac/README.md",
+                          "domain":  "Platform",
+                          "capability":  "Database",
+                          "documentType":  "AA",
+                          "kind":  "Standard",
+                          "owner":  null,
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:docs/database.md",
+                                          "STANDARDS:docs/local-database.md",
+                                          "SYSTEM-ADMIN-EAC:docs/db-model.md",
+                                          "SYSTEM-ADMIN-EAC:sql/seed/README.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-24T14:09:47.6111174-05:00"
+                      },
+                      {
                           "id":  "SYSTEM-ADMIN-EAC:AGENTS.md",
                           "repository":  "SYSTEM-ADMIN-EAC",
                           "path":  "AGENTS.md",
@@ -4420,6 +4446,7 @@
                           "related":  [
                                           "STANDARDS:docs/database.md",
                                           "STANDARDS:docs/local-database.md",
+                                          "STANDARDS:templates/seed-eac/README.md",
                                           "SYSTEM-ADMIN-EAC:sql/seed/README.md"
                                       ],
                           "relatedAdrs":  [
@@ -4544,6 +4571,7 @@
                           "related":  [
                                           "STANDARDS:docs/database.md",
                                           "STANDARDS:docs/local-database.md",
+                                          "STANDARDS:templates/seed-eac/README.md",
                                           "SYSTEM-ADMIN-EAC:docs/db-model.md"
                                       ],
                           "relatedAdrs":  [
@@ -4984,6 +5012,7 @@
                                                       "STANDARDS:docs/hosted-deployment.md",
                                                       "STANDARDS:docs/local-database.md",
                                                       "STANDARDS:docs/deviations/DEV-001-process-framework-future-engine-vision.md",
+                                                      "STANDARDS:templates/seed-eac/README.md",
                                                       "SYSTEM-ADMIN-EAC:AGENTS.md",
                                                       "SYSTEM-ADMIN-EAC:README.md",
                                                       "SYSTEM-ADMIN-EAC:README_AI.md",
@@ -5177,6 +5206,7 @@
                                          "Platform/Database":  [
                                                                    "STANDARDS:docs/database.md",
                                                                    "STANDARDS:docs/local-database.md",
+                                                                   "STANDARDS:templates/seed-eac/README.md",
                                                                    "SYSTEM-ADMIN-EAC:docs/db-model.md",
                                                                    "SYSTEM-ADMIN-EAC:sql/seed/README.md"
                                                                ],
@@ -5533,7 +5563,8 @@
                                                            "STANDARDS:templates/dependabot/README.md",
                                                            "STANDARDS:templates/docs-plans/README.md",
                                                            "STANDARDS:templates/local-sql/README.md",
-                                                           "STANDARDS:templates/onboarding/README.md"
+                                                           "STANDARDS:templates/onboarding/README.md",
+                                                           "STANDARDS:templates/seed-eac/README.md"
                                                        ],
                                          "SYSTEM-ADMIN-EAC":  [
                                                                   "SYSTEM-ADMIN-EAC:AGENTS.md",

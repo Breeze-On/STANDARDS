@@ -16,7 +16,7 @@ Current conventions for portable payloads used to import and export application 
 | `breezeon.eac.security-group-members` (+ Excel) | Membership-only Add Missing / Overwrite | Groups omitted from file = untouched; Overwrite + `members: []` clears that group (JSON) | EAC SG Bulk Actions | Yes |
 | Data Entity Values Excel | Add/Update or Overwrite by row Code | Overwrite deletes rows absent from sheet for included entities | EAC Data Entities Excel Tool | Yes |
 | Translations Excel | Catalog dual-path with JSON language maps | See path-by-kind matrix below / Translations section | EAC Translations | Yes |
-| `breezeon.eac.data-entity-values` (local seed JSON) | Synchronize-by-Code at **local Docker seed** only | N/A as product import/export | Seed tooling only | **Never hosted** |
+| `breezeon.eac.data-entity-values` (local seed JSON) | Synchronize-by-Code at **local Docker seed** only | N/A as product import/export | EAC local reset importing consumer `seed/eac/` | **Never hosted** |
 
 **`schemaVersion` typing (do not unify without a breaking bump):** Applications / BE Types / BE / SG members use string **`"1.0"`**. Application Configuration uses integer **`2`** (import also accepts `1` legacy flat PF). AI authors must emit the type shown for that kind.
 
@@ -46,6 +46,23 @@ Prefer **export-then-edit** for Application Configuration: export the full envel
 | Values Excel Overwrite | Deletes destination rows absent from included sheets |
 
 Authoring JSON locally is allowed. Executing hosted Import/Sync requires current-prompt authorization ([ai-agent-governance.md](ai/ai-agent-governance.md)). Construct-level pointer: [construct-selection.md](../architecture/app-configuration/construct-selection.md).
+
+## Per-application `seed/eac` (local Docker)
+
+Portable EAC configuration used to make an EAC-consuming application runnable on a developer machine is **owned by that application's repository**, in a top-level **`seed/eac/`** folder (no per-app `seed/eac/README.md`; the product README / `README_AI.md` document it).
+
+| Concern | Rule |
+| --- | --- |
+| Owner | The consuming application repo (e.g. `breezeon-corp-fin-inv/seed/eac/`). **Not** `SYSTEM-ADMIN-EAC/sql/seed/`. |
+| Importer | **EAC** (`SYSTEM-ADMIN-EAC` `scripts/dev-reset.ps1`) — consumer apps invoke it as a subprocess ([local-development-scripts.md](local-development-scripts.md) § Consumer apps and EAC reset) and never import EAC configuration themselves. |
+| Discovery | EAC discovers **sibling** repositories under the same parent folder and imports each one's `seed/eac/` when present. A sibling without `seed/eac/` is skipped. |
+| Contents | Portable payloads only (JSON envelopes / `.xlsx`), using the existing kinds: `breezeon.eac.applications` (the app's registry entry and enablement), `breezeon.eac.application-configuration` (Data Entity definitions, Process Framework, Variables, Security Group definitions, languages), `breezeon.eac.data-entity-values` (local Values JSON) or Data Entity Values Excel, `breezeon.eac.security-group-members`, and Translations Excel as needed. Business Entity Types / Business Entities JSON only when the app needs hierarchy rows that the EAC baseline does not provide. |
+| Order | Import follows the [Promote sequence](#promote-sequence-operators--ai): registry → hierarchy → enablement → Application Configuration → Values → members → translations. |
+| Hosted | **Never** applied to DEV / UAT / PRD. Hosted promote uses the normal import surfaces. |
+
+Product apps must **not** carry `System.EAC*` SQL configuration or current-state seeds (e.g. `INSERT` into EAC tables, `P_POST_EAC*` calls) in their own `sql/seed/`; EAC configuration is expressed only as portable payloads under `seed/eac/` ([database.md](database.md) § `seed/eac/`).
+
+---
 
 ## Applications JSON (`breezeon.eac.applications`)
 
@@ -471,7 +488,7 @@ Root keys `processMetadataColumns`, `roles`, `steps`, `options` (present/omit se
 - Authorization: Global System Administrator or Application administrator group (`APP_*`) for the selected Application.
 - Max size: EAC `ApplicationConfigurationImport:MaxFileSizeMb` (default **5**); in-memory only.
 - Filename on export: `{applicationUniqueCode}.application-configuration.json`.
-- Local Docker may seed the same envelope after Applications/BE SQL (`SYSTEM-ADMIN-EAC` `sql/seed/` + `tools/BreezeOn.Eac.LocalAppConfigurationSeed`); never hosted environments.
+- Local Docker may seed the same envelope after Applications/BE SQL: EAC's reset (`SYSTEM-ADMIN-EAC` `scripts/dev-reset.ps1` + `tools/BreezeOn.Eac.LocalAppConfigurationSeed`) discovers and imports each consuming application's file from that application's own `seed/eac/` folder ([§ Per-application `seed/eac`](#per-application-seedeac-local-docker)); never hosted environments.
 
 ### Related
 
@@ -490,7 +507,7 @@ Distinct from other Data Entity payloads:
 | --- | --- | --- |
 | Application Configuration JSON (`breezeon.eac.application-configuration`) | Data Entity definitions + columns | Synchronize (create / update / remove by Code) — [above](#application-configuration-json-breezeoneacapplication-configuration) |
 | **Values Excel** (`.xlsx`, this section) | Rows, row Description (one language), custom-column values | Analyze → confirm; Add/Update or Overwrite by row Code |
-| Local Values JSON (`breezeon.eac.data-entity-values`) | Rows for local Docker seed | Synchronize-by-Code at seed time; **local only**, **never hosted**; **not** a product import/export feature |
+| Local Values JSON (`breezeon.eac.data-entity-values`) | Rows for local Docker seed | Synchronize-by-Code at seed time; lives in the consuming app's `seed/eac/`; **local only**, **never hosted**; **not** a product import/export feature |
 
 **Never hosted:** Do not attempt to import `breezeon.eac.data-entity-values` into DEV/UAT/PRD. Hosted Values travel via Excel only.
 
