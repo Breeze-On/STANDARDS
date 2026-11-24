@@ -172,7 +172,7 @@ Product `README_AI.md` must tell agents which script to use for routine vs fresh
 Implemented for:
 
 - [breezeon-corp-fin-inv](https://github.com/Breeze-On/breezeon-corp-fin-inv) — `scripts/dev-reset.ps1` + `scripts/dev-run.ps1` (EAC-consuming product; first host with both)  
-- [SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) — `scripts/dev-reset.ps1` (+ SQL helpers); **`dev-run.ps1` pending adoption**  
+- [SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) — `scripts/dev-reset.ps1` + `scripts/dev-run.ps1` (+ SQL helpers; platform reset owner)  
 - [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `scripts/dev-reset.ps1` (Gallery; no SQL); **`dev-run.ps1` pending adoption**  
 
 Future BreezeOn applications must ship **both** scripts when they add a runnable local host ([application-development-process.md](ai/application-development-process.md) New App Development checklist).
