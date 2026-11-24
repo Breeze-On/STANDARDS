@@ -48,7 +48,7 @@ Synchronize is **section-participation based** ([ADR-017](../../decisions/ADR-01
 Synchronize is **Application-wide**, not limited to the currently selected Business Entity:
 
 - When `variables` participates, **values sync across all enablements** represented in the file (full replace for participating definitions).
-- When `securityGroups` participates, groups sync for **all Business Entity contexts** present in the file for that Application.
+- When `securityGroups` participates, portable definitions (by `attributeCode`) materialize onto **every enabled** Business Entity for that Application.
 - Selecting a Business Entity only opens the workspace; it does not scope the promote.
 
 Import Summary must surface this hazard when Variables or Security Groups participate.
@@ -57,7 +57,7 @@ Import Summary must surface this hazard when Variables or Security Groups partic
 
 | Classification | Contents |
 | --- | --- |
-| **Included** (App Config JSON when section participates) | Data Entity **configuration** (definitions + columns); Process Framework Roles / Steps / Options + metadata columns + **metadata values** (incl. TEXT language maps); Variables **definitions** + **values** (incl. TEXT language maps); Security Groups **definitions** (AttributeCode / portable Name / Description / Metadata / SortOrder; configuration-owned APPSG); **Enabled languages** (`languages` — replace per context; `en-CA` required) |
+| **Included** (App Config JSON when section participates) | Data Entity **configuration** (definitions + columns); Process Framework Roles / Steps / Options + metadata columns + **metadata values** (incl. TEXT language maps); Variables **definitions** + **values** (incl. TEXT language maps); Security Groups **portable definitions** (AttributeCode / portable Name / Description / Metadata / SortOrder — materialized per enabled BE as configuration-owned APPSG); **Enabled languages** (`languages` — replace per context; `en-CA` required) |
 | **Excluded** from App Config JSON | Data Entity **row** data; Security Group **memberships**; environment GUIDs; runtime / audit data |
 | **Separate deployment path** | **Translations Excel** (DE row Descriptions; also PF labels / PF TEXT metadata / Variable TEXT — dual path with JSON language maps where those kinds also travel in App Config JSON). SG members: kind `breezeon.eac.security-group-members`. DE Values Excel: [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md). |
 
@@ -70,12 +70,12 @@ Contract detail: [`docs/data-portability.md`](../../docs/data-portability.md).
 | Section | In JSON | Synchronized |
 | --- | --- | --- |
 | `dataEntities` | Yes (required) | Always — complete section sync |
-| `securityGroups` | Export always; import when present | Complete sync when key present (incl. `[]`); **skipped** when omitted |
+| `securityGroups` | Export always; import when present | Complete sync when key present (incl. `[]`) — AttributeCode definitions materialize to all enabled BEs; **skipped** when omitted. Export fails on cross-context portable-field drift. |
 | `variables` | Export always as `{ definitions, values }`; import when present | Complete sync when key present (both arrays required); **skipped** when omitted |
 | `processFramework` | Export always as nested tree; import when present | Complete sync of participating nested owners when key present; **skipped** when omitted |
 | `languages` | Export always; import when present | Complete replace of enabled languages for listed contexts when key present; **skipped** when omitted |
 
-Legacy schemaVersion **1** flat keys (`processMetadataColumns` / `roles` / `steps` / `options`) are still accepted on import (dual-read). Export writes schemaVersion **2** nested only. Non-empty legacy `systemConfiguration` is rejected (replaced by `variables`).
+Legacy schemaVersion **1** flat keys (`processMetadataColumns` / `roles` / `steps` / `options`) are still accepted on import (dual-read). schemaVersion **2** nested PF with BE-keyed `securityGroups` is dual-read on import. Export writes schemaVersion **3** (nested PF + AttributeCode-only `securityGroups`). Non-empty legacy `systemConfiguration` is rejected (replaced by `variables`).
 
 ### Omitted-section warnings (Import Summary)
 

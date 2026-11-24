@@ -18,7 +18,7 @@ Current conventions for portable payloads used to import and export application 
 | Translations Excel | Catalog dual-path with JSON language maps | See path-by-kind matrix below / Translations section | EAC Translations | Yes |
 | `breezeon.eac.data-entity-values` (local seed JSON) | Synchronize-by-Code at **local Docker seed** only | N/A as product import/export | EAC local reset importing consumer `seed/eac/` | **Never hosted** |
 
-**`schemaVersion` typing (do not unify without a breaking bump):** Applications / BE Types / BE / SG members use string **`"1.0"`**. Application Configuration uses integer **`2`** (import also accepts `1` legacy flat PF). AI authors must emit the type shown for that kind.
+**`schemaVersion` typing (do not unify without a breaking bump):** Applications / BE Types / BE / SG members use string **`"1.0"`**. Application Configuration uses integer **`3`** (import also accepts `1` legacy flat PF and `2` nested PF / legacy BE-keyed securityGroups). AI authors must emit the type shown for that kind.
 
 ### Promote sequence (operators / AI)
 
@@ -262,13 +262,13 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 
 | Field | Required | Notes |
 | --- | --- | --- |
-| `schemaVersion` | Yes | **Integer** (not a string). **Current export: `2`**. Import accepts `1` (legacy flat Process Framework) and `2` (nested `processFramework`). |
+| `schemaVersion` | Yes | **Integer** (not a string). **Current export: `3`**. Import accepts `1` (legacy flat Process Framework), `2` (nested `processFramework`; BE-keyed `securityGroups`), and `3` (AttributeCode-only `securityGroups`). |
 | `kind` | Yes | `"breezeon.eac.application-configuration"` |
 | `exportedAt` | No | ISO-8601 UTC on export; import ignores |
 | `applicationUniqueCode` | Yes | Match key = Application `UniqueCode` (must equal selected Application on import) |
 | `applicationCode` | Export: yes; Import: when present | Short Application `Code`; when present on import must match selected Application |
 | `dataEntities` | Yes | Array (may be empty). **Always synchronized.** Missing property ≡ `[]` ≡ full DE sync (remove Codes absent from file) — **not** omit=skip. Prefer export-then-edit; never omit this key for “PF-only” files. |
-| `securityGroups` | Export: yes; Import: when present | Array (may be empty). When **present** (including `[]`), synchronized for the Application. When **omitted**, security-group sync is skipped (backward compatible). |
+| `securityGroups` | Export: yes; Import: when present | Array of portable definitions (may be empty). When **present** (including `[]`), definitions are materialized onto **every enabled** Business Entity for the Application. When **omitted**, security-group sync is skipped (backward compatible). Export fails if the same `attributeCode` has drifted portable fields across contexts. |
 | `variables` | Export: yes; Import: when present | Object with required `definitions` + `values` arrays (may be empty). When **present**, both are synchronized. When **omitted**, Variables sync is skipped. See below. |
 | `processFramework` | Export: yes; Import: when present | Object. Canonical Process Framework node (schemaVersion **2**). Absent = skip all Process Framework sync. See below. |
 | `languages` | Export: yes; Import: when present | Array of `{ businessEntityCode, languageCode, sortOrder }`. When **present**, enabled languages are **replaced** per listed Application Context (`en-CA` required). When **omitted**, language enablement is skipped. |
@@ -308,16 +308,18 @@ Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
 
 ### Security group item
 
+Portable **definitions** keyed by `attributeCode` only (Application-scoped in the file). On synchronize they **materialize** into per–Business Entity `EACSecurityGroups` + configuration-owned `Security.Groups` for every enabled context.
+
 | Field | Required | Notes |
 | --- | --- | --- |
-| `businessEntityCode` | Yes | Must be enabled for the Application; resolves to Application Context |
-| `attributeCode` | Yes | `[A-Z0-9_]+`; unique within that Business Entity for the Application; **mutable** (portable rename = remove+create match-key change) |
-| `name` | No (export always; import optional) | Portable `Security.Groups.Name` (max 600). Export always emits. Import/sync **preserves** curated Name when present; when omitted on create, defaults to `{ApplicationCode} / {BusinessEntityCode} — {AttributeCode}`. Sync does **not** overwrite an existing Name with the formula when `name` is supplied. |
-| `description` | Yes | Stored on `Security.Groups.Description` (max 600) |
+| `attributeCode` | Yes | `[A-Z0-9_]+`; unique within `securityGroups`; **mutable** (portable rename = remove+create match-key change) |
+| `name` | No (export always; import optional) | Authoritative portable Name metadata as stored (max 600). Export emits the stored value with **no** convention-based rewriting; cross-context drift on Name (or other portable fields) **fails export**. Not applied as runtime `Security.Groups.Name` on sync create. |
+| `description` | Yes | Written to `Security.Groups.Description` on create/update (max 600) |
 | `metadata` | No | Stored on `EACSecurityGroups.Metadata` (max 250). **Export always emits** the property (`null` when unset) so round-trip matches import. |
-| `sortOrder` | Yes | Positive integer; unique within the same `businessEntityCode` |
+| `sortOrder` | Yes | Positive integer; unique within `securityGroups` |
+| `businessEntityCode` | Legacy only | schemaVersion ≤ 2 import: ignored for identity; duplicate AttributeCodes with conflicting portable fields → validation error. Never exported on schemaVersion **3**. |
 
-Creates `Security.Groups` with Code `APPSG_{UniqueCode}_{BusinessEntityCode}_{AttributeCode}` (**`IsManuallyCreated = 0`**, configuration-owned). **Code length budget** ≤ 700 (Save and Synchronize hard-fail; no silent truncation). Memberships are never imported via this kind. **Delete-with-config:** removing a portable item deletes the EAC configuration row **and** the linked APPSG `Security.Groups` row + memberships.
+**Materialization:** create/update/remove for each enabled Business Entity × each file `attributeCode`. Runtime Name on **create** = `{ApplicationCode} / {BusinessEntityCode} — {AttributeCode}`. **Update** syncs Description / Metadata / SortOrder (and keeps APPSG Code in convention) and **does not overwrite** an existing Name. Code = `APPSG_{UniqueCode}_{BusinessEntityCode}_{AttributeCode}` (**`IsManuallyCreated = 0`**). **Code length budget** ≤ 700 (hard-fail). Memberships are never imported via this kind. **Delete-with-config:** removing a definition deletes matching EAC rows **and** linked APPSG groups + memberships in every context for that AttributeCode.
 
 ### Variables
 
@@ -411,7 +413,7 @@ Root keys `processMetadataColumns`, `roles`, `steps`, `options` (present/omit se
 
 ```json
 {
-  "schemaVersion": 2,
+  "schemaVersion": 3,
   "kind": "breezeon.eac.application-configuration",
   "applicationUniqueCode": "INVOICE-APPROVAL",
   "applicationCode": "INV",
@@ -463,10 +465,9 @@ Root keys `processMetadataColumns`, `roles`, `steps`, `options` (present/omit se
   },
   "securityGroups": [
     {
-      "businessEntityCode": "FIN",
       "attributeCode": "INITIATE",
-      "name": "EAC / FIN — INITIATE",
-      "description": "Can initiate requests.",
+      "name": "Initiate",
+      "description": "Users permitted to create and submit requests.",
       "metadata": null,
       "sortOrder": 1
     }
@@ -479,7 +480,7 @@ Root keys `processMetadataColumns`, `roles`, `steps`, `options` (present/omit se
 - Validate selected Application `UniqueCode` == `applicationUniqueCode` (blocking).
 - Match Data Entities and Columns by **current** `Code` within the Application.
 - Create missing Codes; update matched Codes (description, sortOrder); **remove** Codes in the target that are absent from the file.
-- When `securityGroups` is present: match by `businessEntityCode` + `attributeCode`; create missing (including configuration-owned `Security.Groups`); update matched (including portable `name`); remove absent rows with **delete-with-config** (EAC + APPSG members + groups). `businessEntityCode` must be enabled for the Application. Code length > 700 hard-fails.
+- When `securityGroups` is present: treat items as portable definitions by `attributeCode`; materialize onto **every enabled** Business Entity (create missing APPSG + EAC rows with convention Name; update Description/Metadata/SortOrder without overwriting Name; remove AttributeCodes absent from the file with **delete-with-config**). Legacy `businessEntityCode` is ignored after collapse. Code length > 700 hard-fails.
 - When Process Framework sections are present (nested or legacy flat): match metadata columns by `(code, owner)`; roles/steps by `code`; options by `stepCode` + `code`; sync order metadata columns → roles → steps → options, removals in reverse. Removing a metadata column is always allowed (cascades translations → values → column); removing a Step / Role is blocked while a remaining Option / Step references it; a Data Entity referenced by a `DDL` column cannot be removed.
 - No rename detection.
 - Removing a Data Entity is blocked when any rows exist in any Application Context.

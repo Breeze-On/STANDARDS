@@ -18,7 +18,7 @@ Platform semantics: [architecture/app-configuration/application-configuration-de
 1. Open **Application Configuration**.
 2. Select Application + Business Entity.
 3. Footer **Export JSON**.
-4. Save `{UniqueCode}.application-configuration.json` (source-control friendly). Current export includes `dataEntities`, `processFramework`, `variables`, `securityGroups`, and `languages` (schemaVersion **2** integer). Prefer **export-then-edit** — do not hand-author a minimal file that omits `dataEntities` (missing key ≡ `[]` ≡ full DE synchronize).
+4. Save `{UniqueCode}.application-configuration.json` (source-control friendly). Current export includes `dataEntities`, `processFramework`, `variables`, `securityGroups` (AttributeCode-only portable definitions), and `languages` (schemaVersion **3** integer). Prefer **export-then-edit** — do not hand-author a minimal file that omits `dataEntities` (missing key ≡ `[]` ≡ full DE synchronize). Align Security Group Name/Description/Metadata/SortOrder across enabled Business Entities before export (cross-context drift fails export).
 
 ## Import / synchronize (target environment)
 
