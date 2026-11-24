@@ -199,6 +199,7 @@ Canonical JSON for `@FiltersJson`, aligned with `BoQueryFilter` / `BoQueryFilter
 - The SQL schema **`System`** holds platform administration / shared catalog tables owned by **EAC** (Enterprise Administration Center).
 - Other applications **consume** those registry values (for example via `ApplicationGUID`); they must **not** fork duplicate application-catalog tables.
 - Concrete table inventory lives in the EAC product [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) and `sql/current_model/` — not in this file.
+- **Consumer Application Context Bootstrap:** product apps call EAC-owned `System.P_GET_EACApplicationAccessContext` through SHARED-UI `IBoApplicationAccessBootstrap` — they do not author parallel System SPs or fork registry tables ([architecture/app-context/](../architecture/app-context/README.md), [ADR-022](../decisions/ADR-022-consumer-application-context-bootstrap.md)).
 
 ## Primary keys, GUID columns, and relationships
 

@@ -3,7 +3,7 @@
 
 Owner: UI / Architecture
 
-**Implementation SSOT:** [Breeze-On/SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoAccessDenied`, `BoErrorMessageContext`, `BoErrorMessageOptions`, `.bo-error-message*` in `breezeon-ui.css`, Gallery `/error-message-page`.
+**Implementation SSOT:** [Breeze-On/SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoAccessDenied`, `BoApplicationError`, `BoErrorMessageContext`, `BoErrorMessageOptions`, `.bo-error-message*` in `breezeon-ui.css`, Gallery `/error-message-page`.
 
 Error Message Pages are a **first-class BreezeOn UI pattern**. SHARED-UI owns shared components and the authoritative gallery showcase. Product apps consume them; they do not invent one-off error pages.
 
@@ -11,16 +11,32 @@ Error Message Pages are a **first-class BreezeOn UI pattern**. SHARED-UI owns sh
 
 Provide consistent, enterprise-grade full-page error experiences across all BreezeOn applications so users and support share the same mental model: what happened, what was requested, who is signed in, and (when needed) minimal support metadata.
 
+Shipped scenarios:
+
+- Access Denied (`BoAccessDenied`) — authenticated but restricted (**after** a valid AE is established)
+- Application Error (`BoApplicationError`) — a valid Application Context (AE) **could not be established**, or required configuration/technical failure blocks the request
+
 Future scenarios (each a sibling `Bo*` + Gallery tab when introduced):
 
-- Access Denied (shipped)
 - Page Not Found (404)
 - Session Expired
 - Service Unavailable
-- Application Error
 - Maintenance Mode
 - Unexpected Error
 - Other standardized experiences as approved
+
+### Application Context (establish AE first)
+
+See [context-resolution.md](../../../architecture/app-context/context-resolution.md). Short form:
+
+| Condition | Component |
+| --- | --- |
+| Step 1 fail: bootstrap/EAC failure, no AE rows, invalid/foreign AE, or **missing application-required AttributeCodes** in EAC | `BoApplicationError` |
+| Step 1 ok; Step 2 fail: user lacks membership / visibility / page permission | `BoAccessDenied` |
+
+`/application-error` must **not** require a resolved AE or completed Application Context Bootstrap, and must not recursively re-enter AE resolution.
+
+**Transport:** navigate to `/application-error`. Do **not** pass title/message query parameters. Error Details reason is carried via circuit-scoped `IBoApplicationErrorState` (consumed once by the host page). Primary copy is always localized generic Application Error title/lead/body.
 
 ## Design principles
 
@@ -38,11 +54,31 @@ Future scenarios (each a sibling `Bo*` + Gallery tab when introduced):
 
 ## Visual hierarchy
 
-1. Status icon (layered circular badge; reusable foundation — Access Denied uses `PersonLock` + primary/tertiary badge, not a danger/error glyph)
-2. Title
-3. Professional explanatory message (lead + body where applicable)
+### Access Denied
+
+1. Status icon (`PersonLock` + primary/tertiary badge)
+2. Title (generic **Access Denied**)
+3. Lead + body (user-facing)
 4. Access Details (expandable; **expanded by default**)
-5. Support Details (same panel chrome; collapsed by default)
+5. Support Details (expandable; **collapsed by default**)
+
+### Application Error
+
+1. Status icon (`ErrorCircle`)
+2. Title (generic **Application Error** — never scenario-specific)
+3. Lead + body (**user-facing** messaging only)
+4. **Error Details** (expandable; **expanded by default**) — concise support/admin/developer failure explanation
+5. **Support Details** (expandable; **expanded by default**) — reference / operational metadata
+
+#### Messaging layers (Application Error)
+
+| Layer | Audience | Content |
+| --- | --- | --- |
+| Title / lead / body | End users | Generic, localized, non-technical |
+| Error Details | Support, admins, developers | Concise actionable failure (e.g. missing required AttributeCodes, no Application Enabled rows, invalid AE, bootstrap failure). No stack traces, secrets, SQL, or PII |
+| Support Details | Support / ops | Environment, Tenant ID, Correlation / Reference ID, Timestamp (Phase 1 ceiling) |
+
+Error Details are selected via safe `BoApplicationErrorReason` values and localized platform strings — not free-form exception text in the URL.
 
 ## Shared foundation (CSS)
 
@@ -52,15 +88,16 @@ Reuse these classes for all error-message components — do **not** invent Acces
 | --- | --- |
 | `.bo-error-message` | Root (horizontally centered; **top-aligned** with generous top padding — not vertically centered) |
 | `.bo-error-message--access-denied` | Scenario modifier (auth/permission tone for icon color) |
+| `.bo-error-message--application-error` | Scenario modifier (technical/configuration tone; `ErrorCircle` icon) |
 | `.bo-error-message__icon` / `__icon-badge` | Status icon treatment (circular gradient badge + soft elevation) |
 | `.bo-error-message__title` | Title |
 | `.bo-error-message__message` / `__message-detail` | Lead / body copy |
-| `.bo-error-message__panel` | Spacing wrapper around `BoExpandableSection` for Access/Support Details |
+| `.bo-error-message__panel` | Spacing wrapper around `BoExpandableSection` for Access / Error / Support Details |
 | `.bo-error-message__details-list` / `__detail-row` / `__detail-label` / `__detail-value` | Detail rows inside expandable panels |
 
-Access/Support Details use shared [`BoExpandableSection`](../layout/expandable-section.md) (not `BoSectionMain`/`BoSectionSub`). Access Details default expanded; Support Details default collapsed. Collapsed content remains mounted (DOM retention rule).
+Detail panels use shared [`BoExpandableSection`](../layout/expandable-section.md) (not `BoSectionMain`/`BoSectionSub`). Collapsed content remains mounted (DOM retention rule).
 
-Future components (`BoPageNotFound`, `BoSessionExpired`, `BoMaintenanceMode`, `BoApplicationError`, …) must reuse this design language.
+`BoApplicationError` reuses this design language. Do not promote implementation-specific scenario strings into the page title — they belong in **Error Details**. Future components (`BoPageNotFound`, `BoSessionExpired`, `BoMaintenanceMode`, …) must reuse the same foundation.
 
 ## Enforceable rules
 

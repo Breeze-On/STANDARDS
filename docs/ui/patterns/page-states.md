@@ -22,8 +22,9 @@ Current reality only.
 | **Loading — button** | None | `BoButton` has no busy / spinner; use Page Freeze; dialogs disable footer actions via `Busy` / disabled flags | [button.md](../controls/button.md) |
 | **Field error** | Field chrome | `ErrorText` or deferred required error **after** a validation attempt | [forms.md](../controls/forms.md#deferred-mandatory-validation-locked) |
 | **Multi-row save failure** | Validation Summary + field chrome + **Alert** toast + navigate-to-error | Required where the Adoption Matrix says so | [validation-summary.md](validation-summary.md) |
-| **Not authorized** | Error Message Page (`BoAccessDenied`) | Footer **off** (`ShowFooter = false`); app-agnostic copy | [error-messages.md](../shell/error-messages.md) |
-| **Other page-level errors** (not found, session expired, maintenance, unhandled error) | Error Message framework | Only **Access Denied** ships; other types are **deferred** — reuse the framework design language when added | [error-messages.md § Introducing a new error type](../shell/error-messages.md#introducing-a-new-error-type) |
+| **Not authorized** | Error Message Page (`BoAccessDenied`) | Footer **off** (`ShowFooter = false`); app-agnostic copy; **after** valid AE established (e.g. non-visible AE, missing page AttributeCode membership) | [error-messages.md](../shell/error-messages.md) |
+| **Application / configuration error** | Error Message Page (`BoApplicationError`) | Footer **off**; outside AE bootstrap chain; generic title/lead; **Error Details** + **Support Details** expanded by default; reason via `IBoApplicationErrorState` (not URL title/message) | [error-messages.md](../shell/error-messages.md) · [context-resolution.md](../../../architecture/app-context/context-resolution.md) |
+| **Other page-level errors** (not found, session expired, maintenance) | Error Message framework | Access Denied + Application Error ship; remaining types are **deferred** — reuse the framework design language when added | [error-messages.md § Introducing a new error type](../shell/error-messages.md#introducing-a-new-error-type) |
 
 Do **not** invent page-local loading overlays, inline spinners that block the page, or host `<ul>` error lists ([ux-conventions.md](ux-conventions.md), [validation-summary.md](validation-summary.md)).
 

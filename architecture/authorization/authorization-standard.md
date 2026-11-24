@@ -48,7 +48,11 @@ SHARED-UI owns **`IBoAuthorizationService`** for **Code-based** membership and *
 
 Passing page security does not imply unrestricted data access. A platform GroupGUID evaluation API on SHARED-UI is **not** shipped (Future Validation).
 
-Application Context–scoped permissions beyond enablement visibility remain future work under [ADR-006](../../decisions/ADR-006-application-context-ownership.md).
+### Application Context Bootstrap (consumer apps)
+
+SHARED-UI **`IBoApplicationAccessBootstrap`** loads EAC Application Enabled facts and AttributeCode memberships for a product `ApplicationUniqueCode` ([app-context/](../app-context/README.md), [ADR-022](../../decisions/ADR-022-consumer-application-context-bootstrap.md)). It is **not** a second authorization system and must not replace `IBoAuthorizationService` for Code/route/catalog evaluation.
+
+Product AttributeCode page policy (for example INV `ADMIN` / `INITIATE` / `REPORT`) consumes bootstrap facts after AE resolution. Missing configured AttributeCodes for a required policy set is a **configuration Error**; missing membership in configured groups is **Access Denied**. AttributeCodes are unique per Application Enabled context (`UQ_EACSecurityGroups_ApplicationEnabled_AttributeCode`).
 
 ## Service-boundary read authorization
 

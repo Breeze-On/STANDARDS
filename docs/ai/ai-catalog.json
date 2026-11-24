@@ -1,6 +1,6 @@
 {
     "schemaVersion":  1,
-    "generatedAt":  "2026-11-24T19:25:30.6643218Z",
+    "generatedAt":  "2026-11-24T19:46:37.3643846Z",
     "generator":  "scripts/docs/Generate-AiCatalog.ps1",
     "repositories":  [
                          "STANDARDS",
@@ -167,6 +167,10 @@
                           "isEntryPoint":  true,
                           "entryPointPriority":  10,
                           "related":  [
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
                                           "STANDARDS:architecture/applications/eac.md",
                                           "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
@@ -326,6 +330,130 @@
                           "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
+                          "id":  "STANDARDS:architecture/app-context/ae-query-string.md",
+                          "repository":  "STANDARDS",
+                          "path":  "architecture/app-context/ae-query-string.md",
+                          "domain":  "Platform",
+                          "capability":  "Applications",
+                          "documentType":  "AA",
+                          "kind":  "Architecture",
+                          "owner":  "Architecture",
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
+                                          "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
+                                          "STANDARDS:architecture/applications/README.md",
+                                          "SYSTEM-ADMIN-EAC:AGENTS.md",
+                                          "SYSTEM-ADMIN-EAC:README.md",
+                                          "SYSTEM-ADMIN-EAC:README_AI.md",
+                                          "SYSTEM-ADMIN-EAC:scripts/README.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-24T14:46:18.0648291-05:00"
+                      },
+                      {
+                          "id":  "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                          "repository":  "STANDARDS",
+                          "path":  "architecture/app-context/bootstrap-and-cache.md",
+                          "domain":  "Platform",
+                          "capability":  "Applications",
+                          "documentType":  "AA",
+                          "kind":  "Architecture",
+                          "owner":  "Architecture",
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
+                                          "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
+                                          "STANDARDS:architecture/applications/README.md",
+                                          "SYSTEM-ADMIN-EAC:AGENTS.md",
+                                          "SYSTEM-ADMIN-EAC:README.md",
+                                          "SYSTEM-ADMIN-EAC:README_AI.md",
+                                          "SYSTEM-ADMIN-EAC:scripts/README.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-24T14:46:18.1926410-05:00"
+                      },
+                      {
+                          "id":  "STANDARDS:architecture/app-context/context-resolution.md",
+                          "repository":  "STANDARDS",
+                          "path":  "architecture/app-context/context-resolution.md",
+                          "domain":  "Platform",
+                          "capability":  "Applications",
+                          "documentType":  "AA",
+                          "kind":  "Architecture",
+                          "owner":  "Architecture",
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/README.md",
+                                          "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
+                                          "STANDARDS:architecture/applications/README.md",
+                                          "SYSTEM-ADMIN-EAC:AGENTS.md",
+                                          "SYSTEM-ADMIN-EAC:README.md",
+                                          "SYSTEM-ADMIN-EAC:README_AI.md",
+                                          "SYSTEM-ADMIN-EAC:scripts/README.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-24T14:46:18.3275802-05:00"
+                      },
+                      {
+                          "id":  "STANDARDS:architecture/app-context/README.md",
+                          "repository":  "STANDARDS",
+                          "path":  "architecture/app-context/README.md",
+                          "domain":  "Platform",
+                          "capability":  "Applications",
+                          "documentType":  "AA",
+                          "kind":  "Architecture",
+                          "owner":  "Architecture",
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
+                                          "STANDARDS:architecture/applications/README.md",
+                                          "SYSTEM-ADMIN-EAC:AGENTS.md",
+                                          "SYSTEM-ADMIN-EAC:README.md",
+                                          "SYSTEM-ADMIN-EAC:README_AI.md",
+                                          "SYSTEM-ADMIN-EAC:scripts/README.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-24T14:46:18.4549815-05:00"
+                      },
+                      {
                           "id":  "STANDARDS:architecture/applications/eac-authorization-matrix.md",
                           "repository":  "STANDARDS",
                           "path":  "architecture/applications/eac-authorization-matrix.md",
@@ -344,6 +472,7 @@
                                           "STANDARDS:architecture/authorization/README.md",
                                           "STANDARDS:architecture/authorization/security-schema-standard.md",
                                           "STANDARDS:decisions/ADR-014-platform-authorization.md",
+                                          "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                           "STANDARDS:runbooks/customer-onboarding-authorization.md",
                                           "SYSTEM-SHARED-UI:docs/security-model.md"
                                       ],
@@ -367,6 +496,10 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
                                           "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
                                           "SYSTEM-ADMIN-EAC:AGENTS.md",
@@ -394,6 +527,10 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
                                           "STANDARDS:architecture/applications/eac.md",
                                           "STANDARDS:architecture/applications/README.md",
                                           "SYSTEM-ADMIN-EAC:AGENTS.md",
@@ -404,7 +541,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/applications/README.md",
@@ -421,6 +558,10 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
                                           "STANDARDS:architecture/applications/eac.md",
                                           "STANDARDS:architecture/applications/inv.md",
                                           "SYSTEM-ADMIN-EAC:AGENTS.md",
@@ -452,6 +593,7 @@
                                           "STANDARDS:architecture/authorization/README.md",
                                           "STANDARDS:architecture/authorization/security-schema-standard.md",
                                           "STANDARDS:decisions/ADR-014-platform-authorization.md",
+                                          "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                           "STANDARDS:runbooks/customer-onboarding-authorization.md",
                                           "SYSTEM-SHARED-UI:docs/security-model.md"
                                       ],
@@ -479,6 +621,7 @@
                                           "STANDARDS:architecture/authorization/README.md",
                                           "STANDARDS:architecture/authorization/security-schema-standard.md",
                                           "STANDARDS:decisions/ADR-014-platform-authorization.md",
+                                          "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                           "STANDARDS:runbooks/customer-onboarding-authorization.md",
                                           "SYSTEM-SHARED-UI:docs/security-model.md"
                                       ],
@@ -506,6 +649,7 @@
                                           "STANDARDS:architecture/authorization/page-security-standard.md",
                                           "STANDARDS:architecture/authorization/security-schema-standard.md",
                                           "STANDARDS:decisions/ADR-014-platform-authorization.md",
+                                          "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                           "STANDARDS:runbooks/customer-onboarding-authorization.md",
                                           "SYSTEM-SHARED-UI:docs/security-model.md"
                                       ],
@@ -533,6 +677,7 @@
                                           "STANDARDS:architecture/authorization/page-security-standard.md",
                                           "STANDARDS:architecture/authorization/README.md",
                                           "STANDARDS:decisions/ADR-014-platform-authorization.md",
+                                          "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                           "STANDARDS:runbooks/customer-onboarding-authorization.md",
                                           "SYSTEM-SHARED-UI:docs/security-model.md"
                                       ],
@@ -968,7 +1113,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/identity-and-authentication/README.md",
@@ -1694,6 +1839,7 @@
                                           "STANDARDS:architecture/authorization/page-security-standard.md",
                                           "STANDARDS:architecture/authorization/README.md",
                                           "STANDARDS:architecture/authorization/security-schema-standard.md",
+                                          "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                           "STANDARDS:runbooks/customer-onboarding-authorization.md",
                                           "SYSTEM-SHARED-UI:docs/security-model.md"
                                       ],
@@ -1913,6 +2059,34 @@
                           "lastUpdated":  "2026-11-22T10:28:29-05:00"
                       },
                       {
+                          "id":  "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
+                          "repository":  "STANDARDS",
+                          "path":  "decisions/ADR-022-consumer-application-context-bootstrap.md",
+                          "domain":  "Security",
+                          "capability":  "Authorization",
+                          "documentType":  "DEC",
+                          "kind":  "Decision",
+                          "owner":  null,
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:architecture/applications/eac-authorization-matrix.md",
+                                          "STANDARDS:architecture/authorization/authorization-standard.md",
+                                          "STANDARDS:architecture/authorization/page-security-standard.md",
+                                          "STANDARDS:architecture/authorization/README.md",
+                                          "STANDARDS:architecture/authorization/security-schema-standard.md",
+                                          "STANDARDS:decisions/ADR-014-platform-authorization.md",
+                                          "STANDARDS:runbooks/customer-onboarding-authorization.md",
+                                          "SYSTEM-SHARED-UI:docs/security-model.md"
+                                      ],
+                          "relatedAdrs":  [
+                                              "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md"
+                                          ],
+                          "lastUpdated":  "2026-11-24T14:46:24.5435162-05:00"
+                      },
+                      {
                           "id":  "STANDARDS:decisions/README.md",
                           "repository":  "STANDARDS",
                           "path":  "decisions/README.md",
@@ -1995,7 +2169,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/data-portability.md",
@@ -2068,7 +2242,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/domain-modeling.md",
@@ -2186,7 +2360,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/local-database.md",
@@ -2210,7 +2384,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/local-development-scripts.md",
@@ -2237,7 +2411,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
+                          "lastUpdated":  "2026-11-24T14:32:53-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/naming.md",
@@ -2435,7 +2609,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/application-development-process.md",
@@ -2459,7 +2633,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
@@ -2483,7 +2657,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
@@ -2507,7 +2681,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-STANDARDS-SUMMARY.md",
@@ -2531,7 +2705,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/planning-and-development-agents.md",
@@ -2624,6 +2798,7 @@
                                           "STANDARDS:docs/ui/gallery-index.md",
                                           "STANDARDS:docs/ui/ux-pr-review-checklist.md",
                                           "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/dirty-state.md",
                                           "STANDARDS:docs/ui/patterns/import-summary.md",
                                           "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -2719,6 +2894,7 @@
                                           "STANDARDS:docs/ui/gallery-index.md",
                                           "STANDARDS:docs/ui/ux-pr-review-checklist.md",
                                           "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/dirty-state.md",
                                           "STANDARDS:docs/ui/patterns/import-summary.md",
                                           "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -2779,6 +2955,7 @@
                                           "STANDARDS:docs/ui/example-governance.md",
                                           "STANDARDS:docs/ui/ux-pr-review-checklist.md",
                                           "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/dirty-state.md",
                                           "STANDARDS:docs/ui/patterns/import-summary.md",
                                           "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -3155,6 +3332,7 @@
                                           "STANDARDS:docs/ui/example-governance.md",
                                           "STANDARDS:docs/ui/gallery-index.md",
                                           "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/dirty-state.md",
                                           "STANDARDS:docs/ui/patterns/import-summary.md",
                                           "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -3705,6 +3883,7 @@
                                           "STANDARDS:docs/ui/example-governance.md",
                                           "STANDARDS:docs/ui/gallery-index.md",
                                           "STANDARDS:docs/ui/ux-pr-review-checklist.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/dirty-state.md",
                                           "STANDARDS:docs/ui/patterns/import-summary.md",
                                           "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -3716,6 +3895,37 @@
 
                                           ],
                           "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                      },
+                      {
+                          "id":  "STANDARDS:docs/ui/patterns/context-selection.md",
+                          "repository":  "STANDARDS",
+                          "path":  "docs/ui/patterns/context-selection.md",
+                          "domain":  "UI",
+                          "capability":  "Patterns",
+                          "documentType":  "AA",
+                          "kind":  "Standard",
+                          "owner":  "UI / Architecture",
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:docs/deviations/DEV-002-example-governance-approved-exceptions.md",
+                                          "STANDARDS:docs/ui/example-governance.md",
+                                          "STANDARDS:docs/ui/gallery-index.md",
+                                          "STANDARDS:docs/ui/ux-pr-review-checklist.md",
+                                          "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/dirty-state.md",
+                                          "STANDARDS:docs/ui/patterns/import-summary.md",
+                                          "STANDARDS:docs/ui/patterns/page-archetypes.md",
+                                          "STANDARDS:docs/ui/patterns/page-states.md",
+                                          "STANDARDS:docs/ui/patterns/ux-conventions.md",
+                                          "STANDARDS:docs/ui/patterns/validation-summary.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-24T14:46:31.7848781-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/dirty-state.md",
@@ -3736,6 +3946,7 @@
                                           "STANDARDS:docs/ui/gallery-index.md",
                                           "STANDARDS:docs/ui/ux-pr-review-checklist.md",
                                           "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/import-summary.md",
                                           "STANDARDS:docs/ui/patterns/page-archetypes.md",
                                           "STANDARDS:docs/ui/patterns/page-states.md",
@@ -3766,6 +3977,7 @@
                                           "STANDARDS:docs/ui/gallery-index.md",
                                           "STANDARDS:docs/ui/ux-pr-review-checklist.md",
                                           "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/dirty-state.md",
                                           "STANDARDS:docs/ui/patterns/page-archetypes.md",
                                           "STANDARDS:docs/ui/patterns/page-states.md",
@@ -3796,6 +4008,7 @@
                                           "STANDARDS:docs/ui/gallery-index.md",
                                           "STANDARDS:docs/ui/ux-pr-review-checklist.md",
                                           "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/dirty-state.md",
                                           "STANDARDS:docs/ui/patterns/import-summary.md",
                                           "STANDARDS:docs/ui/patterns/page-states.md",
@@ -3826,6 +4039,7 @@
                                           "STANDARDS:docs/ui/gallery-index.md",
                                           "STANDARDS:docs/ui/ux-pr-review-checklist.md",
                                           "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/dirty-state.md",
                                           "STANDARDS:docs/ui/patterns/import-summary.md",
                                           "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -3856,6 +4070,7 @@
                                           "STANDARDS:docs/ui/gallery-index.md",
                                           "STANDARDS:docs/ui/ux-pr-review-checklist.md",
                                           "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/dirty-state.md",
                                           "STANDARDS:docs/ui/patterns/import-summary.md",
                                           "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -3886,6 +4101,7 @@
                                           "STANDARDS:docs/ui/gallery-index.md",
                                           "STANDARDS:docs/ui/ux-pr-review-checklist.md",
                                           "STANDARDS:docs/ui/patterns/actions-area.md",
+                                          "STANDARDS:docs/ui/patterns/context-selection.md",
                                           "STANDARDS:docs/ui/patterns/dirty-state.md",
                                           "STANDARDS:docs/ui/patterns/import-summary.md",
                                           "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -4064,6 +4280,7 @@
                                           "STANDARDS:architecture/authorization/README.md",
                                           "STANDARDS:architecture/authorization/security-schema-standard.md",
                                           "STANDARDS:decisions/ADR-014-platform-authorization.md",
+                                          "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                           "SYSTEM-SHARED-UI:docs/security-model.md"
                                       ],
                           "relatedAdrs":  [
@@ -4337,6 +4554,10 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
                                           "STANDARDS:architecture/applications/eac.md",
                                           "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
@@ -4347,7 +4568,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:32:52-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:README.md",
@@ -4364,6 +4585,10 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
                                           "STANDARDS:architecture/applications/eac.md",
                                           "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
@@ -4374,7 +4599,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T14:44:40-05:00"
+                          "lastUpdated":  "2026-11-24T14:32:52-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:README_AI.md",
@@ -4391,6 +4616,10 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
                                           "STANDARDS:architecture/applications/eac.md",
                                           "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
@@ -4401,7 +4630,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
+                          "lastUpdated":  "2026-11-24T14:32:52-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:docs/data-entities.md",
@@ -4543,6 +4772,10 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
                                           "STANDARDS:architecture/applications/eac.md",
                                           "STANDARDS:architecture/applications/inv.md",
                                           "STANDARDS:architecture/applications/README.md",
@@ -4553,7 +4786,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
+                          "lastUpdated":  "2026-11-24T14:32:52-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:sql/seed/README.md",
@@ -4790,6 +5023,7 @@
                                           "STANDARDS:architecture/authorization/README.md",
                                           "STANDARDS:architecture/authorization/security-schema-standard.md",
                                           "STANDARDS:decisions/ADR-014-platform-authorization.md",
+                                          "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                           "STANDARDS:runbooks/customer-onboarding-authorization.md"
                                       ],
                           "relatedAdrs":  [
@@ -4974,6 +5208,7 @@
                                                       "STANDARDS:architecture/identity-and-authentication/README.md",
                                                       "STANDARDS:architecture/identity-and-authentication/session-management-standard.md",
                                                       "STANDARDS:decisions/ADR-014-platform-authorization.md",
+                                                      "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                                       "STANDARDS:docs/security-governance.md",
                                                       "STANDARDS:runbooks/customer-onboarding-authorization.md",
                                                       "SYSTEM-SHARED-UI:docs/identity-model.md",
@@ -4985,6 +5220,10 @@
                                                       "STANDARDS:architecture/app-configuration/configuration-session-cache.md",
                                                       "STANDARDS:architecture/app-configuration/construct-selection.md",
                                                       "STANDARDS:architecture/app-configuration/README.md",
+                                                      "STANDARDS:architecture/app-context/ae-query-string.md",
+                                                      "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                                      "STANDARDS:architecture/app-context/context-resolution.md",
+                                                      "STANDARDS:architecture/app-context/README.md",
                                                       "STANDARDS:architecture/applications/eac.md",
                                                       "STANDARDS:architecture/applications/inv.md",
                                                       "STANDARDS:architecture/applications/README.md",
@@ -5063,6 +5302,7 @@
                                                 "STANDARDS:docs/ui/layout/panels.md",
                                                 "STANDARDS:docs/ui/layout/sections.md",
                                                 "STANDARDS:docs/ui/patterns/actions-area.md",
+                                                "STANDARDS:docs/ui/patterns/context-selection.md",
                                                 "STANDARDS:docs/ui/patterns/dirty-state.md",
                                                 "STANDARDS:docs/ui/patterns/import-summary.md",
                                                 "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -5171,6 +5411,7 @@
                                                                         "STANDARDS:architecture/authorization/README.md",
                                                                         "STANDARDS:architecture/authorization/security-schema-standard.md",
                                                                         "STANDARDS:decisions/ADR-014-platform-authorization.md",
+                                                                        "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                                                         "STANDARDS:runbooks/customer-onboarding-authorization.md",
                                                                         "SYSTEM-SHARED-UI:docs/security-model.md"
                                                                     ],
@@ -5188,6 +5429,10 @@
                                                                    ],
                                          "Platform/Applications":  [
                                                                        "STANDARDS:architecture/landscape.md",
+                                                                       "STANDARDS:architecture/app-context/ae-query-string.md",
+                                                                       "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                                                       "STANDARDS:architecture/app-context/context-resolution.md",
+                                                                       "STANDARDS:architecture/app-context/README.md",
                                                                        "STANDARDS:architecture/applications/eac.md",
                                                                        "STANDARDS:architecture/applications/inv.md",
                                                                        "STANDARDS:architecture/applications/README.md",
@@ -5285,6 +5530,7 @@
                                                              "STANDARDS:docs/ui/gallery-index.md",
                                                              "STANDARDS:docs/ui/ux-pr-review-checklist.md",
                                                              "STANDARDS:docs/ui/patterns/actions-area.md",
+                                                             "STANDARDS:docs/ui/patterns/context-selection.md",
                                                              "STANDARDS:docs/ui/patterns/dirty-state.md",
                                                              "STANDARDS:docs/ui/patterns/import-summary.md",
                                                              "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -5418,6 +5664,10 @@
                                                            "STANDARDS:architecture/app-configuration/configuration-session-cache.md",
                                                            "STANDARDS:architecture/app-configuration/construct-selection.md",
                                                            "STANDARDS:architecture/app-configuration/README.md",
+                                                           "STANDARDS:architecture/app-context/ae-query-string.md",
+                                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                                           "STANDARDS:architecture/app-context/context-resolution.md",
+                                                           "STANDARDS:architecture/app-context/README.md",
                                                            "STANDARDS:architecture/applications/eac-authorization-matrix.md",
                                                            "STANDARDS:architecture/applications/eac.md",
                                                            "STANDARDS:architecture/applications/inv.md",
@@ -5473,6 +5723,7 @@
                                                            "STANDARDS:decisions/ADR-019-process-framework-metadata.md",
                                                            "STANDARDS:decisions/ADR-020-configuration-session-cache.md",
                                                            "STANDARDS:decisions/ADR-021-validation-summary-experience.md",
+                                                           "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
                                                            "STANDARDS:decisions/README.md",
                                                            "STANDARDS:docs/adr.md",
                                                            "STANDARDS:docs/application-model.md",
@@ -5542,6 +5793,7 @@
                                                            "STANDARDS:docs/ui/layout/panels.md",
                                                            "STANDARDS:docs/ui/layout/sections.md",
                                                            "STANDARDS:docs/ui/patterns/actions-area.md",
+                                                           "STANDARDS:docs/ui/patterns/context-selection.md",
                                                            "STANDARDS:docs/ui/patterns/dirty-state.md",
                                                            "STANDARDS:docs/ui/patterns/import-summary.md",
                                                            "STANDARDS:docs/ui/patterns/page-archetypes.md",
