@@ -156,13 +156,13 @@ Org standard: [`docs/local-development-scripts.md`](../local-development-scripts
 
 When creating or modifying a BreezeOn application:
 
-1. Reuse the existing `scripts/dev-reset.ps1` pattern.  
-2. Do not invent a custom developer startup workflow.  
-3. Keep README instructions aligned with the script.  
-4. Keep the script updated as development requirements evolve.  
-5. Prefer modifying the existing script rather than introducing additional scripts.  
+1. Ship both `scripts/dev-reset.ps1` and `scripts/dev-run.ps1` (required layout).  
+2. Do not invent a custom developer startup workflow (`dev-up` / `dev-down` / one-off start scripts).  
+3. Keep README instructions aligned with both scripts.  
+4. Keep both scripts updated as development requirements evolve.  
+5. Prefer `.\scripts\dev-run.ps1` for routine relaunch; use `.\scripts\dev-reset.ps1` only for destructive recreate.  
 
-Autonomous local verification: `.\scripts\dev-reset.ps1` (requires `.env` from `.env.example`).
+Autonomous local verification: prefer `.\scripts\dev-run.ps1` when the environment already exists; use `.\scripts\dev-reset.ps1` for a fresh environment (requires `.env` from `.env.example`).
 
 ## Things AI Agents Must Never Do
 
@@ -192,7 +192,7 @@ Full matrix: [ai-agent-governance.md](ai-agent-governance.md).
 - Dump implementation plans into chat instead of `docs/plans/in-progress/*.md`, create V2/duplicate plans, regenerate entire plans instead of in-place delta updates, or leave completed plans in `docs/plans/in-progress/` after knowledge transfer
 - Point routine Development at Azure SQL when local Docker SQL is the org pattern
 - Ship a data-owning App Service with MI SQL auth **without** `Microsoft.Data.SqlClient.Extensions.Azure` + `ActiveDirectoryAuthenticationProvider` registration (SqlClient 7+); that crash-loops startup and burns Free F1 into **QuotaExceeded**
-- Skip the org local script standard (`scripts/dev-reset.ps1`) or invent alternate startup scripts (`dev-up` / `dev-down` / custom run scripts)
+- Skip the org local script standard (`scripts/dev-reset.ps1` + `scripts/dev-run.ps1`) or invent alternate startup scripts (`dev-up` / `dev-down` / one-off `start.ps1` / `run-local.ps1`)
 - Hardcode secrets; use `.env` for script config and User Secrets for OIDC credentials ([application-model.md](../application-model.md))
 - Add EAC business features into Shared UI (or UI library concerns into EAC)
 

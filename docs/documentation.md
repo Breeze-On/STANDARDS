@@ -202,7 +202,7 @@ This guidance is **advisory and pragmatic**. It does **not** create mandatory re
 | `docs/` | Standards and governance (how we work); glossary: [`glossary.md`](glossary.md) |
 | `docs/ai/` | AI onboarding + AI process SSOT (mandatory quickstart first); index: [`ai/README.md`](ai/README.md) — includes agent governance and Planning/Development Agent rules |
 | `docs/deviations/` | Approved exceptions to standards (first-class); index: [`deviations/README.md`](deviations/README.md) |
-| `docs/local-development-scripts.md` | Org Local Development Script Standard (`dev-reset.ps1` only) |
+| `docs/local-development-scripts.md` | Org Local Development Script Standard (`dev-reset.ps1` + `dev-run.ps1`) |
 | `docs/data-portability.md` | File-format standard for JSON import/export (Applications JSON today) |
 | `docs/hosted-deployment.md` | Canonical hosted deploy standard (App Service, publish profile, GitHub Environments) |
 | `docs/ui/` | Hierarchical UI standards (entry: [`ui/overview.md`](ui/overview.md); page checklist: [`ui/page-development.md`](ui/page-development.md); Example Governance: [`ui/example-governance.md`](ui/example-governance.md)); folders: `foundations/`, `shell/`, `layout/`, `controls/`, `patterns/` |
@@ -247,7 +247,7 @@ Entry point only (`Classification: ENT`). Allow-list:
 - Relationship to Breeze On + link to STANDARDS
 - Stack (bullets)
 - Repository layout (short)
-- How to run locally (commands + link to [`local-database.md`](local-database.md) / product scripts)
+- How to run locally (`dev-reset.ps1` / `dev-run.ps1` + link to [`local-database.md`](local-database.md) / [`local-development-scripts.md`](local-development-scripts.md))
 - Deploy metadata (names/URLs + link to [`hosted-deployment.md`](hosted-deployment.md))
 - Related docs (links)
 

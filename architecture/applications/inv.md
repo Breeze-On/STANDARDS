@@ -17,7 +17,7 @@ Thin BreezeOn product host for invoice approval IA. Consumes `BreezeOn.UI` (Auth
 | `/new-request`, `/status-report`, `/my-tasks` | Empty `BoCard` (`MarginDensity=Content`); footer off |
 | AuthN | Platform Entra OIDC (`AddBreezeOnAuthentication`); local **BreezeOn-LOCAL**; hosted registration input **BreezeOn-DEV** (process **Step 6** when requested) |
 | AuthZ | Page catalog + shared Security; empty `RequiredGroupCodes` for current pages |
-| Local DB | `scripts/dev-reset.ps1` requires the sibling `SYSTEM-ADMIN-EAC` checkout and invokes its `scripts/dev-reset.ps1` as a subprocess (EAC owns drop/schema/bootstrap/import of INV `seed/eac/`), then launches INV — [`docs/local-database.md`](../../docs/local-database.md) |
+| Local DB | `scripts/dev-reset.ps1` requires the sibling `SYSTEM-ADMIN-EAC` checkout and invokes its `scripts/dev-reset.ps1` as a subprocess (EAC owns drop/schema/bootstrap/import of INV `seed/eac/`), then launches INV; day-to-day relaunch is `scripts/dev-run.ps1` (non-destructive) — [`docs/local-database.md`](../../docs/local-database.md) · [`docs/local-development-scripts.md`](../../docs/local-development-scripts.md) |
 
 ## Related
 

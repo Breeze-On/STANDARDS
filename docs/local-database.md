@@ -27,6 +27,7 @@ Because the instance and database are shared, **SYSTEM-ADMIN-EAC (EAC) owns the 
 
 - **EAC-consuming applications require a local EAC checkout** (sibling clone at `..\SYSTEM-ADMIN-EAC` relative to the app repo, same parent folder). An app that reads EAC registry/configuration (Applications, Business Entities, Application Configuration, Data Entities, Security Groups) cannot run local without it.
 - **Consumer apps orchestrate; they do not own the reset.** A consumer `.\scripts\dev-reset.ps1` invokes EAC `scripts\dev-reset.ps1` as a **subprocess** (EAC drops/recreates the database, applies schema, bootstraps, and imports sibling `seed/eac` content), then the consumer applies its own business schema/seed (if any) and launches itself. Contract: [local-development-scripts.md](local-development-scripts.md) § Consumer apps and EAC reset.
+- **Day-to-day launch** uses the consumer `.\scripts\dev-run.ps1` (non-destructive application-only). It must **not** invoke EAC reset, recreate databases, or re-import configuration.
 - Consumer apps must **not** reimplement EAC database drop, EAC/platform schema apply, bootstrap, or EAC configuration import, and must **not** carry EAC SQL configuration or current-state seeds ([database.md](database.md) § `seed/eac/`).
 
 ## Prerequisites (developer machine)
@@ -82,7 +83,7 @@ The sequence below is executed by the repository that owns the reset. For `Breez
 3. Create the physical database if it does not exist.
 4. Regenerate the **committed** consolidated reset script `sql/current_model.sql` (and a local `generated/` copy) from ordered `sql/current_model/` sources (schema first, then tables, then procedures / other objects) and apply it with **one** `sqlcmd` execution ([database.md](database.md) § Database Deployment Standard). Local workflow is **full database reset** (drop DB then apply) — `current_model` DROP+CREATE is **not** the hosted evolution path for populated customer databases ([database.md](database.md) § Platform schema evolution). Table DROP scripts must clear FK dependents before parents within the reset set.
 5. Build a **consolidated** seed deployment script from `sql/seed/` sources (and any JSON→T-SQL generation) and apply it with **one** `sqlcmd` execution ([database.md](database.md) § Database Seed Maintenance Standard). Never default-apply seed to hosted Azure SQL.
-6. Configure the app’s local SA password (`LocalSql:SaPassword` user-secrets and/or `MSSQL_SA_PASSWORD`) and run the application via `.\scripts\dev-reset.ps1`. Prefer applying empty/history EF migrations on app startup rather than a separate `dotnet ef database update` in every reset when the host already calls `Database.Migrate()`.
+6. Configure the app’s local SA password (`LocalSql:SaPassword` user-secrets and/or `MSSQL_SA_PASSWORD`) and launch via `.\scripts\dev-reset.ps1` (fresh environment). For day-to-day relaunch use `.\scripts\dev-run.ps1`. Prefer applying empty/history EF migrations on app startup rather than a separate `dotnet ef database update` in every reset when the host already calls `Database.Migrate()`.
 
 Apps that own business schema **must** maintain `sql/seed/` and update it in the same change set as schema changes (see [database.md](database.md)).
 
@@ -96,7 +97,7 @@ Apps that own business schema **must** maintain `sql/seed/` and update it in the
 
 ### Agents
 
-Product apps with SQL must use the org script standard ([local-development-scripts.md](local-development-scripts.md)): `.\scripts\dev-reset.ps1` (ensure Docker SQL → drop/recreate → init → seed/bootstrap → launch). EAC-consuming apps satisfy the drop/recreate/init/bootstrap/EAC-import steps by invoking EAC `scripts\dev-reset.ps1` as a subprocess. Never commit or print `.env` passwords.
+Product apps with SQL must use the org script standard ([local-development-scripts.md](local-development-scripts.md)): `.\scripts\dev-reset.ps1` for destructive recreate (ensure Docker SQL → drop/recreate → init → seed/bootstrap → launch) and `.\scripts\dev-run.ps1` for non-destructive day-to-day launch. EAC-consuming apps satisfy the drop/recreate/init/bootstrap/EAC-import steps by invoking EAC `scripts\dev-reset.ps1` as a subprocess from **reset only**. Never commit or print `.env` passwords.
 
 ## What belongs where
 
@@ -104,7 +105,7 @@ Product apps with SQL must use the org script standard ([local-development-scrip
 | --- | --- |
 | **STANDARDS** `docs/local-database.md` + `templates/local-sql/` | Org pattern and copy-paste starter |
 | **SYSTEM-ADMIN-EAC** | Local database drop/recreate, EAC + platform schema, GSA bootstrap, and import of sibling `seed/eac` content (`scripts/dev-reset.ps1`) |
-| **Each app repo** | `docker-compose.yml`, `.env.example`, gitignored `.env`, init/seed scripts, Development connection wiring, README / README_AI local run steps. EAC consumers invoke sibling EAC `scripts/dev-reset.ps1` instead of resetting the database themselves |
+| **Each app repo** | `scripts/dev-reset.ps1` + `scripts/dev-run.ps1`, `docker-compose.yml` when applicable, `.env.example`, gitignored `.env`, init/seed scripts, Development connection wiring, README / README_AI local run steps. EAC consumers invoke sibling EAC `scripts/dev-reset.ps1` from **reset** instead of resetting the database themselves; **run** launches the app only |
 | **Each EAC-consuming app** `seed/eac/` | Portable EAC configuration for that app (JSON / xlsx); imported by EAC reset — [data-portability.md](data-portability.md) |
 | **Each app** `sql/current_model/` | Individual business schema source files (SSOT); aggregated into `generated/current-model.sql` for deploy |
 | **Each app** `sql/seed/` | Required local-only sample data sources (keep in sync with schema); aggregated into `generated/seed.sql` for deploy |

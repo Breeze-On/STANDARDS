@@ -75,7 +75,7 @@ Unless a more specific org rule forbids it, AI agents **may**:
 | Documentation | Create or update Markdown / agent docs for **current reality** |
 | Diagnostics | Add logging, diagnostics, and instrumentation **locally** |
 | Tests | Create or update tests **locally** |
-| Local validation | Build, test, lint, and run local scripts (e.g. `.\scripts\dev-reset.ps1`) in the workspace — see **Local destructive operations** |
+| Local validation | Build, test, lint, and run local scripts (`.\scripts\dev-run.ps1` for routine launch; `.\scripts\dev-reset.ps1` when destructive recreate is intended) in the workspace — see **Local destructive operations** |
 | Local file edits | Edit tracked files in the working tree, including CODEOWNERS, workflows, IaC, deploy metadata, Dependabot, and governance docs — **local file modification only** |
 | Local User Secrets | Write/update .NET User Secrets or other **local** developer secret stores required for local run (not cloud/GitHub secret stores) |
 | Recommendations | Prepare **commit**, **PR**, **deploy**, and **ops** recommendations for the human |
@@ -154,15 +154,16 @@ Before running a local action that **destroys or overwrites** developer-machine 
 | Effect to name | Typical trigger |
 | --- | --- |
 | Drop / recreate local database | `.\scripts\dev-reset.ps1` on SQL apps |
-| Kill matching local app processes | `dev-reset` stop helpers |
-| Overwrite local User Secrets / `.env` values | Local OIDC or script bootstrap |
-| Reset local Docker SQL volume / container data | Explicit local DB recreate |
+| Kill matching local app processes | `dev-reset` / `dev-run` stop helpers |
+| Overwrite local User Secrets / `.env` values | Local OIDC or `dev-reset` script bootstrap |
+| Reset local Docker SQL volume / container data | Explicit local DB recreate via `dev-reset` |
 | Discard uncommitted local work (`git reset --hard`, clean, etc.) | Only with current-prompt authorization |
 
 Clarifications:
 
 - These are **local development** activities, not secret-management or cloud violations.
 - Writing local User Secrets for OIDC is an **allowed** development activity.
+- `.\scripts\dev-run.ps1` is **non-destructive** (application-only launch; may stop this app’s processes). It is not a local destructive operation.
 - Script hardening (extra confirms inside `dev-reset`, avoiding risky flags) remains **Future Validation** — do not redesign scripts in this standard.
 - Hosted / shared environments remain under Restricted actions.
 

@@ -128,13 +128,13 @@ After Step 3 succeeds, the next expected command is **Build Locally**.
 The implementation agent, working **in the application repository**, implements the product host so a developer can:
 
 1. Clone the repository (sibling `SYSTEM-SHARED-UI` for interim `ProjectReference`)
-2. Run `.\scripts\dev-reset.ps1`
+2. Run `.\scripts\dev-reset.ps1` (fresh environment / first-time startup)
 3. Configure User Secrets for the **Local App Registration** (`AUTHENTICATION__*`)
-4. Launch the application
+4. Run `.\scripts\dev-run.ps1` for day-to-day relaunch (non-destructive application-only)
 5. Sign in
 6. Navigate the defined pages
 
-Mandatory host contract: [page-development.md](../ui/page-development.md) § Product Host Contract. Branding: [application-branding.md](../ui/shell/application-branding.md). Reference host: `SYSTEM-ADMIN-EAC`. Shared UI: `BreezeOn.UI`. Local entry: [local-development-scripts.md](../local-development-scripts.md) (`dev-reset.ps1` only).
+Mandatory host contract: [page-development.md](../ui/page-development.md) § Product Host Contract. Branding: [application-branding.md](../ui/shell/application-branding.md). Reference host: `SYSTEM-ADMIN-EAC`. Shared UI: `BreezeOn.UI`. Local entry: [local-development-scripts.md](../local-development-scripts.md) (`dev-reset.ps1` + `dev-run.ps1` required).
 
 Do not fork Identity/Security schemas.
 
@@ -142,10 +142,11 @@ Do not fork Identity/Security schemas.
 
 - [ ] Sibling **`SYSTEM-ADMIN-EAC`** checkout is required locally (same parent folder as the app repo); `scripts/dev-reset.ps1` fails fast with a clear error when it is missing.
 - [ ] `scripts/dev-reset.ps1` **invokes EAC `scripts\dev-reset.ps1` as a subprocess** (EAC owns database drop/recreate, schema, bootstrap, and EAC configuration import), then applies the app's own business schema/seed if any, then launches the app. It does **not** reimplement EAC reset/bootstrap/import ([local-development-scripts.md](../local-development-scripts.md) § Consumer apps and EAC reset).
+- [ ] `scripts/dev-run.ps1` is present: non-destructive application-only launch; verifies required User Secrets / local SQL configuration as appropriate; does **not** invoke EAC reset, recreate databases, reset Docker, or re-import configuration ([local-development-scripts.md](../local-development-scripts.md)).
 - [ ] The app repo has a top-level **`seed/eac/`** folder (scaffold creates the folder only — **no** `seed/eac/README.md`) holding the app's portable EAC configuration (JSON / xlsx) that EAC discovers and imports ([data-portability.md](../data-portability.md) § Per-application `seed/eac`).
 - [ ] No `System.EAC*` SQL configuration or current-state seeds in the app repo (`sql/seed/` is app business / non-EAC data only — [database.md](../database.md) § `seed/eac/`); no EAC registry seed for the app under `SYSTEM-ADMIN-EAC/sql/seed/`.
 - [ ] Shared local SQL instance (`breezeon-sql-local` / `BreezeOnLocal`) is used — [local-database.md](../local-database.md).
-- [ ] Product `README.md` / `README_AI.md` document the sibling EAC prerequisite and `seed/eac/`.
+- [ ] Product `README.md` / `README_AI.md` document the sibling EAC prerequisite, `seed/eac/`, and both local scripts (morning `dev-reset.ps1` / day-to-day `dev-run.ps1`).
 
 ### Step 5 — Local validation
 

@@ -62,7 +62,7 @@ The Customer Onboarding Master Flow does **not** create new BreezeOn application
 | Product UI pages and page catalog entries | Application repo |
 | Business schema (`docs/db-model.md`, `sql/current_model/`, `sql/seed/`) when the app owns data | Application repo |
 | Host wiring (DI, `AUTHENTICATION__*` / connection config, MI SqlClient registration) | Application repo |
-| Local `scripts/dev-reset.ps1` and product-specific sandbox | Application repo |
+| Local `scripts/dev-reset.ps1` + `scripts/dev-run.ps1` and product-specific sandbox | Application repo |
 | Product deploy workflow + App Service metadata | Application repo |
 | Object-admin / domain AuthZ beyond platform Codes (e.g. GroupGUID data checks) | Application / domain (EAC pattern) |
 
@@ -98,7 +98,7 @@ Every application repository must:
 
 ## Local development expectations
 
-**Script standard (all runnable hosts):** every application and the Shared UI gallery must expose [`scripts/dev-reset.ps1`](local-development-scripts.md) as the single local entry point (no `dev-up` / `dev-down`).
+**Script standard (all runnable hosts):** every application and the Shared UI gallery must expose [`scripts/dev-reset.ps1`](local-development-scripts.md) (destructive fresh environment) and [`scripts/dev-run.ps1`](local-development-scripts.md) (non-destructive day-to-day launch). No `dev-up` / `dev-down` or invent-your-own start scripts.
 
 **Secrets split:**
 
@@ -114,7 +114,7 @@ For applications with a database (EAC pattern):
 - Default local engine: SQL Server Docker sandbox ([local-database.md](local-database.md)).
 - Repo typically includes `docker-compose.yml`, `.env.example`, init/seed scripts, and README steps.
 - Do not default Development to Azure SQL.
-- Agents use `.\scripts\dev-reset.ps1` for autonomous local verification.
+- Agents prefer `.\scripts\dev-run.ps1` for routine local verification; use `.\scripts\dev-reset.ps1` only when a destructive recreate is intended.
 
 For the Shared UI gallery: same script names; no database — scripts build and launch `BreezeOn.UI.Gallery`.
 

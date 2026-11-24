@@ -1,6 +1,6 @@
 {
     "schemaVersion":  1,
-    "generatedAt":  "2026-11-24T19:09:50.2457138Z",
+    "generatedAt":  "2026-11-24T19:25:30.6643218Z",
     "generator":  "scripts/docs/Generate-AiCatalog.ps1",
     "repositories":  [
                          "STANDARDS",
@@ -251,7 +251,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/app-configuration/configuration-session-cache.md",
@@ -377,7 +377,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/applications/inv.md",
@@ -404,7 +404,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/applications/README.md",
@@ -2016,7 +2016,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/database.md",
@@ -2040,7 +2040,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/documentation.md",
@@ -2210,7 +2210,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/local-development-scripts.md",
@@ -2237,7 +2237,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/naming.md",
@@ -2459,7 +2459,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
@@ -4269,7 +4269,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "STANDARDS:templates/onboarding/README.md",
@@ -4320,7 +4320,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:09:47.6111174-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:AGENTS.md",
@@ -4401,7 +4401,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T14:44:40-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:docs/data-entities.md",
@@ -4553,7 +4553,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T14:44:40-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:sql/seed/README.md",
@@ -4577,7 +4577,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T12:32:54-05:00"
+                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:AGENTS.md",

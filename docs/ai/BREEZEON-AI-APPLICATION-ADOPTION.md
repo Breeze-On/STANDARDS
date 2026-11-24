@@ -28,7 +28,7 @@ The **Customer Onboarding Master Flow is not used to create new BreezeOn applica
 - Implement **Authentication** (platform Entra OIDC — do not defer)
 - Implement **Authorization** + page catalog (do not defer)
 - Follow the **Product Host Contract** ([page-development.md](../ui/page-development.md#product-host-contract-required))
-- Provide **`scripts/dev-reset.ps1`** (+ `.env.example`; OIDC via User Secrets)
+- Provide **`scripts/dev-reset.ps1`** and **`scripts/dev-run.ps1`** (+ `.env.example`; OIDC via User Secrets)
 - Create thin **`README_AI.md`** and **`AGENTS.md`** (reading-chain to [`docs/ai/README.md`](README.md))
 - Configure **Dependabot** from [`templates/dependabot/`](../../templates/dependabot/) (may extend; see [security-governance.md](../security-governance.md))
 - Add product **deploy workflow metadata** per [hosted-deployment.md](../hosted-deployment.md) (procedures stay centralized — do not fork)
@@ -128,7 +128,7 @@ Remove when adopting cleanly: default Blazor sidebar/`NavMenu`, Bootstrap-first 
 7. Add app-owned resources (en/fr) — never copy BoUi keys as the product glossary
 8. Define IA from the Step 1 instance: Home hub cards + left nav routes (URL = page name)
 9. Ship destination pages inside BoAppShell with catalog registration
-10. Provide `scripts/dev-reset.ps1` + `.env.example`; OIDC secrets via User Secrets ([application-model.md](../application-model.md))
+10. Provide `scripts/dev-reset.ps1` + `scripts/dev-run.ps1` + `.env.example`; OIDC secrets via User Secrets ([application-model.md](../application-model.md) · [local-development-scripts.md](../local-development-scripts.md))
 11. Shared customer DB: Identity + Security schemas are **shared** (SHARED-UI definitions) — never fork. New customer-environment → Master Flow; new product app in an existing environment → consume the existing customer DB ([application-model.md](../application-model.md) § Database ownership)
 12. If the app owns Azure SQL: enable App Service MI, set `SQLAzureConnection`, run templates/azure-sql/grant-app-service-mi.sql, and wire **Microsoft.Data.SqlClient.Extensions.Azure** + MI provider registration (SqlClient 7+)
 13. Add `.github/workflows/deploy-dev.yml` product metadata + GitHub Environment **DEV** per hosted-deployment.md (Step 6 when authorized — do not fork procedures)
@@ -139,7 +139,7 @@ Remove when adopting cleanly: default Blazor sidebar/`NavMenu`, Bootstrap-first 
 
 Optional defense-in-depth: copy [`templates/cursor-rules/`](../../templates/cursor-rules/) after the reading-chain pointers exist (not a substitute for AGENTS/README_AI).
 
-Do **not** invent a second design system. Extend `BreezeOn.UI` (with Gallery + STANDARDS UI docs) when a shared control is missing. Do **not** invent a custom local startup workflow — reuse `dev-reset.ps1`. Do **not** defer platform Identity/Auth/AuthZ for new applications.
+Do **not** invent a second design system. Extend `BreezeOn.UI` (with Gallery + STANDARDS UI docs) when a shared control is missing. Do **not** invent a custom local startup workflow — reuse `dev-reset.ps1` + `dev-run.ps1` ([local-development-scripts.md](../local-development-scripts.md)). Do **not** defer platform Identity/Auth/AuthZ for new applications.
 
 ---
 

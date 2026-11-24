@@ -33,7 +33,7 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Stack | Follow implemented engineering conventions | [engineering.md](../engineering.md) |
 | Database | Schema scripts + product `docs/db-model.md`; seed with schema changes | [database.md](../database.md) |
 | Local SQL | Do not default Development to Azure SQL | [local-database.md](../local-database.md) |
-| Local scripts | Every runnable host: `scripts/dev-reset.ps1` only; script config via `.env`, OIDC via User Secrets; keep script + README aligned when local needs change | [local-development-scripts.md](../local-development-scripts.md), [application-model.md](../application-model.md) |
+| Local scripts | Every runnable host: `scripts/dev-reset.ps1` (fresh/destructive) + `scripts/dev-run.ps1` (day-to-day); script config via `.env`, OIDC via User Secrets; keep scripts + README aligned when local needs change | [local-development-scripts.md](../local-development-scripts.md), [application-model.md](../application-model.md) |
 | Dependencies / vulns | NuGet audit, Dependabot, severity policy, remediation order — Phase 1 gates | [security-governance.md](../security-governance.md) |
 | Placeholders | testing / observability / versioning / domain-modeling — **not formally defined**; do not invent | Placeholder files under `docs/` |
 | Review findings | Owner-oriented finding shape; severity; Closed reports → `docs/plans/implemented/` (H) | [review-governance.md](../review-governance.md) |

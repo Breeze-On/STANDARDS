@@ -29,7 +29,7 @@ Current Reality Only: documents the **approved implementation in use today**. Fu
 
 **Out of scope**
 
-- Local development (`dev-reset.ps1`, Docker SQL) — see [local-development-scripts.md](local-development-scripts.md), [local-database.md](local-database.md)
+- Local development (`dev-reset.ps1` / `dev-run.ps1`, Docker SQL) — see [local-development-scripts.md](local-development-scripts.md), [local-database.md](local-database.md)
 - Application data model and end-user Identity auth / Entra customer onboarding — see [Customer Onboarding Master Flow](../runbooks/customer-onboarding-master-flow.md), [customer-onboarding-authentication.md](../runbooks/customer-onboarding-authentication.md), and product `docs/` (this document is App Service / SQL MI / schema-gate deploy, not Entra cutover)
 - UAT / PRD Azure resource inventories (those hosts are not documented as implemented yet) — naming pattern only
 - Multi-customer provisioning procedures — Master Flow / Identity architecture; do not invent here
