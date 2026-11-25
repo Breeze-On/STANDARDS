@@ -57,7 +57,7 @@ Portable EAC configuration used to make an EAC-consuming application runnable on
 | Importer | **EAC** (`SYSTEM-ADMIN-EAC` `scripts/dev-reset.ps1`) — consumer apps invoke it as a subprocess ([local-development-scripts.md](local-development-scripts.md) § Consumer apps and EAC reset) and never import EAC configuration themselves. |
 | Discovery | EAC discovers **sibling** repositories under the same parent folder and imports each one's `seed/eac/` when present. A sibling without `seed/eac/` is skipped. |
 | Contents | Portable payloads only (JSON envelopes / `.xlsx`), using the existing kinds: `breezeon.eac.applications` (the app's registry entry and enablement), `breezeon.eac.application-configuration` (Data Entity definitions, Process Framework, Variables, Security Group definitions, languages), `breezeon.eac.data-entity-values` (local Values JSON) or Data Entity Values Excel, `breezeon.eac.security-group-members`, and Translations Excel as needed. Business Entity Types / Business Entities JSON only when the app needs hierarchy rows that the EAC baseline does not provide. |
-| Order | Import follows the [Promote sequence](#promote-sequence-operators--ai): registry → hierarchy → enablement → Application Configuration → Values → members → translations. |
+| Order | Import follows the [Promote sequence](#promote-sequence-operators--ai): registry → hierarchy → enablement → Application Configuration → Values → translations → **directory bootstrap (Graph UPN upsert)** → **Security Group Members**. Local Docker applies members **after** Identity users exist so UPNs resolve; hosted promote still uses the operator Promote sequence (members before translations) when the directory is already synced. |
 | Hosted | **Never** applied to DEV / UAT / PRD. Hosted promote uses the normal import surfaces. |
 
 Product apps must **not** carry `System.EAC*` SQL configuration or current-state seeds (e.g. `INSERT` into EAC tables, `P_POST_EAC*` calls) in their own `sql/seed/`; EAC configuration is expressed only as portable payloads under `seed/eac/` ([database.md](database.md) § `seed/eac/`).
@@ -635,6 +635,10 @@ Flow: upload → parse (JSON or Excel) → shared document → validate → bulk
 - Extensions: `.json` or `.xlsx` per selected Format; in-memory only.
 - Max size: EAC `SecurityGroupMembersImport:MaxFileSizeMb` (default **5**) for both formats.
 - Analyze diagnostics: Debug logger category `BreezeOn.Eac.SecurityGroups.Members.Analyze`.
+
+### Local Docker seed
+
+Consuming apps may ship `SecurityGroupMembersSeeds.json` + `*.security-group-members.json` under `seed/eac/`. EAC `tools/BreezeOn.Eac.LocalSecurityGroupMembersSeed` imports them **after** LocalDirectoryBootstrap (UPNs must already exist in `Identity.Users`). Default catalog mode is **Add Missing** (idempotent). Unresolved UPNs or missing AttributeCodes fail the seed. Never applied to hosted DEV / UAT / PRD.
 
 ---
 
