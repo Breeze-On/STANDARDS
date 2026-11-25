@@ -355,6 +355,7 @@ Use this as a lightweight reminder (not a review program). Map the change to the
 | New architecture decision | New/updated ADR (+ owning `architecture/` AA) |
 | New BreezeOn application | [`application-development-process.md`](ai/application-development-process.md) Steps 1–6 + [`application-definition.schema.json`](ai/application-definition.schema.json) (Step 1) + [`BREEZEON-AI-APPLICATION-ADOPTION.md`](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) pattern + landscape/applications + thin ENT trio (`README` / `README_AI` / `AGENTS`) |
 | Step 1 inputs / defaults / omission | **[`application-definition.schema.json`](ai/application-definition.schema.json) first**, then sync explanatory tables in [`application-development-process.md`](ai/application-development-process.md) — same change set; schema wins on conflict; markdown must not invent inputs/defaults/behaviors absent from the schema |
+| Mandatory new-app platform / onboarding requirement | Owning AA (typically [`application-model.md`](application-model.md) § Must consume and/or [`page-development.md`](ui/page-development.md) § Product Host Contract) **and** [`application-development-process.md`](ai/application-development-process.md) § **Platform bootstrap completion** in the same change set — Future Validation stays out of the gate until promoted |
 | New deployment requirement | [`hosted-deployment.md`](hosted-deployment.md) and/or owning runbook |
 | New dependency / vulnerability policy | [`security-governance.md`](security-governance.md) (+ Dependabot template under `templates/` if needed) |
 | New / moved / deleted catalog-eligible doc | Banner Domain+Capability + regenerate [`ai/ai-catalog.json`](ai/ai-catalog.json) |
@@ -370,7 +371,7 @@ When a newly approved decision might affect new-app process docs, **classify bef
 | --- | --- | --- |
 | `inv-specific` | True only for INV product reality | [`architecture/applications/inv.md`](../architecture/applications/inv.md) (+ INV ENT trio if discovery changes); **not** schema defaults or process input tables |
 | `application-specific` | One product’s inputs/decisions | That app’s AA / ENT; optional illustrative instance under [`ai/examples/`](ai/examples/) only when used as an example |
-| `shared-app-dev-standard` | Reusable new-app process / input / default | **Inputs/defaults/omission →** [`application-definition.schema.json`](ai/application-definition.schema.json) **first**, then sync [`application-development-process.md`](ai/application-development-process.md); process-order-only → process markdown; branding/theme only if those SSOTs own the rule |
+| `shared-app-dev-standard` | Reusable new-app process / input / default / gate | **Inputs/defaults/omission →** [`application-definition.schema.json`](ai/application-definition.schema.json) **first**, then sync [`application-development-process.md`](ai/application-development-process.md); process-order / **Platform bootstrap completion** gate → process markdown; branding/theme only if those SSOTs own the rule |
 | `shared-platform-standard` | Cross-product platform contract | Owning AA under `architecture/` / `docs/` / ADR — **not** the process file or application-definition schema |
 
 **When process/schema updates are required:** only when class is `shared-app-dev-standard` **and** a new app (or explicit approval) validates the change ([application-development-process.md](ai/application-development-process.md) Distinctions).
@@ -386,6 +387,16 @@ IF touches inputs/defaults/omission:
   SAME change set — never schema-only or markdown-only for input contracts
   IF conflict: schema wins; fix markdown
   Markdown MUST NOT add inputs/defaults/behaviors absent from schema
+```
+
+**Anti-drift (Platform bootstrap completion):**
+
+```text
+IF a capability becomes mandatory for new BreezeOn applications:
+  update owning AA (Must consume / Product Host Contract / etc.)
+  AND update application-development-process.md Platform bootstrap completion
+  SAME change set — detail stays in owning SSOTs; gate is categories + links only
+  Future Validation stays OUT of the gate until promoted
 ```
 
 ### Identity & Authentication DoD (platform)

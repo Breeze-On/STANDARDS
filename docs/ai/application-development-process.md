@@ -86,7 +86,7 @@ Capture the completed instance before planning or coding.
 
 Generate a **local-development** roadmap from the inputs and existing standards ([planning-and-development-agents.md](planning-and-development-agents.md)).
 
-Default plan scope stops when the application can be **built and run locally**, unless the current prompt expands scope.
+Default plan scope stops when the application can be **built and run locally** and **Platform bootstrap completion** (Step 5) passes, unless the current prompt expands scope.
 
 Include UX Standards Compliance covering Home subtitle omission, card description = page subtitle, branding split, and Theme Palette.
 
@@ -162,6 +162,25 @@ Verify locally:
 
 Agents stop at the Entra interactive boundary; humans complete authenticated smoke ([ai-agent-governance.md](ai-agent-governance.md)).
 
+**Platform bootstrap completion** (mandatory gate)
+
+This gate is **new-app platform foundation readiness** — distinct from **Application Context Bootstrap** (one Must-consume capability verified inside the gate).
+
+Default Step 2 / Step 4 scope ends when the host can be **built and run locally** **and** this gate passes. **Business feature development must not begin** until the gate passes. Step 6 (hosted) remains separate and authorization-gated.
+
+Platform foundation is complete only when **all** of the following are true (detail stays in the linked SSOTs — do not restate full tables here):
+
+| # | Category | Authority |
+| --- | --- | --- |
+| 1 | **Product Host Contract** satisfied | [page-development.md](../ui/page-development.md) § Product Host Contract |
+| 2 | **Platform consumption** — every row in Must consume | [application-model.md](../application-model.md) § Must consume (SHARED-UI, auth, AuthZ, page catalog, Identity/Security schemas, Application Context Bootstrap, registry expectation) |
+| 3 | **Local host contract** — New App Development checklist complete | Step 4 checklist above ([local-development-scripts.md](../local-development-scripts.md), `seed/eac/`, shared local SQL, product README facts) |
+| 4 | **Local validation** — Step 5 smoke list passed | This step (agents stop at Entra interactive boundary) |
+| 5 | **Repo baselines** — thin `README` / `README_AI` / `AGENTS`, Dependabot from templates, deploy workflow metadata present | [BREEZEON-AI-APPLICATION-ADOPTION.md](BREEZEON-AI-APPLICATION-ADOPTION.md) Must; procedures stay in [hosted-deployment.md](../hosted-deployment.md) (Step 6 execution still separate) |
+| 6 | **IA shell only** — Home + defined destination routes exist as standards-compliant shell pages | [application-branding.md](../ui/shell/application-branding.md); no premature business UI required to pass |
+
+**Future Validation** items stay **out** of this gate until they are promoted into Must consume or other mandatory new-app rules.
+
 ### Step 6 — Manual and deployment activities (separate request)
 
 Hosted App Registration validation for the new host, App Service provisioning, redirect URIs, Managed Identity grants, Deploy DEV, and hosted promote are **out of the default Build Locally path**.
@@ -183,7 +202,7 @@ Perform Step 6 only when the current prompt explicitly requests it. Procedures: 
 1. **Existing platform standards** — follow; do not restate or redesign (STANDARDS remains process authority)
 2. **Application-specific inputs** — authoritative shape in [application-definition.schema.json](application-definition.schema.json); tables above explain
 3. **Planning vs execution** — planning may start outside the app repo; after Step 3, execution is only in the application repository
-4. **Local agent work** — Steps 4–5 in the application repository
+4. **Local agent work** — Steps 4–5 in the application repository; business features only after **Platform bootstrap completion**
 5. **Manual / hosted work** — Step 6, only when authorized in the current prompt
 6. **Reusable process** — this document + schema; refine only when a new app validates a change. Classify newly approved decisions (`inv-specific` / `application-specific` / `shared-app-dev-standard` / `shared-platform-standard`) per [documentation.md](../documentation.md) § Application-development change classifier; **ask** when class is ambiguous
 7. **Schema-first Step 1** — consume the schema first; markdown is supporting documentation only
@@ -191,6 +210,8 @@ Perform Step 6 only when the current prompt explicitly requests it. Procedures: 
 ### Auto-update (anti-drift)
 
 When Step 1 inputs, defaults, or omission behavior change: update **schema first**, then sync this markdown in the **same change set**. Schema wins on conflict. Markdown must not invent inputs/defaults/behaviors absent from the schema.
+
+When a capability becomes **mandatory for new BreezeOn applications**, update **Platform bootstrap completion** (Step 5) in the **same change set** as the owning AA — typically [application-model.md](../application-model.md) § Must consume and/or [page-development.md](../ui/page-development.md) § Product Host Contract. Detail remains in those SSOTs; this gate lists categories and links only. **Future Validation** stays out of the gate until promoted.
 
 ---
 

@@ -61,7 +61,7 @@ The **Customer Onboarding Master Flow is not used to create new BreezeOn applica
 | Platform foundations | New apps assume Identity / Auth / AuthZ as **mandatory** platform consumption ([application-model.md](../application-model.md)) — historical EAC shell milestones that deferred auth are **not** a template for App #N |
 | Docs updated together | STANDARDS landscape/eac/i18n + EAC README_AI + Shared UI README_AI |
 
-Success criterion for adoption: a separate application runs on Interactive Server with `BoAppShell`, BreezeOn branding, localized chrome, standards-compliant Home cards, and **platform authentication + authorization + page catalog** — without inventing alternate chrome or deferring Identity.
+Success criterion for adoption: a separate application runs on Interactive Server with `BoAppShell`, BreezeOn branding, localized chrome, standards-compliant Home cards, and **platform authentication + authorization + page catalog** — without inventing alternate chrome or deferring Identity. Authoritative completion checkpoint before business features: process **Platform bootstrap completion** ([application-development-process.md](application-development-process.md) Step 5).
 
 ---
 
@@ -134,7 +134,7 @@ Remove when adopting cleanly: default Blazor sidebar/`NavMenu`, Bootstrap-first 
 13. Add `.github/workflows/deploy-dev.yml` product metadata + GitHub Environment **DEV** per hosted-deployment.md (Step 6 when authorized — do not fork procedures)
 14. Plan EAC `System` registry registration (`uniqueCode` = repositoryName.ToUpperInvariant()); mechanics = Future Validation
 15. Update product README_AI + STANDARDS architecture/landscape in the same change set
-16. Verify per process Steps 5–6 (local agent stop at Entra; hosted only when authorized)
+16. Verify per process Step 5 (including **Platform bootstrap completion**) then Step 6 when authorized (local agent stop at Entra; hosted only when authorized)
 ```
 
 Optional defense-in-depth: copy [`templates/cursor-rules/`](../../templates/cursor-rules/) after the reading-chain pointers exist (not a substitute for AGENTS/README_AI).

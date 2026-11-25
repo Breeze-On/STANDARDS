@@ -16,7 +16,7 @@ These documents summarize and point into STANDARDS. They do **not** replace deta
 | **3** | [`planning-and-development-agents.md`](planning-and-development-agents.md) | **Planning / Development Agents** — plans in `docs/plans/in-progress/`; in-place delta updates only; never dump plans in chat; Build Locally + knowledge transfer |
 | **4** | [`BREEZEON-AI-STANDARDS-SUMMARY.md`](BREEZEON-AI-STANDARDS-SUMMARY.md) | Before changing standards-sensitive behavior |
 | **5** | [`BREEZEON-AI-APPLICATION-ADOPTION.md`](BREEZEON-AI-APPLICATION-ADOPTION.md) | Before adopting or extending `BreezeOn.UI` in an app |
-| **5b** | [`application-development-process.md`](application-development-process.md) + [`application-definition.schema.json`](application-definition.schema.json) | Before creating a **new** product application (Steps 1–6; **Step 1 inputs → schema first**, markdown supporting; repo transition before Build Locally; Step 6 hosted) |
+| **5b** | [`application-development-process.md`](application-development-process.md) + [`application-definition.schema.json`](application-definition.schema.json) | Before creating a **new** product application (Steps 1–6; **Step 1 inputs → schema first**, markdown supporting; repo transition before Build Locally; **Platform bootstrap completion** after Steps 4–5 before business features; Step 6 hosted) |
 | **6** | Repo `README_AI.md` + detailed STANDARDS links | Only after the above — drill into specifics |
 
 ## Catalog-first retrieval (after the reading order)
@@ -47,7 +47,7 @@ Schema: [`ai-catalog.schema.json`](ai-catalog.schema.json). Taxonomy + banner ru
 | --- | --- |
 | Agent push / PR / deploy / cloud limits | [`ai-agent-governance.md`](ai-agent-governance.md) |
 | Planning Agent / Development Agent / `docs/plans/in-progress/` | [`planning-and-development-agents.md`](planning-and-development-agents.md) |
-| New product application (Step 1 inputs → schema first; Steps 1–6; repo ownership transition) | [`application-definition.schema.json`](application-definition.schema.json) · [`application-development-process.md`](application-development-process.md) |
+| New product application (Step 1 inputs → schema first; Steps 1–6; repo ownership transition; Platform bootstrap completion before business features) | [`application-definition.schema.json`](application-definition.schema.json) · [`application-development-process.md`](application-development-process.md) |
 | How we work (full) | [STANDARDS `README_AI.md`](../../README_AI.md) |
 | What exists | [`architecture/landscape.md`](../../architecture/landscape.md) |
 | UI page checklist | [`docs/ui/page-development.md`](../ui/page-development.md) |

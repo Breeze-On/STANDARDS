@@ -35,6 +35,8 @@ The Customer Onboarding Master Flow does **not** create new BreezeOn application
 
 ### Must consume
 
+Verified at process **Platform bootstrap completion** before business feature development begins ([application-development-process.md](ai/application-development-process.md) Step 5).
+
 | Capability | Requirement | SSOT |
 | --- | --- | --- |
 | **Product Host Contract** | Full host wiring once per app: UI + auth + AuthZ + page catalog + Data Protection + Error Message options + localization/resources — [page-development.md § Product Host Contract](ui/page-development.md#product-host-contract-required) (Gallery = chrome/assets; EAC = complete product host) | [ui/page-development.md](ui/page-development.md), [ui/overview.md](ui/overview.md) |
