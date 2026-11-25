@@ -48,7 +48,7 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | [foundations/normative-tiers.md](foundations/normative-tiers.md) | Tier 1 LOCKED / Tier 2 STANDARD / Tier 3 GUIDANCE — compliance, change control, precedence |
 | [foundations/tokens.md](foundations/tokens.md) | Design / shell tokens; spacing scale; corner radius; motion token index |
 | [foundations/application-theme-palette.md](foundations/application-theme-palette.md) | Per-app Theme Palette model (customizable vs platform-controlled tokens; Light/Dark) |
-| [foundations/motion.md](foundations/motion.md) | Platform motion — approved duration tokens, reorder FLIP / settle, selection travel; reduced-motion; anti-patterns |
+| [foundations/motion.md](foundations/motion.md) | Platform motion — approved duration tokens, reorder FLIP / settle, selection travel, route transition tokens; reduced-motion; anti-patterns |
 | [foundations/typography.md](foundations/typography.md) | Default typeface and type scale |
 | [foundations/icons.md](foundations/icons.md) | Icon technology and approved sizes (16 / 20 / 24 / 32 / 48) |
 | [foundations/accessibility.md](foundations/accessibility.md) | WCAG 2.2 AA target; keyboard / focus / contrast baseline |
@@ -60,6 +60,7 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | [layout/expandable-section.md](layout/expandable-section.md) | `BoExpandableSection` + shared disclosure engine; Section `IsCollapsible`; page-default expand only on page load |
 | [shell/overlays.md](shell/overlays.md) | `BoDialog` (Enter/Escape, initial focus, focus restore), Settings, toasts, page freeze (`IBoPageFreezeService`) |
 | [shell/navigation.md](shell/navigation.md) | Left navigation, route/URL matching |
+| [shell/navigation-motion.md](shell/navigation-motion.md) | Navigation Motion Standard — shell-owned route / AE enter; compact AE press; reduced-motion |
 | **Layout** | |
 | [layout/sections.md](layout/sections.md) | Main Section / Sub Section |
 | [layout/layout.md](layout/layout.md) | Row (`BoRow`) Weight + hidden/preserve layout, page composition, planning JSON schema |

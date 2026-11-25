@@ -125,6 +125,7 @@ The complete **approved motion token system** (tokens, approved non-token durati
 | `--bo-selection-travel-duration` / `-easing` | `240ms` / `cubic-bezier(0.2, 0.8, 0.2, 1)` | [Selection travel tokens](#selection-travel-tokens-current) |
 | `--bo-reorder-flip-duration` / `-easing` | `260ms` / `cubic-bezier(0.2, 0.8, 0.2, 1)` | [Reorder motion tokens](#reorder-motion-tokens-current) |
 | `--bo-reorder-settle-duration` | `220ms` | [Reorder motion tokens](#reorder-motion-tokens-current) |
+| `--bo-route-transition-duration` / `-easing` / `-rise` | `150ms` / `ease-out` / `4px` | [Route transition tokens](#route-transition-tokens-current) |
 
 ### Corner radius tokens (current)
 
@@ -158,6 +159,16 @@ Shared by `BoToggle` / `BoTabs` (and future segmented controls). Defined on `.bo
 | `--bo-selection-travel-duration` | `240ms` | Indicator / thumb travel |
 | `--bo-selection-travel-easing` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | Same family as reorder |
 | `--bo-selection-travel-x` / `y` / `w` / `h` | JS-written | Indicator geometry |
+
+### Route transition tokens (current)
+
+Shell-owned route / Application Context enter (`BoAppBody`). Defined on `.bo-theme-root`. Full behavior: [navigation-motion.md](../shell/navigation-motion.md) · [motion.md](motion.md).
+
+| CSS variable | Value | Used for |
+| --- | --- | --- |
+| `--bo-route-transition-duration` | `150ms` | Body content enter duration |
+| `--bo-route-transition-easing` | `ease-out` | Body content enter easing |
+| `--bo-route-transition-rise` | `4px` | Subtle upward rise on enter |
 
 ### Layering and focus tokens (current)
 

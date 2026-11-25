@@ -14,7 +14,8 @@ When a product application has **multiple valid and visible** Application Enable
 | Page header | Same AppTitle behavior as Home (application display name; **no** page-specific title/subtitle) |
 | Host chrome | `BoNavHub` — left workflow + right Application Logo / gradient brand panel (same visual identity as Home) |
 | Informational header | `BoNavCardStyleStatic` — supportive (≈75–80% of BE row width); **not** clickable; no icon |
-| Selection cards | Compact `BoNavCardStyleHyperlink` — **Business Entity icon + Description** only (no secondary description/code); nav-card hover/lift + hyperlink; equal-width responsive grid |
+| Selection cards | Compact `BoNavCardStyleHyperlink` — **Business Entity icon + Description** only (no secondary description/code); nav-card hover/lift + short pressed confirmation (~90ms) then navigate; equal-width responsive grid |
+| After select | Shell route enter via `BoAppBody` (pathname and/or `AE` change) — [navigation-motion.md](../shell/navigation-motion.md) |
 | Layout | Left column: content block centered in the working area (header above BE grid, clear Information → Selection spacing). Right: Application Logo + hub background treatment |
 | Selection | Navigate to sanitized return URL with `AE=` via `IBoApplicationContextNavigation` |
 
@@ -37,4 +38,6 @@ When a product application has **multiple valid and visible** Application Enable
 
 SHARED-UI Gallery `/context-selection-page` shows the layout pattern (static showcase; not live AE resolution).
 
-Related: [context-resolution.md](../../../architecture/app-context/context-resolution.md) · [shell.md](../shell/shell.md) Home / nav-card chrome · [error-messages.md](../shell/error-messages.md)
+Same-path Application Context changes (e.g. `?AE=A` → `?AE=B`) receive the same shell navigation motion as pathname changes.
+
+Related: [context-resolution.md](../../../architecture/app-context/context-resolution.md) · [shell.md](../shell/shell.md) Home / nav-card chrome · [navigation-motion.md](../shell/navigation-motion.md) · [error-messages.md](../shell/error-messages.md)

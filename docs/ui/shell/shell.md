@@ -3,7 +3,7 @@
 
 Owner: UI
 
-App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.md](navigation.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md).
+App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.md](navigation.md), [navigation-motion.md](navigation-motion.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md).
 
 ## `BoAppShell` (required)
 
@@ -13,8 +13,12 @@ App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.
 | --- | --- | --- |
 | Left nav | `BoNavPane` / `BoNavLink` | Platform navigation — see [navigation.md](navigation.md) |
 | Header | `BoAppHeader` | Top header card; **per-page** `AppTitle` / `Subtitle` (host-localized); trailing actions; optional `TabsContent` |
-| Body | `BoAppBody` | Body region inside a floating card; card **fills** the available shell viewport slot; when content exceeds the slot, scroll **inside** the body (`overflow: auto` on `BoAppBody`). **Platform rule:** containers must provide scrollbars when content exceeds their bounds — do not use `overflow: hidden` on `BoAppBody` except intentional exceptions (e.g. Home / nav hub; **visible** workspace `BoPanelHost` — see [panels.md](../layout/panels.md)). Home / nav hub / visible panel host: card fills the slot with **no** body scrollbar (panels scroll independently). Hosts inside **hidden** keep-alive tab panels must not disable body scroll for other tabs |
+| Body | `BoAppBody` | Body region inside a floating card; card **fills** the available shell viewport slot; when content exceeds the slot, scroll **inside** the body (`overflow: auto` on `BoAppBody`). **Platform rule:** containers must provide scrollbars when content exceeds their bounds — do not use `overflow: hidden` on `BoAppBody` except intentional exceptions (e.g. Home / nav hub; **visible** workspace `BoPanelHost` — see [panels.md](../layout/panels.md)). Home / nav hub / visible panel host: card fills the slot with **no** body scrollbar (panels scroll independently). Hosts inside **hidden** keep-alive tab panels must not disable body scroll for other tabs. **Owns shell navigation motion** (pathname / `AE` enter) — [navigation-motion.md](navigation-motion.md); product apps must not fork route transitions |
 | Footer | `BoAppFooter` | Optional per page (`ShowFooter`); when shown, fixed bottom footer card |
+
+### Navigation motion (shell-owned)
+
+Route / Application Context page transitions are injected automatically through `BoAppShell` → `BoAppBody`. Product applications inherit them by consuming SHARED-UI; they must not create competing route-transition implementations. Full standard: [navigation-motion.md](navigation-motion.md).
 
 `BoShellCard` provides floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None. Token names: [tokens.md](../foundations/tokens.md).
 

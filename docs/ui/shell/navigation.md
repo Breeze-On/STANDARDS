@@ -3,7 +3,7 @@
 
 Owner: UI
 
-Left navigation and URL path standards. Related: [shell.md](shell.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md).
+Left navigation and URL path standards. Related: [shell.md](shell.md), [navigation-motion.md](navigation-motion.md) (shell route / AE motion), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md).
 
 ## Left navigation standard (locked)
 

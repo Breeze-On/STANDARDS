@@ -3,14 +3,15 @@
 
 Owner: UI
 
-Platform motion language for BreezeOn shared UI. Current reality only. Implementation: [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`breezeon-ui.css`, control JS). Related: [tokens.md](tokens.md), [toggle.md](../controls/toggle.md), [shell.md](../shell/shell.md) (header tabs), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), [overview.md](../overview.md).
+Platform motion language for BreezeOn shared UI. Current reality only. Implementation: [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`breezeon-ui.css`, control JS). Related: [tokens.md](tokens.md), [toggle.md](../controls/toggle.md), [shell.md](../shell/shell.md) (header tabs), [navigation-motion.md](../shell/navigation-motion.md) (route / AE transitions), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), [overview.md](../overview.md).
 
 ## Philosophy (locked)
 
 - Prefer **CSS transitions** and existing engine FLIP (e.g. SortableJS) over new animation libraries.
 - Motion should feel **premium and responsive** (Toggle-quality), never laggy or flashy.
+- **Users should perceive smoother navigation, not animation** — route / AE shell motion SSOT: [navigation-motion.md](../shell/navigation-motion.md).
 - Selection travel must feel **professional, responsive, and enterprise-grade** — it reinforces navigation (“you moved here”), not decorative flourish (no bounce, overshoot, elastic easing, or attention-stealing delays).
-- Honor **`prefers-reduced-motion: reduce`** — instant state change; no lift / FLIP / settle / selection travel.
+- Honor **`prefers-reduced-motion: reduce`** — instant state change; no lift / FLIP / settle / selection travel / route enter / AE press delay.
 - Control SSOTs keep surface-specific rules and **cite** this document for shared reorder and selection-travel motion. Do not invent per-control duration dialects — use [approved motion tokens](#approved-motion-tokens-tier-2).
 
 ## Approved motion tokens (Tier 2)
@@ -27,6 +28,9 @@ Platform motion language for BreezeOn shared UI. Current reality only. Implement
 | `--bo-reorder-flip-easing` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | Reorder FLIP + settle easing (same family) |
 | `--bo-reorder-settle-duration` | `220ms` | Dragged-item shadow settle |
 | `--bo-toggle-thumb-duration` / `--bo-toggle-thumb-easing` | alias of the selection-travel tokens | Toggle thumb (kept for compatibility; do not set independently) |
+| `--bo-route-transition-duration` | `150ms` | Shell route / AE enter ([navigation-motion.md](../shell/navigation-motion.md)) |
+| `--bo-route-transition-easing` | `ease-out` | Route enter easing |
+| `--bo-route-transition-rise` | `4px` | Route enter upward rise |
 
 Defaults for moving selection, reordering, and settle **must** consume these tokens (never a literal).
 
@@ -48,7 +52,7 @@ Token-izing the non-token durations (`--bo-motion-*`) and migrating legacy value
 
 ### Rules
 
-1. Selection movement → `--bo-selection-travel-*`. Reorder → `--bo-reorder-*`. Everything else → an approved duration above.
+1. Selection movement → `--bo-selection-travel-*`. Reorder → `--bo-reorder-*`. Route / AE shell enter → `--bo-route-transition-*`. Everything else → an approved duration above.
 2. No bounce, overshoot, or elastic easing on navigation / selection motion (Home card icon exception above).
 3. Every animation honors `prefers-reduced-motion: reduce` (instant / no animation).
 4. Animate `transform` and `opacity` (and the approved `grid-template-rows` for disclosure); do not animate `left` / `top` / `width` of content for polish.
@@ -132,12 +136,17 @@ Hosts load `_content/BreezeOn.UI/js/bo-sliding-selection.js` once (covers Toggle
 - Optimistic indicator movement before the host commits selection.
 - Omitting a no-JS / not-ready static selected-fill fallback.
 
+## Route / Application Context navigation (shell)
+
+SSOT: [navigation-motion.md](../shell/navigation-motion.md). Owned by `BoAppShell` / `BoAppBody`. Enter-focused fade + **4px** rise (`150ms` `ease-out`) on pathname or `AE` query change. Compact AE cards use a ~90ms pressed state before `NavigateTo`. Product apps must not fork route transitions.
+
 ## Related control motion (reference)
 
 | Control | Duration / easing | Notes |
 | --- | --- | --- |
 | `BoToggle` thumb | Shared selection travel (`240ms` / shared easing) | Direct `boSlidingSelection` — [toggle.md](../controls/toggle.md) |
 | `BoTabs` indicator | Shared selection travel | Tertiary fill; button corner radius — [shell.md](../shell/shell.md) |
+| Shell route / AE enter | `--bo-route-transition-*` (`150ms` / `ease-out` / `4px`) | [navigation-motion.md](../shell/navigation-motion.md) |
 | Disclosure / expandable | **Disclosure** (`240ms` height + `200ms` opacity) | [expandable-section.md](../layout/expandable-section.md) |
 | Toast in/out | **Toast in** `220ms` / **Standard** `200ms` out | [overlays.md](../shell/overlays.md) |
 

@@ -97,6 +97,7 @@ All editable inputs (`BoTextField`, `BoDropDownList`, `BoNumberField`, `BoDateFi
 | Sub-state inheritance | Do **not** inherit prior tab, panel, toggle, or filter sub-state across major workspace / context changes unless the page **explicitly documents** keep-alive intent. Grid Family column-filter visibility and terms are **component-instance only** (cleared on leave) |
 | In-page chrome | Tab / panel / toggle changes within the same workspace follow existing section expand rules — [sections.md](../layout/sections.md#default-expand-vs-in-page-navigation-locked) |
 | Route remount | Navigating away and back remounts the page and restores documented defaults |
+| Shell navigation motion | Pathname or `AE` query changes receive shell-owned enter motion via `BoAppBody`; other query-only updates stay silent — [navigation-motion.md](../shell/navigation-motion.md). Product apps must not fork route transitions |
 | In-page Configuration Session | Allowed for EAC Application Configuration: circuit-scoped baselines keyed by Application + Business Entity while the page stays mounted; cross-route remount still rebuilds ([configuration-session-cache.md](../../../architecture/app-configuration/configuration-session-cache.md)) |
 | Product docs | Each workspace documents its primary view and any intentional keep-alive exceptions |
 

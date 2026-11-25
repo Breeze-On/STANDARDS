@@ -38,6 +38,7 @@ Current reality only. Update this table in the same change set as any Gallery de
 | Home hub (`BoNavHub`, `BoNavCardStyleHyperlink`) | [shell.md](shell/shell.md) | Home |
 | Context Selection (`BoNavHub` brand panel + `BoNavCardStyleStatic` info header + compact icon/label BE cards; Home-style AppTitle) | [context-selection.md](patterns/context-selection.md) | Context Selection Page |
 | App shell, left navigation, header actions (theme switch, Settings, profile) | [shell.md](shell/shell.md), [navigation.md](shell/navigation.md) | Every page (`MainLayout`) |
+| Navigation motion (route / AE enter; compact AE press) | [navigation-motion.md](shell/navigation-motion.md) | Every `BoAppShell` page; Context Selection showcase |
 | Header tabs (`BoTabs` / `BoTabPanels`), keep-alive panels | [shell.md](shell/shell.md#header-tabs-optional-page-sections) | Components, Theme, Error Message Page |
 | Tabs keyboard + `TabRequested` veto | [selection-and-navigation.md](controls/selection-and-navigation.md) | Components → Other → Button → Tabs keyboard |
 | Toggle | [toggle.md](controls/toggle.md) | Components → Other → Toggle |
