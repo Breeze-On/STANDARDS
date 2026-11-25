@@ -1,6 +1,6 @@
 {
     "schemaVersion":  1,
-    "generatedAt":  "2026-11-24T19:46:37.3643846Z",
+    "generatedAt":  "2026-11-25T02:57:17.3217737Z",
     "generator":  "scripts/docs/Generate-AiCatalog.ps1",
     "repositories":  [
                          "STANDARDS",
@@ -167,6 +167,7 @@
                           "isEntryPoint":  true,
                           "entryPointPriority":  10,
                           "related":  [
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
@@ -255,7 +256,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
+                          "lastUpdated":  "2026-11-24T17:26:34-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/app-configuration/configuration-session-cache.md",
@@ -330,9 +331,9 @@
                           "lastUpdated":  "2026-11-22T12:32:58-05:00"
                       },
                       {
-                          "id":  "STANDARDS:architecture/app-context/ae-query-string.md",
+                          "id":  "STANDARDS:architecture/app-context/ae-fact-providers.md",
                           "repository":  "STANDARDS",
-                          "path":  "architecture/app-context/ae-query-string.md",
+                          "path":  "architecture/app-context/ae-fact-providers.md",
                           "domain":  "Platform",
                           "capability":  "Applications",
                           "documentType":  "AA",
@@ -344,6 +345,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
                                           "STANDARDS:architecture/app-context/README.md",
@@ -358,7 +360,39 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:46:18.0648291-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
+                      },
+                      {
+                          "id":  "STANDARDS:architecture/app-context/ae-query-string.md",
+                          "repository":  "STANDARDS",
+                          "path":  "architecture/app-context/ae-query-string.md",
+                          "domain":  "Platform",
+                          "capability":  "Applications",
+                          "documentType":  "AA",
+                          "kind":  "Architecture",
+                          "owner":  "Architecture",
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
+                                          "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
+                                          "STANDARDS:architecture/app-context/context-resolution.md",
+                                          "STANDARDS:architecture/app-context/README.md",
+                                          "STANDARDS:architecture/applications/eac.md",
+                                          "STANDARDS:architecture/applications/inv.md",
+                                          "STANDARDS:architecture/applications/README.md",
+                                          "SYSTEM-ADMIN-EAC:AGENTS.md",
+                                          "SYSTEM-ADMIN-EAC:README.md",
+                                          "SYSTEM-ADMIN-EAC:README_AI.md",
+                                          "SYSTEM-ADMIN-EAC:scripts/README.md"
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
@@ -375,6 +409,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
                                           "STANDARDS:architecture/app-context/README.md",
@@ -389,7 +424,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:46:18.1926410-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/app-context/context-resolution.md",
@@ -406,6 +441,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/README.md",
@@ -420,7 +456,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:46:18.3275802-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/app-context/README.md",
@@ -437,6 +473,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
@@ -451,7 +488,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:46:18.4549815-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/applications/eac-authorization-matrix.md",
@@ -496,6 +533,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
@@ -527,6 +565,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
@@ -541,7 +580,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/applications/README.md",
@@ -558,6 +597,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
@@ -600,7 +640,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T12:32:58-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/authorization/page-security-standard.md",
@@ -1942,7 +1982,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-017-application-configuration-deployment.md"
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T17:26:34-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/ADR-018-data-entity-values-excel-portability.md",
@@ -2084,7 +2124,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md"
                                           ],
-                          "lastUpdated":  "2026-11-24T14:46:24.5435162-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
                       },
                       {
                           "id":  "STANDARDS:decisions/README.md",
@@ -2116,7 +2156,7 @@
                           "relatedAdrs":  [
                                               "STANDARDS:decisions/README.md"
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/adr.md",
@@ -2169,7 +2209,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
+                          "lastUpdated":  "2026-11-24T20:32:16-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/data-portability.md",
@@ -2190,7 +2230,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
+                          "lastUpdated":  "2026-11-24T21:26:47-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/database.md",
@@ -2214,7 +2254,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/documentation.md",
@@ -2242,7 +2282,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
+                          "lastUpdated":  "2026-11-24T20:32:16-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/domain-modeling.md",
@@ -2633,7 +2673,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
+                          "lastUpdated":  "2026-11-24T20:32:16-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
@@ -2657,7 +2697,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
+                          "lastUpdated":  "2026-11-24T20:32:16-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-QUICKSTART.md",
@@ -2752,7 +2792,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T23:46:46-05:00"
+                          "lastUpdated":  "2026-11-24T20:32:16-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/deviations/DEV-001-process-framework-future-engine-vision.md",
@@ -2966,7 +3006,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/grids.md",
@@ -3166,7 +3206,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/page-development.md",
@@ -3686,7 +3726,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/foundations/normative-tiers.md",
@@ -3740,7 +3780,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/foundations/typography.md",
@@ -3925,7 +3965,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:46:31.7848781-05:00"
+                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/dirty-state.md",
@@ -4049,7 +4089,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/ux-conventions.md",
@@ -4080,7 +4120,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/validation-summary.md",
@@ -4158,7 +4198,28 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
+                      },
+                      {
+                          "id":  "STANDARDS:docs/ui/shell/navigation-motion.md",
+                          "repository":  "STANDARDS",
+                          "path":  "docs/ui/shell/navigation-motion.md",
+                          "domain":  "UI",
+                          "capability":  "NavigationMotion",
+                          "documentType":  "AA",
+                          "kind":  "Standard",
+                          "owner":  "UI",
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+
+                                      ],
+                          "relatedAdrs":  [
+
+                                          ],
+                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/shell/navigation.md",
@@ -4184,7 +4245,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/shell/overlays.md",
@@ -4236,7 +4297,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
                       },
                       {
                           "id":  "STANDARDS:runbooks/customer-onboarding-authentication.md",
@@ -4329,7 +4390,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-24T17:26:34-05:00"
                       },
                       {
                           "id":  "STANDARDS:runbooks/README.md",
@@ -4554,6 +4615,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
@@ -4585,6 +4647,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
@@ -4616,6 +4679,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
@@ -4681,7 +4745,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T14:44:40-05:00"
+                          "lastUpdated":  "2026-11-24T21:26:45-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:docs/process-framework.md",
@@ -4772,6 +4836,7 @@
                           "entryPointPriority":  null,
                           "related":  [
                                           "STANDARDS:architecture/landscape.md",
+                                          "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                           "STANDARDS:architecture/app-context/ae-query-string.md",
                                           "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                           "STANDARDS:architecture/app-context/context-resolution.md",
@@ -4786,7 +4851,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:32:52-05:00"
+                          "lastUpdated":  "2026-11-24T21:26:45-05:00"
                       },
                       {
                           "id":  "SYSTEM-ADMIN-EAC:sql/seed/README.md",
@@ -4810,7 +4875,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:17:14-05:00"
+                          "lastUpdated":  "2026-11-24T21:26:45-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:AGENTS.md",
@@ -5001,7 +5066,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:45-05:00"
+                          "lastUpdated":  "2026-11-24T20:20:16-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:docs/security-model.md",
@@ -5029,7 +5094,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:30-05:00"
+                          "lastUpdated":  "2026-11-24T17:56:54-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:docs/plans/README.md",
@@ -5220,6 +5285,7 @@
                                                       "STANDARDS:architecture/app-configuration/configuration-session-cache.md",
                                                       "STANDARDS:architecture/app-configuration/construct-selection.md",
                                                       "STANDARDS:architecture/app-configuration/README.md",
+                                                      "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                                       "STANDARDS:architecture/app-context/ae-query-string.md",
                                                       "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                                       "STANDARDS:architecture/app-context/context-resolution.md",
@@ -5311,6 +5377,7 @@
                                                 "STANDARDS:docs/ui/patterns/validation-summary.md",
                                                 "STANDARDS:docs/ui/shell/application-branding.md",
                                                 "STANDARDS:docs/ui/shell/error-messages.md",
+                                                "STANDARDS:docs/ui/shell/navigation-motion.md",
                                                 "STANDARDS:docs/ui/shell/navigation.md",
                                                 "STANDARDS:docs/ui/shell/overlays.md",
                                                 "STANDARDS:docs/ui/shell/shell.md",
@@ -5429,6 +5496,7 @@
                                                                    ],
                                          "Platform/Applications":  [
                                                                        "STANDARDS:architecture/landscape.md",
+                                                                       "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                                                        "STANDARDS:architecture/app-context/ae-query-string.md",
                                                                        "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                                                        "STANDARDS:architecture/app-context/context-resolution.md",
@@ -5664,6 +5732,7 @@
                                                            "STANDARDS:architecture/app-configuration/configuration-session-cache.md",
                                                            "STANDARDS:architecture/app-configuration/construct-selection.md",
                                                            "STANDARDS:architecture/app-configuration/README.md",
+                                                           "STANDARDS:architecture/app-context/ae-fact-providers.md",
                                                            "STANDARDS:architecture/app-context/ae-query-string.md",
                                                            "STANDARDS:architecture/app-context/bootstrap-and-cache.md",
                                                            "STANDARDS:architecture/app-context/context-resolution.md",
@@ -5802,6 +5871,7 @@
                                                            "STANDARDS:docs/ui/patterns/validation-summary.md",
                                                            "STANDARDS:docs/ui/shell/application-branding.md",
                                                            "STANDARDS:docs/ui/shell/error-messages.md",
+                                                           "STANDARDS:docs/ui/shell/navigation-motion.md",
                                                            "STANDARDS:docs/ui/shell/navigation.md",
                                                            "STANDARDS:docs/ui/shell/overlays.md",
                                                            "STANDARDS:docs/ui/shell/shell.md",

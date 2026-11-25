@@ -46,7 +46,7 @@ This document does **not** replace detailed standards. It is the authoritative *
 | Script | Needed for |
 | --- | --- |
 | `bo-theme-mode.js` | Theme-mode cookie helpers; sets `document.documentElement.dataset.boThemeMode` |
-| `bo-branding.js` | Browser Favicon sync from Navigation Logo (`boBranding.setFavicon`) |
+| `bo-branding.js` | Browser Favicon sync from generated Customer Logo favicon (`boBranding.setFavicon`) |
 | `bo-locale.js` | Locale cookie helpers for `bo-culture` / `bo-timezone` |
 | `bo-popup.js` | Fixed-position panels for `BoDropDownList`, `BoPeoplePicker`, and `BoDateField` |
 | `bo-number-field.js` | **Required for `BoNumberField`** (key filter, focus/blur bridge, display sync) |
@@ -90,8 +90,8 @@ Include **all eight** core `bo-*.js` scripts even if a page does not use every c
 | Concern | Requirement | Deep SSOT |
 | --- | --- | --- |
 | Data Protection | `AddDataProtection().SetApplicationName("<Product>")` (isolate purpose strings per app) | [session-standard.md](../../architecture/identity-and-authentication/session-standard.md) |
-| Branding options | `Configure<BoBrandingOptions>(…)` — Application Display Name, Application Logo, Navigation Logo (favicon tracks Navigation Logo) | [application-branding.md](shell/application-branding.md) |
-| Theme Palette | Optional `Configure<BoThemePaletteConfiguration>(…)` for Light/Dark accents | [application-theme-palette.md](foundations/application-theme-palette.md) |
+| Branding options | `Configure<BoBrandingOptions>(…)` — Application Display Name (application-definition), Application Logo, Customer Name, Customer Logo source (generates nav + favicon) | [application-branding.md](shell/application-branding.md) |
+| Theme Palette | Optional three brand colors → derived `Configure<BoThemePaletteConfiguration>(…)` Light/Dark accents (hover and other roles are derived, not Step 1 fields) | [application-theme-palette.md](foundations/application-theme-palette.md) |
 | Error Message options | `Configure<BoErrorMessageOptions>(o => o.ApplicationDisplayName = "…")` after `AddBreezeOnUI` (same Display Name as branding) | [error-messages.md](shell/error-messages.md) |
 | Browser title | Each page uses `<BoDocumentTitle PageTitle="…" />` → `<Page Title> - <Application Display Name>` | [application-branding.md](shell/application-branding.md) |
 | Browser Favicon script | Include `_content/BreezeOn.UI/js/bo-branding.js` in host `App.razor` | [application-branding.md](shell/application-branding.md) |
@@ -121,7 +121,7 @@ Every new or changed Breeze On page should validate the following.
 - [ ] Header actions remain platform-standard (`BoHeaderActions`: Theme → Settings → Profile) unless the host intentionally overrides `ActionsContent`.
 - [ ] Footer behavior follows standards (`ShowFooter`; Home typically **false**; Error Message Pages **must** be **false**) — [shell.md](shell/shell.md), [error-messages.md](shell/error-messages.md).
 - [ ] Error Message Pages follow the Error Message framework (shared `Bo*` + foundation CSS; no product-specific remediation in shared components; showcase ≡ production) — [error-messages.md](shell/error-messages.md).
-- [ ] Branding: Application Branding (Display Name + Application Logo) decoupled from Customer/Tenant Branding (Navigation Logo + Browser Favicon); Theme Palette independent — [application-branding.md](shell/application-branding.md), [application-theme-palette.md](foundations/application-theme-palette.md).
+- [ ] Branding: Application Branding (`applicationLogo` only) decoupled from Customer Branding (`customerName`, `customerLogo`, three colors); Application Display Name outside both packages; theme inputs only the three brand colors — [application-branding.md](shell/application-branding.md), [application-theme-palette.md](foundations/application-theme-palette.md).
 - [ ] Browser title via `BoDocumentTitle` (no hardcoded app name in page-title resources).
 
 ### Home pages
@@ -133,12 +133,12 @@ When the page is a **Home** (or equivalent landing hub):
 - [ ] One card per application destination (internal SPA or external as required).
 - [ ] Home **`AppTitle`** = Application Display Name; Home **`Subtitle` omitted**.
 - [ ] Each card **Description** equals that destination page’s header **Subtitle** (same resource key / string).
-- [ ] Right-panel asset is **Application Logo** (independent of Navigation Logo configuration).
+- [ ] Right-panel asset is **Application Logo** (independent of Customer Logo configuration).
 - [ ] Follows the locked Home / navigation hub pattern — [shell.md § Home](shell/shell.md#home--navigation-hub-locked-platform-pattern) · [application-branding.md](shell/application-branding.md).
 - [ ] Does **not** invent custom dashboard / markdown / Fluent card layouts.
 - [ ] Does **not** use Section → Row → Field as the Home layout (that composition is for forms).
 
-**Per-app only on Home:** card count/routes, localized labels (descriptions tied to page subtitles), card icons (defaults: New Request `AddSquareMultiple`, Status Report `Dashboard`, My Tasks `AppsListDetail` — [application-branding.md](shell/application-branding.md)), Application Logo asset, Theme Palette.
+**Per-app only on Home:** card count/routes, localized labels (descriptions tied to page subtitles), card icons (defaults: New Request `AddSquareMultiple`, Status Report `Dashboard`, My Tasks `AppsListDetail` — [application-branding.md](shell/application-branding.md)), Application Logo asset, Customer Branding brand colors (derived Theme Palette).
 
 ### Layout (forms and structured content)
 

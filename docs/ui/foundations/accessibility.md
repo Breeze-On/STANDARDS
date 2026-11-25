@@ -45,6 +45,7 @@ Current reality only.
 - Text and meaningful icons meet **4.5:1** (large text **3:1**) against their background; UI component boundaries and focus indicators meet **3:1**.
 - Do not convey information by color alone (validation uses icon/badge + text + color; sort uses arrow + weight).
 - Use palette tokens only ([tokens.md § Palette rules](tokens.md#palette-rules-locked)); Save / Discard token pairs are specified at ≥ 4.5:1 foreground-on-fill in both modes.
+- When Customer Branding supplies `primaryColor` / `secondaryColor` / `tertiaryColor`, the palette generator **must** validate derived foreground/background pairs to WCAG 2.2 AA and document accessible role-specific variants when an exact brand hex cannot safely serve a role — [application-theme-palette.md](application-theme-palette.md).
 - **Dark mode contrast across all components is Future Validation** (FV-002) — a full audit (focus ring, toast, field borders on dark surfaces) has not been performed.
 
 ## Motion (Tier 1)

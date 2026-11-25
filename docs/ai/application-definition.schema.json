@@ -51,29 +51,49 @@
     "applicationDisplayName": {
       "type": "string",
       "minLength": 1,
-      "description": "Human-readable product name. See docs/ui/shell/application-branding.md."
+      "description": "Human-readable product name (application-definition field; not part of Customer Branding or Application Branding packages). See docs/ui/shell/application-branding.md."
     },
     "applicationLogo": {
       "type": "string",
       "default": "app-logo.svg",
-      "description": "Application Logo asset filename. Locked name app-logo.svg when omitted; independently configurable from Navigation Logo."
+      "description": "Application Branding package — sole member. Locked filename app-logo.svg when omitted. Independent of Customer Branding."
     },
-    "navigationLogo": {
+    "customerName": {
       "type": "string",
-      "default": "nav-logo.svg",
-      "description": "Navigation Logo asset filename. Locked name nav-logo.svg when omitted; independently configurable from Application Logo."
+      "minLength": 1,
+      "default": "BreezeOn",
+      "description": "Customer Branding — human-readable customer/tenant name. Displayed in expanded navigation to the right of the customer logo; hidden when navigation is minimized. Distinct from applicationDisplayName."
     },
-    "browserFavicon": {
+    "customerLogo": {
       "type": "string",
-      "default": "favicon.svg",
-      "const": "favicon.svg",
-      "description": "Browser Favicon locked filename. Aligns with Navigation Logo branding by default; remains a separate asset."
+      "default": "customer-logo.svg",
+      "description": "Customer Branding — authoritative source SVG filename. Locked name customer-logo.svg when omitted. Generates nav-logo.svg and favicon.svg; not independently user-configured placement assets."
     },
-    "themePalette": {
+    "primaryColor": {
       "type": "string",
-      "default": "platform-default",
-      "description": "Theme Palette. Default: platform Light/Dark accents. See docs/ui/foundations/application-theme-palette.md."
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "description": "Customer Branding theme input — six-digit #RRGGBB. Must be supplied together with secondaryColor and tertiaryColor, or all three omitted. Derived palette roles are never application-definition fields."
+    },
+    "secondaryColor": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "description": "Customer Branding theme input — six-digit #RRGGBB. Must be supplied together with primaryColor and tertiaryColor, or all three omitted."
+    },
+    "tertiaryColor": {
+      "type": "string",
+      "pattern": "^#[0-9A-Fa-f]{6}$",
+      "description": "Customer Branding theme input — six-digit #RRGGBB. Must be supplied together with primaryColor and secondaryColor, or all three omitted."
     }
+  },
+  "if": {
+    "anyOf": [
+      { "required": ["primaryColor"] },
+      { "required": ["secondaryColor"] },
+      { "required": ["tertiaryColor"] }
+    ]
+  },
+  "then": {
+    "required": ["primaryColor", "secondaryColor", "tertiaryColor"]
   },
   "x-breezeon": {
     "authority": {
@@ -100,20 +120,55 @@
     ],
     "optionalInputs": [
       "applicationLogo",
-      "navigationLogo",
-      "browserFavicon",
-      "themePalette"
+      "customerName",
+      "customerLogo",
+      "primaryColor",
+      "secondaryColor",
+      "tertiaryColor"
     ],
     "fixedValues": {
-      "localAppRegistrationName": "BreezeOn-LOCAL",
-      "browserFavicon": "favicon.svg"
+      "localAppRegistrationName": "BreezeOn-LOCAL"
+    },
+    "brandingPackages": {
+      "customerBranding": [
+        "customerName",
+        "customerLogo",
+        "primaryColor",
+        "secondaryColor",
+        "tertiaryColor"
+      ],
+      "applicationBranding": [
+        "applicationLogo"
+      ],
+      "outsideBrandingPackages": [
+        "applicationDisplayName"
+      ]
+    },
+    "themePersistence": {
+      "userConfigurableThemeInputsOnly": [
+        "primaryColor",
+        "secondaryColor",
+        "tertiaryColor"
+      ],
+      "rule": "Only primaryColor, secondaryColor, and tertiaryColor may ever be persisted as user-configurable theme inputs in application-definition. Hover, pressed, selected, borders, foregrounds, dark variants, accessibility variants, and other generated colors are implementation outputs only and must never become application-definition fields. Future customization requests change palette-generation logic, not this schema.",
+      "modes": {
+        "supported": ["Light", "Dark"],
+        "step1Configurable": false,
+        "rule": "Every application supports Light and Dark. Applications cannot add or remove theme modes through Step 1 configuration."
+      }
+    },
+    "generatedCustomerAssets": {
+      "source": "customer-logo.svg",
+      "generated": ["nav-logo.svg", "favicon.svg"],
+      "rule": "Placement-specific runtime bindings may differ but must derive from customer-logo.svg. nav-logo.svg and favicon.svg are never separate Step 1 user inputs."
     },
     "defaults": {
       "pages": ["Home", "New Request", "Status Report", "My Tasks"],
       "applicationLogo": "app-logo.svg",
-      "navigationLogo": "nav-logo.svg",
-      "browserFavicon": "favicon.svg",
-      "themePalette": "platform-default",
+      "customerName": "BreezeOn",
+      "customerLogo": "customer-logo.svg",
+      "generatedNavLogo": "nav-logo.svg",
+      "generatedFavicon": "favicon.svg",
       "pageIcons": {
         "New Request": { "name": "AddSquareMultiple", "variant": "Regular" },
         "Status Report": { "name": "Dashboard", "variant": "Regular" },
@@ -127,21 +182,25 @@
     "omissionBehavior": {
       "pages": "Use defaults.pages (Home + New Request + Status Report + My Tasks).",
       "applicationLogo": "Use locked filename app-logo.svg (platform/default or product asset).",
-      "navigationLogo": "Use locked filename nav-logo.svg.",
-      "browserFavicon": "Use locked filename favicon.svg.",
-      "themePalette": "Use platform default Light/Dark accents (application-theme-palette.md).",
+      "customerName": "Use defaults.customerName (BreezeOn). Expanded nav shows Customer Logo + Customer Name; minimized nav shows Customer Logo only.",
+      "customerLogo": "Use locked filename customer-logo.svg; generate nav-logo.svg and favicon.svg from that source.",
+      "primaryColor_secondaryColor_tertiaryColor": "If all three omitted, use complete platform-default Light and Dark palettes (application-theme-palette.md). If any one is supplied, all three are required (no partial palette).",
       "pageSubtitles": "Use standard reusable subtitles from application-branding.md.",
-      "brandingAssetFilenames": "Always rename uploads to app-logo.svg / nav-logo.svg / favicon.svg; never retain designer filenames.",
-      "logoVisualSharing": "Application Logo, Navigation Logo, and Browser Favicon may initially share visuals while remaining independently configured, referenced, and bound.",
+      "brandingAssetFilenames": "Rename customer uploads to customer-logo.svg; rename application uploads to app-logo.svg; never retain designer filenames. Generated placement files are always nav-logo.svg and favicon.svg.",
+      "generatedCustomerAssets": "Derive nav-logo.svg and favicon.svg from customer-logo.svg; never collect them as separate Step 1 inputs.",
       "browserTitle": "Use <Page Title> - <Application Display Name> via BoDocumentTitle.",
       "homeCardDescription": "Equals the destination page subtitle (same string / resource key).",
-      "brandingSplit": "Application Branding (Display Name + Application Logo) decoupled from Customer/Tenant Branding (Navigation Logo + Favicon)."
+      "brandingPackages": "Customer Branding = customerName + customerLogo + primaryColor + secondaryColor + tertiaryColor. Application Branding = applicationLogo only. applicationDisplayName is outside both packages."
     },
     "agentConsumption": [
       "Consume this schema first for required / optional / defaults / omission behavior.",
       "Use application-development-process.md as supporting documentation only (explanation, Steps 1–6, Distinctions).",
       "Fill an instance from the user prompt; apply schema defaults for omitted optionals.",
       "Ask only for missing non-defaulted required fields (repositoryName, uniqueCode, code, hostedAppRegistrationName, applicationDisplayName). Derive uniqueCode from repositoryName via ToUpperInvariant when not supplied.",
+      "Do not require customerName (default BreezeOn), customerLogo, or brand colors unless the user wants to customize Customer Branding.",
+      "Do not ask for navigationLogo, browserFavicon, themePalette, primaryHover, or any derived theme colors as Step 1 inputs.",
+      "If any of primaryColor / secondaryColor / tertiaryColor is supplied, require all three; otherwise omit all three and use platform default palettes.",
+      "Derive complete Light and Dark Theme Palettes from the three brand colors; never persist derived colors into the application-definition instance.",
       "Do not require the user to read the markdown process doc to discover inputs.",
       "Do not copy illustrative example instances (e.g. INV) as platform defaults."
     ],

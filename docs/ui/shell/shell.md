@@ -131,8 +131,8 @@ Use for each product app’s **Home** (or equivalent landing hub). This is **not
 | Host | `BoNavHub` `LogoSrc` **or** `BrandContent` (custom fragment wins when set) |
 | Logo cell | Square sized to **`80cqmin`** (80% of the smaller brand-panel side); `object-fit: contain` |
 | Alt text | Required for `LogoSrc` via `LogoAlt` (localized) |
-| Asset | Per-app Application Logo under that app’s `wwwroot` — independently configured from Navigation Logo |
-| Do not | Hardcode another app’s logo; invent a different right-panel layout; share a single config binding with Navigation Logo |
+| Asset | Per-app Application Logo (`app-logo.svg`) under that app’s `wwwroot` — Application Branding package; independently configured from Customer Logo |
+| Do not | Hardcode another app’s logo; invent a different right-panel layout; share a single config binding with Customer Logo |
 
 ### `BoNavCardStyleHyperlink` (locked chrome)
 
@@ -163,11 +163,11 @@ Use for each product app’s **Home** (or equivalent landing hub). This is **not
 | --- | --- |
 | `BoNavHub` + `BoNavCardStyleHyperlink` composition | **Number of cards** and destination routes |
 | ~33/67 split, full-height body, no Home footer | **Card labels**; descriptions **= destination page subtitles** |
-| Home header: **no subtitle** | **Application Logo** asset + alt text (independent of Navigation Logo) |
+| Home header: **no subtitle** | **Application Logo** asset + alt text (independent of Customer Logo) |
 | Gradient stops + dot texture + card bloom | **Card icons** (`BoIcon` Name/Variant) |
 | Card chrome, header/rule/description styles | **Application Display Name** as Home `AppTitle` |
-| Internal SPA vs external new-tab rules | Theme Palette accents ([application-theme-palette.md](../foundations/application-theme-palette.md)) |
-| Dual Light/Dark via theme mode | Left-nav page set + Navigation Logo |
+| Internal SPA vs external new-tab rules | Customer Branding brand colors → derived Theme Palette ([application-theme-palette.md](../foundations/application-theme-palette.md)) |
+| Dual Light/Dark via theme mode | Left-nav page set + Customer Logo / Customer Name |
 
 **Not per-app:** inventing a different Home layout, using Fluent UI types in product pages, hardcoding user-visible strings, or putting form Section→Row on Home instead of the hub.
 

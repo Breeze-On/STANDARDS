@@ -47,7 +47,7 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | **Foundations** | |
 | [foundations/normative-tiers.md](foundations/normative-tiers.md) | Tier 1 LOCKED / Tier 2 STANDARD / Tier 3 GUIDANCE — compliance, change control, precedence |
 | [foundations/tokens.md](foundations/tokens.md) | Design / shell tokens; spacing scale; corner radius; motion token index |
-| [foundations/application-theme-palette.md](foundations/application-theme-palette.md) | Per-app Theme Palette model (customizable vs platform-controlled tokens; Light/Dark) |
+| [foundations/application-theme-palette.md](foundations/application-theme-palette.md) | Per-app Theme Palette model (three Step 1 brand colors → derived Light/Dark roles; platform-controlled tokens) |
 | [foundations/motion.md](foundations/motion.md) | Platform motion — approved duration tokens, reorder FLIP / settle, selection travel, route transition tokens; reduced-motion; anti-patterns |
 | [foundations/typography.md](foundations/typography.md) | Default typeface and type scale |
 | [foundations/icons.md](foundations/icons.md) | Icon technology and approved sizes (16 / 20 / 24 / 32 / 48) |
@@ -55,7 +55,7 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | [foundations/i18n.md](foundations/i18n.md) | Culture / timezone cookies; per-app resource libraries; no hardcoded labels |
 | **Shell** | |
 | [shell/shell.md](shell/shell.md) | App shell chrome, footer, header tabs |
-| [shell/application-branding.md](shell/application-branding.md) | Application Display Name, Application Logo vs Navigation Logo, Home subtitle rules, default page subtitles |
+| [shell/application-branding.md](shell/application-branding.md) | Application Display Name (outside packages), Application Branding vs Customer Branding, Customer Logo asset model, Home subtitle rules, default page subtitles |
 | [shell/error-messages.md](shell/error-messages.md) | Error Message Pages framework (Access Denied + future scenarios) |
 | [layout/expandable-section.md](layout/expandable-section.md) | `BoExpandableSection` + shared disclosure engine; Section `IsCollapsible`; page-default expand only on page load |
 | [shell/overlays.md](shell/overlays.md) | `BoDialog` (Enter/Escape, initial focus, focus restore), Settings, toasts, page freeze (`IBoPageFreezeService`) |
@@ -109,7 +109,7 @@ Inventory with UX pointers only. **Parameters, events, and types** for every com
 | `IBoThemeModeService` | `ThemeMode` + active palette; cookie `bo-theme-mode` restore via `BoProviders` bootstrap | [tokens.md](foundations/tokens.md) |
 | `BoProviders` | Hosts Fluent providers, theme/locale bootstrap, dialog / toast / page-freeze hosts | [tokens.md](foundations/tokens.md), [i18n.md](foundations/i18n.md), [shell.md](shell/shell.md), [overlays.md](shell/overlays.md) |
 | `IBoLocaleService` | Culture + IANA timezone; cookies `bo-culture` / `bo-timezone`; `FormatCulture` (en-CA / fr-CA) + `UiCulture`; no process-wide culture mutation | [i18n.md](foundations/i18n.md) |
-| `IBoBrandingService` | Circuit logos (`LogoExpandedSrc` / `LogoMinimizedSrc`); published by `BoNavPane`; page freeze uses minimized | [navigation.md](shell/navigation.md), [overlays.md](shell/overlays.md) |
+| `IBoBrandingService` | Customer Name + Customer/Application logos (`CustomerLogoSrc` → nav/favicon; `LogoMinimizedSrc` for page freeze) | [navigation.md](shell/navigation.md), [overlays.md](shell/overlays.md), [application-branding.md](shell/application-branding.md) |
 | `BoAppShell` | Option B app chrome: full-height nav + header / body / footer column | [shell.md](shell/shell.md) |
 | `BoShellCard` | Floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None | [shell.md](shell/shell.md), [tokens.md](foundations/tokens.md) |
 | `BoNavPane` / `BoNavLink` | Left navigation; collapses to a narrow icon rail (labels visually hidden; `BoNavLink.Title` tooltip when collapsed; localized `Chrome_Aria_Nav*`); bottom collapse control; prefer `IconContent` with `BoIcon` | [navigation.md](shell/navigation.md) |

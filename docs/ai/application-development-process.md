@@ -35,18 +35,20 @@ Do not invent alternate technical ids that diverge from the repository name ([na
 
 ### Optional
 
-| Input | Default when omitted |
-| --- | --- |
-| Application Logo | `app-logo.svg` (platform/default or product asset); independently configurable from Navigation Logo |
-| Navigation Logo | `nav-logo.svg`; independently configurable from Application Logo |
-| Theme Palette | Platform default Light/Dark accents — [application-theme-palette.md](../ui/foundations/application-theme-palette.md) |
+| Input | Default when omitted | Package |
+| --- | --- | --- |
+| Application Logo | `app-logo.svg` (platform/default or product asset) | Application Branding (sole member) |
+| Customer Name | `BreezeOn` | Customer Branding |
+| Customer Logo | `customer-logo.svg` → generates `nav-logo.svg` + `favicon.svg` | Customer Branding |
+| Primary / Secondary / Tertiary Color | All omitted → complete platform-default Light/Dark palettes; if any supplied, all three required (`#RRGGBB`) | Customer Branding |
 
 When optional inputs are omitted (schema `x-breezeon.omissionBehavior`):
 
 - Standard default pages and **standard subtitles** are used ([application-branding.md](../ui/shell/application-branding.md))
-- Standard Theme Palette (platform defaults) is used
-- Branding assets use locked filenames **`app-logo.svg`**, **`nav-logo.svg`**, **`favicon.svg`** (user/designer filenames are never retained)
-- Application Logo, Navigation Logo, and Browser Favicon **may** initially share visuals while remaining **independently** configured, referenced, and bound
+- Customer Name defaults to **`BreezeOn`**; expanded nav shows Customer Logo + Customer Name; minimized nav shows Customer Logo only
+- Customer Logo defaults to **`customer-logo.svg`**; placement assets `nav-logo.svg` and `favicon.svg` are **generated** from that source (never separate Step 1 inputs)
+- Brand colors omitted → complete platform-default Light and Dark palettes; derived roles (hover, pressed, selected, borders, foregrounds, dark/accessibility variants) are implementation outputs only and are never application-definition fields
+- Application Branding is **`app-logo.svg` only**; Application Display Name remains a required application-definition field outside both branding packages
 - Browser title uses `<Page Title> - <Application Display Name>`
 
 ---
@@ -63,11 +65,11 @@ Unless a plan explicitly overrides (encoded in schema defaults / omission behavi
 | Default subtitles | Reusable platform copy in [application-branding.md](../ui/shell/application-branding.md) |
 | Home card description | **Equals** the destination page subtitle (same string / resource key) |
 | Browser title | `<Page Title> - <Application Display Name>` via `BoDocumentTitle` |
-| Browser Favicon | `favicon.svg` (aligns with Navigation Logo branding by default; separate asset) |
-| Branding asset names | `app-logo.svg` / `nav-logo.svg` / `favicon.svg` — rename uploads on import |
-| Themes | Light and Dark both mandatory (Theme Palette first-class) |
-| Branding split | Application Branding (Display Name + Application Logo) decoupled from Customer/Tenant Branding (Navigation Logo + Favicon) |
-| Platform display name | **`Breeze On`** for org/Gallery chrome |
+| Customer Logo assets | Source `customer-logo.svg`; generated `nav-logo.svg` + `favicon.svg` — rename customer uploads to the source name |
+| Application Logo | `app-logo.svg` — Application Branding package only |
+| Themes | Light and Dark both mandatory; not Step 1–configurable; only `primaryColor` / `secondaryColor` / `tertiaryColor` may be persisted as theme inputs |
+| Branding packages | Customer Branding (`customerName`, `customerLogo`, three colors) decoupled from Application Branding (`applicationLogo` only); `applicationDisplayName` outside both |
+| Platform display name | **`Breeze On`** for org/Gallery chrome (distinct from Customer Name default `BreezeOn`) |
 
 ---
 
@@ -88,7 +90,7 @@ Generate a **local-development** roadmap from the inputs and existing standards 
 
 Default plan scope stops when the application can be **built and run locally** and **Platform bootstrap completion** (Step 5) passes, unless the current prompt expands scope.
 
-Include UX Standards Compliance covering Home subtitle omission, card description = page subtitle, branding split, and Theme Palette.
+Include UX Standards Compliance covering Home subtitle omission, card description = page subtitle, Customer vs Application Branding packages, and three-color theme derivation.
 
 Plans may be authored under STANDARDS or another planning workspace while the target application repository does not yet exist. Planning does **not** continue as the implementation workspace after Step 3.
 
@@ -156,7 +158,7 @@ Verify locally:
 - Authentication against the Local App Registration
 - Authorization (page catalog + shared Security)
 - Navigation (Home cards + destination routes; card descriptions match page subtitles; Home has no subtitle)
-- Branding bindings (Application Logo vs Navigation Logo independently configured; favicon tracks Navigation Logo; browser title format)
+- Branding bindings (Application Logo independent; Customer Logo source generates nav + favicon; expanded nav shows Customer Name; browser title format)
 - Local bootstrap (including `GLOBAL-SYSTEM-ADMINISTRATORS` when seed tids / bootstrap UPNs are configured)
 - Seeding / reset for the product local database path documented in the product README (EAC consumers: EAC reset invoked via sibling checkout, `seed/eac/` imported)
 
@@ -229,8 +231,9 @@ When a capability becomes **mandatory for new BreezeOn applications**, update **
 | Pages | Home, New Request, Status Report, My Tasks |
 | Default page icons | `AddSquareMultiple` / `Dashboard` / `AppsListDetail` (Regular) |
 | Application Display Name | Invoice Approval Request |
-| Application Logo / Navigation Logo | Independently configurable (may share image file initially) |
-| Theme Palette | Platform defaults until product-specific palette is supplied |
+| Customer Name | `BreezeOn` (omitted → schema default) |
+| Application Logo / Customer Logo | `app-logo.svg` / `customer-logo.svg` (generates `nav-logo.svg` + `favicon.svg`) |
+| Brand colors | Omitted → platform default Light/Dark palettes |
 
 **Repository transition:** execution workspace is [`breezeon-corp-fin-inv`](https://github.com/Breeze-On/breezeon-corp-fin-inv). STANDARDS remains process SSOT; EAC remains the platform reference host.
 

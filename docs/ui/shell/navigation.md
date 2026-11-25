@@ -15,22 +15,23 @@ Left navigation and URL path standards. Related: [shell.md](shell.md), [navigati
 
 **Fixed values (Tier 2):** *Default expanded width* `192px` (`BoThemeOptions.SizeNavExpanded` / `--bo-size-nav-expanded`); *collapsed icon rail* `56px` (`SizeNavCollapsed` / `--bo-size-nav-collapsed`); default logos ship in `_content/BreezeOn.UI/brand/`. Collapse label: none (no "Minimize" text). Page URL = page name (below).
 
-**Per-application customization:** **Navigation Logo** URLs (`NavigationLogoExpandedSrc` / `NavigationLogoMinimizedSrc` — customer/tenant/environment); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; Theme Palette accents ([application-theme-palette.md](../foundations/application-theme-palette.md)). **Application Logo** (Home) is a **separate** concept — [application-branding.md](application-branding.md).
+**Per-application customization:** **Customer Name** (`BrandText`, default `BreezeOn`) and **Customer Logo** (source `customer-logo.svg` → generated `nav-logo.svg` / `favicon.svg` bindings); number of pages, routes, and labels; page icons (except collapse) via `BoNavLink.IconContent` + `BoIcon`; Customer Branding brand colors ([application-theme-palette.md](../foundations/application-theme-palette.md)). **Application Logo** (Home) is a **separate** Application Branding package member — [application-branding.md](application-branding.md).
 
 ### Branding ownership (current)
 
 | Concern | Standard |
 | --- | --- |
-| Navigation Logo | Set on **`BoNavPane`** from **`nav-logo.svg`** (`NavigationLogoExpandedSrc` / `NavigationLogoMinimizedSrc`) — Customer / Tenant Branding |
-| Application Logo | Set on **Home** from **`app-logo.svg`** (`BoNavHub` `ApplicationLogoSrc`) — Application Branding; **independent** of Navigation Logo |
-| Browser Favicon | **`favicon.svg`** via `IBoBrandingService.BrowserFaviconSrc` (separate from Navigation Logo; aligned by default) |
-| Shared state | `BoNavPane` publishes Navigation Logos; `BoBrandingBootstrap` applies `BoBrandingOptions` |
-| Defaults | Null/whitespace → `BoBrandingDefaults` (`app-logo.svg` / `nav-logo.svg` / `favicon.svg`) |
+| Customer Name | Expanded nav `BrandText` ← `customerName` (default **`BreezeOn`**); minimized nav shows logo only (name visually hidden) — Customer Branding |
+| Customer Logo | Source **`customer-logo.svg`**; generated **`nav-logo.svg`** bound on **`BoNavPane`** (`NavigationLogoExpandedSrc` / `NavigationLogoMinimizedSrc`) |
+| Application Logo | Set on **Home** from **`app-logo.svg`** (`BoNavHub` `ApplicationLogoSrc`) — Application Branding package only; **independent** of Customer Logo |
+| Browser Favicon | Generated **`favicon.svg`** from Customer Logo via `IBoBrandingService.BrowserFaviconSrc` (not a separate Step 1 input) |
+| Shared state | `BoNavPane` publishes derived nav logos; `BoBrandingBootstrap` applies `BoBrandingOptions` |
+| Defaults | Null/whitespace → `BoBrandingDefaults` (`app-logo.svg` / `customer-logo.svg` → `nav-logo.svg` / `favicon.svg`; Customer Name `BreezeOn`) |
 | Platform display name | Default org chrome label **`Breeze On`** — [application-branding.md](application-branding.md) |
-| Page freeze | Consumes **Navigation** minimized logo only — [overlays.md](overlays.md) |
-| Do not | Configure a freeze-specific logo URL; use Application Logo for page freeze; merge Application Logo and Navigation Logo into one setting |
+| Page freeze | Consumes **Customer** minimized nav logo only — [overlays.md](overlays.md) |
+| Do not | Configure a freeze-specific logo URL; use Application Logo for page freeze; collect favicon or nav-logo as independent Step 1 inputs; merge Application Logo and Customer Logo into one setting |
 
-**Decoupling (locked):** even when both logos temporarily use the same image file, configuration, references, bindings, and replacement paths **must** remain separate.
+**Decoupling (locked):** Application Logo and Customer Logo remain separate packages even when visuals are similar. Nav and favicon placement files are **generated** from `customer-logo.svg`, not independently user-configured Step 1 assets.
 
 ### Collapsed nav, tooltips, and accessibility (current)
 

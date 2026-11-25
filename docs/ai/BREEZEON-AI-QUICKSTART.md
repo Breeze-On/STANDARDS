@@ -126,7 +126,7 @@ SHARED-UI does not own EAC business domains or business databases; it owns platf
 | Home | Locked `BoNavHub` + `BoNavCardStyleHyperlink` (not Section→Row→Field) |
 | Localization | App-owned resources (EAC: `EacResources` + `IEacLocalizer`); subscribe to `IBoLocaleService.Changed` |
 | Navigation | Left `BoNavPane` / `BoNavLink` + `BoIcon`; URLs match page name (lowercase, hyphenated) |
-| Branding | Library logos `_content/BreezeOn.UI/brand/*`; per-app Home hero under `wwwroot/brand/` |
+| Branding | Library logos `_content/BreezeOn.UI/brand/*` (`app-logo.svg`, `customer-logo.svg` → generated `nav-logo.svg` / `favicon.svg`); per-app Home hero under `wwwroot/brand/` |
 
 End-user auth / platform Identity: **[architecture/identity-and-authentication/](../../architecture/identity-and-authentication/README.md)** (ADR-009–011). EAC consumes SYSTEM-SHARED-UI auth; business schema remains `sql/current_model/` (`System`); platform `Identity.*` scripts come from SHARED-UI `sql/identity/`.
 

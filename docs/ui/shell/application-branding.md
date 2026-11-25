@@ -3,92 +3,103 @@
 
 Owner: UI
 
-First-class branding concepts for every BreezeOn product host. Related: [shell.md](shell.md) · [navigation.md](navigation.md) · [application-theme-palette.md](../foundations/application-theme-palette.md) · [application-development-process.md](../../ai/application-development-process.md)
+First-class branding concepts for every BreezeOn product host. Related: [shell.md](shell.md) · [navigation.md](navigation.md) · [application-theme-palette.md](../foundations/application-theme-palette.md) · [application-development-process.md](../../ai/application-development-process.md) · [application-definition.schema.json](../../ai/application-definition.schema.json)
 
 These defaults apply to **all** future BreezeOn applications unless a plan explicitly overrides them.
 
 ---
 
-## Branding model (locked names)
+## Branding packages (locked)
 
-### Application Branding
+Step 1 branding is two packages. Application Display Name is **not** a member of either package.
 
-| Concept | Standard asset | Meaning | Typical surface |
+### Application Branding package
+
+| Member | Standard asset | Meaning | Typical surface |
 | --- | --- | --- | --- |
-| **Application Display Name** | — | Human-readable application name | Browser titles, header titles, error chrome, product `BrandText` |
 | **Application Logo** | **`app-logo.svg`** | Logo that represents **the application** | Home right-panel brand (`BoNavHub` `ApplicationLogoSrc`) |
 
-### Customer / Tenant Branding
+### Customer Branding package
 
-| Concept | Standard asset | Meaning | Typical surface |
+| Member | Standard / input | Meaning | Typical surface |
 | --- | --- | --- | --- |
-| **Navigation Logo** | **`nav-logo.svg`** | Logo that represents the **customer**, **tenant**, or **environment** | Left nav (`BoNavPane` Navigation Logo bindings) |
-| **Browser Favicon** | **`favicon.svg`** | Tab icon; aligns with Navigation Logo branding by default | `<link rel="icon">` via `IBoBrandingService.BrowserFaviconSrc` |
+| **Customer Name** | `customerName` (optional; default **`BreezeOn`**) | Human-readable customer / tenant name | Expanded left nav, immediately to the right of the customer logo |
+| **Customer Logo** | Source **`customer-logo.svg`** | Logo that represents the **customer** / **tenant** | Left nav + favicon (via generated assets) |
+| **Primary / Secondary / Tertiary Color** | Optional `#RRGGBB` triad (all-or-nothing) | Customer brand colors for palette derivation | Theme pipeline — [application-theme-palette.md](../foundations/application-theme-palette.md) |
 
-### Branding asset naming (locked)
-
-| Rule | Standard |
-| --- | --- |
-| Filenames | Always `app-logo.svg`, `nav-logo.svg`, `favicon.svg` |
-| User / designer uploads | **Never** retained as permanent names — rename on import |
-| Host location | Product `wwwroot/brand/` and/or Shared UI `_content/BreezeOn.UI/brand/` |
-| Future apps | Inherit these three names automatically via the application-development process |
-| Decoupling | Application Logo, Navigation Logo, and Browser Favicon remain **separate** concepts even when they temporarily use the same visual |
-
-### Theme Configuration
+### Outside branding packages (application-definition)
 
 | Concept | Meaning | Typical surface |
 | --- | --- | --- |
-| **Theme Palette** | Application visual identity (Light + Dark) | [application-theme-palette.md](../foundations/application-theme-palette.md) · `BoThemePaletteConfiguration` |
+| **Application Display Name** | Human-readable product name (`applicationDisplayName`) | Browser titles, Home `AppTitle`, error chrome |
 
-Use these names consistently across Shared UI, applications, documentation, configuration models, and implementation.
+---
 
-Future applications **must not** require Shared UI source changes to customize these concepts. Configuration is owned by the product host (`BoBrandingOptions` + assets + Theme Palette).
+## Customer Logo asset model
+
+```text
+Customer Branding
+└─ customer-logo.svg          (canonical source; user or platform default)
+    ├─ nav-logo.svg           (generated — navigation expanded/minimized bindings)
+    └─ favicon.svg            (generated — browser tab icon)
+
+Application Branding
+└─ app-logo.svg
+```
+
+| Rule | Standard |
+| --- | --- |
+| Source filename | Always **`customer-logo.svg`** for Customer Branding uploads / platform default |
+| Generated filenames | Always **`nav-logo.svg`** and **`favicon.svg`** — implementation outputs, never Step 1 user inputs |
+| Application Logo | Always **`app-logo.svg`** — independent of Customer Logo |
+| User / designer uploads | **Never** retained as permanent names — rename on import to the canonical source name |
+| Host location | Product `wwwroot/brand/` and/or Shared UI `_content/BreezeOn.UI/brand/` |
+| Runtime bindings | `NavigationLogoExpandedSrc` / `NavigationLogoMinimizedSrc` / `BrowserFaviconSrc` may differ as URLs but **must** resolve from the `customer-logo.svg` derivation pipeline |
+| SVG requirements | Source SVG must include an explicit `viewBox`; design for square-safe cropping so minimized nav and favicon remain legible; prefer a single mark that scales cleanly at expanded (~wordmark width) and minimized/favicon (~compact icon) sizes |
+
+### Expanded vs minimized navigation
+
+| State | Customer Logo | Customer Name |
+| --- | --- | --- |
+| **Expanded** | Show generated nav logo (`nav-logo.svg` / expanded binding) | Show to the **immediate right** of the logo (`BrandText` ← `customerName`, default `BreezeOn`) |
+| **Minimized** | Show generated nav logo (minimized binding) | **Do not display** — visually hide (1px clip / equivalent); keep available to assistive tech; **do not** truncate or duplicate the name into the logo mark |
+
+Page freeze consumes the **minimized** nav logo only — never an expanded wordmark ([overlays.md](overlays.md)).
 
 ---
 
 ## Application Display Name
 
 - Required application-definition input ([application-definition.schema.json](../../ai/application-definition.schema.json); explained in [application-development-process.md](../../ai/application-development-process.md)).
-- Used throughout application branding and in **browser titles**.
+- **Not** part of Application Branding or Customer Branding packages.
+- Used in **browser titles**, Home `AppTitle`, and other product chrome that identifies the application.
 - Example: `Corporate Finance Investments`.
 - Localized chrome may still use resource keys; the **canonical display name** is the product’s human title.
-- Distinct from the **platform display name** below.
+- Distinct from **Customer Name** (`customerName`, default `BreezeOn`) and from the **platform display name** below.
 
 ### Platform display name (org chrome)
 
 | Concern | Standard |
 | --- | --- |
-| Default expanded-nav / org label | **`Breeze On`** (space between words) |
-| Not | `BreezeOn`, `BreezeOn UI`, or other concatenations for default platform chrome |
-| Gallery / Shared UI showcase | Use **`Breeze On`** as the default `BrandText` / Application Display Name when representing the platform |
-| Product hosts | Prefer **Application Display Name** for product `BrandText` / chrome that identify the app |
+| Default org / Gallery label | **`Breeze On`** (space between words) |
+| Not | `BreezeOn UI` or other concatenations for default platform chrome |
+| vs Customer Name default | Customer Name schema default is **`BreezeOn`** (no space); platform display name remains **`Breeze On`** |
+| Gallery / Shared UI showcase | Use **`Breeze On`** when representing the platform; product hosts bind expanded-nav `BrandText` to **Customer Name** |
 
 ---
 
-## Application Logo vs Navigation Logo (hard separation)
+## Application Logo vs Customer Logo (hard separation)
 
-| | Application Logo | Navigation Logo |
+| | Application Logo | Customer Logo |
 | --- | --- | --- |
-| Bucket | Application Branding | Customer / Tenant Branding |
-| Represents | The **application** (EAC, INV, future products) | The **customer / tenant / environment** |
-| Primary placement | Home hub right panel | Left navigation (expanded wordmark + minimized icon) |
-| Configuration | Independent (`BoBrandingOptions.ApplicationLogoSrc`) | Independent (`NavigationLogoExpandedSrc` / `NavigationLogoMinimizedSrc`) |
-| References / bindings | Independent | Independent |
-| Replacement path | Replace without changing Navigation Logo | Replace without changing Application Logo |
+| Package | Application Branding | Customer Branding |
+| Represents | The **application** (EAC, INV, future products) | The **customer / tenant** |
+| Canonical file | `app-logo.svg` | `customer-logo.svg` (generates `nav-logo.svg` + `favicon.svg`) |
+| Primary placement | Home hub right panel | Left navigation + favicon |
+| Configuration | `BoBrandingOptions.ApplicationLogoSrc` | Customer source → derived nav/favicon bindings |
+| Replacement path | Replace without changing Customer Logo | Replace source; regenerate nav + favicon |
 
-Even when both temporarily point at the **same image file**, they **must** remain:
-
-- Separate configuration entries
-- Separate code references / parameters
-- Separate asset bindings
-- Separate future replacement paths
-
-**Do not** treat Home logo and nav logos as one shared “brand logo” setting.
-
-### Navigation Logo structure
-
-Navigation Logo retains the **expanded + minimized** pair (wordmark + compact icon) for left nav and page-freeze consumption of the minimized URL ([navigation.md](navigation.md) · [overlays.md](overlays.md)). Both sizes are Navigation Logo assets — not Application Logo.
+**Do not** treat Home logo and customer/nav logos as one shared “brand logo” setting.
 
 ---
 
@@ -96,10 +107,10 @@ Navigation Logo retains the **expanded + minimized** pair (wordmark + compact ic
 
 | Rule | Standard |
 | --- | --- |
-| Asset | **`favicon.svg`** (Customer / Tenant Branding) |
-| Alignment | By default aligns with Navigation Logo branding; remains a **separate** configured asset |
+| Asset | **`favicon.svg`** — **generated** from `customer-logo.svg` |
+| Not a Step 1 input | Do not collect favicon separately from Customer Logo |
 | Host script | Product `App.razor` includes `_content/BreezeOn.UI/js/bo-branding.js` |
-| Binding | `BoBrandingOptions.BrowserFaviconSrc` → `IBoBrandingService.BrowserFaviconSrc` |
+| Binding | Derived `BrowserFaviconSrc` → `IBoBrandingService.BrowserFaviconSrc` |
 
 ---
 
@@ -157,14 +168,20 @@ Hosts should bind Home card descriptions and page subtitles from the **same** re
 
 ---
 
+## Theme inputs (Customer Branding)
+
+Only these user-configurable theme inputs may be persisted in application-definition: `primaryColor`, `secondaryColor`, `tertiaryColor`. See [application-theme-palette.md](../foundations/application-theme-palette.md).
+
+---
+
 ## Host wiring (current reality)
 
 | Concern | Implementation |
 | --- | --- |
 | Options | `Configure<BoBrandingOptions>(…)` after `AddBreezeOnUI` |
 | Bootstrap | `BoProviders` → `BoBrandingBootstrap` applies options and syncs favicon |
+| Customer Name | `customerName` → expanded-nav `BrandText` (default `BreezeOn`); hidden when minimized |
 | Application Logo | `app-logo.svg` via `BoNavHub ApplicationLogoSrc` |
-| Navigation Logo | `nav-logo.svg` via `BoNavPane` Navigation Logo parameters |
-| Browser Favicon | `favicon.svg` via `BrowserFaviconSrc` |
+| Customer Logo | `customer-logo.svg` → generated `nav-logo.svg` / `favicon.svg` via `BoNavPane` + favicon bindings |
 | Browser title | `<BoDocumentTitle PageTitle="…" />` on each page |
-| Theme Palette | `Configure<BoThemePaletteConfiguration>(…)` — [application-theme-palette.md](../foundations/application-theme-palette.md) |
+| Theme | Three brand colors → derived `BoThemePaletteConfiguration` — [application-theme-palette.md](../foundations/application-theme-palette.md) |

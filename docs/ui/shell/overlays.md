@@ -109,11 +109,11 @@ Nesting is **reference-counted**: nested Import→Save keeps the overlay until `
 
 | Concern | Standard |
 | --- | --- |
-| Ownership | App sets logos once on `BoNavPane`; service is SSOT for other chrome |
-| Freeze logo | Always `IBoBrandingService.LogoMinimizedSrc` (nav minimized icon) |
-| Expanded logo | Nav wordmark only — never used by page freeze |
-| Fallback | If nav logos unset → `BoBrandingDefaults.LogoMinimizedSrc` |
-| Themes | Logo asset is app-supplied; freeze chrome (scrim/glow) follows Light/Dark tokens |
+| Ownership | App supplies Customer Logo source once; derived nav bindings on `BoNavPane`; service is SSOT for other chrome |
+| Freeze logo | Always `IBoBrandingService.LogoMinimizedSrc` (generated customer nav minimized icon) |
+| Expanded logo | Customer nav expanded binding only — never used by page freeze |
+| Fallback | If nav logos unset → `BoBrandingDefaults.LogoMinimizedSrc` (from customer-logo defaults) |
+| Themes | Customer logo asset is app-supplied or platform default; freeze chrome (scrim/glow) follows Light/Dark tokens |
 
 See also [navigation.md § Branding ownership](navigation.md#branding-ownership-current).
 

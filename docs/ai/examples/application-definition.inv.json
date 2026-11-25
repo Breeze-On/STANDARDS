@@ -9,7 +9,6 @@
   "pages": ["Home", "New Request", "Status Report", "My Tasks"],
   "applicationDisplayName": "Invoice Approval Request",
   "applicationLogo": "app-logo.svg",
-  "navigationLogo": "nav-logo.svg",
-  "browserFavicon": "favicon.svg",
-  "themePalette": "platform-default"
+  "customerName": "BreezeOn",
+  "customerLogo": "customer-logo.svg"
 }

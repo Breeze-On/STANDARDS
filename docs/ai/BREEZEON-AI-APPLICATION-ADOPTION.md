@@ -90,7 +90,7 @@ Page construction checklist: [`docs/ui/page-development.md`](../ui/page-developm
 | Imports | `Components/_Imports.razor` — `BreezeOn.UI.*` namespaces |
 | Shell | `Components/Layout/MainLayout.razor` — AppShell + nav + header resolution |
 | Pages | `Home.razor` (hub); empty destination pages for IA |
-| Brand | `wwwroot/brand/app-logo.svg`, `nav-logo.svg`, `favicon.svg` |
+| Brand | `wwwroot/brand/app-logo.svg`, `customer-logo.svg` (generates `nav-logo.svg` + `favicon.svg`) |
 | Resources | `Resources/EacResources.resx` (+ `.fr`), `IEacLocalizer` |
 | Styles | `wwwroot/app.css` — height/overflow + Calibri / tokens; strip template chrome |
 | Deploy | `.github/workflows/deploy-dev.yml` — product metadata + sibling Shared UI checkout; procedures: [hosted-deployment.md](../hosted-deployment.md) |
