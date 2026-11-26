@@ -287,6 +287,10 @@ Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory
 | `Disabled`, `ErrorText` | Standard field chrome; Disabled hides chevron/clear, no open, greyer fill, **muted text (same color as a disabled Text Field)**, and **omits Placeholder** |
 | Closed value overflow | Single-select closed value **truncates** with ellipsis; hover `title` when truncated. Selected values must not widen the control — [ux-conventions.md](../patterns/ux-conventions.md) § Control width and truncation |
 
+### Data Entity-backed lists (product Process forms)
+
+DE-backed `BoDropDownList` on product `{UniqueCode}.Process` forms loads via SHARED-UI `IBoDataEntityLookupQueries` (`SearchAsync` for typeahead, `ResolveAsync` for saved Codes). `Value` = **Code** (persisted in a `*Code` column); sort defaults to **Code** (Description only by explicit override). Contract: [using-data-entities.md](../../../architecture/data-entities/using-data-entities.md) · [ADR-023](../../../decisions/ADR-023-consumer-data-entity-lookup.md).
+
 ### Search and list
 
 - Search lives in the **expanded panel** as a **fixed first row** (always available — including `DisplayCode` and `AllowMultiple`).

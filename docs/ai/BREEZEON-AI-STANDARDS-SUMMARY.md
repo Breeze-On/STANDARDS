@@ -86,6 +86,7 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Query-driven retrieval | One primary contract per dataset; Filter → Sort → Page; `BoLatestWinsQuery`; FilterCatalog (not FilterOptions SP) | [query-driven-retrieval.md](../ui/controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md) |
 | Nested View keyword | Rules 1–3; client helper `BoNestedViewKeywordFilter` | [grids.md](../ui/controls/grids.md#nested-view-keyword-filtering-org-standard) |
 | Drop-Down retrieval | Small → `Items`; large → `ItemsProvider` Top-N + search | [forms.md](../ui/controls/forms.md) |
+| Consumer Data Entity lookup | EAC `P_GET_EACDataEntityLookupValues` + SHARED-UI `IBoDataEntityLookupQueries` (Search TOP 100 / Resolve); persist `*Code` on `{UniqueCode}.Process`; sort Code default; flat field property = column name | [using-data-entities.md](../../architecture/data-entities/using-data-entities.md) · [ADR-023](../../decisions/ADR-023-consumer-data-entity-lookup.md) · [database.md](../database.md) |
 | People Picker | `BoPeoplePicker`; Value = `UserGUID` / `;`-joined; active only; Top-N 100; no photos V1 | [forms.md](../ui/controls/forms.md#people-picker-bopeoplepicker) |
 | Example Governance | Normative + AI guidance + Gallery example required | [example-governance.md](../ui/example-governance.md) |
 | UX conventions | Placeholders, truncation, disabled/read-only, nav state, freeze summary, Compliance Review | [ux-conventions.md](../ui/patterns/ux-conventions.md) |

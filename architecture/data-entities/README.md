@@ -3,7 +3,7 @@
 
 Owner: Architecture (EAC)
 
-**Data Entities are an EAC business capability** for **reference data** — not a generic master-data platform and not a platform-wide consumption API. Multi-application consumption is **Future Validation**. Implementation lives in SYSTEM-ADMIN-EAC.
+**Data Entities are an EAC business capability** for **reference data** — not a generic master-data platform and not a general-purpose query API. Product Process apps consume rows only through the EAC lookup SP + SHARED-UI helper ([using-data-entities.md](using-data-entities.md)). Implementation lives in SYSTEM-ADMIN-EAC (SHARED-UI owns the consumer helper).
 
 ## Index
 
@@ -14,11 +14,11 @@ Owner: Architecture (EAC)
 | [AI authoring contract](ai-authoring-contract.md) | Field contract + hazards |
 | [Worked examples](worked-examples.md) | Cost Centers, Request Types→DDL, Regions |
 | [Data Entities architecture](data-entities-architecture.md) | ERD, constraints, indexing, Excel retrieval |
-| [Using Data Entities](using-data-entities.md) | **Non-normative** consumer notes until additional consumers exist |
+| [Using Data Entities](using-data-entities.md) | **Normative** consumer contract: Search / Resolve, sort default, Code persistence |
 
-Decisions: [ADR-016](../../decisions/ADR-016-data-entity-ownership.md); [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md). Product: [eac.md](../applications/eac.md). Schema: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) · thin [`docs/data-entities.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/data-entities.md).
+Decisions: [ADR-016](../../decisions/ADR-016-data-entity-ownership.md); [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md); [ADR-023](../../decisions/ADR-023-consumer-data-entity-lookup.md). Product: [eac.md](../applications/eac.md). Schema: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) · thin [`docs/data-entities.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/data-entities.md).
 
-**Only shipped consumer today:** Process Framework `DDL` by **row Code**.
+**Consumers:** Process Framework `DDL` (by **row Code**) and product `{UniqueCode}.Process` apps via `System.P_GET_EACDataEntityLookupValues` + SHARED-UI `IBoDataEntityLookupQueries` (persist `*Code`).
 
 ## Ownership
 
@@ -26,7 +26,9 @@ Decisions: [ADR-016](../../decisions/ADR-016-data-entity-ownership.md); [ADR-018
 | --- | --- |
 | Tables, SPs, CRUD, validation | SYSTEM-ADMIN-EAC |
 | EAC-domain standards / authoring | STANDARDS (`architecture/data-entities/`) |
-| Future consumers | Read-only expectations TBD — do not invent |
+| Consumer lookup SP (`P_GET_EACDataEntityLookupValues`) | SYSTEM-ADMIN-EAC |
+| Consumer helper (`IBoDataEntityLookupQueries`) | SYSTEM-SHARED-UI |
+| Product `*Code` columns + `seed/eac/` payloads | Product application repo |
 
 ## Definition of Done
 

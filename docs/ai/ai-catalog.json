@@ -1,6 +1,6 @@
 {
     "schemaVersion":  1,
-    "generatedAt":  "2026-11-26T21:02:43.2563416Z",
+    "generatedAt":  "2026-11-26T21:54:21.1569535Z",
     "generator":  "scripts/docs/Generate-AiCatalog.ps1",
     "repositories":  [
                          "STANDARDS",
@@ -123,7 +123,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/ecosystem.md",
@@ -580,7 +580,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T17:57:24-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:architecture/applications/README.md",
@@ -746,6 +746,7 @@
                                           "STANDARDS:architecture/data-entities/README.md",
                                           "STANDARDS:architecture/data-entities/using-data-entities.md",
                                           "STANDARDS:architecture/data-entities/worked-examples.md",
+                                          "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
                                           "SYSTEM-ADMIN-EAC:docs/data-entities.md"
                                       ],
                           "relatedAdrs":  [
@@ -773,6 +774,7 @@
                                           "STANDARDS:architecture/data-entities/README.md",
                                           "STANDARDS:architecture/data-entities/using-data-entities.md",
                                           "STANDARDS:architecture/data-entities/worked-examples.md",
+                                          "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
                                           "SYSTEM-ADMIN-EAC:docs/data-entities.md"
                                       ],
                           "relatedAdrs":  [
@@ -800,6 +802,7 @@
                                           "STANDARDS:architecture/data-entities/README.md",
                                           "STANDARDS:architecture/data-entities/using-data-entities.md",
                                           "STANDARDS:architecture/data-entities/worked-examples.md",
+                                          "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
                                           "SYSTEM-ADMIN-EAC:docs/data-entities.md"
                                       ],
                           "relatedAdrs":  [
@@ -827,6 +830,7 @@
                                           "STANDARDS:architecture/data-entities/README.md",
                                           "STANDARDS:architecture/data-entities/using-data-entities.md",
                                           "STANDARDS:architecture/data-entities/worked-examples.md",
+                                          "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
                                           "SYSTEM-ADMIN-EAC:docs/data-entities.md"
                                       ],
                           "relatedAdrs":  [
@@ -854,6 +858,7 @@
                                           "STANDARDS:architecture/data-entities/data-entities-standard.md",
                                           "STANDARDS:architecture/data-entities/using-data-entities.md",
                                           "STANDARDS:architecture/data-entities/worked-examples.md",
+                                          "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
                                           "SYSTEM-ADMIN-EAC:docs/data-entities.md"
                                       ],
                           "relatedAdrs":  [
@@ -867,10 +872,10 @@
                           "path":  "architecture/data-entities/using-data-entities.md",
                           "domain":  "Platform",
                           "capability":  "DataEntities",
-                          "documentType":  "AN",
+                          "documentType":  "AA",
                           "kind":  "Architecture",
-                          "owner":  "Architecture (EAC)",
-                          "scope":  "application:eac",
+                          "owner":  "Architecture (EAC + SHARED-UI)",
+                          "scope":  "platform",
                           "status":  "active",
                           "isEntryPoint":  false,
                           "entryPointPriority":  null,
@@ -881,6 +886,7 @@
                                           "STANDARDS:architecture/data-entities/data-entities-standard.md",
                                           "STANDARDS:architecture/data-entities/README.md",
                                           "STANDARDS:architecture/data-entities/worked-examples.md",
+                                          "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
                                           "SYSTEM-ADMIN-EAC:docs/data-entities.md"
                                       ],
                           "relatedAdrs":  [
@@ -908,6 +914,7 @@
                                           "STANDARDS:architecture/data-entities/data-entities-standard.md",
                                           "STANDARDS:architecture/data-entities/README.md",
                                           "STANDARDS:architecture/data-entities/using-data-entities.md",
+                                          "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
                                           "SYSTEM-ADMIN-EAC:docs/data-entities.md"
                                       ],
                           "relatedAdrs":  [
@@ -2127,6 +2134,34 @@
                           "lastUpdated":  "2026-11-26T14:54:02-05:00"
                       },
                       {
+                          "id":  "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
+                          "repository":  "STANDARDS",
+                          "path":  "decisions/ADR-023-consumer-data-entity-lookup.md",
+                          "domain":  "Platform",
+                          "capability":  "DataEntities",
+                          "documentType":  "DEC",
+                          "kind":  "Decision",
+                          "owner":  null,
+                          "scope":  "platform",
+                          "status":  "active",
+                          "isEntryPoint":  false,
+                          "entryPointPriority":  null,
+                          "related":  [
+                                          "STANDARDS:architecture/data-entities/ai-authoring-contract.md",
+                                          "STANDARDS:architecture/data-entities/authoring-guide.md",
+                                          "STANDARDS:architecture/data-entities/data-entities-architecture.md",
+                                          "STANDARDS:architecture/data-entities/data-entities-standard.md",
+                                          "STANDARDS:architecture/data-entities/README.md",
+                                          "STANDARDS:architecture/data-entities/using-data-entities.md",
+                                          "STANDARDS:architecture/data-entities/worked-examples.md",
+                                          "SYSTEM-ADMIN-EAC:docs/data-entities.md"
+                                      ],
+                          "relatedAdrs":  [
+                                              "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md"
+                                          ],
+                          "lastUpdated":  "2026-11-26T16:54:01.9047621-05:00"
+                      },
+                      {
                           "id":  "STANDARDS:decisions/README.md",
                           "repository":  "STANDARDS",
                           "path":  "decisions/README.md",
@@ -2209,7 +2244,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-26T16:02:26.9179037-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/application-model.md",
@@ -2230,7 +2265,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T20:32:16-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/data-portability.md",
@@ -2275,7 +2310,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-26T14:54:02-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/documentation.md",
@@ -2303,7 +2338,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-26T14:54:02-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/domain-modeling.md",
@@ -2694,7 +2729,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T21:58:20-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/BREEZEON-AI-APPLICATION-ADOPTION.md",
@@ -2766,7 +2801,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T14:28:51-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ai/planning-and-development-agents.md",
@@ -2813,7 +2848,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T20:32:16-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/deviations/DEV-001-process-framework-future-engine-vision.md",
@@ -3030,7 +3065,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/grids.md",
@@ -3230,7 +3265,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T21:58:20-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/page-development.md",
@@ -3260,7 +3295,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T21:58:20-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/sections.md",
@@ -3434,7 +3469,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/forms.md",
@@ -3460,7 +3495,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/grids.md",
@@ -3512,7 +3547,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/controls/query-driven-retrieval.md",
@@ -3724,7 +3759,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/foundations/motion.md",
@@ -3880,7 +3915,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/layout/panels.md",
@@ -3960,7 +3995,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T10:28:29-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/context-selection.md",
@@ -4088,7 +4123,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-26T16:02:36.3236691-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/page-archetypes.md",
@@ -4120,7 +4155,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-22T22:57:50-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/page-footer-actions.md",
@@ -4152,7 +4187,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-26T16:02:36.5656747-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/page-states.md",
@@ -4216,7 +4251,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-26T16:02:36.8351637-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/ux-conventions.md",
@@ -4248,7 +4283,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T20:20:19-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:docs/ui/patterns/validation-summary.md",
@@ -4426,7 +4461,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-24T21:58:20-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:05-05:00"
                       },
                       {
                           "id":  "STANDARDS:runbooks/customer-onboarding-authentication.md",
@@ -4845,7 +4880,8 @@
                                           "STANDARDS:architecture/data-entities/data-entities-standard.md",
                                           "STANDARDS:architecture/data-entities/README.md",
                                           "STANDARDS:architecture/data-entities/using-data-entities.md",
-                                          "STANDARDS:architecture/data-entities/worked-examples.md"
+                                          "STANDARDS:architecture/data-entities/worked-examples.md",
+                                          "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md"
                                       ],
                           "relatedAdrs":  [
 
@@ -5195,7 +5231,7 @@
                           "relatedAdrs":  [
 
                                           ],
-                          "lastUpdated":  "2026-11-26T15:36:15-05:00"
+                          "lastUpdated":  "2026-11-26T16:07:08-05:00"
                       },
                       {
                           "id":  "SYSTEM-SHARED-UI:docs/security-model.md",
@@ -5440,6 +5476,7 @@
                                                       "STANDARDS:architecture/variables/worked-examples.md",
                                                       "STANDARDS:decisions/ADR-019-process-framework-metadata.md",
                                                       "STANDARDS:decisions/ADR-020-configuration-session-cache.md",
+                                                      "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
                                                       "STANDARDS:docs/data-portability.md",
                                                       "STANDARDS:docs/database.md",
                                                       "STANDARDS:docs/environments.md",
@@ -5667,6 +5704,7 @@
                                                                        "STANDARDS:architecture/data-entities/README.md",
                                                                        "STANDARDS:architecture/data-entities/using-data-entities.md",
                                                                        "STANDARDS:architecture/data-entities/worked-examples.md",
+                                                                       "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
                                                                        "SYSTEM-ADMIN-EAC:docs/data-entities.md"
                                                                    ],
                                          "Platform/ProcessFramework":  [
@@ -5930,6 +5968,7 @@
                                                            "STANDARDS:decisions/ADR-020-configuration-session-cache.md",
                                                            "STANDARDS:decisions/ADR-021-validation-summary-experience.md",
                                                            "STANDARDS:decisions/ADR-022-consumer-application-context-bootstrap.md",
+                                                           "STANDARDS:decisions/ADR-023-consumer-data-entity-lookup.md",
                                                            "STANDARDS:decisions/README.md",
                                                            "STANDARDS:docs/adr.md",
                                                            "STANDARDS:docs/application-bootstrap-checklist.md",

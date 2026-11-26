@@ -135,6 +135,16 @@ Prefer one upsert POST plus a dedicated delete procedure when delete semantics d
 
 Do **not** treat this name as the start of a `P_GET_*ComponentValues` family across schemas. Any future lookup procedure requires its own justified need (this section / [query-driven-retrieval.md](ui/controls/query-driven-retrieval.md)).
 
+### Consumer Data Entity lookup
+
+`System.P_GET_EACDataEntityLookupValues` (SYSTEM-ADMIN-EAC `sql/current_model/`) is a **justified lookup procedure** for product apps consuming Data Entity rows. It is **not** a `*ComponentValues` family member and not a template for per-app lookup SPs. Decision: [ADR-023](../decisions/ADR-023-consumer-data-entity-lookup.md); contract: [using-data-entities.md](../architecture/data-entities/using-data-entities.md).
+
+- `@Mode` = `Search` (**TOP 100**, `@MaxItems` clamped 1..100; `@SearchText` on Code or display Description) or `Resolve` (`@ResolveCodesJson` — JSON string array, first 100 exact Codes).
+- Keyed by `@ApplicationEnabledGUID` + `@DataEntityCode` (Code, not GUID) + `@LanguageCode` + `@UserGUID`.
+- `@SortField`: `Code` default; `Description` only as an explicit caller override (INV Supplier / `suppliers` is the approved exception).
+- Returns `Code`, `Description` (language → `en-CA` → Code; never blank). Authorization fails closed to an empty set.
+- Consumed only through SHARED-UI `IBoDataEntityLookupQueries`. Product apps do **not** query `System.EACDataEntities*` or reuse `P_GET_EACDataEntitiesRows` for typeahead.
+
 ## Query-driven paged list stored procedures
 
 Standard: [query-driven-retrieval.md](ui/controls/query-driven-retrieval.md) · [ADR-008](../decisions/ADR-008-query-driven-data-retrieval.md).
@@ -251,6 +261,14 @@ Every BreezeOn **product application** that persists process instances owns a pr
 | `ProcessGUID` | `UNIQUEIDENTIFIER NOT NULL` | UNIQUE. Generate on **first save** if not already assigned; never regenerate on update. |
 | *(flat fields)* | Per field | One column per flat field the application persists (e.g. `InitiatorUserGUID`, `RequestedDate`). |
 | Audit quartet | See [Mandatory audit columns](#mandatory-audit-columns) | Always present on `Process`. |
+
+### Flat field identity and reference persistence
+
+| Rule | Contract |
+| --- | --- |
+| Identity | A flat Process field's typed property name = `FieldKey` = database column name (no mapping layer or alias). |
+| Data Entity reference | Persist the row **Code** in a **`*Code`** column (e.g. `SupplierCode`) — never Description, never `DataEntityRowGUID`. Lookup: [Consumer Data Entity lookup](#consumer-data-entity-lookup). |
+| People reference | Persist **`UserGUID`** in a **`*UserGUID`** column (e.g. `InitiatorUserGUID`) — never UPN / display name. |
 
 Baseline Process Request fields (`InitiatorUserGUID`, `RequestedDate`) and UI placement: [process-request-section.md](ui/patterns/process-request-section.md). New-app checklist rows: [application-bootstrap-checklist.md](application-bootstrap-checklist.md). Applications may add columns; they must keep `ProcessId` / `ProcessGUID` / audit columns and the Process table as the root.
 

@@ -53,6 +53,7 @@ Portable EAC configuration used to make an EAC-consuming application runnable on
 
 | Concern | Rule |
 | --- | --- |
+| Ownership split | **EAC** owns the platform baseline (platform registry/hierarchy rows) and the importer. **The app repo** owns its `seed/eac/` payloads: Applications, Business Entity delta, Application Configuration, Data Entity Values, Translations. |
 | Owner | The consuming application repo (e.g. `breezeon-corp-fin-inv/seed/eac/`). **Not** `SYSTEM-ADMIN-EAC/sql/seed/`. |
 | Importer | **EAC** (`SYSTEM-ADMIN-EAC` `scripts/dev-reset.ps1`) — consumer apps invoke it as a subprocess ([local-development-scripts.md](local-development-scripts.md) § Consumer apps and EAC reset) and never import EAC configuration themselves. |
 | Discovery | EAC discovers **sibling** repositories under the same parent folder and imports each one's `seed/eac/` when present. A sibling without `seed/eac/` is skipped. |

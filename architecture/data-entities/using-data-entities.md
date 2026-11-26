@@ -1,25 +1,50 @@
-<!-- Classification: AN; Scope: application:eac; Domain: Platform; Capability: DataEntities -->
-# Using Data Entities (non-normative)
+﻿<!-- Classification: AA; Scope: platform; Domain: Platform; Capability: DataEntities -->
+# Using Data Entities (consumer contract)
 
-Owner: Architecture (EAC)
+Owner: Architecture (EAC + SHARED-UI)
 
-**Status: non-normative guidance** until a second consumer beyond EAC Process Framework exists. Do **not** treat this document as a platform API contract.
+Normative contract for **product applications** that consume Data Entity rows. Decision: [ADR-023](../../decisions/ADR-023-consumer-data-entity-lookup.md).
 
-## Current reality
+## Consumers
 
-| Fact | Detail |
+| Consumer | Contract |
 | --- | --- |
-| Only shipped consumer | Process Framework **DDL** metadata — stores Data Entity **row Code** (never GUID) |
-| Definitions | Application-scoped; portable via App Config JSON by **Code** |
-| Rows | Application Context–scoped; portable via **Excel** on hosted environments |
-| Multi-app consumption | **Future Validation** — do not invent |
+| Process Framework `DDL` metadata (EAC) | Stores Data Entity **row Code** (never GUID) |
+| Product Process apps (e.g. INV) | EAC `System.P_GET_EACDataEntityLookupValues` via SHARED-UI `IBoDataEntityLookupQueries` |
 
-## Retrieval notes (EAC-internal)
+Definitions are Application-scoped (portable via App Config JSON by **Code**). Rows are Application Context (AE) scoped (portable via Excel / local `seed/eac/` Values JSON).
 
-Product UI uses paged Values SPs and Excel full-load paths. There is **no** org-wide consumer row-read SSOT. Prefer Codes for portable references.
+## Lookup contract
 
-If you previously saw guidance to treat `DataEntityRowGUID` as the integration key: that does **not** match the shipped PF DDL contract (Code). GUIDs are environment-local.
+| Concern | Rule |
+| --- | --- |
+| EAC owner | `System.P_GET_EACDataEntityLookupValues` — `@Mode` (`Search` / `Resolve`), `@ApplicationEnabledGUID`, `@DataEntityCode` (Code, not GUID), `@LanguageCode`, `@UserGUID` |
+| SHARED-UI owner | `IBoDataEntityLookupQueries.SearchAsync` / `ResolveAsync` |
+| **Search** | `TOP 100` typeahead; `SearchText` matches row Code or display Description |
+| **Resolve** | Exact Codes for already-saved values (max 100); independent of the Search window; unknown Codes omitted |
+| Result | `Code` + `Description` (requested language → `en-CA` → Code; never blank) |
+| Sort | Default **Code**. Description is an **explicit** `SortField` override. Resolve is always Code order |
+| Approved override | INV Supplier / `suppliers` sorts by localized Description |
+| Authorization | Fails closed to an empty set (Global System Administrator or Security Group member of the AE) |
 
-## Expectations for a future second consumer
+Do not use Search to hydrate saved values; do not use Resolve for open-ended search.
 
-When a second app needs DE data, define a read contract in the same change set as first real usage — and update this document from non-normative to AA. Until then, keep consumption inside EAC.
+## Persistence
+
+- Product apps persist DE selections as **`*Code`** columns on `{UniqueCode}.Process` — **never** Description, never `DataEntityRowGUID` (GUIDs are environment-local).
+- Flat Process field: typed property name = database column name ([database.md](../../docs/database.md) § Process table convention, [naming.md](../../docs/naming.md)).
+- Bound control value is the Code ([forms.md](../../docs/ui/controls/forms.md) § Drop-Down List).
+
+## Prohibited
+
+- Querying `System.EACDataEntities*` tables from a product app.
+- Reusing `P_GET_EACDataEntitiesRows` (Values grid) or `P_GET_EACDataEntitiesRowsForExcel` for typeahead.
+- Authoring per-app DE lookup stored procedures.
+
+## Seed ownership
+
+EAC owns the platform baseline and the importer; the app repo owns its `seed/eac/` payloads (Applications, BE delta, App Config, DE Values, Translations) — [data-portability.md](../../docs/data-portability.md) § Per-application `seed/eac`.
+
+## Related
+
+[data-entities-architecture.md](data-entities-architecture.md) § Consumer lookup · [ae-fact-providers.md](../app-context/ae-fact-providers.md) · [database.md](../../docs/database.md) § Consumer Data Entity lookup

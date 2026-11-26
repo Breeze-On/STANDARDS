@@ -14,7 +14,7 @@ BreezeOn product host for invoice approval. Consumes `BreezeOn.UI` (AuthN, AuthZ
 | Surface | Behavior |
 | --- | --- |
 | Home | `BoNavHub` with cards: New Request, Status Report, My Tasks (listed when AE resolved; entry still AttributeCode-gated); links preserve `AE` via `IBoApplicationContextNavigation` |
-| `/new-request` | Header tab **General Information** (Form outlined icon); section **Process Request** (disabled Initiator `BoPeoplePicker` display `DisplayName (Email)` + Requested Date `BoDateField`); shell footer **Save** (`BoButtonVariant.Save` Filled icon) + **Submit** placeholders via `BoPageFooterActions`; AttributeCode gate after AE |
+| `/new-request` | Header tab **General Information** (Form outlined icon); **Process Request** (disabled Initiator + Requested Date) then **Request Details** (PO Number, Supplier Data Entity DDL, disabled Supplier Code projection); shell footer **Save** / **Submit** via `BoPageFooterActions` persist `[BREEZEON-CORP-FIN-INV].[Process]`; Supplier lookup via SHARED-UI `IBoDataEntityLookupQueries`; AttributeCode gate after AE |
 | `/status-report`, `/my-tasks` | Empty `BoCard` (`MarginDensity=Content`); footer off; AttributeCode gates **after** AE establishment |
 | `/select-context` | Multi-visible-context picker (`BoContextSelection`): Home-style AppTitle + brand panel; informational header card; compact icon/label BE cards |
 | `/application-error` | Generic `BoApplicationError` — outside AE bootstrap chain; no title/message query transport |

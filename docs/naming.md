@@ -74,6 +74,17 @@ Integer `*Id` primary keys are **physical** clustered keys (storage / indexing).
 
 **Canonical user identifier:** `UserGUID` is the BreezeOn platform user id. Hierarchy: Entra `(TenantId, ExternalObjectId)` → `UserGUID` → physical `UsersId`. Full rules: [database.md](database.md).
 
+## Process persistence columns
+
+On `{UniqueCode}.Process` ([database.md](database.md) § Process table convention):
+
+| Suffix | Holds | Example |
+| --- | --- | --- |
+| `*Code` | Data Entity row **Code** (never Description / GUID) — [using-data-entities.md](../architecture/data-entities/using-data-entities.md) | `SupplierCode` |
+| `*UserGUID` | People Picker `UserGUID` | `InitiatorUserGUID` |
+
+A flat field's typed property name = `FieldKey` = column name.
+
 ## Stored procedures
 
 When used: `P_GET_` / `P_POST_` + friendly app **Code** (e.g. `EAC`) + PascalCase subject with **no spaces or underscores**. Separate delete procedures append `Delete` (e.g. `P_POST_EACBusinessEntityDelete`, not `…_Delete`). Full rules: [database.md](database.md) § Stored procedure naming.

@@ -56,7 +56,7 @@ Richer capabilities = **Future Validation** only — do not invent them here.
 
 **Normative SSOT:** [construct-selection.md](../app-configuration/construct-selection.md) (Variable · Data Entity · Process Framework · Business Entity · Security Group).
 
-Only shipped DE consumer today: Process Framework **DDL** metadata (stores Data Entity **row Code**). Multi-app consumption = Future Validation.
+DE consumers: Process Framework **DDL** metadata (stores Data Entity **row Code**) and product `{UniqueCode}.Process` apps, which read rows only through `System.P_GET_EACDataEntityLookupValues` + SHARED-UI `IBoDataEntityLookupQueries` and persist **`*Code`** ([using-data-entities.md](using-data-entities.md), [ADR-023](../../decisions/ADR-023-consumer-data-entity-lookup.md)).
 
 ### Ownership (business)
 
@@ -68,7 +68,7 @@ Only shipped DE consumer today: Process Framework **DDL** metadata (stores Data 
 ### Row lifecycle (v1)
 
 - Row **Code** = stable business key within the entity+context (slug or real number — choose per list and keep stable).
-- Renaming a Code affects Excel matching and any PF DDL values that store that Code — UI **warns**; does not hard-block.
+- Renaming a Code affects Excel matching, any PF DDL values that store that Code, and product `*Code` columns — UI **warns**; does not hard-block.
 - **Retire = hard delete** today (no soft delete / active flag). Soft delete = Future Validation.
 - Each context maintains its own item list; **Excel** is the hosted copy path for Values (rows are excluded from App Config JSON).
 
@@ -140,4 +140,4 @@ Create assigns `MAX+1`. Reorder only via **Edit Data Entities** (1..N). Dedicate
 
 ## Future scope (documented only)
 
-Soft delete / retire-active, relationships, constraints, person types, multi-app consumer API, delegated stewardship — **Future Validation**. Do not document as shipped.
+Soft delete / retire-active, relationships, constraints, person types, delegated stewardship — **Future Validation**. Do not document as shipped.

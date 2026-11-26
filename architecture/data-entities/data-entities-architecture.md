@@ -59,7 +59,7 @@ Full column inventory: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYS
 - Optimize for configurable **reference data**; designed for thousands of rows per entity. ~200k-scale viability is **unproven** (Future Validation). PF DDL pickers cap at 1000 rows.
 - Sparse metadata: no row when value is NULL ([standard](data-entities-standard.md)).
 - Prefer indexed filters on `(ApplicationEnabledGUID, DataEntityGUID)` over scanning by Application alone for rows.
-- Avoid wide SQL pivots until a dedicated consumer retrieval contract exists.
+- Avoid wide SQL pivots; the consumer lookup contract returns Code + Description only (custom columns are not part of it).
 
 ## Values workspace retrieval (locked)
 
@@ -90,6 +90,21 @@ Decision: [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability
 | SortOrder | Optional on import: provided → used; blank new row → `max + 1` in Excel order; blank existing row → destination SortOrder kept |
 | Analyze diagnostics | Durable **Debug** timings via EAC `DataEntityExcelAnalyzeTiming`, category `BreezeOn.Eac.DataEntities.Excel.Analyze` (`OperationId` + stage ms + `TotalMs`). Opt-in for performance investigations; silent at default Information. See EAC `README_AI.md` and [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md) |
 | Performance stance | Keep Analyze → Confirm → Apply in-app. Do not move analysis into SQL unless measured timings prove the architecture itself is the bottleneck at large catalogs |
+
+## Consumer lookup (product apps)
+
+Decision: [ADR-023](../../decisions/ADR-023-consumer-data-entity-lookup.md). Contract: [using-data-entities.md](using-data-entities.md).
+
+`System.P_GET_EACDataEntityLookupValues` — one result set `Code`, `Description` for one Application Context.
+
+| Parameter | Role |
+| --- | --- |
+| `@Mode` | `Search` or `Resolve` |
+| `@ApplicationEnabledGUID`, `@DataEntityCode`, `@LanguageCode`, `@UserGUID` | AE, Data Entity **Code** (not GUID), display language, caller (authorization fails closed → empty) |
+| `@SearchText`, `@MaxItems`, `@SortField` | Search only: Code/Description substring; **TOP 100** (clamped 1–100); `Code` (default) or `Description` |
+| `@ResolveCodesJson` | Resolve only: JSON string array, first 100 exact Codes |
+
+Separate from the Values grid (`P_GET_EACDataEntitiesRows`) and Excel full-load SP. SHARED-UI consumes it via `IBoDataEntityLookupQueries`.
 
 ## Sparse metadata rules
 
