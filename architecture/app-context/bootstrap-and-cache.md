@@ -56,3 +56,5 @@ Inputs: `@ApplicationUniqueCode`, `@UserGUID`.
 | RS3 | Configured AttributeCodes per AE (input to Step 1 config validation) |
 
 `(ApplicationEnabledGUID, AttributeCode)` uniqueness is enforced by EAC (`UQ_EACSecurityGroups_ApplicationEnabled_AttributeCode`). Policy evaluation assumes uniqueness.
+
+**Deploy sync:** the procedure must be on EAC `Get-EacCurrentModelScriptNames` (allowlist) and in `sql/framework-required-objects.json`. A source file under `sql/current_model/` alone does **not** deploy it. Local consolidator fail-fast + post-reset smoke are the primary gates; missing-proc at consumer bootstrap maps to Application Error reason `FrameworkDependencyMissing` (run sibling EAC `dev-reset`). Standard: [database.md](../../docs/database.md) § EAC Framework Synchronization · [ADR-022](../../decisions/ADR-022-consumer-application-context-bootstrap.md).

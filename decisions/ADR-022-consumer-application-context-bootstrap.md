@@ -23,9 +23,11 @@ Product applications need a reusable way to resolve EAC Application Enabled cont
 - Future apps integrate by registering UniqueCode, consuming shared AE helpers, and defining AttributeCode maps — without custom bootstrap SPs or parallel Code authZ.
 - EAC App Configuration visibility remains EAC-specific; consumer visibility is AttributeCode-membership-based.
 - AE remains the join key for future EAC-scoped facts ([ae-fact-providers.md](../architecture/app-context/ae-fact-providers.md)).
+- Changes to `System.P_GET_EACApplicationAccessContext` (or its deploy path) must satisfy [database.md](../docs/database.md) § **EAC Framework Synchronization**: allowlist (`Get-EacCurrentModelScriptNames`), committed consolidation, migration scripts, and required-objects manifest in the same change set. Local fail-fast is primary; consumer bootstrap must not be the first detector of a missing framework procedure.
 
 ## Related
 
 - [ADR-006](ADR-006-application-context-ownership.md)
 - [architecture/app-context/](../architecture/app-context/README.md)
 - [authorization-standard.md](../architecture/authorization/authorization-standard.md)
+- [docs/database.md](../docs/database.md) § EAC Framework Synchronization

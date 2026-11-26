@@ -175,8 +175,8 @@ After Azure App Service, GitHub Environment, secrets, MI SQL access, and workflo
 
 1. **Evaluate pending migrations** — compare SHARED-UI and product `migration_scripts/` to applied rows in `dbo.BreezeOnSchemaVersions` for the target customer database.
 2. **Apply required SHARED-UI migrations** — platform ledger / Identity / Security (and any other SHARED-UI-owned scripts) in documented ownership order: platform → Identity → Security (see [database.md](database.md)).
-3. **Apply required product migrations** — application schemas (e.g. EAC `System`) from the product repo `sql/migration_scripts/`.
-4. **Validate `BreezeOnSchemaVersions` state** — confirm expected scripts are recorded; do not publish if required migrations failed or remain pending.
+3. **Apply required product migrations** — application schemas (e.g. EAC `System`) from the product repo `sql/migration_scripts/`. EAC System object evolution must include the matching `current_model` source **and** deploy allowlist update for local reset parity ([database.md](database.md) § EAC Framework Synchronization) — migrations alone do not update the local allowlist path.
+4. **Validate `BreezeOnSchemaVersions` state** — confirm expected scripts are recorded; do not publish if required migrations failed or remain pending. Prefer also verifying required framework objects from EAC `sql/framework-required-objects.json` (`OBJECT_ID`) after System migrations.
 5. **Publish application** — GitHub Actions:
    - Open the product repository → **Actions**.
    - Select **Deploy DEV** (workflow from `deploy-dev.yml`; same pattern for UAT/PRD when those Environments exist).

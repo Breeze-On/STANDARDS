@@ -89,8 +89,8 @@ If prerequisites are missing, fail fast with a clear error that points the devel
 Applications that consume EAC (registry, Application Configuration, Security Groups, Data Entities) share the local SQL container and `BreezeOnLocal` database with **SYSTEM-ADMIN-EAC** ([local-database.md](local-database.md) § Shared local SQL instance and EAC dependency). For these apps:
 
 1. `dev-reset.ps1` locates the **sibling** `SYSTEM-ADMIN-EAC` checkout (same parent folder as the app repo) and fails fast with a clear error when it is missing.
-2. `dev-reset.ps1` invokes EAC `scripts\dev-reset.ps1` as a **subprocess**. EAC owns the destructive work: database drop/recreate, EAC and platform schema, bootstrap, and import of EAC configuration discovered in sibling `seed/eac/` folders ([data-portability.md](data-portability.md) § Per-application `seed/eac`).
-3. After EAC finishes, the consumer applies its own business schema/seed (`sql/current_model/`, `sql/seed/`) when it owns any, then launches itself.
+2. `dev-reset.ps1` invokes EAC `scripts\dev-reset.ps1` as a **subprocess**. EAC owns the destructive work: database drop/recreate, EAC and platform schema (allowlisted `current_model` consolidation with local fail-fast + required-object smoke), bootstrap, and import of EAC configuration discovered in sibling `seed/eac/` folders ([data-portability.md](data-portability.md) § Per-application `seed/eac`; [database.md](database.md) § EAC Framework Synchronization).
+3. After EAC finishes, the consumer applies its own business schema/seed (`sql/current_model/`, `sql/seed/`) when it owns any, then launches itself. After pulling EAC framework DDL changes, use **`dev-reset`** — `dev-run` does not redeploy System objects.
 4. The consumer script **must not** reimplement EAC database drop, EAC/platform schema apply, bootstrap, or EAC configuration import, and must not keep a private copy of EAC SQL configuration or current-state seeds.
 5. `dev-run.ps1` must **not** invoke EAC reset, recreate databases, or re-import configuration. It launches only the consumer application.
 

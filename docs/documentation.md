@@ -357,6 +357,7 @@ Use this as a lightweight reminder (not a review program). Map the change to the
 | Step 1 inputs / defaults / omission | **[`application-definition.schema.json`](ai/application-definition.schema.json) first**, then sync explanatory tables in [`application-development-process.md`](ai/application-development-process.md) — same change set; schema wins on conflict; markdown must not invent inputs/defaults/behaviors absent from the schema |
 | Mandatory new-app platform / onboarding requirement | Owning AA (typically [`application-model.md`](application-model.md) § Must consume and/or [`page-development.md`](ui/page-development.md) § Product Host Contract) **and** [`application-development-process.md`](ai/application-development-process.md) § **Platform bootstrap completion** in the same change set — Future Validation stays out of the gate until promoted |
 | New deployment requirement | [`hosted-deployment.md`](hosted-deployment.md) and/or owning runbook |
+| EAC / platform framework SQL object | [`database.md`](database.md) § EAC Framework Synchronization + EAC allowlist / manifest / `docs/db-model.md` (+ app-context / ADR-022 when bootstrap contract changes) |
 | New dependency / vulnerability policy | [`security-governance.md`](security-governance.md) (+ Dependabot template under `templates/` if needed) |
 | New / moved / deleted catalog-eligible doc | Banner Domain+Capability + regenerate [`ai/ai-catalog.json`](ai/ai-catalog.json) |
 | New Capability token | Seed list in this file (under Domain) + first banner use + catalog regenerate |
@@ -412,6 +413,16 @@ Any change affecting **authorization architecture**, **Security schema**, **page
 Any change affecting Data Entity **schema**, **stored procedures**, **API contracts**, **business rules**, **CRUD flows**, or **platform standards** is incomplete until [`architecture/data-entities/`](../architecture/data-entities/README.md), related ADR(s) (ADR-016 or successors), and EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) (plus thin product `README` / `README_AI` pointers) are updated in the **same change set**.
 
 UI / query-driven standards also follow **[Example Governance](ui/example-governance.md)**: normative standard + AI guidance + Gallery working example (unless an approved exception applies — record in [`docs/deviations/`](deviations/README.md)).
+
+### EAC Framework Synchronization / Application Context DoD (platform)
+
+Any change affecting EAC **framework SQL objects** (`System` tables, procedures, functions, views, security objects), **consumer Application Context bootstrap** (`System.P_GET_EACApplicationAccessContext` / SHARED-UI `IBoApplicationAccessBootstrap`), or **local/hosted deploy aggregation** for those objects is incomplete until:
+
+1. [`docs/database.md`](database.md) § **EAC Framework Synchronization** requirements are satisfied (source → **allowlist** → generated consolidation → database; allowlist is first-class).
+2. EAC deploy allowlist (`Get-EacCurrentModelScriptNames`), committed consolidated scripts, hosted `migration_scripts/` when needed, and the framework-required-object manifest are updated in the **same change set**.
+3. [`architecture/app-context/`](../architecture/app-context/README.md) and related ADR(s) (ADR-022 or successors) are updated when the consumer bootstrap contract changes.
+
+Local consolidator fail-fast is the primary technical gate; CI is a secondary safety net. `seed/eac` / `sql/seed` must not be used to ship framework DDL.
 
 ### UI / shared component DoD (BreezeOn.UI)
 

@@ -37,4 +37,4 @@ Establish a valid AE **before** evaluating permissions ([context-resolution.md](
 
 Platform never hardcodes application AttributeCodes. Configuration validity is evaluated **per AE** (required ⊆ configured on that AE) **before** membership evaluation. A single invalid AE does not break the application; Application Error only when no valid AE remains — [context-resolution.md](context-resolution.md).
 
-Related: [ADR-006](../../decisions/ADR-006-application-context-ownership.md) · [ADR-022](../../decisions/ADR-022-consumer-application-context-bootstrap.md) · [authorization-standard.md](../authorization/authorization-standard.md) · EAC `docs/db-model.md` (`P_GET_EACApplicationAccessContext`)
+Related: [ADR-006](../../decisions/ADR-006-application-context-ownership.md) · [ADR-022](../../decisions/ADR-022-consumer-application-context-bootstrap.md) · [authorization-standard.md](../authorization/authorization-standard.md) · EAC `docs/db-model.md` (`P_GET_EACApplicationAccessContext`) · [database.md](../../docs/database.md) § EAC Framework Synchronization (allowlist + local fail-fast)

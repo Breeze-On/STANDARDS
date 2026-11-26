@@ -94,7 +94,7 @@ Route `/business-entities` (legacy `/organisation-entities` redirects). Header t
 | Engine | SQL Server 2022 container (`docker-compose.yml` in EAC repo) |
 | Physical database | `BreezeOnLocal` |
 | Auth | SQL `sa` (password via `.env` / `LocalSql:SaPassword` or `MSSQL_SA_PASSWORD`) |
-| Init | `scripts/local-db-init.ps1` builds `generated/current-model.sql` from ordered `sql/current_model/` sources → one `sqlcmd` |
+| Init | `scripts/local-db-init.ps1` / `dev-reset` builds `generated/current-model.sql` from **allowlisted** `sql/current_model/` sources (`Get-EacCurrentModelScriptNames`) → one `sqlcmd`; consolidator fails on orphan/missing scripts; post-deploy required-object smoke ([database.md](../../docs/database.md) § EAC Framework Synchronization) |
 | Seed | `scripts/local-db-seed.ps1` builds `generated/seed.sql` from `sql/seed/` (+ JSON→T-SQL) → one `sqlcmd` (required local fake data for EAC itself; keep in sync with schema) |
 | Consumer app configuration | EAC `scripts/dev-reset.ps1` owns the destructive reset of the shared `BreezeOnLocal` database and imports each sibling consuming application's `seed/eac/` (portable JSON / xlsx). Consumer apps invoke EAC `scripts/dev-reset.ps1` as a subprocess; EAC does not hold other apps' configuration under `sql/seed/` — [data-portability.md](../../docs/data-portability.md) § Per-application `seed/eac` |
 

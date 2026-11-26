@@ -231,6 +231,31 @@ Standing platform rules (also summarized in [naming.md](naming.md)):
 - Relationships use `GroupGUID` and `UserGUID` only. SSOT: [architecture/authorization/](../architecture/authorization/README.md), [ADR-014](../decisions/ADR-014-platform-authorization.md), [ADR-015](../decisions/ADR-015-object-owned-administrator-groups.md).
 - **`Security.Groups.Code`** is **`NVARCHAR(700)`** (documented column exception to the org Code default of 30) so system-generated Codes such as `APP_{UniqueCode}` fit without capping business UniqueCode fields; uniqueness is on Code only.
 
+## Process table convention
+
+Every BreezeOn **product application** that persists process instances owns a primary process table in an application SQL schema named after the application **`UniqueCode`**.
+
+| Rule | Contract |
+| --- | --- |
+| **Schema name** | Application `UniqueCode` (e.g. `BREEZEON-CORP-FIN-INV`). Hyphenated names require bracketed identifiers: `[BREEZEON-CORP-FIN-INV]`. |
+| **Table name** | `Process` |
+| **Qualified name** | `{UniqueCode}.Process` (documentation form: `BREEZEON-{DOMAIN}-{APP}.Process`) |
+| **Role** | Authoritative **root** entity for process-level flat fields. Related child tables may exist; they do not replace the Process table. |
+| **Ownership** | Application repository `sql/current_model/` + `docs/db-model.md` — not EAC Process Framework metadata tables. |
+
+### Required columns
+
+| Column | Type | Rules |
+| --- | --- | --- |
+| `ProcessId` | `INT IDENTITY` | Primary key (`TableName` + `Id`). |
+| `ProcessGUID` | `UNIQUEIDENTIFIER NOT NULL` | UNIQUE. Generate on **first save** if not already assigned; never regenerate on update. |
+| *(flat fields)* | Per field | One column per flat field the application persists (e.g. `InitiatorUserGUID`, `RequestedDate`). |
+| Audit quartet | See [Mandatory audit columns](#mandatory-audit-columns) | Always present on `Process`. |
+
+Baseline Process Request fields (`InitiatorUserGUID`, `RequestedDate`) and UI placement: [process-request-section.md](ui/patterns/process-request-section.md). Applications may add columns; they must keep `ProcessId` / `ProcessGUID` / audit columns and the Process table as the root.
+
+**Distinct from EAC Process Framework:** PF tables under `System` hold process **definition** metadata only. Runtime instances live in the product `{UniqueCode}.Process` (and app-owned children).
+
 ## Application registry identity columns
 
 Conventions for registering applications in the EAC-owned catalog (column semantics are org-wide; physical table is EAC-owned):
@@ -274,20 +299,60 @@ Org rule for applications that own SQL objects (reference implementation: EAC):
 
 1. **Source stays separated.** Tables, procedures, functions, views, schemas, etc. remain individual files under `sql/current_model/` for maintainability.
 2. **Maintain a committed single-file reset script.** Every schema-owning app keeps **`sql/current_model.sql`**: the concatenation of ordered `sql/current_model/` sources. Regenerate it whenever sources or deploy order change; **never edit `sql/current_model.sql` by hand**. Commit it in the **same change set** as the source edits (for SSMS / review / one-file apply).
-3. **Deploy through one consolidated script.** Local init / `dev-reset` regenerates the consolidated artifact (refreshing `sql/current_model.sql` and a gitignored `generated/current-model.sql` copy) and executes **one** `sqlcmd` against that file.
-4. **Ordering is explicit.** Maintain a deterministic dependency-order list in the app’s local DB helpers whenever objects are added, removed, renamed, or reordered. **CREATE order** is dependency order (parents before children). **DROP order** inside each table script must remove **dependents first** within the **bootstrap/reset** graph (children before parents for objects in that reset set).
+3. **Deploy through one consolidated script.** Local init / `dev-reset` rebuilds a gitignored `generated/current-model.sql` from the **deployment allowlist** and executes **one** `sqlcmd` against that file. Committed `sql/current_model.sql` is refreshed via the app’s export script (EAC: `.\scripts\export-current-model.ps1`) — not necessarily inside every reset — and must stay in the same change set as source/allowlist edits.
+4. **Ordering is explicit (first-class allowlist).** Maintain a deterministic dependency-order list in the app’s local DB helpers (EAC: `Get-EacCurrentModelScriptNames`) whenever objects are added, removed, renamed, or reordered. **A source file under `sql/current_model/` is not deployable until it is intentionally listed.** **CREATE order** is dependency order (parents before children). **DROP order** inside each table script must remove **dependents first** within the **bootstrap/reset** graph (children before parents for objects in that reset set).
 5. **Logging lists sources.** Generation must print (and embed in the consolidated header) which source files were included and in what order.
-6. **`current_model` is not safe on populated hosted DBs.** See [Platform schema evolution (hosted)](#platform-schema-evolution-hosted).
+6. **Local fail-fast.** Consolidation must **fail** when a `*.sql` source exists but is not allowlisted, or when an allowlist entry has no source file. No silent omissions. This runs during `dev-reset`, export, and any consolidation generation — before CI, bootstrap, or consumer apps.
+7. **`current_model` is not safe on populated hosted DBs.** See [Platform schema evolution (hosted)](#platform-schema-evolution-hosted).
 
 ### Definition of Done (schema change)
 
 A database-object change is incomplete unless:
 
 1. The object is implemented under `sql/current_model/` (and `docs/db-model.md` updated).
-2. Deployment aggregation / ordering is updated if required.
-3. **`sql/current_model.sql` is regenerated** from sources (never hand-patched) and included in the same change set.
+2. **Deployment allowlist / aggregation order is updated** (object absent from the allowlist = incomplete — not “if required”).
+3. **`sql/current_model.sql` is regenerated** from the allowlisted sources (never hand-patched) and included in the same change set.
 4. Seed aggregation is updated if required (see Seed Maintenance Standard).
 5. Product and STANDARDS documentation reflect current reality.
+
+## EAC Framework Synchronization
+
+Platform standard for EAC-owned `System` (and platform Identity/Security lists applied by EAC local reset). Enforced primarily by standards + local tooling; CI is a secondary safety net ([testing.md](testing.md)).
+
+### Deployment chain
+
+Adding a file under `sql/current_model/` does **not** automatically place it into deployment:
+
+```text
+Source File (sql/current_model/)
+    → Allowlist (Get-EacCurrentModelScriptNames — first-class deployment artifact)
+    → Generated Consolidation (generated/current-model.sql)
+    → Database Deployment (local sqlcmd / reset)
+```
+
+Committed review artifacts (`sql/current_model.sql`, `sql/current-state.sql`) are regenerated from the **same allowlist** via export. Hosted populated databases evolve via `sql/migration_scripts/` (not by re-applying `current_model`).
+
+### Allowlist is first-class
+
+`Get-EacCurrentModelScriptNames` (and SHARED-UI Identity/Security script-name lists used by EAC reset) are **first-class deployment artifacts**, not implementation details.
+
+A framework SQL object is **not** considered deployable merely because a source file exists. It is deployable only after the allowlist has been **intentionally reviewed and updated**.
+
+Any addition, removal, rename, or modification of a framework SQL object must include review of:
+
+1. `sql/current_model/` (or SHARED-UI Identity/Security `current_model` when applicable)
+2. Deploy allowlist (`Get-EacCurrentModelScriptNames` / sibling lists)
+3. `generated/current-model.sql` (apply artifact)
+4. `sql/current_model.sql`
+5. `sql/current-state.sql` (when used)
+6. `sql/migration_scripts/` (hosted evolution)
+7. Framework-required-object manifest (EAC `sql/framework-required-objects.json`)
+
+**Incomplete until allowlist synchronization is verified.** Acceptable: add source + update allowlist, or add source and **explicitly document** why it is excluded. Not acceptable: add source and forget the allowlist.
+
+`seed/eac/` and product `sql/seed/` are **not** vehicles for framework DDL. They carry portable configuration / sample data and call already-deployed procedures.
+
+After EAC framework DDL lands, consumer apps must run **`dev-reset`** (not `dev-run`) so `BreezeOnLocal` is rebuilt from the allowlisted model.
 
 ## Database Seed Maintenance Standard
 
