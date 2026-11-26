@@ -26,6 +26,7 @@ Owns org-wide standards, platform architecture, ADRs, runbooks, deviations, and 
 | Doc architecture / classification / README rules | [`docs/documentation.md`](docs/documentation.md) |
 | AI doc catalog (Domain → Entry Point → Capability) | [`docs/ai/ai-catalog.json`](docs/ai/ai-catalog.json) · schema [`ai-catalog.schema.json`](docs/ai/ai-catalog.schema.json) |
 | Review finding format (ad-hoc) | [`docs/review-governance.md`](docs/review-governance.md) |
+| New Application Checklist (bootstrap gate) | [`docs/application-bootstrap-checklist.md`](docs/application-bootstrap-checklist.md) · [`docs/ai/application-development-process.md`](docs/ai/application-development-process.md) |
 | UI behavior / page construction | [`docs/ui/overview.md`](docs/ui/overview.md) · [`page-development.md`](docs/ui/page-development.md) |
 | Database / seed | [`docs/database.md`](docs/database.md) · [`local-database.md`](docs/local-database.md) |
 | Identity / auth | [`architecture/identity-and-authentication/`](architecture/identity-and-authentication/README.md) |

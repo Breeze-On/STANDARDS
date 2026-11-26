@@ -46,6 +46,15 @@ Icons inherit `currentColor` from their control (nav: white / black-selected; bu
 - Prefer `Regular`. Use `Filled` for status glyphs where the Fluent filled form is the recognized symbol (for example Import Summary severity icons) and for selected / emphasized states defined by a control SSOT.
 - Rotated glyphs use the shared modifier (`bo-icon--rotate-90`) rather than a different icon name (Panel Navigation title icon — [panels.md](../layout/panels.md)).
 
+## Initiation chrome icons (Tier 2 — STANDARD)
+
+| Surface | `Name` | `Variant` | Size | Notes |
+| --- | --- | --- | --- | --- |
+| General Information header tab | `Form` | **Regular** (outlined) | **16** | Default initiation tab — [initiation-experience.md](../patterns/initiation-experience.md) |
+| Page footer Save | `Save` | **Filled** | **20** (via `BoIconButton`) | Icon-only Save in `BoPageFooterActions` — [page-footer-actions.md](../patterns/page-footer-actions.md) |
+
+Resolver: Fluent Size16 Form may be missing — `BoIconResolver` aliases Form Size 16 → Size 20. Save Filled must be mapped at 16/20/24.
+
 ## Default new-application page icons (Tier 2 — STANDARD)
 
 Unless a plan explicitly overrides IA icons, new product catalogs use these `BoIcon` **Regular** names (see [application-branding.md](../shell/application-branding.md) · [application-development-process.md](../../ai/application-development-process.md)):

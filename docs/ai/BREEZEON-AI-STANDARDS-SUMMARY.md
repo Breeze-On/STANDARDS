@@ -76,7 +76,8 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Topic | Rule (short) | SSOT |
 | --- | --- | --- |
 | Entry | Inventory + philosophy | [ui/overview.md](../ui/overview.md) |
-| New/changed page | Checklist first | [ui/page-development.md](../ui/page-development.md) |
+| New product application | New Application Checklist first | [application-bootstrap-checklist.md](../application-bootstrap-checklist.md) · [application-development-process.md](application-development-process.md) |
+| New/changed page | Page-construction checklist | [ui/page-development.md](../ui/page-development.md) |
 | Shell | `BoAppShell` required; locked header actions | [ui/shell/shell.md](../ui/shell/shell.md) |
 | Navigation | Left nav locked; URL = page name | [ui/shell/navigation.md](../ui/shell/navigation.md) |
 | Home | `BoNavHub` + `BoNavCardStyleHyperlink` only | Shell Home section |

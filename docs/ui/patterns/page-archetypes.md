@@ -67,7 +67,9 @@ Page → Body → [Actions area] → BoSectionMain → [BoSectionSub] → BoRow 
 | --- | --- |
 | Composition | Page → Section → Row → Field; every field a direct child of a `BoRow`; every `BoRow` inside a Section — [layout.md](../layout/layout.md#page-composition-locked--hard-standard) |
 | Page segmentation | Optional header `BoTabs` (≈2–7 sections) with keep-alive `BoTabPanels`; `SectionKey` + `ValidationGroup` for fail badges — [selection-and-navigation.md](../controls/selection-and-navigation.md) |
-| Working copy | [Actions area](actions-area.md) (Save | Discard) at the top; Save runs `Validate(null)`; Dirty State guards navigation and tab/toggle abandon points |
+| Process instances | New Request / open-process Detail-Edit **must** start with tab **General Information** (Form outlined icon) and section **Process Request** — [process-request-section.md](process-request-section.md) · [initiation-experience.md](initiation-experience.md) |
+| Initiation footer | Default initiation uses shell footer Save+Submit ([page-footer-actions.md](page-footer-actions.md)), not top Actions Save\|Discard |
+| Working copy (workspaces) | [Actions area](actions-area.md) (Save | Discard) at the top; Save runs `Validate(null)`; Dirty State guards navigation and tab/toggle abandon points |
 | Small edits | A `BoDialog` (Create / Edit / Confirm) instead of a new page; footer actions, not an Actions area — [overlays.md](../shell/overlays.md) |
 | Validation | Deferred required chrome, Alert toast, fail badges; Validation Summary for multi-row editors — [forms.md](../controls/forms.md#deferred-mandatory-validation-locked) |
 | Footer | Per page (Gallery Components / Theme keep the Submit footer) |

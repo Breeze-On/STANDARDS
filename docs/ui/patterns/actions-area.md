@@ -18,12 +18,14 @@ Current reality only.
 
 ## Definition (Tier 2 — STANDARD)
 
-The **Actions area** is the **page- or workspace-level** region holding the commands that apply to the **entire active working copy**:
+The **Actions area** is the **page- or workspace-level** region holding the commands that apply to the **entire active working copy** for **workspace / catalog editors** (e.g. EAC App Configuration):
 
 - **Save** (Primary) and **Discard** (Secondary) — [button.md § Save / Discard](../controls/button.md#save--discard-platform-pattern)
 - optionally other **page-level** commands of the same scope, after Save / Discard
 
 It is rendered as a **`BoSectionSub` titled "Actions"** (localized) at the **top** of the editable workspace.
+
+**Default process initiation** (New Request) does **not** use this area — use shell footer **Save + Submit** ([page-footer-actions.md](page-footer-actions.md), [initiation-experience.md](initiation-experience.md)).
 
 ### Vertical order inside an editable workspace
 

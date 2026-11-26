@@ -3,7 +3,7 @@
 
 Owner: UI
 
-Single source of truth for **button hierarchy, ordering, destructive actions, icon-only actions, and corner radius**. Related: [forms.md](forms.md), [tokens.md](../foundations/tokens.md), [icons.md](../foundations/icons.md), [accessibility.md](../foundations/accessibility.md), [actions-area.md](../patterns/actions-area.md), [dirty-state.md](../patterns/dirty-state.md), [overlays.md](../shell/overlays.md), [normative-tiers.md](../foundations/normative-tiers.md).
+Single source of truth for **button hierarchy, ordering, destructive actions, icon-only actions, and corner radius**. Related: [forms.md](forms.md), [tokens.md](../foundations/tokens.md), [icons.md](../foundations/icons.md), [accessibility.md](../foundations/accessibility.md), [actions-area.md](../patterns/actions-area.md), [page-footer-actions.md](../patterns/page-footer-actions.md), [dirty-state.md](../patterns/dirty-state.md), [overlays.md](../shell/overlays.md), [normative-tiers.md](../foundations/normative-tiers.md).
 
 API (parameters, events, enums): [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) — [BoButton](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bobutton) · [BoIconButton](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#boiconbutton).
 
@@ -25,23 +25,25 @@ Using `BackgroundColor` / `ForegroundColor` to imitate Danger, Save, or Discard 
 
 | Variant | Emphasis | Use for | Do not use for |
 | --- | --- | --- | --- |
-| **Primary** | Highest — filled `--bo-color-primary`, white label | The **one** main action in a region (Add New, Save, dialog confirm, Submit) | More than one Primary per action group |
+| **Primary** | Highest — filled `--bo-color-primary`, white label | The **one** main action in a region (Add New, sole dominant Save, dialog confirm, Submit) | More than one Primary per action group |
 | **Secondary** | Medium — filled `--bo-color-tertiary` | Normal / alternative actions (Discard, Filters, Cancel in a footer) | The only way to perform a destructive action |
+| **Save** | Soft persist — `--bo-color-save-button-*` fill/border/foreground | Persist progress when **another** action remains Primary (Save+Submit, Save+Continue, Save+Approve) | Sole dominant Save; inferring variant from the word “Save” alone |
 | **Danger** | Highest warning — filled `--bo-color-danger`, white label | Destructive or hard-to-undo actions (Delete, Remove, Reset) | Routine actions; non-destructive "Cancel" |
 | **Stealth** | Low — transparent | Low-emphasis tertiary actions, toolbar chrome, links-as-buttons | Primary workflows; the only visible action |
 | **Icon-only** (`BoIconButton`) | Per variant (default Stealth) | Dense surfaces where a label does not fit (grid row actions, close) | Actions that are not instantly recognizable; anything without an accessible name |
 
 Rules:
 
-1. **One Primary per action group.** Everything else steps down (Secondary → Stealth).
+1. **One Primary per action group.** Everything else steps down (Secondary / Save → Stealth).
 2. **Label every action** unless it is an icon-only control with `AriaLabel` ([accessibility.md](../foundations/accessibility.md)).
 3. Labels are one line (`nowrap`); the button hugs its label. Give the slot more `Weight` rather than letting a label clip.
 4. Blocking work uses `IBoPageFreezeService` from the click handler — `BoButton` has no busy / spinner API ([overlays.md](../shell/overlays.md)).
+5. **Do not map action names to variants by text.** A button labeled “Save” does **not** automatically require `BoButtonVariant.Save`. If Save is the sole dominant action, use **Primary** (or the documented Actions-area Save pattern). Use **Save** when persistence sits beside a higher-emphasis workflow command.
 
 ### Chrome (Tier 2 — STANDARD)
 
-- **Fill by variant:** Primary `--bo-color-primary` (white label, hover `--bo-color-primary-hover`); Secondary `--bo-color-tertiary`; Danger `--bo-color-danger` (white label); Stealth transparent. Optional `BackgroundColor` / `ForegroundColor` exist for exceptional cases only — prefer a variant.
-- **No border**; soft shadow + hover lift (reduced motion: no lift — [motion.md](../foundations/motion.md)).
+- **Fill by variant:** Primary `--bo-color-primary` (white label, hover `--bo-color-primary-hover`); Secondary `--bo-color-tertiary`; Save `--bo-color-save-button-*` (1px border); Danger `--bo-color-danger` (white label); Stealth transparent. Optional `BackgroundColor` / `ForegroundColor` exist for exceptional cases only — prefer a variant.
+- **Border:** none except **Save** (token border). Soft shadow + hover lift on most variants (Save uses soft chrome without aggressive shadow; reduced motion: no lift — [motion.md](../foundations/motion.md)).
 - **Bold label**; optional leading `IconContent` (16px — [icons.md](../foundations/icons.md)).
 - **Padding:** shorter and wider than the spacing default — half the vertical and double the horizontal of `--bo-space-md` ([tokens.md § Spacing scale](../foundations/tokens.md#spacing-scale)).
 - **Label wrapping:** labels are one line (`nowrap`); the button hugs its label (`width: max-content`) and does not stretch to its `BoRow` slot.
@@ -51,6 +53,8 @@ Rules:
 | Situation | Choose |
 | --- | --- |
 | Submit / confirm the main outcome of the page, section, or dialog | **Primary** |
+| Sole dominant Save (no higher-emphasis peer in the group) | **Primary** (not automatic Save variant) |
+| Persist progress beside Submit / Continue / Approve | **Save** (e.g. initiation footer — [page-footer-actions.md](../patterns/page-footer-actions.md)) |
 | Cancel / close a dialog; Discard unsaved edits; open Filters | **Secondary** |
 | Delete a row, record, or setting (not undoable without Save/Discard) | **Danger** (+ confirmation per below) |
 | Subtle toolbar affordance beside stronger buttons | **Stealth** |
@@ -74,6 +78,7 @@ Order depends on the container, because reading flow differs:
 | **Dialog footer** | Secondary (Cancel) then **Primary** — Primary rightmost | `BoDialog` footer |
 | **Section / grid header actions** | **Primary** first, then Secondary; Filters rightmost: `Add New \| Save \| Filters` | [grids.md](grids.md) |
 | **Actions area** (page / workspace) | **Save** (Primary) then **Discard** (Secondary) | [actions-area.md](../patterns/actions-area.md) |
+| **Page footer actions** (initiation) | **Save** (`BoButtonVariant.Save`, icon-only Filled) then **Submit** (Primary) — right-aligned | [page-footer-actions.md](../patterns/page-footer-actions.md) · `BoPageFooterActions` |
 | **Row actions** | Edit, then Delete; Danger last | [grids.md](grids.md) |
 
 Keep a consistent order across all pages of a product.
@@ -87,7 +92,7 @@ Save and Discard of a working copy is a **platform action pattern**, not an EAC-
 | **Save** | Primary | Persists the active working copy; runs validation first ([forms.md](forms.md)) |
 | **Discard** | Secondary | Reverts to the baseline |
 
-Tokens `--bo-color-save-button-*` and `--bo-color-discard-button-*` ([tokens.md](../foundations/tokens.md)) are the platform tokens for soft Save / Discard chrome. Products map them onto `.bo-button` through CSS (EAC does this in its app stylesheet) — **never** raw hex. Today there is **no** SHARED-UI Save/Discard component; the EAC composition (`EacSaveDiscardActions`) is the **EAC reference**. Promotion is Future Validation (FV-001, app #2).
+Tokens `--bo-color-save-button-*` and `--bo-color-discard-button-*` ([tokens.md](../foundations/tokens.md)) are the platform tokens for soft Save / Discard chrome — **never** raw hex. **`BoButtonVariant.Save`** maps Save tokens in SHARED-UI (initiation footer and other Save+Primary pairs). Working-copy **Actions area** Save\|Discard still commonly uses Primary + Secondary (`EacSaveDiscardActions` remains the EAC dirty-state reference). Full shared Save/Discard Actions component remains Future Validation (FV-001).
 
 ## Corner radius — single authority (Tier 2)
 

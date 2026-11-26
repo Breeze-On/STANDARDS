@@ -42,6 +42,7 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | [overview.md](overview.md) (this file) | Library contract, shipped inventory, gallery, documentation governance |
 | [example-governance.md](example-governance.md) | Example Governance — normative + AI guidance + Gallery working example DoD |
 | [page-development.md](page-development.md) | Page-construction checklist for humans and AI agents (links to detailed standards) |
+| [application-bootstrap-checklist.md](../application-bootstrap-checklist.md) | **New Application Checklist** — authoritative bootstrap gate for new product apps |
 | [ux-pr-review-checklist.md](ux-pr-review-checklist.md) | Short UX PR review checklist (Compliance Review, freeze, placeholders, truncation) |
 | [gallery-index.md](gallery-index.md) | Pattern → Gallery path index; patterns without a demo (DEV-002) |
 | **Foundations** | |
@@ -66,7 +67,7 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | [layout/layout.md](layout/layout.md) | Row (`BoRow`) Weight + hidden/preserve layout, page composition, planning JSON schema |
 | [layout/panels.md](layout/panels.md) | Workspace panels (`BoPanelHost` / `BoPanel` / `BoPanelNavigation` / `BoKeepAlivePanels`) |
 | **Controls** | |
-| [controls/forms.md](controls/forms.md) | Text Field, Drop-Down List, People Picker, Date Field, and form controls |
+| [controls/forms.md](controls/forms.md) | Text Field, Text Area, Drop-Down List, People Picker, Date Field, and form controls |
 | [controls/toggle.md](controls/toggle.md) | Segmented Toggle (`BoToggle`) — presentation-only; host-owned selection |
 | [controls/selection-and-navigation.md](controls/selection-and-navigation.md) | Tabs vs Toggle vs Panel Navigation vs Drop-Down decision matrix; Selection Authority Model (intent-based); keyboard / ARIA |
 | [controls/button.md](controls/button.md) | Buttons — hierarchy (Primary / Secondary / Danger / Stealth / Icon-only), ordering, destructive guidance, Save / Discard, radius authority |
@@ -78,6 +79,9 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | [patterns/import-summary.md](patterns/import-summary.md) | Import Summary review dialog (`BoImportSummaryDialog`) — Changes Summary + Errors/Warnings; explicit confirm |
 | [patterns/validation-summary.md](patterns/validation-summary.md) | Validation Summary (`BoValidationSummary`) — live-editor collapsible errors above grids/Shuffle; Adoption Matrix; [ADR-021](../../decisions/ADR-021-validation-summary-experience.md) |
 | [patterns/ux-conventions.md](patterns/ux-conventions.md) | Cross-control UX conventions — placeholders, truncation, disabled/read-only, navigation state, Page Freeze summary, UX Compliance Review |
+| [patterns/process-request-section.md](patterns/process-request-section.md) | Mandatory **Process Request** section (General Information tab; Initiator + Requested Date); application-owned implementation |
+| [patterns/initiation-experience.md](patterns/initiation-experience.md) | Default New Request initiation chrome (Form icon, footer Save+Submit, Process Request) |
+| [patterns/page-footer-actions.md](patterns/page-footer-actions.md) | Shell footer **`BoPageFooterActions`** (Save Filled icon + Submit Primary) |
 | [controls/grids.md](controls/grids.md) | Grid Family Standards + `BoGrid` — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode`; Add New top + focus |
 | [controls/shuffle-card-grid.md](controls/shuffle-card-grid.md) | Shuffle Card Grid (`BoShuffleCardGrid`) — Grid-family card + DnD; premium reorder motion ([motion.md](foundations/motion.md)); `InsertNewAtTopAsync`; inherits Family Standards |
 | [controls/query-driven-retrieval.md](controls/query-driven-retrieval.md) | Query-driven retrieval — one primary contract per dataset; Filter → Sort → Page; debounce, cancellation, Top-N, exceptions ([ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md)) |
@@ -135,9 +139,10 @@ Inventory with UX pointers only. **Parameters, events, and types** for every com
 | `BoRow` | **Row** — proportional `Weight` field slots inside a section (default equal) | [layout.md](layout/layout.md) |
 | `BoStack` | Vertical or horizontal stack layout | [sections.md](layout/sections.md) |
 | `BoPageHeader` | Page title and description | — |
-| `BoFieldReadOnly` | Flat read-only display field (pre-formatted string `Value`; same label chrome as Text Field; `Alignment`) | [forms.md](controls/forms.md) |
+| `BoFieldReadOnly` | Flat read-only display field (pre-formatted string `Value`; same label chrome as Text Field; `Alignment`; optional `LinkifyUrls`) | [forms.md](controls/forms.md) |
 | `BoEmptyField` | Empty `BoRow` alignment slot (no label/value) | [layout.md](layout/layout.md), [forms.md](controls/forms.md) |
 | `BoTextField` | Text input (default Placeholder; `ReadOnly`; deferred mandatory validation; `ErrorText` → invalid) | [forms.md](controls/forms.md) |
+| `BoTextArea` | Multiline plain-text area (MaxLength default 4000; character count default on; fixed 6-row initial height; vertical resize; read-only linkify) | [forms.md](controls/forms.md#text-area-botextarea) |
 | `BoDropDownList` | Searchable Code/Description Drop-Down (`Items` or async `ItemsProvider` Top-N; `DisplayCode`, `AllowMultiple` chips, panel search) | [forms.md](controls/forms.md) |
 | `BoPeoplePicker` | Platform user selector (composes Drop-Down List; Value = `UserGUID` / `;`-joined; active users only; Top-N 100) | [forms.md](controls/forms.md) |
 | `BoLatestWinsQuery` | Host latest-wins / cancel / optional signature skip for queries and FilterCatalog loads | [query-driven-retrieval.md](controls/query-driven-retrieval.md) |
@@ -169,7 +174,7 @@ Inventory with UX pointers only. **Parameters, events, and types** for every com
 | Gallery page | Route | Contents | Standards |
 | --- | --- | --- | --- |
 | **Home** | `/` | `BoNavHub` hub; footer off | [shell.md](shell/shell.md) |
-| **Components** | `/components` | Header tabs: Text Field, Drop-Down List, People Picker, Checkbox, Date Field, Number Field, **Other**. Main → Parameters / Preview / Documentation; Parameters rows have 6 `BoRow` slots (pad with `BoEmptyField`); Preview = editable \| read-only \| Backend Value; Submit = `Validate(null)` + Alert toast + fail badges | [forms.md](controls/forms.md), [layout.md](layout/layout.md) |
+| **Components** | `/components` | Header tabs: Text Field, Text Area, Drop-Down List, People Picker, Checkbox, Date Field, Number Field, **Other**. Main → Parameters / Preview / Documentation; Parameters rows have 6 `BoRow` slots (pad with `BoEmptyField`); Preview = editable \| read-only \| Backend Value; Submit = `Validate(null)` + Alert toast + fail badges | [forms.md](controls/forms.md), [layout.md](layout/layout.md) |
 | **Components → Other** | `/components` | Workspace `BoPanelHost` + `BoPanelNavigation` + `BoKeepAlivePanels` (demo vehicle for [panels.md](layout/panels.md), not the design target). Items: **Grid** (incl. Server `QueryMode`, Filters, Nested keyword, Grid Type = Shuffle Card), **Page Freeze**, **Dialog**, **Toggle**, **Import Summary**, **Validation Summary**, **Button** (variants, `BoIconButton`, Tabs keyboard + `TabRequested`) | [grids.md](controls/grids.md), [overlays.md](shell/overlays.md), [toggle.md](controls/toggle.md), [button.md](controls/button.md) |
 | **Theme** | `/theme` | Light + Dark Main sections per palette color | [tokens.md](foundations/tokens.md) |
 | **Error Message Page** | `/error-message-page` | Access Denied tab (shared `BoAccessDenied`); footer off | [error-messages.md](shell/error-messages.md) |

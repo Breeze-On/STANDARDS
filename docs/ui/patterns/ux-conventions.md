@@ -45,6 +45,10 @@ Single authority: [button.md § Corner radius](../controls/button.md#corner-radi
 | Tabs vs Toggle vs Panel Navigation vs Drop-Down; selection authority; keyboard | [selection-and-navigation.md](../controls/selection-and-navigation.md) |
 | Empty / loading / error / toast semantics | [page-states.md](page-states.md) |
 | Page / workspace Actions area | [actions-area.md](actions-area.md) |
+| Process Request section (mandatory baseline) | [process-request-section.md](process-request-section.md) |
+| Default initiation experience | [initiation-experience.md](initiation-experience.md) |
+| Page footer Save + Submit | [page-footer-actions.md](page-footer-actions.md) |
+| New Application Checklist | [application-bootstrap-checklist.md](../../application-bootstrap-checklist.md) |
 
 ## Column header alignment (locked)
 
@@ -64,7 +68,7 @@ Single authority: [button.md § Corner radius](../controls/button.md#corner-radi
 | --- | --- |
 | Layout stability | Host declares `BoRow` `Weight` or Shuffle/Grid track widths. **Selected values must not change control width** or skew columns |
 | Truncation | Long closed values **truncate** with ellipsis; hover `title` (or equivalent) exposes the full value when truncated |
-| Surfaces | `BoDropDownList` closed single value; `BoFieldReadOnly` / dense display text; `BoGrid` display cells (existing). Edit cells may scroll/wrap only when a control standard explicitly allows it |
+| Surfaces | `BoDropDownList` closed single value; `BoFieldReadOnly` / dense display text; `BoGrid` display cells (existing). Edit cells may scroll/wrap only when a control standard explicitly allows it. **`BoTextArea`** (and multiline read-only companions) soft-wrap with `pre-wrap` — ellipsis truncation does **not** apply ([forms.md § Text Area](../controls/forms.md#text-area-botextarea)) |
 | Shuffle tracks | **MUST** use `minmax(0, …fr)` tracks (never `minmax(8rem, 1fr)` / bare `1fr`) so content cannot force horizontal growth past the track. Shared UI sets `min-width: 0` on cols and fields; header and rows must resolve identical tracks (no content-derived `min-width`) |
 | Anti-pattern | Sizing controls from selected text length; custom product CSS that disables Shared UI truncation |
 
@@ -76,7 +80,7 @@ Single authority: [button.md § Corner radius](../controls/button.md#corner-radi
 | Overrides | **Forbidden** to echo the field label, column header, or section title |
 | Semantic exceptions | Allowed only when the placeholder carries meaning that is **not** an echo of the field label/column title or a restatement of “empty”, and the justification is documented in the product docs. Optional single-select fields (e.g. an optional Role on a Step) use the platform default placeholder plus the platform clear affordance — do not invent “None (…)” strings |
 | Grid Family filter row | Documented exception: use **`Grid_Filter_Placeholder`** (`Search...`) — not the column title and not `Field_Placeholder_Default` ([grids.md § Filtering](../controls/grids.md#filtering-lightweight--locked)) |
-| Disabled | Placeholder is **always omitted** when `Disabled` (all editable `Bo*` inputs, including Drop-Down List and People Picker) |
+| Disabled | Placeholder is **always omitted** when `Disabled` (all editable `Bo*` inputs, including Text Field, Text Area, Drop-Down List and People Picker) |
 | Grid / Shuffle cells | Same rules — do not pass column titles as `Placeholder` |
 
 ## Disabled vs read-only vs N/A (locked)

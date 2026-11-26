@@ -73,7 +73,7 @@ Do **not** pad a single full-width field with `BoEmptyField` siblings — that s
 | Row + container inside padding | **`--bo-space-row-inset`** (default **4px**) on all four sides — see [tokens.md](../foundations/tokens.md) |
 | Field container outside spacing | **`--bo-space-row-gap`** (default **16px**) `column-gap` between adjacent containers |
 | Field width | Control fills the field container width (`max-width` overridden inside a row; input stretches 100%) |
-| Vertical align | Default: start-align field containers. When any child is a **multi-select or tall** Drop-Down List (`AllowMultiple` / multi read-only), the Row keeps **`align-items: start`** so chips/lines top-align |
+| Vertical align | Default: start-align field containers. When any child is a **multi-select or tall** Drop-Down List (`AllowMultiple` / multi read-only) or a **Text Area**, the Row keeps **`align-items: start`** so chips/lines/tall controls top-align |
 
 ### Spacing tokens (change once, applies to Row + field container)
 
@@ -160,7 +160,7 @@ Older SHARED-UI treated every `IsHidden` as a reserved slot. That legacy behavio
 
 | In scope (v1) | Out of scope (describe in prose per [page-archetypes.md](../patterns/page-archetypes.md)) |
 | --- | --- |
-| `BoSectionMain` / `BoSectionSub`, `BoRow`, and the field controls in the `control` enum (`TextField`, `ReadOnlyField`, `EmptyField`, `DateField`, `NumberField`, `DropDownList`, `PeoplePicker`, `Checkbox`) | `BoGrid`, `BoShuffleCardGrid`, `BoToggle`, `BoTabs` / `BoTabPanels`, `BoPanelNavigation` / panels, `BoButton` / `BoIconButton`, Actions area, dialogs, Home hub |
+| `BoSectionMain` / `BoSectionSub`, `BoRow`, and the field controls in the `control` enum (`TextField`, `TextArea`, `ReadOnlyField`, `EmptyField`, `DateField`, `NumberField`, `DropDownList`, `PeoplePicker`, `Checkbox`) | `BoGrid`, `BoShuffleCardGrid`, `BoToggle`, `BoTabs` / `BoTabPanels`, `BoPanelNavigation` / panels, `BoButton` / `BoIconButton`, Actions area, dialogs, Home hub |
 | Per-field `weight`, `hidden`, `preserveLayoutWhenHidden`, `required`, type-specific flags | Page archetype, shell / footer settings, validation groups, data retrieval, Drop-Down item catalogs (host-supplied) |
 
 Planning agents **must not** invent additional `control` values. For List and Workspace pages, state the archetype and grid / panel intent in prose, and emit JSON only for the form sections (for example the Filters section of a List page).
@@ -202,7 +202,7 @@ Planning agents **must not** invent additional `control` values. For List and Wo
 
 | Field | Type | Required | Meaning |
 | --- | --- | --- | --- |
-| `control` | string | Yes | `"TextField"` → `BoTextField`; `"ReadOnlyField"` → `BoFieldReadOnly`; `"EmptyField"` → `BoEmptyField`; `"DateField"` → `BoDateField`; `"NumberField"` → `BoNumberField`; `"DropDownList"` → `BoDropDownList`; `"PeoplePicker"` → `BoPeoplePicker`; `"Checkbox"` → `BoCheckbox` |
+| `control` | string | Yes | `"TextField"` → `BoTextField`; `"TextArea"` → `BoTextArea`; `"ReadOnlyField"` → `BoFieldReadOnly`; `"EmptyField"` → `BoEmptyField`; `"DateField"` → `BoDateField`; `"NumberField"` → `BoNumberField`; `"DropDownList"` → `BoDropDownList`; `"PeoplePicker"` → `BoPeoplePicker`; `"Checkbox"` → `BoCheckbox` |
 | `label` | string | Yes* | Field label (*omit / unused for `EmptyField`) |
 | `fieldKey` | string | Yes* | Stable DTO / working-model property id (*omit for `EmptyField`) |
 | `required` | boolean | No | Default false → `Required` / Mandatory asterisk |
@@ -232,6 +232,7 @@ Planning agents **must not** invent additional `control` values. For List and Wo
 | `sections[].rows[]` | one `BoRow` **inside that Section** each |
 | `rows[].fields[]` | **direct** children of that `BoRow` (each child = field container + field) |
 | `control: "TextField"` | `BoTextField` with `Label`, `FieldKey`, `Required`, `MaxLength`, `ShowCharacterCount`, … + `@bind-Value` to the typed property for `fieldKey` |
+| `control: "TextArea"` | `BoTextArea` with `Label`, `FieldKey`, `Required`, `MaxLength` (default 4000), `ShowCharacterCount` (default true), `AllowResize`, … + `@bind-Value` (plain text; no public `Rows`) |
 | `control: "ReadOnlyField"` | `BoFieldReadOnly` with `Label`, `FieldKey`, pre-formatted `Value` (host formats; no Required/validation) |
 | `control: "EmptyField"` | `BoEmptyField` (alignment slot only) |
 | `control: "DateField"` | `BoDateField` with `Label`, `FieldKey`, `Required`, optional `Mode` (`Date` / `DateTime`) + `@bind-Value` (**`DateTime?` only** — never `DateOnly`; Date mode → midnight) |

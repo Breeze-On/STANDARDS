@@ -7,6 +7,8 @@ Single-page **implementation checklist** for developers and AI agents creating o
 
 This document does **not** replace detailed standards. It is the authoritative **page-construction checklist** that points to the responsibility docs under `docs/ui/`. Current reality only.
 
+**New application bootstrap** (mandatory app-level gate, distinct from this page checklist): [application-bootstrap-checklist.md](../application-bootstrap-checklist.md).
+
 **Entry / inventory:** [overview.md](overview.md). **Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BreezeOn.UI`). **Decision:** [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md).
 
 **Before you build:** pick the page shape in [page-archetypes.md](patterns/page-archetypes.md) (Home / List / Detail-Edit / Workspace / Error / Access Denied). **Parameters, events, and types** come from SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) — do **not** read Razor for API ([parameter-reference.md](controls/parameter-reference.md)). **Working examples:** [gallery-index.md](gallery-index.md). **How strongly a rule binds:** [normative-tiers.md](foundations/normative-tiers.md) (Tier 1 LOCKED / 2 STANDARD / 3 GUIDANCE).
@@ -140,6 +142,17 @@ When the page is a **Home** (or equivalent landing hub):
 
 **Per-app only on Home:** card count/routes, localized labels (descriptions tied to page subtitles), card icons (defaults: New Request `AddSquareMultiple`, Status Report `Dashboard`, My Tasks `AppsListDetail` — [application-branding.md](shell/application-branding.md)), Application Logo asset, Customer Branding brand colors (derived Theme Palette).
 
+### Process Request / initiation (mandatory on New Request / process Detail-Edit)
+
+Contract: [process-request-section.md](patterns/process-request-section.md) · [initiation-experience.md](patterns/initiation-experience.md) · [page-footer-actions.md](patterns/page-footer-actions.md). Schema: [database.md](../database.md) § Process table convention. New-app validation: [application-bootstrap-checklist.md](../application-bootstrap-checklist.md).
+
+- [ ] First tab is **General Information** with Fluent **Form** Regular (outlined) icon; first section is **Process Request**.
+- [ ] Header `TabsContent`: General Information Form outlined icon; body `BoTabPanels` bound to the same tab key.
+- [ ] Row 1: **Initiator** (`BoPeoplePicker`, single, Disabled, not Required, auto-populated; display `DisplayName (Email)`) + **Requested Date** (`BoDateField` Date mode, Disabled, auto-populated).
+- [ ] Shell footer **on** with `BoPageFooterActions` (Save `BoButtonVariant.Save` Filled icon + Submit Primary); no top Actions Save\|Discard on default initiation.
+- [ ] Implementation of the Process Request **section** is **application-owned** (no SHARED-UI Process Request package).
+- [ ] Persistence targets `{UniqueCode}.Process` (`ProcessGUID` on first save) when Save/Submit are wired beyond placeholders.
+
 ### Layout (forms and structured content)
 
 - [ ] Uses **`BoSectionMain`** for top-level groupings — [sections.md](layout/sections.md).
@@ -257,7 +270,8 @@ Cross-control SSOT: [ux-conventions.md](patterns/ux-conventions.md). UI plans re
 
 ### Controls
 
-- [ ] **`BoTextField`** for text entry — [forms.md](controls/forms.md#text-field-botextfield).
+- [ ] **`BoTextField`** for single-line text entry — [forms.md](controls/forms.md#text-field-botextfield).
+- [ ] **`BoTextArea`** for multiline plain-text entry — [forms.md](controls/forms.md#text-area-botextarea).
 - [ ] **`BoDropDownList`** for Code/Description selection (panel search; `DisplayCode` / `AllowMultiple` as needed) — [forms.md](controls/forms.md#drop-down-list-bodropdownlist).
 - [ ] **`BoPeoplePicker`** for BreezeOn **user** selection (Value = `UserGUID` / `;`-joined; active users only; Top-N 100) — [forms.md](controls/forms.md#people-picker-bopeoplepicker).
 - [ ] **`BoCheckbox`** for boolean values (`Required` / `ReadOnly` Yes-No) — [forms.md](controls/forms.md#checkbox-bocheckbox).

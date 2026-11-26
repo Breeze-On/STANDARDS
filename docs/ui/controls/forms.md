@@ -7,7 +7,7 @@ Form control standards. Related: [layout.md](../layout/layout.md) (Row + page co
 
 **Parameters:** complete parameter lists for every form control live in SHARED-UI [`public-component-api.md` § Form fields](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#form-fields); parameter mentions below explain behavior and may be incomplete ([parameter-reference.md](parameter-reference.md)). Buttons: [button.md](button.md). Choosing Drop-Down vs Tabs / Toggle / Panel Navigation: [selection-and-navigation.md](selection-and-navigation.md).
 
-**Hard standard:** every Text Field, Drop-Down List, Checkbox, Date Field, Number Field, Read-Only Field, Empty Field, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
+**Hard standard:** every Text Field, Text Area, Drop-Down List, Checkbox, Date Field, Number Field, Read-Only Field, Empty Field, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
 
 ## Reserved / empty row slots (locked)
 
@@ -74,9 +74,9 @@ When shipping or changing a form `Bo*` control:
 - [ ] Call `BoValidationContext.NotifyFieldChanged()` after value changes
 - [ ] Invalid chrome = control edge only; universal `Validation_FieldRequired`; host `ErrorText` also sets invalid chrome (`BoFieldChromeRules.IsInvalidChrome`)
 - [ ] Root classes via `BoFieldChromeRules.RootClass` (invalid / disabled / hidden modifiers) — all editable controls, including Number Field
-- [ ] `ReadOnly` (Text / Number / Date): not editable, skips required validation; `Disabled` / `IsHidden` unchanged
+- [ ] `ReadOnly` (Text / Text Area / Number / Date): not editable, skips required validation; `Disabled` / `IsHidden` unchanged
 - [ ] `<label for>` points at the control id (`FieldKey` → `bo-field-{FieldKey}`, else an auto id)
-- [ ] Unmatched attributes (`AdditionalAttributes`, captured) are forwarded by the control (root field chrome only — do **not** use them for `autocomplete`; use `AutoComplete` on Text/Number)
+- [ ] Unmatched attributes (`AdditionalAttributes`, captured) are forwarded by the control (root field chrome only — do **not** use them for `autocomplete`; use `AutoComplete` on Text/Text Area/Number)
 - [ ] Browser autocomplete defaults to **off** on editable text surfaces (see [Browser autocomplete](#browser-autocomplete-locked))
 - [ ] Default Placeholder from resources when applicable
 - [ ] Update STANDARDS `forms.md` + gallery Preview (editable \| read-only \| Backend Value) in the same change set
@@ -87,7 +87,7 @@ Admin / enterprise workspaces (`Bo*` editable fields) **default autocomplete off
 
 | Control | Behavior |
 | --- | --- |
-| `BoTextField` / `BoNumberField` | `AutoComplete` parameter **default `"off"`** → Fluent `FluentTextInput` (requires control `Id`; Bo already sets `FieldId`) |
+| `BoTextField` / `BoTextArea` / `BoNumberField` | `AutoComplete` parameter **default `"off"`** → Fluent input (requires control `Id`; Bo already sets `FieldId`) |
 | `BoDateField` | Main date input and DateTime hour/minute/`select` use `autocomplete="off"` |
 | `BoDropDownList` / `BoPeoplePicker` | Panel search input uses `autocomplete="off"` |
 | Checkbox / Toggle / Button / Read-Only | N/A (no typed-history surface) |
@@ -95,8 +95,8 @@ Admin / enterprise workspaces (`Bo*` editable fields) **default autocomplete off
 | Concern | Standard |
 | --- | --- |
 | Default | Literal token **`off`** — do **not** invent non-standard tokens (`nope`, random strings); Chromium treats invalid tokens as absent and can re-enable history |
-| Opt-in | Set `AutoComplete` on `BoTextField` / `BoNumberField` to a [standard HTML token](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete) (e.g. `email`) when needed |
-| Unmatched attributes | Host `autocomplete=` via `AdditionalAttributes` lands on the **root field `<div>`**, not the real input — **ineffective** for Fluent-backed Text/Number; use the `AutoComplete` parameter |
+| Opt-in | Set `AutoComplete` on `BoTextField` / `BoTextArea` / `BoNumberField` to a [standard HTML token](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/autocomplete) (e.g. `email`) when needed |
+| Unmatched attributes | Host `autocomplete=` via `AdditionalAttributes` lands on the **root field `<div>`**, not the real input — **ineffective** for Fluent-backed Text/Text Area/Number; use the `AutoComplete` parameter |
 | Grid cell editors | Reuse shipped `Bo*` fields in `Edit` templates — inherit this default. Raw `<input>` in an Edit template is a standards violation ([grids.md](grids.md)) |
 | Product apps (e.g. EAC) | No per-screen / form-shell fix — inherit via Shared UI |
 | Ownership | SYSTEM-SHARED-UI (`BreezeOn.UI`); documented here (no separate ADR) |
@@ -127,6 +127,7 @@ Flat **display-only** companion for read views. Always shows **already-formatted
 | `PreserveLayoutWhenHidden` | Keep Weight share while hidden (default false) |
 | `Weight` | Proportional BoRow share (default 1) |
 | `Alignment` | `BoNumberFieldAlignment` Left (default) / Center / Right — use Right/Center for numeric companions (same `bo-field--align-*` modifiers as Number Field) |
+| `LinkifyUrls` | When true, detect `http`/`https` URLs in `Value` and render as safe external links. **Default false**. Plain-text security model — no HTML/Markdown/script execution |
 | `Class` / `Style` | Optional (use `bo-field--section-flush` in section rows like other fields) |
 
 ### Label and chrome
@@ -135,7 +136,8 @@ Flat **display-only** companion for read views. Always shows **already-formatted
 | --- | --- |
 | Label font | **Same as Text Field** — 10px bold uppercase; `--bo-color-text-field-label` |
 | Label-to-value gap | Same as editable fields (`--bo-field-label-gap`, default **4px**) |
-| Value text | **Calibri** 14px; body text color (`--bo-color-text`); no input border, fill, or focus ring |
+| Value text | **Calibri** 14px; body text color (`--bo-color-text`); no input border, fill, or focus ring; `white-space: pre-wrap` preserves newlines |
+| Linkify | Opt-in via `LinkifyUrls`; scheme allowlist `http`/`https` only; `target="_blank"` + `rel="noopener noreferrer"` |
 | Validation | None — not required, no asterisk, no deferred validation |
 | Placement | Direct child of `BoRow` inside a Section |
 
@@ -202,6 +204,65 @@ Visual polish enhances presentation only. Tokens: [tokens.md](../foundations/tok
 
 These Text Field rules are **org standards** for every `BoTextField` usage.
 
+## Text Area (`BoTextArea`)
+
+**Display name:** Text Area.  
+**Component:** `BoTextArea` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+
+Multiline plain-text entry for long-form content. **Not** a mode of Text Field.
+
+### Plain-text lock (architectural)
+
+`BoTextArea` is permanently a plain-text control. It is intentionally limited to plain-text entry.
+
+Out of scope (permanently): Rich Text, HTML editing, Markdown editing, WYSIWYG, mentions, embedded images/files/media, formatting toolbars, text styling (bold, italic, underline, colors, etc.).
+
+Future requirements involving rich content, formatting, mentions, embedded media, attachments, HTML, Markdown, or WYSIWYG functionality **shall be implemented through a separate dedicated control** and must **not** extend `BoTextArea`.
+
+| Parameter | Role |
+| --- | --- |
+| `Label` | Field label. Empty Label (and not required) → **no label spacer** |
+| `ShowLabel` | **Default false**. Hides the visual label row (no vertical spacer) unless set true — including when `Required` with no label text. `Label` still supplies the accessible name when the row is hidden. Required validation unchanged |
+| `FieldKey` | Mapping metadata; does **not** replace `@bind-Value` |
+| `Required` / `Disabled` / `ReadOnly` / `ErrorText` / `ValidationGroup` | Same deferred mandatory / chrome rules as Text Field |
+| `MaxLength` | Enforced. **Default 4000** (differs from Text Field 600) |
+| `ShowCharacterCount` | Format `current/max`. **Default true** (differs from Text Field false). Hidden when `Disabled` or `ReadOnly`. Rendered **inside** the control chrome (lower-right), matching Text Field count affordance |
+| `AllowResize` | **Default true** — vertical resize only; never horizontal |
+| `AutoComplete` | **Default `"off"`** — see [Browser autocomplete](#browser-autocomplete-locked) |
+| `Placeholder` | Same resource default as Text Field; omitted when `Disabled` / `ReadOnly` |
+| `Value` / `ValueChanged` | Two-way bind to working model |
+
+### Geometry and layout
+
+| Concern | Standard |
+| --- | --- |
+| Initial height | Always **6 visible rows** (implementation constant — **not** a public `Rows` parameter). User may then resize vertically when `AllowResize` |
+| Width | **Mandatory** full width of the `BoRow` slot (no 28rem / Fluent 18rem caps) — editable and read-only |
+| Chrome | Same Concept A outline as Text Field (equal 1px rest border, hover, full-border focus, field-background fill including Dark) |
+| Intended usage | Sole field in its `BoRow`; typically own Section Main/Sub; full-width |
+| Soft wrap | Editable and read-only wrap; truncation ellipsis does **not** apply to multiline Text Area values ([ux-conventions.md](../patterns/ux-conventions.md) exception) |
+| Tall row | `BoRow` keeps `align-items: start` for tall Text Area siblings ([layout.md](../layout/layout.md#row-borow)) |
+
+### Value fidelity
+
+`BoTextArea` must preserve the value **exactly as entered**. The control must **not** modify, normalize, transform, or reinterpret user-entered content (including newlines). Preservation across save/load is the responsibility of the consuming application and storage layer. Display uses `pre-wrap` so visual line breaks match the bound string.
+
+### Character count
+
+Shown **inside** the control chrome at the lower-right (same visual family as Text Field in-input count). Italic 10px muted `current/max`. Denominator = `MaxLength` (default **4000**). Hidden when `Disabled` or `ReadOnly`.
+
+### Read-only
+
+When `ReadOnly`: flat multiline display (not a non-editable Fluent textarea) with automatic safe `http`/`https` linkify (same security model as `BoFieldReadOnly` `LinkifyUrls`). No asterisk, count, or placeholder.
+
+### Security (linkify)
+
+Plain-text model: never execute HTML/script; never `MarkupString` on raw input; only encoded text + allowlisted anchors; reject non-`http`/`https` schemes.
+
+**Gallery reference:** Components → Text Area — Parameters (6 slots), Preview (editable sole-row + read-only / Backend with linkify), Documentation.
+
+These Text Area rules are **org standards** for every `BoTextArea` usage.
+
 ## Drop-Down List (`BoDropDownList`)
 
 **Display name:** Drop-Down List.  
@@ -267,9 +328,10 @@ Platform-standard **user** selector for BreezeOn applications (group membership,
 **Bound value rules**
 
 - Persist **`UserGUID` only**. Never bind `UsersId`, Email, UPN, or `ExternalObjectId`.
-- Display text: **`DisplayName (Email)`** with null-safe fallback (DisplayName → Email → UPN → GUID string).
+- Display text: **`DisplayName (Email)`** with null-safe fallback (DisplayName → Email → UPN → GUID string). When resolve succeeds for an active user, the closed/disabled control **must** show that display text — never the raw GUID as the primary label.
+- Bound `Value` Codes are matched **case-insensitively** to hydrated item Codes (GUID casing must not break display).
 - Search fields: DisplayName, Email, UserPrincipalName.
-- **Active users only** (`Identity.Users.IsEnabled = 1`). The picker model does **not** expose `IsEnabled`. Disabled users are never returned; a bound GUID that is no longer enabled falls back to showing the raw GUID string.
+- **Active users only** (`Identity.Users.IsEnabled = 1`). The picker model does **not** expose `IsEnabled`. Disabled users are never returned; a bound GUID that is no longer enabled falls back to showing the raw GUID string (last resort only).
 - **No photos / avatars** in V1.
 
 **Data contract**

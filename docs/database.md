@@ -252,7 +252,7 @@ Every BreezeOn **product application** that persists process instances owns a pr
 | *(flat fields)* | Per field | One column per flat field the application persists (e.g. `InitiatorUserGUID`, `RequestedDate`). |
 | Audit quartet | See [Mandatory audit columns](#mandatory-audit-columns) | Always present on `Process`. |
 
-Baseline Process Request fields (`InitiatorUserGUID`, `RequestedDate`) and UI placement: [process-request-section.md](ui/patterns/process-request-section.md). Applications may add columns; they must keep `ProcessId` / `ProcessGUID` / audit columns and the Process table as the root.
+Baseline Process Request fields (`InitiatorUserGUID`, `RequestedDate`) and UI placement: [process-request-section.md](ui/patterns/process-request-section.md). New-app checklist rows: [application-bootstrap-checklist.md](application-bootstrap-checklist.md). Applications may add columns; they must keep `ProcessId` / `ProcessGUID` / audit columns and the Process table as the root.
 
 **Distinct from EAC Process Framework:** PF tables under `System` hold process **definition** metadata only. Runtime instances live in the product `{UniqueCode}.Process` (and app-owned children).
 

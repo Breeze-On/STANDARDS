@@ -9,7 +9,7 @@ Defines what constitutes a **standard Breeze On application** based on patterns 
 
 | Concern | Meaning | SSOT |
 | --- | --- | --- |
-| **Product application onboarding** | Creating the next product application (**App #N**) | [`application-development-process.md`](ai/application-development-process.md) · [`application-definition.schema.json`](ai/application-definition.schema.json) · [`BREEZEON-AI-APPLICATION-ADOPTION.md`](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) |
+| **Product application onboarding** | Creating the next product application (**App #N**) | [`application-bootstrap-checklist.md`](application-bootstrap-checklist.md) · [`application-development-process.md`](ai/application-development-process.md) · [`application-definition.schema.json`](ai/application-definition.schema.json) · [`BREEZEON-AI-APPLICATION-ADOPTION.md`](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) |
 | **Customer-environment onboarding** | Provisioning / activating a customer DEV/UAT/PRD environment | [`runbooks/customer-onboarding-master-flow.md`](../runbooks/customer-onboarding-master-flow.md) |
 
 The Customer Onboarding Master Flow does **not** create new BreezeOn application repositories.

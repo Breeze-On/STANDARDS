@@ -7,7 +7,7 @@ Workflow for creating a new BreezeOn **product application**. This is distinct f
 
 Detail for host wiring, UI, auth, and local SQL lives in the linked standards — this file defines the process order and explains the application-definition schema.
 
-Related: [application-definition.schema.json](application-definition.schema.json) · [BREEZEON-AI-APPLICATION-ADOPTION.md](BREEZEON-AI-APPLICATION-ADOPTION.md) · [application-model.md](../application-model.md) · [page-development.md](../ui/page-development.md) · [application-branding.md](../ui/shell/application-branding.md) · [application-theme-palette.md](../ui/foundations/application-theme-palette.md) · [local-development-scripts.md](../local-development-scripts.md) · [planning-and-development-agents.md](planning-and-development-agents.md)
+Related: [application-bootstrap-checklist.md](../application-bootstrap-checklist.md) (**authoritative New Application Checklist**) · [application-definition.schema.json](application-definition.schema.json) · [BREEZEON-AI-APPLICATION-ADOPTION.md](BREEZEON-AI-APPLICATION-ADOPTION.md) · [application-model.md](../application-model.md) · [page-development.md](../ui/page-development.md) · [application-branding.md](../ui/shell/application-branding.md) · [application-theme-palette.md](../ui/foundations/application-theme-palette.md) · [local-development-scripts.md](../local-development-scripts.md) · [planning-and-development-agents.md](planning-and-development-agents.md)
 
 **Process narrative SSOT:** this file (`STANDARDS/docs/ai/application-development-process.md`).
 
@@ -53,9 +53,21 @@ When optional inputs are omitted (schema `x-breezeon.omissionBehavior`):
 
 ---
 
+## New Application Checklist (authoritative bootstrap artifact)
+
+**SSOT:** [application-bootstrap-checklist.md](../application-bootstrap-checklist.md).
+
+Use this checklist as the **first** validation artifact when creating a new BreezeOn application (planning, Build Locally, and Platform bootstrap completion). It consolidates mandatory application-level requirements; linked SSOTs remain authoritative for detail.
+
+### Checklist governance (mandatory)
+
+Whenever a new or changed standard introduces a **mandatory application-level** requirement for new apps, the author **must** evaluate whether it belongs on the New Application Checklist. If yes, update [application-bootstrap-checklist.md](../application-bootstrap-checklist.md) in the **same change set**. Standards changes that add such requirements are incomplete until that checklist review occurs. Also update **Platform bootstrap completion** below when gate categories change.
+
+---
+
 ## Default UX rules (all new apps)
 
-Unless a plan explicitly overrides (encoded in schema defaults / omission behavior; detail in branding SSOT):
+Unless a plan explicitly overrides (encoded in schema defaults / omission behavior; detail in branding SSOT). Checklist rows: [application-bootstrap-checklist.md](../application-bootstrap-checklist.md).
 
 | Rule | Standard |
 | --- | --- |
@@ -70,6 +82,10 @@ Unless a plan explicitly overrides (encoded in schema defaults / omission behavi
 | Themes | Light and Dark both mandatory; not Step 1–configurable; only `primaryColor` / `secondaryColor` / `tertiaryColor` may be persisted as theme inputs |
 | Branding packages | Customer Branding (`customerName`, `customerLogo`, three colors) decoupled from Application Branding (`applicationLogo` only); `applicationDisplayName` outside both |
 | Platform display name | **`Breeze On`** for org/Gallery chrome (distinct from Customer Name default `BreezeOn`) |
+| Process Request section | **Mandatory baseline** on New Request (and later process Detail/Edit): first tab **General Information**, first section **Process Request** (Initiator + Requested Date) — [process-request-section.md](../ui/patterns/process-request-section.md). Implementation is **application-owned** (no SHARED-UI package). |
+| Initiation experience | **Default**: header General Information Form (outlined) icon; shell footer Save (`BoButtonVariant.Save` Filled icon) + Submit Primary via `BoPageFooterActions`; no top Actions Save\|Discard — [initiation-experience.md](../ui/patterns/initiation-experience.md) · [page-footer-actions.md](../ui/patterns/page-footer-actions.md) |
+| People display | **Default** `DisplayName (Email)` in person controls; GUID last-resort only — [forms.md](../ui/controls/forms.md) |
+| Process table | **Mandatory** primary table `{UniqueCode}.Process` with `ProcessId`, `ProcessGUID`, flat fields, and audit columns — [database.md](../database.md) § Process table convention |
 
 ---
 
@@ -86,7 +102,7 @@ Capture the completed instance before planning or coding.
 
 ### Step 2 — Implementation planning
 
-Generate a **local-development** roadmap from the inputs and existing standards ([planning-and-development-agents.md](planning-and-development-agents.md)).
+Generate a **local-development** roadmap from the inputs and existing standards ([planning-and-development-agents.md](planning-and-development-agents.md)). Anchor validation against [application-bootstrap-checklist.md](../application-bootstrap-checklist.md).
 
 Default plan scope stops when the application can be **built and run locally** and **Platform bootstrap completion** (Step 5) passes, unless the current prompt expands scope.
 
@@ -140,10 +156,16 @@ Mandatory host contract: [page-development.md](../ui/page-development.md) § Pro
 
 Do not fork Identity/Security schemas.
 
+**Mandatory business baseline (all new apps)** — in addition to the IA shell. Full rows: [application-bootstrap-checklist.md](../application-bootstrap-checklist.md).
+
+- [ ] **Process Request** section on New Request: tab **General Information** (first), section **Process Request** (first), Row 1 Initiator + Requested Date per [process-request-section.md](../ui/patterns/process-request-section.md) (application-owned implementation); initiation footer Save+Submit per [initiation-experience.md](../ui/patterns/initiation-experience.md).
+- [ ] Primary process table `{UniqueCode}.Process` under product `sql/current_model/` with `ProcessId`, `ProcessGUID`, baseline flat fields, and audit columns — [database.md](../database.md) § Process table convention; `docs/db-model.md` in the same change set.
+- [ ] Consumer `dev-reset.ps1` applies the app’s own `sql/current_model/` (and `sql/seed/` when present) **after** the EAC subprocess.
+
 **New App Development checklist (EAC-consuming apps)** — all items required:
 
 - [ ] Sibling **`SYSTEM-ADMIN-EAC`** checkout is required locally (same parent folder as the app repo); `scripts/dev-reset.ps1` fails fast with a clear error when it is missing.
-- [ ] `scripts/dev-reset.ps1` **invokes EAC `scripts\dev-reset.ps1` as a subprocess** (EAC owns database drop/recreate, schema, bootstrap, and EAC configuration import), then applies the app's own business schema/seed if any, then launches the app. It does **not** reimplement EAC reset/bootstrap/import ([local-development-scripts.md](../local-development-scripts.md) § Consumer apps and EAC reset).
+- [ ] `scripts/dev-reset.ps1` **invokes EAC `scripts\dev-reset.ps1` as a subprocess** (EAC owns database drop/recreate, **allowlisted** System + platform schema, required-object smoke, bootstrap, and EAC configuration import), then applies the app's own business schema/seed if any, then launches the app. It does **not** reimplement EAC reset/bootstrap/import ([local-development-scripts.md](../local-development-scripts.md) § Consumer apps and EAC reset). Platform objects come only from EAC reset after allowlisted deploy — not from app `sql/seed/` or `seed/eac/` ([database.md](../database.md) § EAC Framework Synchronization).
 - [ ] `scripts/dev-run.ps1` is present: non-destructive application-only launch; verifies required User Secrets / local SQL configuration as appropriate; does **not** invoke EAC reset, recreate databases, reset Docker, or re-import configuration ([local-development-scripts.md](../local-development-scripts.md)).
 - [ ] The app repo has a top-level **`seed/eac/`** folder (scaffold creates the folder only — **no** `seed/eac/README.md`) holding the app's portable EAC configuration (JSON / xlsx) that EAC discovers and imports ([data-portability.md](../data-portability.md) § Per-application `seed/eac`).
 - [ ] No `System.EAC*` SQL configuration or current-state seeds in the app repo (`sql/seed/` is app business / non-EAC data only — [database.md](../database.md) § `seed/eac/`); no EAC registry seed for the app under `SYSTEM-ADMIN-EAC/sql/seed/`.
@@ -174,12 +196,14 @@ Platform foundation is complete only when **all** of the following are true (det
 
 | # | Category | Authority |
 | --- | --- | --- |
+| 0 | **New Application Checklist** — all applicable rows complete | [application-bootstrap-checklist.md](../application-bootstrap-checklist.md) |
 | 1 | **Product Host Contract** satisfied | [page-development.md](../ui/page-development.md) § Product Host Contract |
 | 2 | **Platform consumption** — every row in Must consume | [application-model.md](../application-model.md) § Must consume (SHARED-UI, auth, AuthZ, page catalog, Identity/Security schemas, Application Context Bootstrap, registry expectation) |
 | 3 | **Local host contract** — New App Development checklist complete | Step 4 checklist above ([local-development-scripts.md](../local-development-scripts.md), `seed/eac/`, shared local SQL, product README facts) |
 | 4 | **Local validation** — Step 5 smoke list passed | This step (agents stop at Entra interactive boundary) |
 | 5 | **Repo baselines** — thin `README` / `README_AI` / `AGENTS`, Dependabot from templates, deploy workflow metadata present | [BREEZEON-AI-APPLICATION-ADOPTION.md](BREEZEON-AI-APPLICATION-ADOPTION.md) Must; procedures stay in [hosted-deployment.md](../hosted-deployment.md) (Step 6 execution still separate) |
-| 6 | **IA shell only** — Home + defined destination routes exist as standards-compliant shell pages | [application-branding.md](../ui/shell/application-branding.md); no premature business UI required to pass |
+| 6 | **IA shell** — Home + defined destination routes exist as standards-compliant shell pages | [application-branding.md](../ui/shell/application-branding.md) |
+| 7 | **Process Request baseline** — General Information / Process Request section + `{UniqueCode}.Process` table present when the app creates process instances (mandatory for new apps per Default UX rules) | [process-request-section.md](../ui/patterns/process-request-section.md) · [database.md](../database.md) § Process table convention |
 
 **Future Validation** items stay **out** of this gate until they are promoted into Must consume or other mandatory new-app rules.
 
@@ -213,7 +237,7 @@ Perform Step 6 only when the current prompt explicitly requests it. Procedures: 
 
 When Step 1 inputs, defaults, or omission behavior change: update **schema first**, then sync this markdown in the **same change set**. Schema wins on conflict. Markdown must not invent inputs/defaults/behaviors absent from the schema.
 
-When a capability becomes **mandatory for new BreezeOn applications**, update **Platform bootstrap completion** (Step 5) in the **same change set** as the owning AA — typically [application-model.md](../application-model.md) § Must consume and/or [page-development.md](../ui/page-development.md) § Product Host Contract. Detail remains in those SSOTs; this gate lists categories and links only. **Future Validation** stays out of the gate until promoted.
+When a capability becomes **mandatory for new BreezeOn applications**, update **Platform bootstrap completion** (Step 5) **and** evaluate [application-bootstrap-checklist.md](../application-bootstrap-checklist.md) in the **same change set** as the owning AA — typically [application-model.md](../application-model.md) § Must consume and/or [page-development.md](../ui/page-development.md) § Product Host Contract. Detail remains in those SSOTs; the checklist and this gate list categories and links only. **Future Validation** stays out of the gate until promoted. Standards changes that add mandatory new-app requirements are incomplete until the checklist review occurs.
 
 ---
 

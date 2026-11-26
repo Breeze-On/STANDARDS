@@ -11,7 +11,7 @@ Current reality only. Update this table in the same change set as any Gallery de
 
 | Notation | Meaning |
 | --- | --- |
-| **Components** | Route `/components`. Header tabs (`BoTabs`, `TabKey`): Text Field (`text-field`), Drop-Down List (`drop-down-list`), People Picker (`people-picker`), Checkbox (`checkbox`), Date Field (`date-field`), Number Field (`number-field`), **Other** (`other`) |
+| **Components** | Route `/components`. Header tabs (`BoTabs`, `TabKey`): Text Field (`text-field`), Text Area (`text-area`), Drop-Down List (`drop-down-list`), People Picker (`people-picker`), Checkbox (`checkbox`), Date Field (`date-field`), Number Field (`number-field`), **Other** (`other`) |
 | **Other → X** | Components → header tab **Other** → left `BoPanelNavigation` item **X**. Items (`Key`): Grid (`grid`), Page Freeze (`page-freeze`), Dialog (`dialog`), Toggle (`toggle`), Import Summary (`import-summary`), Validation Summary (`validation-summary`), Button (`button`) |
 | **Theme** | Route `/theme` (tabs per palette color) |
 | **Home** | Route `/` |
@@ -25,6 +25,7 @@ Current reality only. Update this table in the same change set as any Gallery de
 | Pattern | Standard | Gallery path |
 | --- | --- | --- |
 | Text Field | [forms.md](controls/forms.md) | Components → Text Field |
+| Text Area | [forms.md](controls/forms.md#text-area-botextarea) | Components → Text Area |
 | Row layout (`Weight`), `BoEmptyField`, hide / preserve layout | [layout.md](layout/layout.md) | Components → Text Field → Row layout (Weight); Components → Parameters rows |
 | Read-Only Field | [forms.md](controls/forms.md) | Theme → Attributes; Components → Preview (read-only column) |
 | Drop-Down List (static `Items`, `AllowMultiple`, `DisplayCode`) | [forms.md](controls/forms.md) | Components → Drop-Down List |
