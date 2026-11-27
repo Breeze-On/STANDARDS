@@ -50,7 +50,7 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 | `color-nav-logo-divider` | `--bo-color-nav-logo-divider` | `#E8EDF1` | `#E8EDF1` | Horizontal rule under nav brand logos — **same as Light card-container-border in both modes** |
 | `color-text` | `--bo-color-text` | `#242424` | `#EEF2EF` | Default body text |
 | `color-text-muted` | `--bo-color-text-muted` | `#616161` | `#A8B2AC` | Muted text (e.g. character count) |
-| `color-danger` | `--bo-color-danger` | `#C50F1F` | `#FF8A8A` | Danger / mandatory asterisk |
+| `color-danger` | `--bo-color-danger` | `#C50F1F` | `#E35D6A` | Danger / mandatory asterisk / invalid chrome (SHARED-UI `BoThemePalettes`; Dark must not be overwritten by Light `BoThemeOptions.ColorDanger` — use `ColorDangerDark` for Dark host overrides) |
 | `color-success` | `--bo-color-success` | `#0E700E` | `#4ADE80` | Success |
 | `color-save-button-background` | `--bo-color-save-button-background` | `#D9F0FF` | `#10354A` | Soft positive Save action fill (Data Entities Actions today) |
 | `color-save-button-border` | `--bo-color-save-button-border` | `#7CC7F5` | `#2A89C9` | Save action border |
@@ -197,7 +197,8 @@ Emitted by `BoThemeProvider` (z-index / focus are fixed values; freeze scrim/blu
 | `ColorWarning`, `ColorInfo` | Applied in both modes when non-empty |
 | **Light accents** (`ColorPrimary`, `ColorPrimaryHover`, `ColorSecondary`, `ColorTertiary`) | Applied in **Light** only, and only when the value **differs** from the Light palette default (hex compare, case-insensitive). Setting a value equal to the default is a no-op. Step 1 supplies only Primary/Secondary/Tertiary brand colors; `ColorPrimaryHover` is **derived** (blank hover → falls back to `ColorPrimary`). Do not persist hover or other derived roles in application-definition — [application-theme-palette.md](application-theme-palette.md) |
 | **Dark accents** (`ColorPrimaryDark`, `ColorPrimaryHoverDark`, `ColorSecondaryDark`, `ColorTertiaryDark`) | Applied in **Dark** only, when set (typically from the brand-color generator). `ColorPrimaryHoverDark` blank → hover uses `ColorPrimaryDark`. When unset, Dark keeps the Dark palette accents. Light accent options never leak into Dark |
-| Other color properties (backgrounds, text, nav, card, border, danger, success, scrim, …) | Come from the Light/Dark **palette**, not from `configureTheme` |
+| **Success / Danger** (`ColorSuccess` / `ColorDanger`, `ColorSuccessDark` / `ColorDangerDark`) | **Mode-split.** Light applies `ColorSuccess` / `ColorDanger` only in Light. Dark keeps `BoThemePalettes.Dark` (`color-danger` = `#E35D6A`) unless `ColorSuccessDark` / `ColorDangerDark` (or Theme Palette `Dark.Success` / `Dark.Error`) is set. **Never** apply Light `ColorDanger` / `ColorSuccess` in Dark — that wiped Dark danger historically |
+| Other color properties (backgrounds, text, nav, card, border, scrim, …) | Come from the Light/Dark **palette**, not from `configureTheme` |
 
 The `*Dark` names exist only as **option properties**; CSS variable names stay mode-agnostic (`--bo-color-primary`). Without `configureTheme`, the Light and Dark palettes apply unchanged.
 

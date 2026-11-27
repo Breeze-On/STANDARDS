@@ -68,9 +68,9 @@ Product hosts **may** still override Success / Warning / Error / Info through Sh
 
 | Role | Platform token(s) |
 | --- | --- |
-| Success | `color-success` |
+| Success | `color-success` (Light / Dark palette values differ; host Dark override → `BoThemeOptions.ColorSuccessDark` / Theme Palette `Dark.Success`) |
 | Warning | `color-warning` |
-| Error | `color-danger` |
+| Error | `color-danger` (Light `#C50F1F` / Dark `#E35D6A`; host Dark override → `BoThemeOptions.ColorDangerDark` / Theme Palette `Dark.Error` — never apply Light `ColorDanger` in Dark mode) |
 | Info | `color-info` |
 
 ---

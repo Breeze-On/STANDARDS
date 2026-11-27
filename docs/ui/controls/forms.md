@@ -57,7 +57,7 @@ Context aggregates: `Failures`, `FailedGroups` (tabs), `FailedSectionMains`, `Fa
 
 ### Fail badges
 
-`BoValidationFailBadge`: compact disc (~11px) + centered white “!” + soft shadow (CSS; Fluent ErrorCircle is single-tone). Light theme uses a **softer** danger red; dark theme keeps full danger. Visible but not dominant.
+`BoValidationFailBadge`: compact disc (~11px) + centered white “!” + soft shadow (CSS; Fluent ErrorCircle is single-tone). Color follows `--bo-color-danger` (Light `#C50F1F`, Dark `#E35D6A` — [tokens.md](../foundations/tokens.md)). Visible but not dominant.
 
 **Placement (locked):** on `BoSectionMain` / `BoSectionSub` / `BoTab`, the badge appears **left of the label** in the **icon slot**. When validation fails it **replaces** the configured `IconContent`; when the failure clears, the original icon returns. Shown on:
 
@@ -222,7 +222,7 @@ Future requirements involving rich content, formatting, mentions, embedded media
 | Parameter | Role |
 | --- | --- |
 | `Label` | Field label. Empty Label (and not required) → **no label spacer** |
-| `ShowLabel` | **Default false**. Hides the visual label row (no vertical spacer) unless set true — including when `Required` with no label text. `Label` still supplies the accessible name when the row is hidden. Required validation unchanged |
+| `ShowLabel` | **Default false**. Hides the visual label row (no vertical spacer) unless set true — including when `Required` with no label text. `Label` still supplies the accessible name when the row is hidden. Required validation unchanged. **Approved pattern:** when a Sub Section title is the only visible label for a single mandatory Text Area (e.g. INV Purpose of Service), set `BoSectionSub.Required=true`, keep `ShowLabel=false` on the Text Area, and still set field `Required=true` so deferred mandatory validation / fail badges run on the field while the section title shows the mandatory asterisk |
 | `FieldKey` | Mapping metadata; does **not** replace `@bind-Value` |
 | `Required` / `Disabled` / `ReadOnly` / `ErrorText` / `ValidationGroup` | Same deferred mandatory / chrome rules as Text Field |
 | `MaxLength` | Enforced. **Default 4000** (differs from Text Field 600) |
@@ -277,7 +277,7 @@ Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory
 | `Required` | Mandatory asterisk when true **and not `Disabled`/`ReadOnly`**; no required validation when disabled/read-only |
 | `Items` | `IEnumerable<BoDropDownListItem>` — prefer **`Code` + `Description`** (`Value`/`Text` remain aliases) |
 | `Value` / `ValueChanged` | Two-way bind (`string?`) = **Code only** (single); when `AllowMultiple`, Codes joined by **`;`** (empty → null/`""`) |
-| `DisplayCode` | When true, list/selection shows `"{Code} - {Description}"`; default false = Description only |
+| `DisplayCode` | When true, list/selection shows `"{Code} - {Description}"`; default false = Description only. **Approved product exception (INV Currency):** disabled Currency shows **`{iso-code} - {Description}`** (currencies metadata `iso-code`, not row Code) by composing that text into `BoDropDownListItem.Description` with `DisplayCode=false`; bound `Value` remains the currencies row **Code** |
 | `AllowMultiple` | Multi-select; closed control shows removable **chips** + control-level **Clear all**; open list toggles rows (no checkboxes in the list) |
 | `KeepOpen` | Single-select only: when true, the panel stays open after a selection (repeated-add / picker flows). Multi-select already stays open; ignored when `AllowMultiple` is true |
 | `ClearAfterSelect` | Single-select only: after raising `ValueChanged`, clears the bound Value so the closed control returns to placeholder. Typical with `KeepOpen` for add-pickers; ignored when `AllowMultiple` is true |
@@ -489,7 +489,7 @@ Numeric entry with Text Field chrome. Public API is `Bo*` only; input uses Fluen
 | `NumberOfDecimals` | `int?` — meaningful when `!IsInteger`; default **0** when unset |
 | `IsCurrency` / `CurrencyIsoCode` | Currency mode; approved ISO codes **CAD** / **USD** / **GBP** (internal catalog). `IsCurrency` and `IsPercent` are **mutually exclusive** |
 | `IsPercent` | UI shows **0–100**; bound value is **entered ÷ 100** (e.g. 90 → `0.90m`) |
-| `Alignment` | `BoNumberFieldAlignment`: `Left` / `Center` / `Right`; **default Right** (also apply to read-only companions) |
+| `Alignment` | `BoNumberFieldAlignment`: `Left` / `Center` / `Right`; **default Right** (also apply to read-only companions). **Approved product exception:** INV Request Details **Budget Amount** uses `Alignment=Left` (intentionally not right-aligned) |
 | `Required` / `Disabled` / `IsHidden` | Same deferred mandatory rules as Text Field (Disabled / hidden skip participation) |
 | `Placeholder` | Optional; default resource **`Field_Number_Placeholder_Default`** ("Enter value"); **hidden when Disabled or ReadOnly** |
 | `ReadOnly` | Not editable; no asterisk / required validation |

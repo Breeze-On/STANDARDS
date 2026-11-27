@@ -86,7 +86,8 @@ A **Sub Section** is for nested/subordinate groupings inside a Main Section. It 
 
 | Concern | Standard |
 | --- | --- |
-| API | Same as Main: `SectionKey`, `Title` / `TitleContent`, optional `Required`, optional `IconContent`, optional `HeaderActions`, `ChildContent` |
+| API | Same as Main: `SectionKey`, `Title` / `TitleContent`, optional `Required` (red asterisk after title), optional `IconContent`, optional `HeaderActions`, `ChildContent` |
+| Single-field section label | When the Sub Section title **is** the field label (one mandatory control with `ShowLabel=false`), set `Required=true` on the Sub Section **and** on the field. Section asterisk is the visible mandatory mark; field `Required` still drives deferred validation. See [forms.md](../controls/forms.md) Text Area `ShowLabel` |
 | HeaderActions spacing | Same `bo-section--with-header-actions` rules as Main |
 | Validation fail | Same badge as Main when `SectionKey` ∈ `FailedSectionSubs`; cascades Main + Sub keys to child fields |
 | Content body padding | **6px** equal on all four sides (same as Main) |
