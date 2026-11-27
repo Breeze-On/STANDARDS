@@ -142,8 +142,11 @@ Do **not** treat this name as the start of a `P_GET_*ComponentValues` family acr
 - `@Mode` = `Search` (**TOP 100**, `@MaxItems` clamped 1..100; `@SearchText` on Code or display Description) or `Resolve` (`@ResolveCodesJson` — JSON string array, first 100 exact Codes).
 - Keyed by `@ApplicationEnabledGUID` + `@DataEntityCode` (Code, not GUID) + `@LanguageCode` + `@UserGUID`.
 - `@SortField`: `Code` default; `Description` only as an explicit caller override (INV Supplier / `suppliers` is the approved exception).
-- Returns `Code`, `Description` (language → `en-CA` → Code; never blank). Authorization fails closed to an empty set.
+- Returns `Code`, `Description` (language → `en-CA` → Code; never blank), and **`MetadataJson`** (`[{ "code", "value" }]` by column Code; `'[]'` when none).
+- Authorization fails closed to an empty set.
 - Consumed only through SHARED-UI `IBoDataEntityLookupQueries`. Product apps do **not** query `System.EACDataEntities*` or reuse `P_GET_EACDataEntitiesRows` for typeahead.
+
+**Batch hydrate (Process View / multi-field):** `System.P_GET_EACDataEntityValuesBatch` resolves many Data Entity Codes × many row Codes in one round-trip under one AE. Caps and contract: [using-data-entities.md](../architecture/data-entities/using-data-entities.md). Consumed via SHARED-UI `ResolveBatchAsync` only.
 
 ## Query-driven paged list stored procedures
 
@@ -241,26 +244,52 @@ Standing platform rules (also summarized in [naming.md](naming.md)):
 - Relationships use `GroupGUID` and `UserGUID` only. SSOT: [architecture/authorization/](../architecture/authorization/README.md), [ADR-014](../decisions/ADR-014-platform-authorization.md), [ADR-015](../decisions/ADR-015-object-owned-administrator-groups.md).
 - **`Security.Groups.Code`** is **`NVARCHAR(700)`** (documented column exception to the org Code default of 30) so system-generated Codes such as `APP_{UniqueCode}` fit without capping business UniqueCode fields; uniqueness is on Code only.
 
-## Process table convention
+## Process table convention (two-tier)
 
-Every BreezeOn **product application** that persists process instances owns a primary process table in an application SQL schema named after the application **`UniqueCode`**.
+Runtime process identity is a **two-tier** model ([ADR-024](../decisions/ADR-024-platform-process-root.md) · [process-runtime](../architecture/process-runtime/README.md)):
+
+| Tier | Qualified name | Owner | Role |
+| --- | --- | --- | --- |
+| Platform root | `Global.Process` | SYSTEM-ADMIN-EAC | Universal `ProcessGUID` + `ApplicationEnabledGUID` + audit only |
+| Application extension | `{UniqueCode}.Process` | Product application | Application-specific flat business fields |
+
+### Global schema ownership
+
+- Schema **`Global`** is owned by **SYSTEM-ADMIN-EAC** (alongside `System` catalog ownership).
+- Authoritative create SP: **`Global.P_POST_Process`**. Products must not `INSERT` into `Global.Process` directly.
+- `ProcessGUID` is SQL-generated (`DEFAULT NEWSEQUENTIALID()`). **Application repositories must not mint `ProcessGUID` values.**
+- Consumers use `ProcessGUID` only; `ProcessId` is internal.
+- No workflow, lifecycle, or status columns on `Global.Process`.
+- **AE delete fail-closed:** Application Enabled deletion **must fail** when dependent `Global.Process` rows exist. Never silent cascade of runtime process records ([ADR-006](../decisions/ADR-006-application-context-ownership.md)).
+
+### Application `{UniqueCode}.Process`
 
 | Rule | Contract |
 | --- | --- |
 | **Schema name** | Application `UniqueCode` (e.g. `BREEZEON-CORP-FIN-INV`). Hyphenated names require bracketed identifiers: `[BREEZEON-CORP-FIN-INV]`. |
 | **Table name** | `Process` |
-| **Qualified name** | `{UniqueCode}.Process` (documentation form: `BREEZEON-{DOMAIN}-{APP}.Process`) |
-| **Role** | Authoritative **root** entity for process-level flat fields. Related child tables may exist; they do not replace the Process table. |
+| **Qualified name** | `{UniqueCode}.Process` |
+| **Role** | Application-specific **extension** for process-level flat fields. Related child tables may exist; they do not replace the Process extension table. |
 | **Ownership** | Application repository `sql/current_model/` + `docs/db-model.md` — not EAC Process Framework metadata tables. |
+| **ProcessGUID** | `UNIQUEIDENTIFIER NOT NULL` UNIQUE — value from `Global.P_POST_Process` / `Global.Process`; never app-minted; never regenerated on update. |
 
-### Required columns
+### Required columns (`{UniqueCode}.Process`)
 
 | Column | Type | Rules |
 | --- | --- | --- |
 | `ProcessId` | `INT IDENTITY` | Primary key (`TableName` + `Id`). |
-| `ProcessGUID` | `UNIQUEIDENTIFIER NOT NULL` | UNIQUE. Generate on **first save** if not already assigned; never regenerate on update. |
+| `ProcessGUID` | `UNIQUEIDENTIFIER NOT NULL` | UNIQUE. Consumed from platform root; never minted by the app. |
 | *(flat fields)* | Per field | One column per flat field the application persists (e.g. `InitiatorUserGUID`, `RequestedDate`). |
 | Audit quartet | See [Mandatory audit columns](#mandatory-audit-columns) | Always present on `Process`. |
+
+### Mandatory create order
+
+1. `Global.P_POST_Process` → SQL generates `ProcessGUID`
+2. Insert `{UniqueCode}.Process` with that `ProcessGUID`
+3. Commit one shared-database transaction
+4. Return `ProcessGUID` → redirect to Process View
+
+See [process-persistence.md](ui/patterns/process-persistence.md).
 
 ### Flat field identity and reference persistence
 
@@ -270,9 +299,9 @@ Every BreezeOn **product application** that persists process instances owns a pr
 | Data Entity reference | Persist the row **Code** in a **`*Code`** column (e.g. `SupplierCode`) — never Description, never `DataEntityRowGUID`. Lookup: [Consumer Data Entity lookup](#consumer-data-entity-lookup). |
 | People reference | Persist **`UserGUID`** in a **`*UserGUID`** column (e.g. `InitiatorUserGUID`) — never UPN / display name. |
 
-Baseline Process Request fields (`InitiatorUserGUID`, `RequestedDate`) and UI placement: [process-request-section.md](ui/patterns/process-request-section.md). New-app checklist rows: [application-bootstrap-checklist.md](application-bootstrap-checklist.md). Applications may add columns; they must keep `ProcessId` / `ProcessGUID` / audit columns and the Process table as the root.
+Baseline Process Request fields (`InitiatorUserGUID`, `RequestedDate`) and UI placement: [process-request-section.md](ui/patterns/process-request-section.md). New-app checklist rows: [application-bootstrap-checklist.md](application-bootstrap-checklist.md). Applications may add columns; they must keep `ProcessId` / `ProcessGUID` / audit columns on the extension table.
 
-**Distinct from EAC Process Framework:** PF tables under `System` hold process **definition** metadata only. Runtime instances live in the product `{UniqueCode}.Process` (and app-owned children).
+**Distinct from EAC Process Framework:** PF tables under `System` hold process **definition** metadata only. Runtime platform root is `Global.Process`; app business fields live in `{UniqueCode}.Process`.
 
 ## Application registry identity columns
 
@@ -290,7 +319,7 @@ Conventions for registering applications in the EAC-owned catalog (column semant
 | --- | --- |
 | **ApplicationEnabledGUID** | Immutable canonical key for an Application Context (Application enabled for a Business Entity). `GUID` → **NOT NULL**. Generate once; never regenerate, reassign, or modify. Re-create after delete → new GUID; never reuse prior values. Prefer **UNIQUE**. |
 | **Exclusivity** | Unique `(ApplicationGUID, BusinessEntityGUID)` is a **business rule**: many-to-many overall; a specific pair exists at most once. |
-| **Ownership / deletion** | `ApplicationEnabledGUID` owns entity-specific application configuration. Delete via one centralized workflow that removes dependents then the enablement row (clean-data). See [ADR-006](../decisions/ADR-006-application-context-ownership.md). |
+| **Ownership / deletion** | `ApplicationEnabledGUID` owns entity-specific application configuration. Delete via one centralized workflow that removes configuration dependents then the enablement row (clean-data). **Runtime** `Global.Process` dependents cause the delete to **fail closed** (never silent cascade). See [ADR-006](../decisions/ADR-006-application-context-ownership.md) · [ADR-024](../decisions/ADR-024-platform-process-root.md). |
 
 Repository ↔ identifier mapping: [naming.md](naming.md) § Application technical identifiers.
 

@@ -16,12 +16,14 @@ Two documents, two jobs. Each fact has **one** home.
 | **STANDARDS `docs/ui/`** (this tree) | UX, behavior, visual design, decision matrices ("which control?"), accessibility, page composition, tokens | The complete parameter / event / type list |
 | **SHARED-UI [`docs/public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md)** | **API surface only**: component inventory, every `[Parameter]` (name, type, default), events, enums, services, public methods, host assets | Any UX, behavior, visual, or accessibility rule |
 
+**Gallery** (`BreezeOn.UI.Gallery`) demonstrates SHARED-UI usage. It is **not** a third authority for UX rules. STANDARDS remain SSOT; Gallery must match them — [example-governance.md](example-governance.md).
+
 Consequences:
 
 1. **Agents must not inspect Razor / C# source** to learn the public API — the parameter model is generated or CI-validated against SHARED-UI source ([controls/parameter-reference.md](controls/parameter-reference.md)).
 2. STANDARDS control docs explain *why and how* a parameter is used; for completeness they **defer** to `public-component-api.md`.
 3. The SHARED-UI README holds neither. Left navigation UX is [shell/navigation.md](shell/navigation.md).
-4. Conflicts are resolved by [Normative tiers § Precedence](foundations/normative-tiers.md#precedence).
+4. Conflicts among STANDARDS docs are resolved by [Normative tiers § Precedence](foundations/normative-tiers.md#precedence). Conflicts between **Gallery and STANDARDS** are resolved by STANDARDS ([example-governance.md](example-governance.md)).
 
 ## Normative tiers
 
@@ -82,6 +84,8 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | [patterns/process-request-section.md](patterns/process-request-section.md) | Mandatory **Process Request** section (General Information tab; Initiator + Requested Date); application-owned implementation |
 | [patterns/initiation-experience.md](patterns/initiation-experience.md) | Default New Request initiation chrome (Form icon, footer Save+Submit, Process Request) |
 | [patterns/page-footer-actions.md](patterns/page-footer-actions.md) | Shell footer **`BoPageFooterActions`** (Save Filled icon + Submit Primary) |
+| [patterns/process-persistence.md](patterns/process-persistence.md) | Save/Submit → `Global.Process` + extension; freeze ≥1500ms; redirect to Process View |
+| [patterns/process-view.md](patterns/process-view.md) | Terminal read-only Process View (`AE` + `PGUID`); Application Error on hydrate failure |
 | [controls/grids.md](controls/grids.md) | Grid Family Standards + `BoGrid` — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode`; Add New top + focus |
 | [controls/shuffle-card-grid.md](controls/shuffle-card-grid.md) | Shuffle Card Grid (`BoShuffleCardGrid`) — Grid-family card + DnD; premium reorder motion ([motion.md](foundations/motion.md)); `InsertNewAtTopAsync`; inherits Family Standards |
 | [controls/query-driven-retrieval.md](controls/query-driven-retrieval.md) | Query-driven retrieval — one primary contract per dataset; Filter → Sort → Page; debounce, cancellation, Top-N, exceptions ([ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md)) |
@@ -142,7 +146,7 @@ Inventory with UX pointers only. **Parameters, events, and types** for every com
 | `BoFieldReadOnly` | Flat read-only display field (pre-formatted string `Value`; same label chrome as Text Field; `Alignment`; optional `LinkifyUrls`) | [forms.md](controls/forms.md) |
 | `BoEmptyField` | Empty `BoRow` alignment slot (no label/value) | [layout.md](layout/layout.md), [forms.md](controls/forms.md) |
 | `BoTextField` | Text input (default Placeholder; `ReadOnly`; deferred mandatory validation; `ErrorText` → invalid) | [forms.md](controls/forms.md) |
-| `BoTextArea` | Multiline plain-text area (MaxLength default 4000; character count default on; fixed 6-row initial height; vertical resize; read-only linkify) | [forms.md](controls/forms.md#text-area-botextarea) |
+| `BoTextArea` | Multiline plain-text area (MaxLength default 4000; character count default on; fixed 6-row initial height; vertical resize; read-only linkify; read-only + `ShowLabel` → section-header-matching label divider) | [forms.md](controls/forms.md#text-area-botextarea) |
 | `BoDropDownList` | Searchable Code/Description Drop-Down (`Items` or async `ItemsProvider` Top-N; `DisplayCode`, `AllowMultiple` chips, panel search) | [forms.md](controls/forms.md) |
 | `BoPeoplePicker` | Platform user selector (composes Drop-Down List; Value = `UserGUID` / `;`-joined; active users only; Top-N 100) | [forms.md](controls/forms.md) |
 | `BoLatestWinsQuery` | Host latest-wins / cancel / optional signature skip for queries and FilterCatalog loads | [query-driven-retrieval.md](controls/query-driven-retrieval.md) |
@@ -150,7 +154,7 @@ Inventory with UX pointers only. **Parameters, events, and types** for every com
 | `BoCheckbox` | Boolean (`Required` / `ReadOnly` Yes-No) | [forms.md](controls/forms.md) |
 | `BoDateField` | Date / DateTime UI; bound type always `DateTime?` (never `DateOnly`); `ReadOnly`; locale (`FormatCulture`) + fixed calendar popover | [forms.md](controls/forms.md) |
 | `BoDateDisplay` | Format culture for wall-clock values (`Format`); UTC→user timezone + culture for instants (`FormatUtc`) — standard for grids / read-only datetime text | [i18n.md](foundations/i18n.md) |
-| `BoNumberField` | Number UI; bound type always `decimal?`; integer/decimals; currency/% (mutex); focus raw / blur formatted; `ReadOnly`; alignment default Right; needs host `bo-number-field.js` | [forms.md](controls/forms.md) |
+| `BoNumberField` | Number UI; bound type always `decimal?`; integer/decimals; currency/% (mutex); focus raw / blur formatted; `ReadOnly` flat display uses same `BoNumberDisplay.Format`; alignment default Right; needs host `bo-number-field.js` when editable | [forms.md](controls/forms.md) |
 | `BoButton` | Button (`BoButtonVariant`: Primary / Secondary / Stealth / **Danger**); corner radius `--bo-button-radius`; `HtmlType` (`BoButtonType`); optional icon | [button.md](controls/button.md) |
 | `BoIconButton` | Icon-only button (required `AriaLabel`; default Stealth; any `BoButtonVariant`) | [button.md](controls/button.md) |
 | `BoToggle` | Presentation-only segmented toggle; host-owned `SelectedToggleKey`; `ToggleRequested` intent; required icon+label per item; sliding selection pill via shared `bo-sliding-selection.js` | [toggle.md](controls/toggle.md), [selection-and-navigation.md](controls/selection-and-navigation.md) |

@@ -268,19 +268,31 @@ Related:
 
 Step in the organization principles chain: Objective → **Process** → Decision → Action → Outcome. Not a formal domain-modeling artifact in STANDARDS today.
 
-**Disambiguation:** This organization-principles “Process” is **not** a [Process Framework](#process-framework) process definition. In PF v1, the process definition is the Application itself (see [Process (Process Framework)](#process-process-framework)).
+**Disambiguation:** This organization-principles “Process” is **not** a [Process Framework](#process-framework) process definition, not [Global.Process](#globalprocess), and not an application `{UniqueCode}.Process` extension row. In PF v1, the process definition is the Application itself (see [Process (Process Framework)](#process-process-framework)).
 
 Related:
 - [architecture/ecosystem.md](../architecture/ecosystem.md)
 - [domain-modeling.md](domain-modeling.md)
 
+## Global.Process
+
+Platform **runtime** process root table in schema `Global` (EAC-owned). Holds `ProcessGUID`, `ApplicationEnabledGUID`, and audit only — no workflow/lifecycle columns. Created only via `Global.P_POST_Process`. Application business fields live in `{UniqueCode}.Process`. SSOT: [ADR-024](../decisions/ADR-024-platform-process-root.md) · [process-runtime](../architecture/process-runtime/README.md) · [database.md](database.md) § Process table convention.
+
+## ProcessGUID (platform)
+
+Universal platform process identifier from `Global.Process` (SQL-generated; apps must not mint). Used in URLs (`PGUID`), FKs, and consumers. Distinct from internal `ProcessId`. See [ADR-024](../decisions/ADR-024-platform-process-root.md) · [ae-query-string.md](../architecture/app-context/ae-query-string.md).
+
+## Process View
+
+Terminal read-only process page after Save/Submit (`/process-view?AE=…&PGUID=…`). All fields display (not Disabled); no footer actions; hydrate failures use Application Error. SSOT: [process-view.md](ui/patterns/process-view.md) · [process-persistence.md](ui/patterns/process-persistence.md).
+
 ## Process Framework
 
-EAC business capability for defining **one process definition per Application**: who acts ([Role](#role-process-framework)), what happens ([Step](#step-process-framework)), and how work moves ([Option](#option-process-framework) / [Route](#route-process-framework)). Not a platform workflow engine; runtime engine is Future Validation. SSOT: [architecture/process-framework/README.md](../architecture/process-framework/README.md).
+EAC business capability for defining **one process definition per Application**: who acts ([Role](#role-process-framework)), what happens ([Step](#step-process-framework)), and how work moves ([Option](#option-process-framework) / [Route](#route-process-framework)). Not a platform workflow engine; runtime engine is Future Validation. Orthogonal to runtime [Global.Process](#globalprocess). SSOT: [architecture/process-framework/README.md](../architecture/process-framework/README.md).
 
 ## Process (Process Framework)
 
-In Process Framework v1: the **Application** is the single process definition. There is no separate Process entity. Multiple business processes require multiple Applications. Distinct from organization-principles [Process](#process).
+In Process Framework v1: the **Application** is the single process definition. There is no separate Process entity. Multiple business processes require multiple Applications. Distinct from organization-principles [Process](#process) and from runtime [Global.Process](#globalprocess).
 
 ## Step (Process Framework)
 
@@ -349,6 +361,10 @@ Preferred name for host EF / app-service distinct filter dropdown sources. Avoid
 ## Example Governance
 
 A UI / query standard is fully implemented only when normative STANDARDS + AI guidance + Gallery working example all exist. SSOT: [ui/example-governance.md](ui/example-governance.md).
+
+## Global (SQL schema)
+
+EAC-owned SQL schema for platform runtime assets (today: `Global.Process` + `Global.P_POST_Process`). Distinct from [System (SQL schema)](#system-sql-schema) (catalog / PF metadata). See [ADR-024](../decisions/ADR-024-platform-process-root.md), [database.md](database.md).
 
 ## System (SQL schema)
 

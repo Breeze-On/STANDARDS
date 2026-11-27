@@ -18,11 +18,12 @@ Product applications persist Data Entity (DE) selections on their own `{UniqueCo
 3. **Search and Resolve stay separate.** Typeahead must not be used to hydrate saved values (a saved Code can fall outside the Top-N window); Resolve must not be used for open-ended search.
 4. **Sort:** default `SortField = Code`. Description sort (localized display text, then Code as tie-breaker) is an **explicit caller override**. Resolve always orders by Code.
 5. **Approved exception:** the INV Supplier / `suppliers` lookup overrides to Description because users recognize suppliers by name. Any other Description override requires its own justification in the product's docs.
-6. Result shape is `Code` + `Description` (requested language → `en-CA` → Code; never blank). Controls bind **Code**.
-7. **Persist Code only.** Product apps store DE selections as `*Code` columns on `{UniqueCode}.Process` — never Description, never `DataEntityRowGUID`.
-8. Products must **not** query `System.EACDataEntities*` tables directly, and must **not** reuse `P_GET_EACDataEntitiesRows` (or the Excel full-load SP) for typeahead.
+6. Result shape is `Code` + `Description` (requested language → `en-CA` → Code; never blank) + **`MetadataJson`** (`[{ "code", "value" }]` by column Code). Controls bind **Code**.
+7. **Persist Code only.** Product apps store DE selections as `*Code` columns on `{UniqueCode}.Process` — never Description, never `DataEntityRowGUID`. Do not snapshot Descriptions; resolve current EAC values at read time.
+8. Products must **not** query `System.EACDataEntities*` tables directly, and must **not** reuse `P_GET_EACDataEntitiesRows` (or the Excel full-load SP) for typeahead or Process View hydrate.
 9. Authorization fails closed inside the procedure (empty result, no `RAISERROR`): Global System Administrator or any Security Group member of the Application Context. This is not a replacement for `IBoAuthorizationService` page authorization.
 10. **Seed ownership:** EAC owns the platform baseline and the importer; each application repo owns its `seed/eac/` payloads (Applications, Business Entity delta, Application Configuration, Data Entity Values, Translations) — [data-portability.md](../docs/data-portability.md) § Per-application `seed/eac`.
+11. **Batch resolve:** EAC owns `System.P_GET_EACDataEntityValuesBatch` for multi-entity multi-code hydrate (Process View). SHARED-UI exposes `ResolveBatchAsync`. Caps ≤20 entities / ≤100 codes. No consumer-owned batch contracts.
 
 ## Consequences
 

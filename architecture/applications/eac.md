@@ -21,6 +21,7 @@ EAC is the centralized application for:
 - System configuration
 - Business drop-down (DDL) values / **Data Entities** (configurable master / reference data — [data-entities](../data-entities/README.md), [ADR-016](../../decisions/ADR-016-data-entity-ownership.md))
 - Application **Process Framework** metadata — Roles / Steps / Options configuration ([process-framework](../process-framework/README.md), [ADR-019](../../decisions/ADR-019-process-framework-metadata.md))
+- Platform runtime Process root — schema **`Global`**, table **`Global.Process`**, create SP **`Global.P_POST_Process`** ([ADR-024](../../decisions/ADR-024-platform-process-root.md) · [process-runtime](../process-runtime/README.md))
 - Security access
 - Role assignments
 - Application registry (`System` schema)
@@ -40,7 +41,7 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | Configuration Session Cache | Circuit-scoped `EacConfigurationSession` baselines for App Configuration modules after Application + Business Entity selection; lazy segments; Values Never Cache; warm nav without freeze ([ADR-020](../../decisions/ADR-020-configuration-session-cache.md) · [configuration-session-cache.md](../app-configuration/configuration-session-cache.md)). |
 | Localization | EAC `EacResources.resx` / `EacResources.fr.resx` via `IEacLocalizer` (not Gallery `BoUi`) |
 | Data access | EF Core + SQL Server provider (`ApplicationDbContext` + empty `InitialBaseline` for `__EFMigrationsHistory`; business schema via SQL scripts; audit stamps via `IAuditActorProvider` → authenticated actor (UPN/oid)) |
-| SQL scripts | Platform Identity + Security from SHARED-UI `sql/identity/` + `sql/security/` + EAC `sql/current_model/` (`System` tables/procedures) |
+| SQL scripts | Platform Identity + Security from SHARED-UI `sql/identity/` + `sql/security/` + EAC `sql/current_model/` (`System` catalog + **`Global`** Process runtime) |
 | DB model doc | [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) |
 | Portability | Applications + Business Entity Types + Business Entities JSON (merge/upsert) + Application Configuration JSON (synchronize; includes Process Framework sections) — [data-portability.md](../../docs/data-portability.md) (EAC-owned; not a shared service) |
 | Local database | SQL Server Docker (`BreezeOnLocal`); see [local-database.md](../../docs/local-database.md) |

@@ -38,6 +38,10 @@ See [context-resolution.md](../../../architecture/app-context/context-resolution
 
 **Transport:** navigate to `/application-error`. Do **not** pass title/message query parameters. Error Details reason is carried via circuit-scoped `IBoApplicationErrorState` (consumed once by the host page). Primary copy is always localized generic Application Error title/lead/body.
 
+### Process View failures
+
+Process View hydrate / context validation failures (missing `PGUID`, no `Global.Process` row, AE mismatch, missing application extension) use the same **Application Error** path (`IBoApplicationErrorState` → `/application-error`). Do **not** invent a custom Process error page. Contract: [process-view.md](../patterns/process-view.md).
+
 ## Design principles
 
 - Modern, professional, clean, enterprise-grade, trustworthy, premium

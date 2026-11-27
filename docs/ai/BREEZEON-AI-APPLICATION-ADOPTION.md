@@ -56,7 +56,7 @@ The **Customer Onboarding Master Flow is not used to create new BreezeOn applica
 | Factor | Outcome |
 | --- | --- |
 | Clear goal | Shell + navigation + Home hub only — no premature business UI |
-| Approved patterns only | Gallery-shaped host; no Fluent on product pages; locked Home/`BoAppShell` |
+| Approved patterns only | STANDARDS-shaped host (Gallery illustrative only); no Fluent on product pages; locked Home/`BoAppShell` |
 | Thin app resources | EAC owns `EacResources` / `IEacLocalizer` instead of misusing Gallery `BoUi` |
 | Platform foundations | New apps assume Identity / Auth / AuthZ as **mandatory** platform consumption ([application-model.md](../application-model.md)) — historical EAC shell milestones that deferred auth are **not** a template for App #N |
 | Docs updated together | STANDARDS landscape/eac/i18n + EAC README_AI + Shared UI README_AI |
@@ -68,7 +68,7 @@ Success criterion for adoption: a separate application runs on Interactive Serve
 ## Required integration steps
 
 1. **Reference** `BreezeOn.UI` (**mandatory** — interim: sibling `ProjectReference` to `SYSTEM-SHARED-UI/src/BreezeOn.UI`; NuGet/pinning = Future Validation for App #N).
-2. **Product Host Contract (AA SSOT):** follow [`page-development.md` § Product Host Contract](../ui/page-development.md#product-host-contract-required) end-to-end — UI + `AddBreezeOnAuthentication` / `MapBreezeOnAuthentication` + `AddBreezeOnAuthorization(pageCatalog)` + `BoAuthorizeRouteView` + Data Protection `SetApplicationName` + `BoErrorMessageOptions.ApplicationDisplayName` + Access Denied footer off + localization + app-owned resources. Gallery = chrome/assets only; **EAC = complete product host reference**.
+2. **Product Host Contract (AA SSOT):** follow [`page-development.md` § Product Host Contract](../ui/page-development.md#product-host-contract-required) end-to-end — UI + `AddBreezeOnAuthentication` / `MapBreezeOnAuthentication` + `AddBreezeOnAuthorization(pageCatalog)` + `BoAuthorizeRouteView` + Data Protection `SetApplicationName` + `BoErrorMessageOptions.ApplicationDisplayName` + Access Denied footer off + localization + app-owned resources. Design from STANDARDS first; Gallery = chrome/assets / illustrative composition only (STANDARDS win on conflict); **EAC = complete product host reference**.
 3. **Head assets:** Fluent bundle CSS, `breezeon-ui.css`, and the **seven** core scripts from the host-script inventory SSOT (`bo-sliding-selection.js`, **not** `bo-toggle.js`; no `?v=` cache-bust).
 4. **Nav / Home / titles:** `BoNavPane` + Home hub + per-route localized header titles — see page-development checklist.
 5. **CI:** Sibling Shared UI checkout (EAC DEV workflow pattern) per interim cross-repo contract.
@@ -151,4 +151,4 @@ Do **not** invent a second design system. Extend `BreezeOn.UI` (with Gallery + S
 | Landscape / consumers | [`architecture/landscape.md`](../../architecture/landscape.md) |
 | EAC agent surface | [SYSTEM-ADMIN-EAC README_AI](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README_AI.md) |
 | Shared UI agents | [SYSTEM-SHARED-UI README_AI](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README_AI.md) |
-| Gallery host (implementation reference) | `SYSTEM-SHARED-UI` → `src/BreezeOn.UI.Gallery` |
+| Gallery host (illustrative examples only; not SSOT) | `SYSTEM-SHARED-UI` → `src/BreezeOn.UI.Gallery` |

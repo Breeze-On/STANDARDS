@@ -5,7 +5,7 @@ Owner: Architecture / Standards
 
 **Authoritative bootstrap checklist** for every new BreezeOn **product application**. This is the primary validation artifact for platform compliance at application onboarding — for developers, planning agents, and AI implementation agents.
 
-Related process: [application-development-process.md](ai/application-development-process.md) · Step 1 schema: [application-definition.schema.json](ai/application-definition.schema.json) · Adoption: [BREEZEON-AI-APPLICATION-ADOPTION.md](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) · Host contract: [page-development.md](ui/page-development.md) · Initiation: [initiation-experience.md](ui/patterns/initiation-experience.md) · Process Request: [process-request-section.md](ui/patterns/process-request-section.md) · Footer: [page-footer-actions.md](ui/patterns/page-footer-actions.md) · Process table: [database.md](database.md) § Process table convention.
+Related process: [application-development-process.md](ai/application-development-process.md) · Step 1 schema: [application-definition.schema.json](ai/application-definition.schema.json) · Adoption: [BREEZEON-AI-APPLICATION-ADOPTION.md](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) · Host contract: [page-development.md](ui/page-development.md) · Initiation: [initiation-experience.md](ui/patterns/initiation-experience.md) · Process Request: [process-request-section.md](ui/patterns/process-request-section.md) · Footer: [page-footer-actions.md](ui/patterns/page-footer-actions.md) · Process View / persistence: [process-view.md](ui/patterns/process-view.md) · [process-persistence.md](ui/patterns/process-persistence.md) · Process table: [database.md](database.md) § Process table convention · [ADR-024](../decisions/ADR-024-platform-process-root.md).
 
 Detail remains in the linked SSOTs. This checklist consolidates **mandatory application-level** requirements into one gate artifact. It does **not** replace Product Host Contract tables, Must-consume rows, or schema Step 1 inputs.
 
@@ -88,22 +88,26 @@ Authority: [process-request-section.md](ui/patterns/process-request-section.md) 
 
 ## Database
 
-Authority: [database.md](database.md) § Process table convention
+Authority: [database.md](database.md) § Process table convention (two-tier) · [ADR-024](../decisions/ADR-024-platform-process-root.md) · [process-runtime](../architecture/process-runtime/README.md)
 
-- [ ] `{UniqueCode}.Process` table created under product `sql/current_model/`
-- [ ] `ProcessId` implemented (`INT IDENTITY` PK)
-- [ ] `ProcessGUID` implemented (`UNIQUEIDENTIFIER`, UNIQUE)
-- [ ] `ProcessGUID` generated on **first save** (never regenerated on update)
-- [ ] Flat fields mapped to Process table (baseline: `InitiatorUserGUID`, `RequestedDate`)
+- [ ] Platform root: EAC owns `Global.Process` + `Global.P_POST_Process` (consumer does **not** invent these)
+- [ ] `{UniqueCode}.Process` **extension** table created under product `sql/current_model/`
+- [ ] `ProcessId` implemented (`INT IDENTITY` PK) on the extension table
+- [ ] `ProcessGUID` on extension is `UNIQUEIDENTIFIER NOT NULL` UNIQUE — value from `Global.P_POST_Process` / `Global.Process`
+- [ ] Application **must not mint** `ProcessGUID` (SQL generates on Global create)
+- [ ] Create order: `Global.P_POST_Process` → insert `{UniqueCode}.Process` with that GUID → one transaction → redirect to Process View
+- [ ] Flat fields mapped to extension Process table (baseline: `InitiatorUserGUID`, `RequestedDate`)
 - [ ] Mandatory audit columns present
-- [ ] Consumer `dev-reset.ps1` applies app `sql/current_model/` **after** EAC subprocess
+- [ ] Consumer `dev-reset.ps1` applies app `sql/current_model/` **after** EAC subprocess (Global schema before consumer Process FK)
 
 ## Architecture
 
 - [ ] Process Request remains **application-owned** (no SHARED-UI `BoProcessRequest` package)
+- [ ] Save/Submit persistence per [process-persistence.md](ui/patterns/process-persistence.md); Process View is **terminal** ([process-view.md](ui/patterns/process-view.md))
 - [ ] No application forks of shared UI controls / chrome (use `Bo*` + tokens)
 - [ ] Shared UI standards followed ([ui/overview.md](ui/overview.md) · Product Host Contract)
 - [ ] [page-development.md](ui/page-development.md) reviewed for the pages shipped
+- [ ] UI designed from **STANDARDS first**, then SHARED-UI; Gallery treated as illustrative only ([example-governance.md](ui/example-governance.md))
 - [ ] Must-consume platform capabilities satisfied — [application-model.md](application-model.md)
 
 ## Documentation

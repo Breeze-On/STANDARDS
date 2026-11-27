@@ -50,10 +50,11 @@ Icons inherit `currentColor` from their control (nav: white / black-selected; bu
 
 | Surface | `Name` | `Variant` | Size | Notes |
 | --- | --- | --- | --- | --- |
-| General Information header tab | `Form` | **Regular** (outlined) | **16** | Default initiation tab — [initiation-experience.md](../patterns/initiation-experience.md) |
+| General Information header tab | `Form` | **Regular** (outlined) | **16** | Default initiation / Process View General Information tab — [initiation-experience.md](../patterns/initiation-experience.md) · [process-view.md](../patterns/process-view.md) |
+| Process History header tab | `Flowchart` | **Regular** (outlined) | **16** | **Org-wide** for all apps — constant `BoProcessViewRoute.ProcessHistoryIconName` — [process-view.md](../patterns/process-view.md) |
 | Page footer Save | `Save` | **Filled** | **20** (via `BoIconButton`) | Icon-only Save in `BoPageFooterActions` — [page-footer-actions.md](../patterns/page-footer-actions.md) |
 
-Resolver: Fluent Size16 Form may be missing — `BoIconResolver` aliases Form Size 16 → Size 20. Save Filled must be mapped at 16/20/24.
+Resolver: Fluent Size16 Form may be missing — `BoIconResolver` aliases Form Size 16 → Size 20. `Flowchart` Regular is mapped at 16/20/24/32. Save Filled must be mapped at 16/20/24. Do **not** use `History` for Process History.
 
 ## Default new-application page icons (Tier 2 — STANDARD)
 

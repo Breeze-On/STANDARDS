@@ -7,11 +7,13 @@ Single-page **implementation checklist** for developers and AI agents creating o
 
 This document does **not** replace detailed standards. It is the authoritative **page-construction checklist** that points to the responsibility docs under `docs/ui/`. Current reality only.
 
+**Authority:** Design from **STANDARDS first**, then implement with SHARED-UI `Bo*` components and services. Gallery demos accelerate composition only after SSOT confirmation; Gallery never overrides STANDARDS ([example-governance.md](example-governance.md)).
+
 **New application bootstrap** (mandatory app-level gate, distinct from this page checklist): [application-bootstrap-checklist.md](../application-bootstrap-checklist.md).
 
 **Entry / inventory:** [overview.md](overview.md). **Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BreezeOn.UI`). **Decision:** [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md).
 
-**Before you build:** pick the page shape in [page-archetypes.md](patterns/page-archetypes.md) (Home / List / Detail-Edit / Workspace / Error / Access Denied). **Parameters, events, and types** come from SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) — do **not** read Razor for API ([parameter-reference.md](controls/parameter-reference.md)). **Working examples:** [gallery-index.md](gallery-index.md). **How strongly a rule binds:** [normative-tiers.md](foundations/normative-tiers.md) (Tier 1 LOCKED / 2 STANDARD / 3 GUIDANCE).
+**Before you build:** pick the page shape in [page-archetypes.md](patterns/page-archetypes.md) (Home / List / Detail-Edit / Workspace / Error / Access Denied). **Parameters, events, and types** come from SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) — do **not** read Razor for API ([parameter-reference.md](controls/parameter-reference.md)). **Working examples (non-authoritative):** [gallery-index.md](gallery-index.md) — confirm against STANDARDS before copying. **How strongly a rule binds:** [normative-tiers.md](foundations/normative-tiers.md) (Tier 1 LOCKED / 2 STANDARD / 3 GUIDANCE).
 
 ## Goals
 
@@ -144,14 +146,16 @@ When the page is a **Home** (or equivalent landing hub):
 
 ### Process Request / initiation (mandatory on New Request / process Detail-Edit)
 
-Contract: [process-request-section.md](patterns/process-request-section.md) · [initiation-experience.md](patterns/initiation-experience.md) · [page-footer-actions.md](patterns/page-footer-actions.md). Schema: [database.md](../database.md) § Process table convention. New-app validation: [application-bootstrap-checklist.md](../application-bootstrap-checklist.md).
+Contract: [process-request-section.md](patterns/process-request-section.md) · [initiation-experience.md](patterns/initiation-experience.md) · [page-footer-actions.md](patterns/page-footer-actions.md) · [process-persistence.md](patterns/process-persistence.md) · [process-view.md](patterns/process-view.md). Schema: [database.md](../database.md) § Process table convention (two-tier / `Global.Process`) · [ADR-024](../../decisions/ADR-024-platform-process-root.md). New-app validation: [application-bootstrap-checklist.md](../application-bootstrap-checklist.md).
 
 - [ ] First tab is **General Information** with Fluent **Form** Regular (outlined) icon; first section is **Process Request**.
 - [ ] Header `TabsContent`: General Information Form outlined icon; body `BoTabPanels` bound to the same tab key.
 - [ ] Row 1: **Initiator** (`BoPeoplePicker`, single, Disabled, not Required, auto-populated; display `DisplayName (Email)`) + **Requested Date** (`BoDateField` Date mode, Disabled, auto-populated).
 - [ ] Shell footer **on** with `BoPageFooterActions` (Save `BoButtonVariant.Save` Filled icon + Submit Primary); no top Actions Save\|Discard on default initiation.
 - [ ] Implementation of the Process Request **section** is **application-owned** (no SHARED-UI Process Request package).
-- [ ] Persistence targets `{UniqueCode}.Process` (`ProcessGUID` on first save) when Save/Submit are wired beyond placeholders.
+- [ ] Persistence: `Global.P_POST_Process` then `{UniqueCode}.Process` extension (no app-minted `ProcessGUID`); freeze ≥1500ms; redirect to Process View — [process-persistence.md](patterns/process-persistence.md).
+- [ ] Process View hydrate / terminal rules followed when that surface is in scope — [process-view.md](patterns/process-view.md).
+- [ ] Process View tabs live in **header** `BoAppHeader.TabsContent` (not body card); body has `BoTabPanels` only; Process History icon = **`Flowchart` Regular 16** (`BoProcessViewRoute.ProcessHistoryIconName`); Process Request is **two** equal-`Weight` fields (no `BoEmptyField` pad) — [process-view.md](patterns/process-view.md) · [icons.md](foundations/icons.md) · [process-request-section.md](patterns/process-request-section.md) · [shell.md](shell/shell.md#header-tabs-optional-page-sections).
 
 ### Layout (forms and structured content)
 
@@ -242,7 +246,7 @@ When the page needs **header + editable card rows + optional reorder** (not a ta
 
 When the page filters, sorts, or pages a dataset — [query-driven-retrieval.md](controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md):
 
-**Canonical host pattern (copy from Gallery):**
+**Canonical host pattern** (STANDARDS-first; Gallery is a non-authoritative copy aid after SSOT confirmation):
 
 Filters section → build `BoQueryRequest` → `BoLatestWinsQuery.RunAsync` → primary retrieval contract → `BoGridCache.ReplaceAll` + `TotalCount` → `StateHasChanged`. Nested View keyword: contract or `BoNestedViewKeywordFilter` → `NestedExpandedSeedKeys` / shallow `DefaultExpansionState` (not `PreserveLayoutWhenHidden`).
 
@@ -266,18 +270,18 @@ Cross-control SSOT: [ux-conventions.md](patterns/ux-conventions.md). UI plans re
 - [ ] **Disabled vs read-only vs N/A:** Disabled = temporary; prefer `BoFieldReadOnly` / Display for inherent read-only; hide N/A with `IsHidden`.
 - [ ] **Navigation state:** major workspace / context change opens documented primary view; no inherited sub-state unless documented keep-alive.
 - [ ] **Admin language:** no implementation identifiers in admin-facing copy.
-- [ ] Before custom UX: confirm no existing Shared UI component, Gallery example, or documented pattern already solves the problem.
+- [ ] Before custom UX: confirm no existing Shared UI component or STANDARDS pattern already solves the problem; prefer Gallery copy only after SSOT confirmation ([example-governance.md](example-governance.md)).
 
 ### Controls
 
 - [ ] **`BoTextField`** for single-line text entry — [forms.md](controls/forms.md#text-field-botextfield).
-- [ ] **`BoTextArea`** for multiline plain-text entry — [forms.md](controls/forms.md#text-area-botextarea).
+- [ ] **`BoTextArea`** for multiline plain-text entry; read-only + `ShowLabel` shows section-header-matching label divider — [forms.md](controls/forms.md#text-area-botextarea).
 - [ ] **`BoDropDownList`** for Code/Description selection (panel search; `DisplayCode` / `AllowMultiple` as needed) — [forms.md](controls/forms.md#drop-down-list-bodropdownlist).
 - [ ] **`BoPeoplePicker`** for BreezeOn **user** selection (Value = `UserGUID` / `;`-joined; active users only; Top-N 100) — [forms.md](controls/forms.md#people-picker-bopeoplepicker).
 - [ ] **`BoCheckbox`** for boolean values (`Required` / `ReadOnly` Yes-No) — [forms.md](controls/forms.md#checkbox-bocheckbox).
 - [ ] **`BoDateField`** for date / date-time — bind **`DateTime?` only** (never `DateOnly`); `Mode` Date or DateTime is UI-only; Date mode still persists midnight — [forms.md](controls/forms.md#date-field-bodatefield).
-- [ ] **`BoNumberField`** for numbers — bind **`decimal?` only**; integer/decimals; `IsCurrency` / `IsPercent` mutually exclusive; percent UI 0–100 → bind ÷100; alignment default Right — [forms.md](controls/forms.md#number-field-bonumberfield).
-- [ ] **`BoFieldReadOnly`** for display-only scalars (host formats `Value`) — [forms.md](controls/forms.md#read-only-field-bofieldreadonly).
+- [ ] **`BoNumberField`** for numbers — bind **`decimal?` only**; integer/decimals; `IsCurrency` / `IsPercent` mutually exclusive; percent UI 0–100 → bind ÷100; alignment default Right; Process View / read surfaces use **`ReadOnly=true` with the same formatting parameters** (not ad-hoc `ToString`) — [forms.md](controls/forms.md#number-field-bonumberfield) · [read-only formatting parity](controls/forms.md#read-only-formatting-parity-locked).
+- [ ] **`BoFieldReadOnly`** for display-only scalars (host formats `Value`); numbers/dates prefer typed `ReadOnly` controls — [forms.md](controls/forms.md#read-only-field-bofieldreadonly).
 - [ ] Browser autocomplete stays **off** by default on editable `Bo*` fields (`AutoComplete` opt-in only when needed) — [forms.md § Browser autocomplete](controls/forms.md#browser-autocomplete-locked).
 - [ ] **`Weight`** when a field should be wider/narrower than neighbors (default 1) — [layout.md](layout/layout.md).
 - [ ] **`BoEmptyField`** for permanent empty slots; **`IsHidden`** + optional **`PreserveLayoutWhenHidden`** for temporary hide — [layout.md](layout/layout.md). Do **not** confuse with Nested View **`PreserveNestedExpansionOnCacheReset`** ([grids.md](controls/grids.md)).

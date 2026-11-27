@@ -14,11 +14,11 @@ Owner: Architecture (EAC)
 | [AI authoring contract](ai-authoring-contract.md) | Field contract + hazards |
 | [Worked examples](worked-examples.md) | Cost Centers, Request Types→DDL, Regions |
 | [Data Entities architecture](data-entities-architecture.md) | ERD, constraints, indexing, Excel retrieval |
-| [Using Data Entities](using-data-entities.md) | **Normative** consumer contract: Search / Resolve, sort default, Code persistence |
+| [Using Data Entities](using-data-entities.md) | **Normative** consumer contract: Search / Resolve / **batch resolve**, sort default, Code persistence |
 
 Decisions: [ADR-016](../../decisions/ADR-016-data-entity-ownership.md); [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md); [ADR-023](../../decisions/ADR-023-consumer-data-entity-lookup.md). Product: [eac.md](../applications/eac.md). Schema: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) · thin [`docs/data-entities.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/data-entities.md).
 
-**Consumers:** Process Framework `DDL` (by **row Code**) and product `{UniqueCode}.Process` apps via `System.P_GET_EACDataEntityLookupValues` + SHARED-UI `IBoDataEntityLookupQueries` (persist `*Code`).
+**Consumers:** Process Framework `DDL` (by **row Code**) and product `{UniqueCode}.Process` apps via `System.P_GET_EACDataEntityLookupValues` + SHARED-UI `IBoDataEntityLookupQueries` (persist `*Code`). Process View hydrate **must** use batch resolve — see [using-data-entities.md](using-data-entities.md) § batch.
 
 ## Ownership
 

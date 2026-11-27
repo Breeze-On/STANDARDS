@@ -30,7 +30,7 @@ Establish a valid AE **before** evaluating permissions ([context-resolution.md](
 ## Adoption (product apps)
 
 1. `services.AddBreezeOnApplicationAccess("<UNIQUE-CODE>", o => { o.RequiredAttributeCodes = [...]; });` — declare **product** required AttributeCodes (or leave empty).
-2. Wrap shell body in `BoApplicationContextGate`.
+2. Wrap shell body in `BoApplicationContextGate` (same-AE in-app navigation keeps gated content mounted — no teardown/remount).
 3. Propagate AE with `IBoApplicationContextNavigation` (no hand-rolled `AE` append).
 4. Read `IBoApplicationContext.ApplicationEnabledGUID` for business work.
 5. Optionally define **product** AttributeCode → page policy (not platform).

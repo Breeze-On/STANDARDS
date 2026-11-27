@@ -3,7 +3,7 @@
 
 Owner: UI
 
-Default **shell footer** command pattern for initiation and other pages that need Save + Submit in the footer. Related: [initiation-experience.md](initiation-experience.md), [actions-area.md](actions-area.md), [shell.md](../shell/shell.md), [button.md](../controls/button.md), [application-bootstrap-checklist.md](../../application-bootstrap-checklist.md).
+Default **shell footer** command pattern for initiation and other pages that need Save + Submit in the footer. Related: [initiation-experience.md](initiation-experience.md), [process-persistence.md](process-persistence.md), [actions-area.md](actions-area.md), [shell.md](../shell/shell.md), [button.md](../controls/button.md), [application-bootstrap-checklist.md](../../application-bootstrap-checklist.md).
 
 ## vs Actions area
 
@@ -31,9 +31,9 @@ Submit is the Primary workflow command; Save persists progress beside it. A cont
 
 ## Host wiring
 
-1. `BoAppShell.ShowFooter="true"` on pages that use this pattern (Home / Error / Access Denied remain footer off).
+1. `BoAppShell.ShowFooter="true"` on pages that use this pattern (Home / Error / Access Denied / Process View remain footer off).
 2. `FooterContent`: `<BoAppFooter><BoPageFooterActions … /></BoAppFooter>`.
-3. Bind `OnSave` / `OnSubmit` (placeholders allowed until persistence/workflow is defined).
+3. Bind `OnSave` / `OnSubmit` to real persistence — same path for both; Submit validates; then freeze ≥1500ms and redirect to Process View. Semantics: **[process-persistence.md](process-persistence.md)** (not Actions-area Save\|Discard).
 
 ## Override guidance
 

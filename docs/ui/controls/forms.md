@@ -111,12 +111,26 @@ Admin / enterprise workspaces (`Bo*` editable fields) **default autocomplete off
 
 Success bar: routine saved-value / history suggestions stay off for admin text/number entry. Do not promise elimination of every Chromium profile heuristic.
 
+## Read-only formatting parity (locked)
+
+**Rule:** Read-only rendering must preserve the field’s **display semantics** (grouping, currency symbol, percent affix, date/locale pattern, etc.). A value must look the same whether the control is editable (unfocused) or read-only, unless a documented standard explicitly states otherwise.
+
+| Field type | Preferred Process View / read surface | Formatting SSOT |
+| --- | --- | --- |
+| Number / currency / percent | **`BoNumberField` `ReadOnly=true`** with the **same** `IsCurrency` / `CurrencyIsoCode` / `IsPercent` / `IsInteger` / `NumberOfDecimals` / `Alignment` as initiation | `BoNumberDisplay.Format` (used by the control) |
+| Date / DateTime | **`BoDateField` `ReadOnly=true`** with the same `Mode` | `BoDateDisplay.Format` |
+| Multiline text | **`BoTextArea` `ReadOnly=true`** | Plain text + linkify |
+| Lookup Description / People display | `BoFieldReadOnly` with host-resolved Description / display name | Host hydrate (not a format mode of the picker) |
+| Simple scalars (codes, PO number) | `BoFieldReadOnly` | Host string as stored/displayed |
+
+**Forbidden:** Ad-hoc `ToString("0")`, invariant raw decimals, or dropping currency/grouping when switching to Process View. If using `BoFieldReadOnly` for a number, the host **must** call `BoNumberDisplay.Format` with identical metadata — prefer the typed control instead.
+
 ## Read-Only Field (`BoFieldReadOnly`)
 
 **Display name:** Read-Only Field.  
 **Component:** `BoFieldReadOnly` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
 
-Flat **display-only** companion for read views. Always shows **already-formatted text** (string, number, decimal, date, etc. share the same chrome). The host formats values **before** passing `Value` — the control does not own culture/type formatters.
+Flat **display-only** companion for read views. Always shows **already-formatted text** (string, number, decimal, date, etc. share the same chrome). The host formats values **before** passing `Value` — the control does not own culture/type formatters. For numbers/dates, prefer the typed control’s `ReadOnly` mode ([Read-only formatting parity](#read-only-formatting-parity-locked)).
 
 | Parameter | Role |
 | --- | --- |
@@ -222,7 +236,7 @@ Future requirements involving rich content, formatting, mentions, embedded media
 | Parameter | Role |
 | --- | --- |
 | `Label` | Field label. Empty Label (and not required) → **no label spacer** |
-| `ShowLabel` | **Default false**. Hides the visual label row (no vertical spacer) unless set true — including when `Required` with no label text. `Label` still supplies the accessible name when the row is hidden. Required validation unchanged. **Approved pattern:** when a Sub Section title is the only visible label for a single mandatory Text Area (e.g. INV Purpose of Service), set `BoSectionSub.Required=true`, keep `ShowLabel=false` on the Text Area, and still set field `Required=true` so deferred mandatory validation / fail badges run on the field while the section title shows the mandatory asterisk |
+| `ShowLabel` | **Default false**. Hides the visual label row (no vertical spacer) unless set true — including when `Required` with no label text. `Label` still supplies the accessible name when the row is hidden. Required validation unchanged. When the Text Area is the visible named field in a multi-field section (e.g. Request Details Purpose of Service), set **`ShowLabel=true`** so the field owns its label |
 | `FieldKey` | Mapping metadata; does **not** replace `@bind-Value` |
 | `Required` / `Disabled` / `ReadOnly` / `ErrorText` / `ValidationGroup` | Same deferred mandatory / chrome rules as Text Field |
 | `MaxLength` | Enforced. **Default 4000** (differs from Text Field 600) |
@@ -239,7 +253,7 @@ Future requirements involving rich content, formatting, mentions, embedded media
 | Initial height | Always **6 visible rows** (implementation constant — **not** a public `Rows` parameter). User may then resize vertically when `AllowResize` |
 | Width | **Mandatory** full width of the `BoRow` slot (no 28rem / Fluent 18rem caps) — editable and read-only |
 | Chrome | Same Concept A outline as Text Field (equal 1px rest border, hover, full-border focus, field-background fill including Dark) |
-| Intended usage | Sole field in its `BoRow`; typically own Section Main/Sub; full-width |
+| Intended usage | Sole field in its `BoRow` (full width). May live in its own Section **or** as an additional row inside a multi-field section (e.g. Request Details Row 4 — Purpose of Service) |
 | Soft wrap | Editable and read-only wrap; truncation ellipsis does **not** apply to multiline Text Area values ([ux-conventions.md](../patterns/ux-conventions.md) exception) |
 | Tall row | `BoRow` keeps `align-items: start` for tall Text Area siblings ([layout.md](../layout/layout.md#row-borow)) |
 
@@ -254,6 +268,26 @@ Shown **inside** the control chrome at the lower-right (same visual family as Te
 ### Read-only
 
 When `ReadOnly`: flat multiline display (not a non-editable Fluent textarea) with automatic safe `http`/`https` linkify (same security model as `BoFieldReadOnly` `LinkifyUrls`). No asterisk, count, or placeholder.
+
+#### Read-only label divider (locked)
+
+**Why:** Large blocks of read-only text need a clear visual separation between the field label and the value body — the same cue users already see under section headers.
+
+**Applies only when all are true:**
+
+- `ReadOnly` is true
+- The visual label row is shown (`ShowLabel` true and label/required chrome present)
+
+**Does not apply when:**
+
+- Editable (`ReadOnly` false)
+- `Disabled`
+- Invalid / validation chrome states
+- Label row hidden (`ShowLabel` false)
+
+**Visual:** Label → horizontal rule → value. The rule uses the **same** color, thickness, and spacing treatment as `.bo-section__header-rule` (SHARED-UI: `.bo-field__label-rule` shares that CSS). Do not invent a second divider style.
+
+Process View and other read-only surfaces that show multiline Purpose / narrative text must use `BoTextArea` `ReadOnly=true` (not a flat `BoFieldReadOnly`) so this divider is automatic.
 
 ### Security (linkify)
 
@@ -429,7 +463,7 @@ Single-value date (or date+time) control. Public API is `Bo*` only; calendar pop
 | `Mode` | `BoDateFieldMode.Date` (default) or `DateTime` — **UI only**; does not change the bound CLR type |
 | `Required` / `Disabled` / `IsHidden` | Same deferred mandatory rules as Text Field (Disabled / hidden skip participation) |
 | `Placeholder` | Optional; default resource **`Field_Date_Placeholder_Default`** ("Select date") or **`Field_DateTime_Placeholder_Default`** ("Select date/time") when `Mode` is DateTime; **hidden when Disabled**; placeholder color matches Text/Number (Fluent `--colorNeutralForeground4`) |
-| `ReadOnly` | Not editable (no calendar popover); no asterisk / required validation |
+| `ReadOnly` | Flat display (no input/calendar chrome); same `BoDateDisplay.Format` as closed editable; no asterisk / required validation |
 
 ### Typed model / persistence (hard standard)
 
@@ -492,7 +526,7 @@ Numeric entry with Text Field chrome. Public API is `Bo*` only; input uses Fluen
 | `Alignment` | `BoNumberFieldAlignment`: `Left` / `Center` / `Right`; **default Right** (also apply to read-only companions). **Approved product exception:** INV Request Details **Budget Amount** uses `Alignment=Left` (intentionally not right-aligned) |
 | `Required` / `Disabled` / `IsHidden` | Same deferred mandatory rules as Text Field (Disabled / hidden skip participation) |
 | `Placeholder` | Optional; default resource **`Field_Number_Placeholder_Default`** ("Enter value"); **hidden when Disabled or ReadOnly** |
-| `ReadOnly` | Not editable; no asterisk / required validation |
+| `ReadOnly` | Not editable; **flat** display (no Fluent input chrome); no asterisk / required validation. Still uses **`BoNumberDisplay.Format`** with the same `IsCurrency` / `CurrencyIsoCode` / `IsPercent` / `IsInteger` / `NumberOfDecimals` / locale as the editable unfocused value |
 | `AutoComplete` | HTML autocomplete token. **Default `"off"`** — see [Browser autocomplete](#browser-autocomplete-locked) |
 
 ### Typed model / persistence (hard standard)
@@ -503,7 +537,7 @@ Numeric entry with Text Field chrome. Public API is `Bo*` only; input uses Fluen
 | Forbidden | Binding to `int` / `double` / string as the model type |
 | Database | Prefer `decimal(36, N)` where **N = max(2, NumberOfDecimals)** — host owns SQL; library does not |
 | Percent storage | Persist the **fractional** value (UI 90 → `0.90`) |
-| Read-only display | Host formats via the same rules as unfocused `BoNumberField` (`BoNumberDisplay.Format` helpers) |
+| Read-only display | Prefer **`BoNumberField` `ReadOnly=true`** with the **same** formatting parameters as the editable field. If using `BoFieldReadOnly`, host **must** format via `BoNumberDisplay.Format` with identical metadata — never ad-hoc `ToString` / invariant `"0"` |
 | Backend Value (gallery) | Shows persisted `decimal?` (percent as fractional) |
 
 Planning JSON: `control: "NumberField"`; optional `isInteger`, `numberOfDecimals`, `isCurrency`, `currencyIsoCode`, `isPercent`, `alignment`, `hidden`.

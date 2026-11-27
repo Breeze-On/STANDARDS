@@ -13,6 +13,8 @@ Related: [application-bootstrap-checklist.md](../application-bootstrap-checklist
 
 **Step 1 input authority:** [application-definition.schema.json](application-definition.schema.json) is authoritative for required inputs, optional inputs, default values, and omission behavior. This markdown is the human-readable explanation. If schema and markdown conflict, **the schema wins**. Markdown must never introduce inputs, defaults, or behaviors absent from the schema.
 
+**UI / composition authority:** New applications are designed from **STANDARDS first** (`docs/ui/`, Product Host Contract), then implemented by **reusing SHARED-UI** `Bo*` components and services. Gallery pages are **illustrative examples only** — useful after SSOT confirmation; they do **not** define standards. If Gallery and STANDARDS disagree, **STANDARDS win** and Gallery must be fixed ([example-governance.md](../ui/example-governance.md)).
+
 ---
 
 ## Required and optional application inputs

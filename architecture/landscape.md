@@ -43,6 +43,7 @@ Current-reality only. For org identity and the repository table, see [ecosystem.
 - Product repos stay thin and **link** to STANDARDS; they do not redefine org-wide rules.
 - `SYSTEM-SHARED-UI` does not own EAC business domains, workflows, or business databases. It **does** own platform Identity/Security SQL **definitions** and auth/authZ runtime; EAC-named reserved group Code prefixes (`APP_*` / `BUSENT_*` / `APPENA_*` / `APPSG_*`) live in SHARED-UI as collision defense / EAC naming on the shared schema ([ADR-014](../decisions/ADR-014-platform-authorization.md), [ADR-015](../decisions/ADR-015-object-owned-administrator-groups.md)).
 - EAC does not own the design-system implementation.
+- Schema **`Global`** (incl. `Global.Process` / `Global.P_POST_Process`) is **EAC-owned**. Product apps (e.g. INV) own `{UniqueCode}.Process` **extension** tables only and consume platform `ProcessGUID` ([ADR-024](../decisions/ADR-024-platform-process-root.md) · [process-runtime](process-runtime/README.md)).
 
 ```text
   STANDARDS  <---- link / follow ----  SYSTEM-ADMIN-EAC
@@ -155,5 +156,6 @@ Decision record: [ADR-003](../decisions/ADR-003-azure-sql-with-local-docker-sql.
 | --- | --- |
 | [ecosystem.md](ecosystem.md) | Org identity and repository list |
 | [eac.md](eac.md) | Enterprise Administration Center |
+| [process-runtime/README.md](process-runtime/README.md) | Two-tier Process runtime (`Global.Process`) |
 | [security.md](security.md) | Auth and access as implemented |
 | [architecture/README.md](README.md) | Architecture index |

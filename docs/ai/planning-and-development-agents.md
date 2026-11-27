@@ -170,8 +170,8 @@ For every **UI-bearing** plan, Planning Agents **must** complete a **UX Standard
 
 **Document in the plan (required):**
 
-- Shared UI (`Bo*`) components reused
-- Gallery examples reviewed
+- Shared UI (`Bo*`) components / services reused
+- Gallery examples reviewed **against STANDARDS** (STANDARDS win on conflict — [example-governance.md](../ui/example-governance.md))
 - Applicable UX standards ([page-development.md](../ui/page-development.md), [ux-conventions.md](../ui/patterns/ux-conventions.md), control SSOTs)
 - Page Freeze expectations
 - Placeholder strategy
@@ -180,7 +180,7 @@ For every **UI-bearing** plan, Planning Agents **must** complete a **UX Standard
 - Disabled / read-only behavior
 - Intentional deviations with justification
 
-SSOT detail: [ux-conventions.md](../ui/patterns/ux-conventions.md) · [page-development.md](../ui/page-development.md).
+SSOT detail: [ux-conventions.md](../ui/patterns/ux-conventions.md) · [page-development.md](../ui/page-development.md) · [example-governance.md](../ui/example-governance.md).
 
 ### Configuration Session Review (mandatory peer gate)
 
@@ -240,9 +240,10 @@ When **Build Locally** is executed:
 
 Before inventing placeholders, overlays, alignment CSS, Fluent usage, or other custom UX:
 
-1. Confirm no existing Shared UI (`Bo*`) component, Gallery example, or documented STANDARDS pattern already solves the problem.
-2. Prefer Gallery as the copy source for library patterns.
-3. Refuse undocumented deviations (placeholders, overlays, alignment forks, direct Fluent on product pages).
+1. Confirm no existing Shared UI (`Bo*`) component or documented STANDARDS pattern already solves the problem.
+2. Prefer Gallery as the **copy source for library patterns only after** confirming the composition matches STANDARDS ([example-governance.md](../ui/example-governance.md)).
+3. If Gallery and STANDARDS disagree, **STANDARDS win** — correct Gallery; do not ship the drifted composition.
+4. Refuse undocumented deviations (placeholders, overlays, alignment forks, direct Fluent on product pages).
 
 Follow Page Freeze MUST / MUST NOT in [overlays.md](../ui/shell/overlays.md).
 

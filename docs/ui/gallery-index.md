@@ -3,7 +3,11 @@
 
 Owner: UI
 
-**Pattern → Gallery path** index for [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) `BreezeOn.UI.Gallery`. "Copy from Gallery" ([example-governance.md](example-governance.md)) starts here. Gaps are registered as exceptions in [DEV-002](../deviations/DEV-002-example-governance-approved-exceptions.md). Related: [overview.md](overview.md), [page-development.md](page-development.md).
+**Pattern → Gallery path** index for [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) `BreezeOn.UI.Gallery`.
+
+**Authority:** Gallery pages are **illustrative examples only**. They demonstrate usage and accelerate copy; they do **not** establish architecture or UX standards. **STANDARDS remain SSOT.** If a Gallery path and a standard disagree, the standard is correct and the Gallery must be fixed — [example-governance.md](example-governance.md).
+
+"Copy from Gallery" starts here **after** confirming the linked Standard. Gaps are registered as exceptions in [DEV-002](../deviations/DEV-002-example-governance-approved-exceptions.md). Related: [overview.md](overview.md), [page-development.md](page-development.md).
 
 Current reality only. Update this table in the same change set as any Gallery demo added, moved, or removed.
 
@@ -40,7 +44,7 @@ Current reality only. Update this table in the same change set as any Gallery de
 | Context Selection (`BoNavHub` brand panel + `BoNavCardStyleStatic` info header + compact icon/label BE cards; Home-style AppTitle) | [context-selection.md](patterns/context-selection.md) | Context Selection Page |
 | App shell, left navigation, header actions (theme switch, Settings, profile) | [shell.md](shell/shell.md), [navigation.md](shell/navigation.md) | Every page (`MainLayout`) |
 | Navigation motion (route / AE enter; compact AE press) | [navigation-motion.md](shell/navigation-motion.md) | Every `BoAppShell` page; Context Selection showcase |
-| Header tabs (`BoTabs` / `BoTabPanels`), keep-alive panels | [shell.md](shell/shell.md#header-tabs-optional-page-sections) | Components, Theme, Error Message Page |
+| Header tabs (`BoTabs` / `BoTabPanels`), keep-alive panels | [shell.md](shell/shell.md#header-tabs-optional-page-sections) | Components, Theme, Error Message Page, Process View Page |
 | Tabs keyboard + `TabRequested` veto | [selection-and-navigation.md](controls/selection-and-navigation.md) | Components → Other → Button → Tabs keyboard |
 | Toggle | [toggle.md](controls/toggle.md) | Components → Other → Toggle |
 | Panel Navigation + `BoKeepAlivePanels` + `BoPanelHost` | [panels.md](layout/panels.md) | Components → Other (the left navigator is the demo) |
@@ -55,6 +59,7 @@ Current reality only. Update this table in the same change set as any Gallery de
 | Import Summary | [import-summary.md](patterns/import-summary.md) | Components → Other → Import Summary |
 | Validation Summary | [validation-summary.md](patterns/validation-summary.md) | Components → Other → Validation Summary |
 | Error Message Page (`BoAccessDenied`, Access / Support Details) | [error-messages.md](shell/error-messages.md) | Error Message Page |
+| Process View (header tabs + read-only panels; footer off) | [process-view.md](patterns/process-view.md) · [shell.md](shell/shell.md#header-tabs-optional-page-sections) | `/process-view-page` — tabs in `BoAppHeader.TabsContent`; body `BoTabPanels` only; Process Request = two equal-`Weight` fields |
 
 ## Not covered (registered in DEV-002)
 

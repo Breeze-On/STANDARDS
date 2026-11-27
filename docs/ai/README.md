@@ -52,6 +52,7 @@ Schema: [`ai-catalog.schema.json`](ai-catalog.schema.json). Taxonomy + banner ru
 | What exists | [`architecture/landscape.md`](../../architecture/landscape.md) |
 | New Application Checklist (bootstrap gate) | [`docs/application-bootstrap-checklist.md`](../application-bootstrap-checklist.md) |
 | UI page checklist | [`docs/ui/page-development.md`](../ui/page-development.md) |
+| Gallery vs STANDARDS authority | [`docs/ui/example-governance.md`](../ui/example-governance.md) — STANDARDS win; Gallery illustrative only |
 | Why a decision exists | [`decisions/README.md`](../../decisions/README.md) |
 
 Product repos stay thin: their `README_AI.md` / `AGENTS.md` should **link here first**, then add repo-local facts only.

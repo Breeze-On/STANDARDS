@@ -22,6 +22,7 @@ Current reality only.
 3. For a **visual value** (px, hex, duration), the token in [tokens.md](tokens.md) / [motion.md](motion.md) / [typography.md](typography.md) wins over any literal restated in prose. Prose should cite the token name, not copy the literal.
 4. For an **API fact** (parameter, event, type), [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) wins — see [overview.md § Authority split](../overview.md#authority-split-ux-vs-api).
 5. If documented behavior and shipped code disagree, it is a **defect**: fix one side and record which in the same change set. Never silently choose a side.
+6. If **Gallery** (or any sample) and STANDARDS disagree on composition / UX, **STANDARDS win** — Gallery is illustrative only and must be corrected ([example-governance.md](../example-governance.md)).
 
 ## Legacy vocabulary mapping
 

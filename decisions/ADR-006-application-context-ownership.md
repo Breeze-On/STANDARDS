@@ -35,12 +35,14 @@ The unique constraint on `(ApplicationGUID, BusinessEntityGUID)` is a **business
 
 ### Deletion Standard
 
-EAC follows a clean-data model:
+EAC follows a clean-data model for **configuration** dependents:
 
-- Deleting an Application Context hard-deletes the `EACApplicationsEnabled` row and **all** dependent configuration for that `ApplicationEnabledGUID`.
-- No soft delete, disabled state, or orphan records.
+- Deleting an Application Context hard-deletes the `EACApplicationsEnabled` row and **all** dependent **configuration** for that `ApplicationEnabledGUID`.
+- No soft delete, disabled state, or orphan configuration records.
 - Cleanup is implemented as **one centralized deletion workflow** (`System.P_POST_EACApplicationsEnabledDelete` and its service entry point). There is no plugin/registry abstraction.
-- Future features that introduce tables referencing `ApplicationEnabledGUID` **must directly extend** that centralized workflow in the same change set.
+- Future features that introduce **configuration** tables referencing `ApplicationEnabledGUID` **must directly extend** that centralized workflow in the same change set.
+
+**Runtime process records (fail-closed):** `Global.Process` rows are **runtime** records owned by the platform process root ([ADR-024](ADR-024-platform-process-root.md)). Application Enabled deletion **must fail** when dependent `Global.Process` rows exist for that `ApplicationEnabledGUID`. The platform must **never** silently cascade-delete runtime process records. The centralized delete workflow checks for dependents and raises an error before mutating configuration.
 
 ### Mandatory future development rule
 

@@ -16,6 +16,7 @@ Concise map of org standards for AI agents. **SSOT remains the linked documents*
 | Data locality | Azure SQL hosted; local Docker SQL for Development | [ADR-003](../../decisions/ADR-003-azure-sql-with-local-docker-sql.md), [local-database.md](../local-database.md) |
 | UI contract | Product → `BreezeOn.UI` → Fluent (internal) | [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 | What exists | Describe implemented systems only | [`architecture/`](../../architecture/), [landscape.md](../../architecture/landscape.md) |
+| Process runtime | Two-tier: `Global.Process` (EAC) + `{UniqueCode}.Process` extension; no app-minted `ProcessGUID`; Save/Submit → Process View | [process-runtime](../../architecture/process-runtime/README.md) · [ADR-024](../../decisions/ADR-024-platform-process-root.md) · [process-view.md](../ui/patterns/process-view.md) · [process-persistence.md](../ui/patterns/process-persistence.md) |
 | App shape | Expected application repo contents | [application-model.md](../application-model.md) |
 | Environments | Org environment vocabulary | [environments.md](../environments.md) |
 | Hosted deployment | App Service / publish profile / GitHub Environment deploy standard | [hosted-deployment.md](../hosted-deployment.md) |
@@ -86,9 +87,10 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Query-driven retrieval | One primary contract per dataset; Filter → Sort → Page; `BoLatestWinsQuery`; FilterCatalog (not FilterOptions SP) | [query-driven-retrieval.md](../ui/controls/query-driven-retrieval.md) · [ADR-008](../../decisions/ADR-008-query-driven-data-retrieval.md) |
 | Nested View keyword | Rules 1–3; client helper `BoNestedViewKeywordFilter` | [grids.md](../ui/controls/grids.md#nested-view-keyword-filtering-org-standard) |
 | Drop-Down retrieval | Small → `Items`; large → `ItemsProvider` Top-N + search | [forms.md](../ui/controls/forms.md) |
-| Consumer Data Entity lookup | EAC `P_GET_EACDataEntityLookupValues` + SHARED-UI `IBoDataEntityLookupQueries` (Search TOP 100 / Resolve); persist `*Code` on `{UniqueCode}.Process`; sort Code default; flat field property = column name | [using-data-entities.md](../../architecture/data-entities/using-data-entities.md) · [ADR-023](../../decisions/ADR-023-consumer-data-entity-lookup.md) · [database.md](../database.md) |
+| Consumer Data Entity lookup | EAC `P_GET_EACDataEntityLookupValues` + SHARED-UI `IBoDataEntityLookupQueries` (Search TOP 100 / Resolve / batch); persist `*Code` on `{UniqueCode}.Process`; Process View hydrate uses batch; sort Code default; flat field property = column name | [using-data-entities.md](../../architecture/data-entities/using-data-entities.md) · [ADR-023](../../decisions/ADR-023-consumer-data-entity-lookup.md) · [database.md](../database.md) |
+| Process View / persistence | Terminal read-only after Save/Submit; freeze ≥1500ms; `Global.P_POST_Process` then extension | [process-view.md](../ui/patterns/process-view.md) · [process-persistence.md](../ui/patterns/process-persistence.md) · [ADR-024](../../decisions/ADR-024-platform-process-root.md) |
 | People Picker | `BoPeoplePicker`; Value = `UserGUID` / `;`-joined; active only; Top-N 100; no photos V1 | [forms.md](../ui/controls/forms.md#people-picker-bopeoplepicker) |
-| Example Governance | Normative + AI guidance + Gallery example required | [example-governance.md](../ui/example-governance.md) |
+| Example Governance | Normative + AI + **STANDARDS-compliant** Gallery; **STANDARDS win** on conflict; Gallery illustrative only | [example-governance.md](../ui/example-governance.md) |
 | UX conventions | Placeholders, truncation, disabled/read-only, nav state, freeze summary, Compliance Review | [ux-conventions.md](../ui/patterns/ux-conventions.md) |
 | Page Freeze | MUST for saves/bulk/perceptible workspace hydrate (incl. tab reload); MUST NOT for filter/sort/chrome-only | [overlays.md](../ui/shell/overlays.md) |
 | Placeholders | Platform defaults only; no label/header echo; omit when Disabled | [ux-conventions.md](../ui/patterns/ux-conventions.md) |
@@ -101,7 +103,7 @@ Before new patterns: read relevant ADRs ([adr.md](../adr.md), [decisions/README.
 | Buttons / Actions | Hierarchy, Danger, `BoIconButton`, Save / Discard, Actions area | [button.md](../ui/controls/button.md), [actions-area.md](../ui/patterns/actions-area.md) |
 | Page shape / states | Archetypes; empty / loading / error / toast | [page-archetypes.md](../ui/patterns/page-archetypes.md), [page-states.md](../ui/patterns/page-states.md) |
 | Icons / a11y / motion | Icon sizes; WCAG 2.2 AA; approved motion tokens | [icons.md](../ui/foundations/icons.md), [accessibility.md](../ui/foundations/accessibility.md), [motion.md](../ui/foundations/motion.md) |
-| Gallery coverage | Pattern → Gallery path; DEV-002 gaps | [gallery-index.md](../ui/gallery-index.md) |
+| Gallery coverage | Pattern → Gallery path (non-authoritative); confirm STANDARDS first; DEV-002 gaps | [gallery-index.md](../ui/gallery-index.md) |
 
 ---
 

@@ -55,7 +55,9 @@ Metadata column Codes **`name`** and **`description`** are the conventional disp
 
 ### Not in scope
 
-No workflow engine, task assignment, or instance/runtime tables. Role `Type` is `Group` only. No multi-application PF consumption contract (Future Validation). No Process entity table in v1 (one process definition per Application).
+No workflow engine, task assignment, or **Process Framework** instance/runtime tables. Role `Type` is `Group` only. No multi-application PF consumption contract (Future Validation). No Process entity table in v1 (one process definition per Application).
+
+**Clarification:** Platform runtime process identity lives in **`Global.Process`** ([ADR-024](ADR-024-platform-process-root.md)) — orthogonal to Process Framework **definition** metadata. This ADR does not prohibit `Global.Process`; it prohibits treating PF tables as runtime instance stores.
 
 ## Consequences
 

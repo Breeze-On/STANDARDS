@@ -14,6 +14,7 @@ Current reality only. Every archetype lives inside `BoAppShell` (Option B) with 
 | The landing hub of the application | [Home](#home) |
 | Browse / search / maintain a dataset | [List](#list) |
 | View or edit one record or one set of settings | [Detail / Edit](#detail--edit) |
+| Read-only terminal process after Save/Submit | [Process View](#process-view) |
 | A large multi-section configuration experience (10–30 sections) | [Workspace](#workspace) |
 | A standardized failure state | [Error](#error) / [Access Denied](#access-denied) |
 
@@ -24,6 +25,7 @@ Current reality only. Every archetype lives inside `BoAppShell` (Option B) with 
 | Home | `BoNavHub` + `BoNavCardStyleHyperlink` | **false** | None (hub fills the slot) | No | Not expressible |
 | List | Filters section + `BoGrid` section | Per page | Body scrolls | Optional | **Partial** — Filters section only |
 | Detail / Edit | Section → Row → Field | Per page | Body scrolls | Optional (page segmentation) | **Yes** — the forms-only schema is built for this |
+| Process View | Section → Row → Field (read-only display) | **false** (must) | Body scrolls | General Information + Process History (min) | Partial — form content only |
 | Workspace | `BoPanelHost` (Left nav + Fill keep-alive) | Per page | Panels scroll independently | No (use Panel Navigation) | **Partial** — field content inside a panel only |
 | Error | Error Message framework | **false** (must) | Standard | No (single scenario on the Gallery showcase) | Not expressible |
 | Access Denied | `BoAccessDenied` | **false** (must) | Standard | No | Not expressible |
@@ -68,13 +70,25 @@ Page → Body → [Actions area] → BoSectionMain → [BoSectionSub] → BoRow 
 | Composition | Page → Section → Row → Field; every field a direct child of a `BoRow`; every `BoRow` inside a Section — [layout.md](../layout/layout.md#page-composition-locked--hard-standard) |
 | Page segmentation | Optional header `BoTabs` (≈2–7 sections) with keep-alive `BoTabPanels`; `SectionKey` + `ValidationGroup` for fail badges — [selection-and-navigation.md](../controls/selection-and-navigation.md) |
 | Process instances | New Request / open-process Detail-Edit **must** start with tab **General Information** (Form outlined icon) and section **Process Request** — [process-request-section.md](process-request-section.md) · [initiation-experience.md](initiation-experience.md) |
-| Initiation footer | Default initiation uses shell footer Save+Submit ([page-footer-actions.md](page-footer-actions.md)), not top Actions Save\|Discard |
+| Initiation footer | Default initiation uses shell footer Save+Submit ([page-footer-actions.md](page-footer-actions.md)), not top Actions Save\|Discard; success → Process View ([process-persistence.md](process-persistence.md)) |
 | Working copy (workspaces) | [Actions area](actions-area.md) (Save | Discard) at the top; Save runs `Validate(null)`; Dirty State guards navigation and tab/toggle abandon points |
 | Small edits | A `BoDialog` (Create / Edit / Confirm) instead of a new page; footer actions, not an Actions area — [overlays.md](../shell/overlays.md) |
 | Validation | Deferred required chrome, Alert toast, fail badges; Validation Summary for multi-row editors — [forms.md](../controls/forms.md#deferred-mandatory-validation-locked) |
 | Footer | Per page (Gallery Components / Theme keep the Submit footer) |
 
 Gallery: Components field tabs (Text Field … Number Field) and Theme. Planning JSON: [layout.md § Page composition JSON](../layout/layout.md#page-composition-json-planning-agent-input).
+
+## Process View
+
+Terminal read-only process surface after Create → Save/Submit. Route `/process-view?AE=…&PGUID=…`. Contract: [process-view.md](process-view.md) · persistence: [process-persistence.md](process-persistence.md) · [ADR-024](../../../decisions/ADR-024-platform-process-root.md).
+
+| Concern | Standard |
+| --- | --- |
+| Fields | Read-only **display** (not Disabled editors) |
+| Footer | **Off** (`ShowFooter = false`) — no sticky Save/Submit |
+| Tabs | At least General Information + Process History |
+| Terminal | No Edit / Resume / Reopen / Withdraw / Delete in v1 |
+| Failures | Application Error framework — no custom Process error page |
 
 ## Workspace
 

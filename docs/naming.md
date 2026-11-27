@@ -76,10 +76,11 @@ Integer `*Id` primary keys are **physical** clustered keys (storage / indexing).
 
 ## Process persistence columns
 
-On `{UniqueCode}.Process` ([database.md](database.md) § Process table convention):
+On `{UniqueCode}.Process` extension ([database.md](database.md) § Process table convention · [ADR-024](../decisions/ADR-024-platform-process-root.md)):
 
-| Suffix | Holds | Example |
+| Column / suffix | Holds | Example |
 | --- | --- | --- |
+| `ProcessGUID` | Platform process identity from **`Global.Process`** (SQL-generated via `Global.P_POST_Process`; apps must not mint) | — |
 | `*Code` | Data Entity row **Code** (never Description / GUID) — [using-data-entities.md](../architecture/data-entities/using-data-entities.md) | `SupplierCode` |
 | `*UserGUID` | People Picker `UserGUID` | `InitiatorUserGUID` |
 

@@ -100,7 +100,9 @@ Highest wins on conflict:
 - SHARED-UI `docs/public-component-api.md` = public `Bo*` parameters / host-integration API SSOT
 - Product READMEs must not claim authority for either
 
-**Future BreezeOn applications:** consume STANDARDS by link; hold only app AA (schema, seed, app-specific runbooks); never copy platform standards into the app repo.
+**Design / composition authority (Gallery vs STANDARDS):** when deciding *how* to compose pages or which layout is correct, authority is STANDARDS → ADRs → architecture → product AA → SHARED-UI implementation → **Gallery last**. Gallery and sample pages are **illustrative only**; they must conform to STANDARDS and **never** override them. If Gallery and STANDARDS disagree, STANDARDS win and Gallery must be fixed — [example-governance.md](ui/example-governance.md).
+
+**Future BreezeOn applications:** consume STANDARDS by link; hold only app AA (schema, seed, app-specific runbooks); never copy platform standards into the app repo. Design from STANDARDS first; implement with SHARED-UI components/services; use Gallery as a verified copy aid only after SSOT confirmation.
 
 ## Approved deviations (first-class)
 
@@ -414,7 +416,7 @@ Any change affecting **authorization architecture**, **Security schema**, **page
 
 Any change affecting Data Entity **schema**, **stored procedures**, **API contracts**, **business rules**, **CRUD flows**, or **platform standards** is incomplete until [`architecture/data-entities/`](../architecture/data-entities/README.md), related ADR(s) (ADR-016 or successors), and EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) (plus thin product `README` / `README_AI` pointers) are updated in the **same change set**.
 
-UI / query-driven standards also follow **[Example Governance](ui/example-governance.md)**: normative standard + AI guidance + Gallery working example (unless an approved exception applies — record in [`docs/deviations/`](deviations/README.md)).
+UI / query-driven standards also follow **[Example Governance](ui/example-governance.md)**: normative standard + AI guidance + **STANDARDS-compliant** Gallery working example (unless an approved exception applies — record in [`docs/deviations/`](deviations/README.md)). Gallery never outranks STANDARDS; drift is a defect.
 
 ### EAC Framework Synchronization / Application Context DoD (platform)
 

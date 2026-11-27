@@ -85,12 +85,12 @@ Full-viewport busy overlay for multi-second operations (import/export, bulk save
 
 | Member | Behavior |
 | --- | --- |
-| `Show(message?)` | Pushes a freeze level; null/whitespace → `PageFreeze_PleaseWait` (“Please wait...”) |
+| `Show(message?)` | Pushes a freeze level; null/whitespace → `PageFreeze_PleaseWait` (“Processing...”) |
 | `Hide()` | Pops one level; no-op when clear |
 | `HideAll()` | Clears the stack (fault handlers) |
 | `IsVisible` / `CurrentMessage` / `Depth` | Observable state |
 | `Changed` | `event Action?` — host re-renders |
-| `RunAsync(message, operation)` | `Show` → try/finally `Hide` (preferred) |
+| `RunAsync(message, operation)` | `Show` → **await paint flush** → try/finally `Hide` (preferred). Ensures the overlay paints before work/validation — **no** intentional delay token |
 | `RunAsync<T>(...)` | Same with result |
 
 Nesting is **reference-counted**: nested Import→Save keeps the overlay until `Depth` returns to zero.
@@ -132,12 +132,14 @@ See also [navigation.md § Branding ownership](navigation.md#branding-ownership-
 `IBoPageFreezeService` **MUST** be used when:
 
 - Database writes occur (create, update, delete)
+- **Process Save / Submit persistence** ([process-persistence.md](../patterns/process-persistence.md)) — freeze immediately, prevent duplicate actions, keep frozen for a **minimum of 1500ms**, then redirect to Process View
 - Import or export operations occur
 - Bulk operations occur
 - Synchronization or other background processing is expected to take noticeable time
 - Users might otherwise attempt duplicate actions
 - User interaction should be prevented until completion
 - Loading lookups that hit the backend at a scale users can perceive (e.g. full hierarchy fetch before an edit dialog)
+- Process View hydrate ([process-view.md](../patterns/process-view.md))
 - **Workspace or configuration hydration** that performs one or more backend round-trips expected to be user-perceptible — including panel/tab **activation that reloads data** (not chrome-only flips)
 
 Cross-control summary: [ux-conventions.md](../patterns/ux-conventions.md) § Page Freeze.
@@ -167,8 +169,8 @@ Page freeze is for **meaningful backend work** or operations users perceive as �
 
 ### Messaging
 
-- Pass **already-localized** short contextual gerunds (e.g. “Importing Applications...”, “Saving Changes...”, “Deleting Business Entity...”).
-- Prefer a specific message over the default `PageFreeze_PleaseWait` whenever the operation is known.
+- **Submission / completion (locked):** Save, Submit, Process persist, and similar completion work use the platform default `PageFreeze_PleaseWait` — **“Processing...”** (FR: “Traitement en cours...”). Pass `message: null` (or the resource) — do **not** invent app-specific “Saving…” copy for these ops.
+- **Optional specific gerunds** remain allowed for Import / Export / Delete / Sync when a more precise label helps (e.g. “Importing Applications...”).
 - Keep copy concise; one line under the minimized logo.
 
 ### Usage pattern

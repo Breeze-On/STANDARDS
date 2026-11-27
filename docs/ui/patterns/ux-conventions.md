@@ -18,20 +18,20 @@ Planning Agents must document a **UX Standards Compliance** subsection in every 
 | Item | Required content |
 | --- | --- |
 | Shared UI reuse | Which `Bo*` components are reused |
-| Gallery | Which Gallery examples were reviewed |
+| Gallery | Which Gallery examples were reviewed **against STANDARDS** (STANDARDS win on conflict) |
 | Applicable standards | Links to `page-development.md`, this file, and control SSOTs |
-| Page Freeze | When freeze is used / not used |
+| Page Freeze | When freeze is used / not used; Process Save/Submit **minimum 1500ms** then redirect ([process-persistence.md](process-persistence.md)) |
 | Placeholders | Default resources vs documented semantic exceptions |
 | Navigation state | Reset vs keep-alive intent |
 | Truncation | How long values stay stable (ellipsis + hover title) |
-| Disabled / read-only | Which path for each non-editable value |
+| Disabled / read-only | Which path for each non-editable value; **Process View = read-only display (not Disabled)** ([process-view.md](process-view.md)) |
 | Deviations | Any intentional deviation with justification |
 | Validation Summary Adoption Matrix | Required / Optional / Not Recommended for Save/Commit validation UX ([validation-summary.md](validation-summary.md)) |
 | Selection / navigation control | Which control and why, per the [decision matrix](../controls/selection-and-navigation.md); intent event used for guarded surfaces |
 | Buttons / Actions | Variants per [button.md](../controls/button.md); [Actions area](actions-area.md) when a working copy exists |
-| Page archetype / states | [page-archetypes.md](page-archetypes.md) shape chosen; [page-states.md](page-states.md) mechanisms |
+| Page archetype / states | [page-archetypes.md](page-archetypes.md) shape chosen; [page-states.md](page-states.md) mechanisms; Process View **terminal** after Create → Save/Submit |
 
-Development Agents must confirm an existing Shared UI component, Gallery example, or documented pattern does **not** already solve the problem before introducing custom UX. Undocumented deviations in a plan are refused at Build Locally. Multi-row Save validation must use `BoValidationSummary` when the Adoption Matrix says Required — do not invent host error lists.
+Development Agents must confirm an existing Shared UI component or documented STANDARDS pattern does **not** already solve the problem before introducing custom UX. Prefer Gallery as copy source **only after** SSOT confirmation ([example-governance.md](../example-governance.md)). Undocumented deviations in a plan are refused at Build Locally. Multi-row Save validation must use `BoValidationSummary` when the Adoption Matrix says Required — do not invent host error lists.
 
 ## Button corner radius (locked)
 
@@ -48,6 +48,8 @@ Single authority: [button.md § Corner radius](../controls/button.md#corner-radi
 | Process Request section (mandatory baseline) | [process-request-section.md](process-request-section.md) |
 | Default initiation experience | [initiation-experience.md](initiation-experience.md) |
 | Page footer Save + Submit | [page-footer-actions.md](page-footer-actions.md) |
+| Process persistence (Save/Submit → Process View) | [process-persistence.md](process-persistence.md) |
+| Process View (terminal read-only) | [process-view.md](process-view.md) |
 | New Application Checklist | [application-bootstrap-checklist.md](../../application-bootstrap-checklist.md) |
 
 ## Column header alignment (locked)
@@ -112,6 +114,7 @@ Full rules: [overlays.md](../shell/overlays.md) § Page freeze.
 | MUST | MUST NOT |
 | --- | --- |
 | Saves / deletes / imports / exports / sync / bulk ops | Grid filter / sort / page / search |
+| Process Save / Submit: freeze immediately (“Processing...”), paint before validation, **≥1500ms only on success**, then redirect to Process View | Leaving initiation editable after successful Save/Submit; holding 1500ms after validation failure |
 | Workspace or configuration hydration with perceptible backend work (including panel/tab **activation that reloads data**) | Chrome-only tab / accordion / dialog open without backend work |
 | Perceptible lookup loads before edit dialogs | Validation-only / local UI / sub-second work |
 | | Ordinary route navigation that paints chrome before optional secondary fetches |
