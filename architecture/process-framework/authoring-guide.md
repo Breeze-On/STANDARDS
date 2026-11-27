@@ -44,20 +44,31 @@ On **Steps** (Entity view):
    - Informational → no Role  
    - Do **not** create Role-less Steps that still have Options (undefined in v1)
 
+### Process History initiation (when the app uses Process History)
+
+| Requirement | Detail |
+| --- | --- |
+| Entry Step code | **`00`** (lowest `sortOrder`) |
+| Submit | Option **`va`** on step `00` (required) |
+| Save | Option **`va1`** on step `00` (optional). **Save meaning only on step `00`** — do not reuse `va1` elsewhere to mean Save |
+| Response Status | Option metadata **`response-status`** required on every option that can generate Process History |
+
+See [ADR-025](../../decisions/ADR-025-process-history.md).
+
 ### 3. Create Options
 
 On **Options** (Entity view):
 
 1. For each Actionable Step, add one Option per business decision.
 2. Set **Step**, **Code**, **Next Step**, sort order.
-3. Use metadata `name` / `description`.
+3. Use metadata `name` / `description` and **`response-status`** (required for Process History).
 4. Loops are allowed (Next Step can point earlier in the flow).
 
 ### 4. Create Metadata (Settings)
 
 For each of Steps / Options / Roles → **Settings**:
 
-1. Prefer convention columns `name` and `description` first.
+1. Prefer convention columns `name` and `description` first; on Options also add **`response-status`** (`isRequired`).
 2. Add other business attributes (TEXT, NUMBER, DATE, BOOLEAN, Data Entity DDL, People Picker) as needed.
 3. TEXT values are authored in **`en-CA`** (authoritative).
 4. Save sends the full Application catalog.

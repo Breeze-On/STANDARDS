@@ -22,7 +22,7 @@ Current reality only.
 | **Loading — async lookup inside a field** | Field-owned (`BoDropDownList` / `BoPeoplePicker` `ItemsProvider`, debounce) | Latest wins; stale responses never update the UI ([`BoLatestWinsQuery`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#services-and-non-visual-api)) | [query-driven-retrieval.md](../controls/query-driven-retrieval.md) |
 | **Loading — button** | None | `BoButton` has no busy / spinner; use Page Freeze; dialogs disable footer actions via `Busy` / disabled flags | [button.md](../controls/button.md) |
 | **Field error** | Field chrome | `ErrorText` or deferred required error **after** a validation attempt | [forms.md](../controls/forms.md#deferred-mandatory-validation-locked) |
-| **Multi-row save failure** | Validation Summary + field chrome + **Alert** toast + navigate-to-error | Required where the Adoption Matrix says so | [validation-summary.md](validation-summary.md) |
+| **Multi-row save failure** | Field chrome + **Alert** toast; Validation Summary + navigate-to-error when opted in / Adoption Matrix Required | Summary opt-in (`ShowValidationSummary`) | [validation-summary.md](validation-summary.md) |
 | **Not authorized** | Error Message Page (`BoAccessDenied`) | Footer **off** (`ShowFooter = false`); app-agnostic copy; **after** valid AE established (e.g. non-visible AE, missing page AttributeCode membership) | [error-messages.md](../shell/error-messages.md) |
 | **Application / configuration error** | Error Message Page (`BoApplicationError`) | Footer **off**; outside AE bootstrap chain; generic title/lead; **Error Details** + **Support Details** expanded by default; reason via `IBoApplicationErrorState` (not URL title/message) | [error-messages.md](../shell/error-messages.md) · [context-resolution.md](../../../architecture/app-context/context-resolution.md) |
 | **Other page-level errors** (not found, session expired, maintenance) | Error Message framework | Access Denied + Application Error ship; remaining types are **deferred** — reuse the framework design language when added | [error-messages.md § Introducing a new error type](../shell/error-messages.md#introducing-a-new-error-type) |
@@ -46,7 +46,7 @@ Rules:
 2. Content = **Main** (bold, short) + optional **Body** (one sentence of what to do next). Both are localized resources ([i18n.md](../foundations/i18n.md)); no raw exception text, schema names, or tokens ([ux-conventions.md § Admin surface language](ux-conventions.md#admin-surface-language-locked)).
 3. Show outcome toasts **after** Page Freeze hides, not while it is visible.
 4. One toast per outcome; do not stack a toast and a blocking dialog for the same event.
-5. Toasts do not replace the Validation Summary or inline field errors; they accompany them.
+5. Toasts do not replace field chrome; when Validation Summary is used, toasts accompany summary + chrome.
 6. API, stacking, dismissal, and motion: [shell.md § Toasts](../shell/shell.md#toasts-ibotoastservice) (`IBoToastService.ShowAsync`, top-right, click / Enter / Space / Escape dismiss, auto-dismiss).
 
 ## Dialog outcomes

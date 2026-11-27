@@ -96,6 +96,20 @@ Register advanced workflow capabilities as **Future Validation** only — do not
 
 Reserved **conventions** (not first-class columns): metadata Codes **`name`** and **`description`** on Roles, Steps, and Options. UI reference dropdowns prefer `name`, then `description`, then Code. Keep seed, examples, and authoring guidance consistent with these Codes. Do **not** invent first-class Name/Description fields in PF v1.
 
+### Process History conventions (normative when the app uses Process History)
+
+Decision: [ADR-025](../../decisions/ADR-025-process-history.md). UI: [process-history.md](../../docs/ui/patterns/process-history.md).
+
+| Rule | Detail |
+| --- | --- |
+| **Entry / Initiation Step** | Lowest `sortOrder` Step **must** have code **`00`** (PanelInitiation ≡ step `00`) |
+| **Submit** | Option **`va`** on step `00` is **required** |
+| **Save** | Option **`va1`** on step `00` is **optional**; absence → hide initiation Save |
+| **`va1` scope** | Save meaning applies **only** on step `00`. Never infer Save from `va1` on any other step |
+| **`response-status`** | Mandatory conventional Option metadata Code on **every** option that can generate a Process History record. Missing / empty = invalid PF configuration |
+
+Runtime ledger is `Global.ProcessHistory` (EAC). PF tables remain definition-only.
+
 ### Operating envelope
 
 - Designed for **moderate** catalogs (tens of Steps/Options/columns).  

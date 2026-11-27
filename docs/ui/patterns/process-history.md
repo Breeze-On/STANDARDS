@@ -1,0 +1,50 @@
+<!-- Classification: AA; Scope: platform; Domain: UI; Capability: ProcessHistory -->
+# Process History
+
+Owner: SYSTEM-ADMIN-EAC (ledger + display-ready GET) · SYSTEM-SHARED-UI (rendering pattern) · product apps (host composition)
+
+Related: [ADR-025](../../../decisions/ADR-025-process-history.md) · [process-view.md](process-view.md) · [process-persistence.md](process-persistence.md) · [initiation-experience.md](initiation-experience.md) · [process-runtime](../../../architecture/process-runtime/README.md) · [grids.md](../controls/grids.md)
+
+## Purpose
+
+Cross-application, read-only history of **business decisions and workflow actions** for a process (`ProcessGUID`). Not a field-level audit trail.
+
+## Write triggers
+
+A history row is created only when a Process Framework option is completed:
+
+| Trigger | StepCode | OptionCode |
+| --- | --- | --- |
+| Initiation Submit | `00` | `va` |
+| Initiation Save | `00` | `va1` |
+| Workflow task action | task step | chosen option |
+
+Authoritative create: `Global.P_POST_ProcessHistory` (via SHARED-UI `IBoProcessHistoryQueries` / `IBoProcessActionCompletion`). Apps must not INSERT.
+
+## Comments
+
+- Belong to the action; persist on `Global.ProcessHistory.Comments` (`NVARCHAR(4000)`).
+- Control: `BoTextArea`, MaxLength 4000.
+- Default placement when the app does not override: tab **Additional Information** → section **Additional Information** → Row 1 **Comments** (`BoProcessHistoryCommentsDefaults`).
+- Apps may move, hide, or reposition; must not store Comments on `{UniqueCode}.Process`.
+
+## Process View tab content
+
+```text
+Process History tab
+  └─ Process Request (Initiator + Requested Date) — existing contract
+  └─ Section-level BoGrid Title "Process History"
+        Role | Name | Response Status | Date | Comments
+```
+
+## Retrieval
+
+- `Global.P_GET_ProcessHistoryByProcessGUID` returns **display-ready** rows (EAC projects Role, Name, Response Status).
+- SHARED-UI maps the result and renders `BoGrid` (ReadOnly, Flex columns; **Comments** `FlexWeight=2`, other columns default 1).
+- Date: EAC returns UTC `CompletedDate`; UI formats with `BoDateDisplay.FormatUtc`.
+- Comments: **2-line clamp** via shared `BoClampedPlainText` (same Read more / Show less as Text Area read-only). **Read more** overlays the end of line 2 (no extra row). **Show less** follows the full value after expand. Expanding grows the row height (not BoGrid overlay expand). Short comments omit the toggle.
+- Empty: standard grid empty copy.
+
+## Initiation conventions
+
+See [ADR-025](../../../decisions/ADR-025-process-history.md) and Process Framework authoring: step `00` / `va` / `va1` (Save only on `00`); required option metadata `response-status`.

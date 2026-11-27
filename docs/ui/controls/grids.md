@@ -74,7 +74,7 @@ Lightweight consolidation — implementation details stay in control docs + [for
 | Required indicators | Consistent header/column `*` rules per control; no invented second asterisk system |
 | Disabled state | Disabled fields/rows are non-editable and skip mandatory participation per forms rules |
 | Errors vs warnings | **Errors** block destructive/commit actions; **warnings** do not block unless a product standard explicitly says so |
-| Validation Summary | Multi-row editable Save/Commit failures use [Validation Summary](../patterns/validation-summary.md) as a dedicated Errors section below the [Actions area](../patterns/actions-area.md) / above the grid (with field chrome + Alert toast + navigate-to-error; inline field messages suppressed via HighlightOnly). Adoption Matrix is Required for editable multi-row BoGrid / Shuffle hosts |
+| Validation Summary | **Opt-in.** Editable Save/Commit failures always use field chrome + Alert toast. [Validation Summary](../patterns/validation-summary.md) (`ShowValidationSummary`, default **false**) is an optional Errors band above the grid when the Adoption Matrix says Required (EAC/admin catalogs) or the product explicitly opts in. When on: HighlightOnly + navigate-to-error |
 
 Control a11y extras (Nested View keys, Shuffle Card `role="list"`, icon `aria-label`) remain in each control section.
 
@@ -174,16 +174,32 @@ The library **never** talks to SQL or application repositories.
 | --- | --- |
 | `Title` | Header label — **same chrome as `BoTextField` label** (10px / 700 / uppercase / `--bo-color-text-field-label`). **Action / icon columns (Hug row actions):** always empty — never show a header label (use `Title=""`). Icon buttons keep `title` / `aria-label` for accessibility. Built-in Row Edit / Inline Edit action chrome already uses an unlabeled header. |
 | `FieldKey` | Stable column / property id |
-| `Required` | Red asterisk on header; Edit cells should set `Required` on `Bo*` fields |
+| `Required` | Red asterisk on header in **editable** modes only (`RowEdit` / `InlineEdit`); never shown in `ReadOnly`. Edit cells should set `Required` on `Bo*` fields |
 | `Align` | Cell **value** alignment only — Left (default) / Center / Right. **Headers always left.** Framework defaults: text & date **Left**; number & currency **Right** |
-| `Width` | `BoGridColumnWidth`: default **Flex** = equal `100%/n` among Flex columns without `WidthPercent` (`table-layout: fixed` + `<colgroup>`; table always 100% of container). Action column (Row Edit / Inline Edit) is Hug via `--bo-grid-action-col-width` (default `4.75rem`; never `1px`). Do not use `calc()` on `<col>`. **Compact** ≈ `12%` when set |
-| `WidthPercent` | Optional explicit percent of table width (e.g. `20`). When set on a Flex column, that column uses `width: N%` instead of equal Flex share. Compact/Hug ignore this and keep their fixed behavior |
+| `Width` | `BoGridColumnWidth`: default **Flex** = proportional share among Flex columns without `WidthPercent` (`table-layout: fixed` + `<colgroup>`; table always 100% of container). Action column (Row Edit / Inline Edit) is Hug via `--bo-grid-action-col-width` (default `4.75rem`; never `1px`). Do not use `calc()` on `<col>`. **Compact** ≈ `12%` when set |
+| `WidthPercent` | Optional explicit percent of table width (e.g. `20`). When set on a Flex column, that column uses `width: N%` instead of Flex-weight share. Compact/Hug ignore this and keep their fixed behavior |
+| `FlexWeight` | Relative share among Flex columns without `WidthPercent`. Default **1** (equal). Use **2** for twice the width of weight-1 siblings (e.g. INV Invoice Details Product / Product Code) |
 | `SortValue` | Optional `Func<TItem, object?>`; when set, header is sortable |
 | `FilterText` | Optional `Func<TItem, string?>`; when set (with `FieldKey`), column is filterable — return the **displayed** string |
 | `Display` | Read-only / non-editing cell template (`BoGridCellContext<TItem>`) |
 | `Edit` | Editable cell template (`BoTextField`, `BoDropDownList`, `BoDateField`, `BoNumberField`, …) |
+| `AllowDisplayExpand` | Default **true**. When **false**, ReadOnly display cells skip click-to-expand overlay (host owns truncation UX, e.g. Process History Comments Read more). |
+| `MultilineDisplay` | Default **false**. When **true**, display cells wrap and grow with content (`bo-grid__cell--display-multiline` / `bo-grid__td--multiline`) instead of single-line ellipsis. Pair with `AllowDisplayExpand=false` for in-row expand patterns. |
+| `Aggregate` | Optional footer aggregate (`BoGridAggregateKind`: `None` default, `Sum`). When set, `BoGrid` renders a final **tbody** aggregate-row cell for the column (same column sequence as header/body, including action columns). Nested View ignores aggregates. |
+| `AggregateValue` | `Func<TItem, decimal?>` — per-row contribution for `Aggregate` (stored field or calculated UI value). Nulls skipped. |
+| `AggregateIsCurrency` / `AggregateCurrencyIsoCode` / `AggregateNumberOfDecimals` / `AggregateIsInteger` | Footer number formatting (same catalog rules as `BoNumberField` / `BoNumberDisplay`) |
 
-Changing a column's `Title`, `FieldKey`, `Required`, `Align`, `Width`, or `WidthPercent` after first render re-renders the grid (`NotifyColumnsChanged`), so headers and layout stay in sync with dynamic column parameters.
+**Aggregate footer (locked):**
+
+- Rendering is **grid-owned** (final `tbody` row with the same selection/actions/data column sequence as header/body — including Hug action columns so totals line up under their fields, not under Delete/Edit). Not page-host composition under the table.
+- Applies in **ReadOnly**, **RowEdit**, and **InlineEdit** (Nested View ignores aggregates).
+- `Sum` totals over the **filtered** working set (all matching rows), not only the current page.
+- Aggregates are **UI-only** — the library never persists footer values; hosts must not map aggregates to SQL.
+- Recalculates when the cache changes (Add / Remove / NotifyChanged / filters).
+- Align footer cells with the column `Align` (number/currency typically Right).
+- **Separator:** the line above the aggregate row uses the **same** branded primary gradient as the column-header separator (`.bo-grid__header-row::after` tokens) — editable and read-only. The data-row hairline under the last body row is suppressed when an aggregate footer follows (no double line).
+
+Changing a column's `Title`, `FieldKey`, `Required`, `Align`, `Width`, `WidthPercent`, or `FlexWeight` after first render re-renders the grid (`NotifyColumnsChanged`), so headers and layout stay in sync with dynamic column parameters.
 
 ### Cell context (`BoGridCellContext<TItem>`)
 
@@ -198,12 +214,12 @@ Changing a column's `Title`, `FieldKey`, `Required`, `Align`, `Width`, or `Width
 - **Philosophy:** less table / more surface. Typography + whitespace + soft elevation over lines. Flush into the page (no outer card / container border). Eye path: **label → actions → headers → data**.
 - **Header labels:** `BoTextField` label chrome; always **left-aligned**. **Exception — action/icon columns:** no header text (`Title=""`).
 
-- **Header separator:** **primary-tinted** gradient under headers (soft edge fade, reduced opacity, 1px) — branded anchor, not a grey table border. Transparent header band (no fill).
+- **Header / aggregate separators:** **primary-tinted** gradient under headers and above the aggregate footer (soft edge fade, reduced opacity, 1px) — branded anchor, not a grey table border. Transparent header band (no fill). Same tokens for editable and read-only.
 - **Section rule:** standard section header rule **remains** when a section hosts a grid.
 - **Column width:** `table-layout: fixed` + `<colgroup>`; Flex = `100%/n`; Compact ≈12%; action Hug = CSS `--bo-grid-action-col-width` (default `4.75rem`; never `1px` — that clips Edit/Delete). Flex `%` + rem action together fill the table; avoid `calc()` on `<col>`. Table **always 100%** of container.
 - **Header actions:** when the grid owns a section and toolbar is shown: `Title [Add New] [Save] [Filters]` on one line (no dash; Filters only when `ShowFiltersButton`); buttons ~**16px** height, **equal width** (widest label / locale-safe); Add New = **primary** fill; Save / Filters = **secondary**; Filters is **rightmost** (variant hierarchy and ordering: [button.md](button.md); these are section `HeaderActions`, not the [Actions area](../patterns/actions-area.md)). Soft elevation. Extra header/body air only when the section has `HeaderActions` (`bo-section--with-header-actions`) — **not** on ancestor sections that merely nest a grid.
 - **Column header row:** tight padding; labels sit close to the header divider.
-- **Display overflow:** single-line ellipsis; hover `title` = full value when truncated (`bo-grid.js`); click expands that cell only (overlay); click elsewhere collapses. Edit cells are not truncated.
+- **Display overflow:** single-line ellipsis; hover `title` = full value when truncated (`bo-grid.js`); click expands that cell only (overlay); click elsewhere collapses. Edit cells are not truncated. Columns with `AllowDisplayExpand=false` + `MultilineDisplay=true` opt out of overlay expand and grow the row in-flow (host-owned Read more).
 - **Row separators:** inset hairlines only — never enclose cells. No vertical column lines.
 - **Depth:** soft row hover elevation; RowEdit active row = light surface **without** a left accent bar. Inline Edit has **no** per-row accent chrome. Tighter cell padding in edit modes.
 - **Row icons:** neutral muted chrome (not primary/danger fills); soft hover lift. RowEdit: Edit/Delete idle; Checkmark Save + Dismiss Cancel while editing. InlineEdit: Delete only.
@@ -275,13 +291,13 @@ Grid Family capability for administration, troubleshooting, data entry, and loca
 - While a row is editing: **Add New** and other rows’ Edit/Delete are **disabled**.
 - **Add New** follows [Grid Family Standards](#grid-family-standards-locked) (top + focus + deferred validation; resets to first page when paginated).
 - When the grid owns a section: **Add New** on the section header row.
-- Column mandatory validation runs only on **row Save**; fail → Alert toast + field border chrome + [Validation Summary](../patterns/validation-summary.md) above the table when failures exist (navigate-to-error).
+- Column mandatory validation runs only on **row Save**; fail → Alert toast + field border chrome; [Validation Summary](../patterns/validation-summary.md) only when `ShowValidationSummary` is true.
 
 ## Inline Edit (locked)
 
 - All rows show Edit templates; Delete available per row (no single-row lock); **no** left accent bar.
 - When the grid owns a section: **Add New** + overall **Save** on the section header row (Save omitted when `ShowSave=false`).
-- Save validates required cell fields (ValidationGroup) + grid `Required`; fail → toast + borders + [Validation Summary](../patterns/validation-summary.md) above the table when failures exist; success → `OnSave`. Hosts that hide Save must run equivalent validation before their own Save path (including summary when the Adoption Matrix says Required).
+- Save validates required cell fields (ValidationGroup) + grid `Required`; fail → toast + borders (+ summary only if opted in); success → `OnSave`. Hosts that hide Save must run equivalent validation before their own Save path (including summary when the Adoption Matrix says Required / host opts in).
 - Sort order remains frozen while cells change (same rules as Sort + [Sorting vs uncommitted new rows](#sorting-vs-uncommitted-new-rows-no-conflict)).
 - **Add New** follows [Grid Family Standards](#grid-family-standards-locked).
 

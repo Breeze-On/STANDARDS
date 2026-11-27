@@ -251,6 +251,7 @@ Runtime process identity is a **two-tier** model ([ADR-024](../decisions/ADR-024
 | Tier | Qualified name | Owner | Role |
 | --- | --- | --- | --- |
 | Platform root | `Global.Process` | SYSTEM-ADMIN-EAC | Universal `ProcessGUID` + `ApplicationEnabledGUID` + audit only |
+| Platform history | `Global.ProcessHistory` | SYSTEM-ADMIN-EAC | Append-only decision / workflow-action ledger keyed by `ProcessGUID` ([ADR-025](../decisions/ADR-025-process-history.md)) |
 | Application extension | `{UniqueCode}.Process` | Product application | Application-specific flat business fields |
 
 ### Global schema ownership
@@ -260,6 +261,7 @@ Runtime process identity is a **two-tier** model ([ADR-024](../decisions/ADR-024
 - `ProcessGUID` is SQL-generated (`DEFAULT NEWSEQUENTIALID()`). **Application repositories must not mint `ProcessGUID` values.**
 - Consumers use `ProcessGUID` only; `ProcessId` is internal.
 - No workflow, lifecycle, or status columns on `Global.Process`.
+- **Process History:** `Global.ProcessHistory` + `Global.P_POST_ProcessHistory` (create) + `Global.P_GET_ProcessHistoryByProcessGUID` (**display-ready projection** — EAC owns Role / Name / Response Status resolution). Products must not `INSERT` into `Global.ProcessHistory` directly.
 - **AE delete fail-closed:** Application Enabled deletion **must fail** when dependent `Global.Process` rows exist. Never silent cascade of runtime process records ([ADR-006](../decisions/ADR-006-application-context-ownership.md)).
 
 ### Application `{UniqueCode}.Process`
@@ -286,10 +288,11 @@ Runtime process identity is a **two-tier** model ([ADR-024](../decisions/ADR-024
 
 1. `Global.P_POST_Process` → SQL generates `ProcessGUID`
 2. Insert `{UniqueCode}.Process` with that `ProcessGUID`
-3. Commit one shared-database transaction
-4. Return `ProcessGUID` → redirect to Process View
+3. `Global.P_POST_ProcessHistory` for initiation option (`00`/`va` or `00`/`va1`) including optional Comments
+4. Commit one shared-database transaction
+5. Return `ProcessGUID` → redirect to Process View
 
-See [process-persistence.md](ui/patterns/process-persistence.md).
+See [process-persistence.md](ui/patterns/process-persistence.md) · [process-history.md](ui/patterns/process-history.md).
 
 ### Flat field identity and reference persistence
 
@@ -301,7 +304,7 @@ See [process-persistence.md](ui/patterns/process-persistence.md).
 
 Baseline Process Request fields (`InitiatorUserGUID`, `RequestedDate`) and UI placement: [process-request-section.md](ui/patterns/process-request-section.md). New-app checklist rows: [application-bootstrap-checklist.md](application-bootstrap-checklist.md). Applications may add columns; they must keep `ProcessId` / `ProcessGUID` / audit columns on the extension table.
 
-**Distinct from EAC Process Framework:** PF tables under `System` hold process **definition** metadata only. Runtime platform root is `Global.Process`; app business fields live in `{UniqueCode}.Process`.
+**Distinct from EAC Process Framework:** PF tables under `System` hold process **definition** metadata only. Runtime platform root is `Global.Process`; decision ledger is `Global.ProcessHistory`; app business fields live in `{UniqueCode}.Process`.
 
 ## Application registry identity columns
 

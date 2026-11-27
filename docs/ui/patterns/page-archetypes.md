@@ -42,7 +42,7 @@ Browse, search, and maintain a dataset.
 BoStack Gap="0"
 ├─ Filters  (BoSectionMain / BoSectionSub + BoRow; no Apply button)   <- optional
 └─ Grid section (BoGrid owns Title + header actions [Add New | Save | Filters])
-   └─ BoValidationSummary Errors band (only after a failed Save/Commit; editable modes)
+   └─ BoValidationSummary Errors band (opt-in / Adoption Matrix Required; after failed Save/Commit)
 ```
 
 | Concern | Standard |
@@ -73,7 +73,7 @@ Page → Body → [Actions area] → BoSectionMain → [BoSectionSub] → BoRow 
 | Initiation footer | Default initiation uses shell footer Save+Submit ([page-footer-actions.md](page-footer-actions.md)), not top Actions Save\|Discard; success → Process View ([process-persistence.md](process-persistence.md)) |
 | Working copy (workspaces) | [Actions area](actions-area.md) (Save | Discard) at the top; Save runs `Validate(null)`; Dirty State guards navigation and tab/toggle abandon points |
 | Small edits | A `BoDialog` (Create / Edit / Confirm) instead of a new page; footer actions, not an Actions area — [overlays.md](../shell/overlays.md) |
-| Validation | Deferred required chrome, Alert toast, fail badges; Validation Summary for multi-row editors — [forms.md](../controls/forms.md#deferred-mandatory-validation-locked) |
+| Validation | Deferred required chrome, Alert toast, fail badges; Validation Summary opt-in for multi-row editors — [forms.md](../controls/forms.md#deferred-mandatory-validation-locked) · [validation-summary.md](validation-summary.md) |
 | Footer | Per page (Gallery Components / Theme keep the Submit footer) |
 
 Gallery: Components field tabs (Text Field … Number Field) and Theme. Planning JSON: [layout.md § Page composition JSON](../layout/layout.md#page-composition-json-planning-agent-input).

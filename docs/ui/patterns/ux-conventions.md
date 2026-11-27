@@ -31,7 +31,7 @@ Planning Agents must document a **UX Standards Compliance** subsection in every 
 | Buttons / Actions | Variants per [button.md](../controls/button.md); [Actions area](actions-area.md) when a working copy exists |
 | Page archetype / states | [page-archetypes.md](page-archetypes.md) shape chosen; [page-states.md](page-states.md) mechanisms; Process View **terminal** after Create → Save/Submit |
 
-Development Agents must confirm an existing Shared UI component or documented STANDARDS pattern does **not** already solve the problem before introducing custom UX. Prefer Gallery as copy source **only after** SSOT confirmation ([example-governance.md](../example-governance.md)). Undocumented deviations in a plan are refused at Build Locally. Multi-row Save validation must use `BoValidationSummary` when the Adoption Matrix says Required — do not invent host error lists.
+Development Agents must confirm an existing Shared UI component or documented STANDARDS pattern does **not** already solve the problem before introducing custom UX. Prefer Gallery as copy source **only after** SSOT confirmation ([example-governance.md](../example-governance.md)). Undocumented deviations in a plan are refused at Build Locally. Multi-row Save validation always uses field chrome + toast; use `BoValidationSummary` when the Adoption Matrix says Required or the product opts in — do not invent host error lists, and do not enable summary by default on product Inline Edit.
 
 ## Button corner radius (locked)
 
@@ -70,7 +70,7 @@ Single authority: [button.md § Corner radius](../controls/button.md#corner-radi
 | --- | --- |
 | Layout stability | Host declares `BoRow` `Weight` or Shuffle/Grid track widths. **Selected values must not change control width** or skew columns |
 | Truncation | Long closed values **truncate** with ellipsis; hover `title` (or equivalent) exposes the full value when truncated |
-| Surfaces | `BoDropDownList` closed single value; `BoFieldReadOnly` / dense display text; `BoGrid` display cells (existing). Edit cells may scroll/wrap only when a control standard explicitly allows it. **`BoTextArea`** (and multiline read-only companions) soft-wrap with `pre-wrap` — ellipsis truncation does **not** apply ([forms.md § Text Area](../controls/forms.md#text-area-botextarea)) |
+| Surfaces | `BoDropDownList` closed single value; `BoFieldReadOnly` / dense display text; `BoGrid` display cells (existing). Edit cells may scroll/wrap only when a control standard explicitly allows it. **`BoTextArea`** soft-wraps with `pre-wrap` (no single-line ellipsis); read-only clamps to the 6-row max with shared **Read more** when taller ([forms.md § Text Area](../controls/forms.md#text-area-botextarea)). Process History Comments reuse the same `BoClampedPlainText` pattern (2-line clamp) |
 | Shuffle tracks | **MUST** use `minmax(0, …fr)` tracks (never `minmax(8rem, 1fr)` / bare `1fr`) so content cannot force horizontal growth past the track. Shared UI sets `min-width: 0` on cols and fields; header and rows must resolve identical tracks (no content-derived `min-width`) |
 | Anti-pattern | Sizing controls from selected text length; custom product CSS that disables Shared UI truncation |
 

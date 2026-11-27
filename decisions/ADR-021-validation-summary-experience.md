@@ -27,20 +27,21 @@ Validation Summary is for **live Save/Commit** editors. Import Summary remains t
 
 ### Co-required chrome
 
-For Adoption Matrix **Required** experiences, failed Save/Commit must provide Validation Summary + deferred field chrome + Alert toast + navigate-to-error. Toast alone or host `<ul>` lists alone are non-compliant.
+Failed Save/Commit on editable grids **always** requires deferred field chrome + Alert toast. For Adoption Matrix **Required** experiences (and Optional when opted in), also provide Validation Summary + navigate-to-error. Toast alone or host `<ul>` lists alone are non-compliant. Summary is **not** co-required for every Inline Edit product grid.
 
 ### Adoption Matrix
 
-STANDARDS publish a Validation Summary Adoption Matrix (Required / Optional / Not Recommended). Planning Agents must evaluate summary vs field chrome vs toast vs navigate-to-error using that matrix before inventing validation UX.
+STANDARDS publish a Validation Summary Adoption Matrix (Required / Optional / Not Recommended). Planning Agents must evaluate summary vs field chrome vs toast vs navigate-to-error using that matrix before inventing validation UX. General / product `BoGrid` Inline Edit is **Optional** (opt-in). EAC / App Configuration multi-row catalog editors remain **Required**.
 
 ### Grid Family ownership
 
-- `BoGrid` surfaces Validation Summary above the table after failed attempts when failures exist.
-- `BoShuffleCardGrid` remains host-owned for validation/Dirty/Save; hosts **must** compose Validation Summary above multi-row editable Shuffle editors.
+- `BoGrid` surfaces Validation Summary above the table only when `ShowValidationSummary` is true (platform default **false** — explicit opt-in).
+- `BoShuffleCardGrid` remains host-owned for validation/Dirty/Save; hosts compose Validation Summary when the matrix requires it or the product opts in.
 
 ## Consequences
 
-- Configuration and Process Framework-style editors replace ad-hoc error lists with `BoValidationSummary`.
+- Configuration and Process Framework-style editors replace ad-hoc error lists with `BoValidationSummary` (explicit enable on EAC Values/Settings grids).
+- Product initiation grids (e.g. INV Invoice Details) keep chrome + toast without an Errors band unless business requirements opt in.
 - Gallery ships a Validation Summary example (Example Governance).
 - Planning / Development agents treat Adoption Matrix evaluation as a peer gate to Dirty State and UX Standards Compliance for multi-row validation UX.
 - Field chrome SSOT stays in forms.md; summary does not introduce row washes.

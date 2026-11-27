@@ -12,11 +12,12 @@ Machine-oriented contract so agents can generate **structurally valid** and **bu
 1. **Decide the unit** — One business process = one Application. If requirements describe two processes, emit two Applications (do not merge graphs).  
 2. **Roles** — Extract actor groups; each gets `code`, required `type: "Group"`, `sortOrder`, optional `securityGroupAttributeCode`, metadata `name`/`description`.  
 3. **Steps** — Extract activities/states; assign `sortOrder` (lowest = Entry); set `roleCode` only for Actionable Steps; metadata `name`/`description`.  
-4. **Options** — For each Actionable Step, one Option per decision; set `stepCode`, `code`, `nextStepCode`, `sortOrder`; metadata `name`/`description`.  
-5. **Shapes** — Ensure Terminal Steps have no outgoing Options; never emit Role-less Steps with Options.  
-6. **Metadata columns** — Prefer `name` then `description` Codes; then other attributes.  
-7. **Envelope** — Nest under `processFramework.{steps|options|roles}.{metadataColumns|values}` in schemaVersion **2**.  
-8. **Validate** — Match the field table below; expect graph-lint **warnings** (not hard fails) for broken graphs.
+4. **Options** — For each Actionable Step, one Option per decision; set `stepCode`, `code`, `nextStepCode`, `sortOrder`; metadata `name`/`description` and **required** `response-status` (Process History — [ADR-025](../../decisions/ADR-025-process-history.md)).  
+5. **Initiation** — Entry Step code **`00`**; option **`va`** (Submit) required; option **`va1`** (Save) optional and **Save meaning only on step `00`**.  
+6. **Shapes** — Ensure Terminal Steps have no outgoing Options; never emit Role-less Steps with Options.  
+7. **Metadata columns** — Prefer `name` then `description`; for Options also include **`response-status`** (`isRequired: true`).  
+8. **Envelope** — Nest under `processFramework.{steps|options|roles}.{metadataColumns|values}` in schemaVersion **2**.  
+9. **Validate** — Match the field table below; expect graph-lint **warnings** (not hard fails) for broken graphs; missing `response-status` on history-capable options is a **hard** configuration failure.
 
 ---
 
@@ -49,7 +50,7 @@ Machine-oriented contract so agents can generate **structurally valid** and **bu
 | `code` | Yes | Unique within Step |
 | `nextStepCode` | Yes | Existing Step (cycles allowed) |
 | `sortOrder` | Yes | Unique within Step in portable file; UI Save may renumber globally |
-| `metadata` | No | Prefer `name`, `description` |
+| `metadata` | Yes (Process History) | Prefer `name`, `description`; **`response-status` required** (non-empty en-CA) on every history-capable option |
 
 ### Metadata column (`*.metadataColumns[]`)
 
@@ -75,6 +76,8 @@ Machine-oriented contract so agents can generate **structurally valid** and **bu
 | **Role `type`** | Omitting `type` fails validation. |
 | **Role-less + Options** | Undefined in PF v1 — do not generate. |
 | **TEXT language** | Author `en-CA` for TEXT metadata values. |
+| **Initiation codes** | Entry Step must be `00`; `va` = Submit on `00`; `va1` = Save **only** on `00` — never infer Save from `va1` elsewhere. |
+| **`response-status`** | Required on every option that can write Process History; missing = invalid configuration. |
 
 ---
 

@@ -155,7 +155,7 @@ Contract: [process-request-section.md](patterns/process-request-section.md) · [
 - [ ] Implementation of the Process Request **section** is **application-owned** (no SHARED-UI Process Request package).
 - [ ] Persistence: `Global.P_POST_Process` then `{UniqueCode}.Process` extension (no app-minted `ProcessGUID`); freeze ≥1500ms; redirect to Process View — [process-persistence.md](patterns/process-persistence.md).
 - [ ] Process View hydrate / terminal rules followed when that surface is in scope — [process-view.md](patterns/process-view.md).
-- [ ] Process View tabs live in **header** `BoAppHeader.TabsContent` (not body card); body has `BoTabPanels` only; Process History icon = **`Flowchart` Regular 16** (`BoProcessViewRoute.ProcessHistoryIconName`); Process Request is **two** equal-`Weight` fields (no `BoEmptyField` pad) — [process-view.md](patterns/process-view.md) · [icons.md](foundations/icons.md) · [process-request-section.md](patterns/process-request-section.md) · [shell.md](shell/shell.md#header-tabs-optional-page-sections).
+- [ ] Process View tabs live in **header** `BoAppHeader.TabsContent` (not body card); body has `BoTabPanels` only; Process History icon = **`Flowchart` Regular 16** (`BoProcessViewRoute.ProcessHistoryIconName`); Process Request is **two** equal-`Weight` fields (no `BoEmptyField` pad); History tab also hosts Process History grid — [process-view.md](patterns/process-view.md) · [process-history.md](patterns/process-history.md) · [icons.md](foundations/icons.md) · [process-request-section.md](patterns/process-request-section.md) · [shell.md](shell/shell.md#header-tabs-optional-page-sections).
 
 ### Layout (forms and structured content)
 
@@ -226,6 +226,7 @@ When the page includes a data grid:
 - [ ] **`EnableHorizontalScroll`** only when many columns truly need a horizontal scrollbar (default false).
 - [ ] Host loads **`_content/BreezeOn.UI/js/bo-grid.js`** when using `BoGrid` (truncated-cell hover titles + Add New first-editable focus).
 - [ ] Cell editors reuse existing **`Bo*`** fields (inherit browser autocomplete **off**); do **not** put raw `<input>` in `Edit` — [grids.md](controls/grids.md), [forms.md § Browser autocomplete](controls/forms.md#browser-autocomplete-locked); column / grid **`Required`** follow [grids.md](controls/grids.md).
+- [ ] Column footer aggregates (when needed): configure `BoGridColumn` `Aggregate` / `AggregateValue` (+ currency formatting params); do **not** host-compose a sum strip under the grid — [grids.md](controls/grids.md) Aggregate footer.
 - [ ] Nested View: set `NodeKey`; same columns → `ChildrenSelector`; different columns → `ChildRowsHaveDifferentColumns` + `ChildGridTemplate` (nested `BoGrid`, not a new component). Optional `DefaultExpansionState`. Same-column Nested View may use `EnableSelection` with cascade. Keyword filters: follow [Nested View keyword filtering](controls/grids.md#nested-view-keyword-filtering-org-standard) unless a documented exception. See [grids.md Nested View](controls/grids.md#nested-view-locked--shipped).
 
 ### Shuffle Card Grid (section-level)
@@ -291,7 +292,7 @@ Cross-control SSOT: [ux-conventions.md](patterns/ux-conventions.md). UI plans re
 ### Validation
 
 - [ ] Deferred mandatory validation pattern respected (asterisk immediately; error chrome **after** attempt) — [forms.md § Deferred mandatory validation](controls/forms.md#deferred-mandatory-validation-locked).
-- [ ] Multi-row editable BoGrid / Shuffle / bulk-edit Save failures use [Validation Summary](patterns/validation-summary.md) when the **Adoption Matrix** says Required (summary + chrome + Alert toast + navigate-to-error). Do not invent host `<ul>` error lists.
+- [ ] Multi-row editable Save failures always use field chrome + Alert toast. Use [Validation Summary](patterns/validation-summary.md) only when the **Adoption Matrix** says Required or the product opts in (`ShowValidationSummary` / composed summary + navigate-to-error). BoGrid default is summary **off**. Do not invent host `<ul>` error lists.
 - [ ] Required fields use standard behavior; **Disabled** fields skip required validation.
 - [ ] Universal required message (`Validation_FieldRequired`); never field-label-specific.
 - [ ] Fields expose `FieldKey` + `ValidationGroup` (header tab **or** workspace panel-nav key); sections set `SectionKey` so failures report Field → Sub → Main → Tab/Panel.

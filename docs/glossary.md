@@ -278,6 +278,10 @@ Related:
 
 Platform **runtime** process root table in schema `Global` (EAC-owned). Holds `ProcessGUID`, `ApplicationEnabledGUID`, and audit only — no workflow/lifecycle columns. Created only via `Global.P_POST_Process`. Application business fields live in `{UniqueCode}.Process`. SSOT: [ADR-024](../decisions/ADR-024-platform-process-root.md) · [process-runtime](../architecture/process-runtime/README.md) · [database.md](database.md) § Process table convention.
 
+## Global.ProcessHistory
+
+Platform **runtime** append-only ledger of business decisions and workflow actions for a `ProcessGUID` (EAC-owned). Not a field-level audit trail. Created via `Global.P_POST_ProcessHistory`; display-ready read via `Global.P_GET_ProcessHistoryByProcessGUID` (EAC projects Role, Name, Response Status). Comments for an action live on the history row. SSOT: [ADR-025](../decisions/ADR-025-process-history.md) · [process-history.md](ui/patterns/process-history.md).
+
 ## ProcessGUID (platform)
 
 Universal platform process identifier from `Global.Process` (SQL-generated; apps must not mint). Used in URLs (`PGUID`), FKs, and consumers. Distinct from internal `ProcessId`. See [ADR-024](../decisions/ADR-024-platform-process-root.md) · [ae-query-string.md](../architecture/app-context/ae-query-string.md).

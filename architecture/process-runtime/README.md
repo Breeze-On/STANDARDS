@@ -3,16 +3,24 @@
 
 Owner: Architecture · SYSTEM-ADMIN-EAC (`Global`) · product apps (`{UniqueCode}.Process`)
 
-SSOT for the **two-tier** runtime Process model. Decision record: [ADR-024](../../decisions/ADR-024-platform-process-root.md).
+SSOT for the **two-tier** runtime Process model. Decision records: [ADR-024](../../decisions/ADR-024-platform-process-root.md) · [ADR-025](../../decisions/ADR-025-process-history.md).
 
 ## Model
 
 | Tier | Qualified name | Role |
 | --- | --- | --- |
 | Platform root | `Global.Process` | Universal process identity (`ProcessGUID`) + Application Context binding |
+| Platform history | `Global.ProcessHistory` | Append-only decision / workflow-action ledger keyed by `ProcessGUID` |
 | Application extension | `{UniqueCode}.Process` | Application-specific flat business fields |
 
 `ProcessGUID` is the platform identity. Application processes **consume** it; they do **not** generate it.
+
+### Process History
+
+- Create: `Global.P_POST_ProcessHistory` (apps must not INSERT).
+- Read: `Global.P_GET_ProcessHistoryByProcessGUID` — **EAC-owned display-ready projection** (Role, Name, Response Status, CompletedDate, Comments).
+- SHARED-UI renders only; it does not project Role / Name / Response Status.
+- UI contract: [process-history.md](../../docs/ui/patterns/process-history.md).
 
 ## Create path
 
@@ -36,10 +44,11 @@ UI → Application Service → Persistence Orchestration → Database. The UI mu
 
 ## Related UI
 
-- [process-persistence.md](../../docs/ui/patterns/process-persistence.md) — Save/Submit orchestration, Page Freeze ≥1500ms
-- [process-view.md](../../docs/ui/patterns/process-view.md) — terminal read-only Process View (v1)
+- [process-persistence.md](../../docs/ui/patterns/process-persistence.md) — Save/Submit orchestration, Page Freeze ≥1500ms, history row in TX
+- [process-view.md](../../docs/ui/patterns/process-view.md) — terminal read-only Process View
+- [process-history.md](../../docs/ui/patterns/process-history.md) — History tab grid + Comments
 - [process-request-section.md](../../docs/ui/patterns/process-request-section.md) — initiation Process Request fields
 
 ## Distinct from Process Framework
 
-PF under `System` = definition metadata only ([ADR-019](../../decisions/ADR-019-process-framework-metadata.md)). Runtime root = `Global.Process`.
+PF under `System` = definition metadata only ([ADR-019](../../decisions/ADR-019-process-framework-metadata.md)). Runtime root = `Global.Process`; decision ledger = `Global.ProcessHistory` ([ADR-025](../../decisions/ADR-025-process-history.md)). Initiation codes (`00` / `va` / `va1`) and required `response-status` are PF authoring conventions consumed by the runtime ledger.

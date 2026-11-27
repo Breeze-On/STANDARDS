@@ -73,11 +73,15 @@ Hosts map domain failures into these rows. Prefer **one issue per failing row/fi
 
 ## BoGrid
 
-After InlineEdit / RowEdit / host Save validation fails, `BoGrid` renders `BoValidationSummary` above the table when failures exist (default on). Keep Alert toast, field borders, grid `Required` helper, and section/tab fail badges. Optional suppress only for exceptional tiny surfaces.
+**Baseline (always):** cell / field validation execution, deferred field chrome (borders), Alert toast on failed Save/Commit, grid `Required` helper, and section/tab fail badges when applicable.
+
+**Validation Summary (opt-in):** `BoGrid` renders `BoValidationSummary` above the table only when `ShowValidationSummary="true"` **and** failures exist after a failed attempt. Default is **`false`** — applications must explicitly opt in. When summary is on, cascade `HighlightOnly` (chrome shows *where*; Errors grid shows *what*).
+
+Do **not** treat every Inline Edit product grid as requiring an Errors band. Prefer chrome + toast on initiation / request forms where failing cells stay on-screen.
 
 ## BoShuffleCardGrid
 
-Shuffle does **not** embed validation, Dirty State, or Save ([shuffle-card-grid.md](../controls/shuffle-card-grid.md)). Hosts of multi-row editable Shuffle editors **must** compose `BoValidationSummary` above the control and use `FocusRowAsync` / field focus helpers for navigate-to-error.
+Shuffle does **not** embed validation, Dirty State, or Save ([shuffle-card-grid.md](../controls/shuffle-card-grid.md)). Hosts that **opt in** to Validation Summary for multi-row editable Shuffle (Adoption Matrix **Required** admin catalogs) compose `BoValidationSummary` above the control and use `FocusRowAsync` / field focus helpers for navigate-to-error.
 
 ## Integration
 
@@ -105,35 +109,38 @@ Lightweight usage matrix for Planning Agents and Dev Agents (same role as Dirty 
 
 | Experience | Adoption | Notes |
 | --- | --- | --- |
-| BoGrid editable multi-row editors | **Required** | InlineEdit / RowEdit / host Save over multiple rows |
-| BoShuffleCardGrid editable experiences | **Required** | Host composition above Shuffle |
-| App Configuration screens | **Required** when hosting editable multi-row BoGrid/Shuffle; else follow form/dialog rows | Do not invent per-tab list UX |
-| Settings editors | **Required** for multi-row grid/shuffle catalogs; **Optional** for large multi-section forms without multi-row editors; **Not Recommended** for tiny single-entity settings | |
-| Large forms | **Optional** | Baseline: chrome + toast + fail badges; add summary when hunting is likely |
+| BoGrid editable multi-row editors (general / product apps) | **Optional** | Opt-in via `ShowValidationSummary="true"` (BoGrid default **false**). Baseline remains Validate + cell chrome + toast. |
+| Product initiation / request forms with embedded Inline Edit | **Optional** / typically omit | Prefer field chrome + toast when the grid is small and cells stay visible (e.g. INV Invoice Details) |
+| EAC / App Configuration multi-row Values & catalog editors | **Required** | Explicitly enable summary (`ShowValidationSummary="true"` or host `BoValidationSummary`). Wide dynamic columns / paging benefit from aggregated review |
+| BoShuffleCardGrid editable experiences | **Required** for admin catalogs that opt into summary; else **Optional** | Host composition when used; EAC Security Groups keep summary |
+| Settings editors | **Required** for multi-row admin catalogs that opt in; **Optional** for large multi-section forms; **Not Recommended** for tiny single-entity settings | |
+| Large forms | **Optional** | Baseline: chrome + toast + fail badges |
 | Small forms | **Not Recommended** | Chrome + toast (+ fail badges) |
-| Dialogs | **Required** when body hosts multi-row BoGrid/Shuffle; **Not Recommended** for small single-entity dialogs | Summary above grid inside dialog body |
+| Dialogs | **Optional** when body hosts multi-row BoGrid; **Required** for EAC/admin catalog dialogs that opt in; **Not Recommended** for small single-entity dialogs | |
 | Import workflows | **Not Recommended** | Use Import Summary |
-| Wizard experiences | **Optional** / **Required** for embedded multi-row editor; **Not Recommended** for simple steps | |
+| Wizard experiences | **Optional**; **Not Recommended** for simple steps | |
 | Single-field actions | **Not Recommended** | Chrome and/or toast only |
-| Bulk-edit experiences | **Required** | Toast alone is non-compliant |
+| Bulk-edit / dense admin grids | **Required** | Explicit opt-in; toast alone is non-compliant when summary is Required |
 
 ### Planning Agent evaluation (mandatory)
 
 Before inventing validation UX, evaluate:
 
 1. Is Validation Summary **Required / Optional / Not Recommended** for this experience?
-2. Is **field chrome** enough alone? Only when Not Recommended or Optional and failures remain findable without hunting.
-3. Is a **toast** enough alone? Never for Required rows; toast remains co-required with chrome (and summary when Required).
-4. Should **navigate-to-error** be available? Yes whenever Validation Summary is used; Required for all Required matrix rows.
+2. Is **field chrome** enough alone? Yes for Optional / Not Recommended when failures remain findable without hunting (default for product Inline Edit).
+3. Is a **toast** enough alone? Never as the only signal — toast remains co-required with **field chrome** on editable Save/Commit failure. Summary is additional when Required or opted-in Optional.
+4. Should **navigate-to-error** be available? Yes whenever Validation Summary is used; required for all Required matrix rows.
+5. Did the host **explicitly opt in** (`ShowValidationSummary` or composed `BoValidationSummary`)? Do not assume BoGrid enables summary by default.
 
 ## Anti-patterns
 
 - Ad-hoc bullet lists under grids for Required matrix experiences
-- Toast-only Save failures on multi-row editable grids
+- Toast-only Save failures (missing field chrome) on editable grids
+- Auto-enabling Validation Summary on every product Inline Edit without business need
 - Showing summary before the first validation attempt
 - Merging Import Summary and Validation Summary into one control
 - Collapsing N row failures into one deduped string
 
 ## Documentation duty
 
-When shipping a new multi-row editable editor, apply the Adoption Matrix and use `BoValidationSummary` when Required — do not invent a parallel summary UX.
+When shipping a multi-row editable editor, apply the Adoption Matrix. Use `BoValidationSummary` when Required or when Optional is explicitly chosen — do not invent a parallel summary UX. Leave summary off unless opted in.

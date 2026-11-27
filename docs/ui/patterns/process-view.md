@@ -3,7 +3,7 @@
 
 Owner: SYSTEM-SHARED-UI (platform capability / shared pattern) · product apps supply field composition
 
-Related: [ADR-024](../../../decisions/ADR-024-platform-process-root.md) · [process-runtime](../../../architecture/process-runtime/README.md) · [process-persistence.md](process-persistence.md) · [error-messages.md](../shell/error-messages.md) · [ae-query-string.md](../../../architecture/app-context/ae-query-string.md)
+Related: [ADR-024](../../../decisions/ADR-024-platform-process-root.md) · [ADR-025](../../../decisions/ADR-025-process-history.md) · [process-runtime](../../../architecture/process-runtime/README.md) · [process-persistence.md](process-persistence.md) · [process-history.md](process-history.md) · [error-messages.md](../shell/error-messages.md) · [ae-query-string.md](../../../architecture/app-context/ae-query-string.md)
 
 ## Purpose
 
@@ -37,7 +37,7 @@ Shared Process View **implementation pattern** is proposed during implementation
 | Tabs | At least **General Information** + **Process History** |
 | Tab icons | General Information: `Form` Regular 16. Process History: **`Flowchart` Regular (outlined) 16** — same in every app (`BoProcessViewRoute.ProcessHistoryIconName`). Do **not** use `History`. — [icons.md](../foundations/icons.md) |
 | Tab placement | **Header only** — `BoAppHeader.TabsContent` → `BoTabs` / `BoTab`; body hosts **`BoTabPanels` only** (cascade selected key). Do **not** place `BoTabs` inside the shell body / main content card. Same rule as [shell.md](../shell/shell.md#header-tabs-optional-page-sections) · [initiation-experience.md](initiation-experience.md). Gallery copy-source: `/process-view-page`. |
-| Process History (v1) | Process Request fields only (Initiator, Requested Date). Layout: **`BoRow` with exactly two field children**, equal default `Weight = 1` — [process-request-section.md](process-request-section.md). Do **not** pad with `BoEmptyField` to “pull fields together” or mimic a 6-slot Request Details row. |
+| Process History | (1) Process Request fields (Initiator, Requested Date) — **`BoRow` with exactly two field children**, equal default `Weight = 1` — [process-request-section.md](process-request-section.md). Do **not** pad with `BoEmptyField`. (2) Section-level Process History grid (Role, Name, Response Status, Date, Comments) — [process-history.md](process-history.md). Display values come from EAC `P_GET_ProcessHistoryByProcessGUID`. |
 | AuthZ (v1) | All authenticated users may open Process View pages (future authorization out of scope). |
 
 ## Validation

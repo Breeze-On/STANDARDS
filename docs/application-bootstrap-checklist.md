@@ -5,7 +5,7 @@ Owner: Architecture / Standards
 
 **Authoritative bootstrap checklist** for every new BreezeOn **product application**. This is the primary validation artifact for platform compliance at application onboarding — for developers, planning agents, and AI implementation agents.
 
-Related process: [application-development-process.md](ai/application-development-process.md) · Step 1 schema: [application-definition.schema.json](ai/application-definition.schema.json) · Adoption: [BREEZEON-AI-APPLICATION-ADOPTION.md](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) · Host contract: [page-development.md](ui/page-development.md) · Initiation: [initiation-experience.md](ui/patterns/initiation-experience.md) · Process Request: [process-request-section.md](ui/patterns/process-request-section.md) · Footer: [page-footer-actions.md](ui/patterns/page-footer-actions.md) · Process View / persistence: [process-view.md](ui/patterns/process-view.md) · [process-persistence.md](ui/patterns/process-persistence.md) · Process table: [database.md](database.md) § Process table convention · [ADR-024](../decisions/ADR-024-platform-process-root.md).
+Related process: [application-development-process.md](ai/application-development-process.md) · Step 1 schema: [application-definition.schema.json](ai/application-definition.schema.json) · Adoption: [BREEZEON-AI-APPLICATION-ADOPTION.md](ai/BREEZEON-AI-APPLICATION-ADOPTION.md) · Host contract: [page-development.md](ui/page-development.md) · Initiation: [initiation-experience.md](ui/patterns/initiation-experience.md) · Process Request: [process-request-section.md](ui/patterns/process-request-section.md) · Footer: [page-footer-actions.md](ui/patterns/page-footer-actions.md) · Process View / persistence / history: [process-view.md](ui/patterns/process-view.md) · [process-persistence.md](ui/patterns/process-persistence.md) · [process-history.md](ui/patterns/process-history.md) · Process table: [database.md](database.md) § Process table convention · [ADR-024](../decisions/ADR-024-platform-process-root.md) · [ADR-025](../decisions/ADR-025-process-history.md).
 
 Detail remains in the linked SSOTs. This checklist consolidates **mandatory application-level** requirements into one gate artifact. It does **not** replace Product Host Contract tables, Must-consume rows, or schema Step 1 inputs.
 
@@ -73,6 +73,10 @@ Authority: [initiation-experience.md](ui/patterns/initiation-experience.md) · [
 - [ ] **`BoPageFooterActions`** implemented in `BoAppFooter` (no Actions-area Save\|Discard on default initiation)
 - [ ] Save uses platform **Save** pattern (`BoButtonVariant.Save`, Filled Save icon, AriaLabel)
 - [ ] Submit uses **Primary** pattern
+- [ ] PF initiation: Entry Step code **`00`** with option **`va`** (Submit); option **`va1`** (Save) only on step `00` — hide Save when `va1` absent; never infer Save from non-00 `va1`
+- [ ] Missing step `00` or `va` → New Request does **not** render (Application Error configuration)
+- [ ] Default **Additional Information** tab with Comments (`BoTextArea` 4000) unless app overrides placement — Comments persist on Process History only
+- [ ] Option metadata **`response-status`** required on every history-capable PF option
 
 ## Process Request Fields
 
@@ -91,14 +95,16 @@ Authority: [process-request-section.md](ui/patterns/process-request-section.md) 
 Authority: [database.md](database.md) § Process table convention (two-tier) · [ADR-024](../decisions/ADR-024-platform-process-root.md) · [process-runtime](../architecture/process-runtime/README.md)
 
 - [ ] Platform root: EAC owns `Global.Process` + `Global.P_POST_Process` (consumer does **not** invent these)
+- [ ] Process History: EAC owns `Global.ProcessHistory` + `P_POST_ProcessHistory` + display-ready `P_GET_ProcessHistoryByProcessGUID` (consumer does **not** invent projection)
 - [ ] `{UniqueCode}.Process` **extension** table created under product `sql/current_model/`
 - [ ] `ProcessId` implemented (`INT IDENTITY` PK) on the extension table
 - [ ] `ProcessGUID` on extension is `UNIQUEIDENTIFIER NOT NULL` UNIQUE — value from `Global.P_POST_Process` / `Global.Process`
 - [ ] Application **must not mint** `ProcessGUID` (SQL generates on Global create)
-- [ ] Create order: `Global.P_POST_Process` → insert `{UniqueCode}.Process` with that GUID → one transaction → redirect to Process View
-- [ ] Flat fields mapped to extension Process table (baseline: `InitiatorUserGUID`, `RequestedDate`)
+- [ ] Create order: `Global.P_POST_Process` → insert `{UniqueCode}.Process` → `P_POST_ProcessHistory` (`00`/`va` or `00`/`va1`) → one transaction → redirect to Process View
+- [ ] Flat fields mapped to extension Process table (baseline: `InitiatorUserGUID`, `RequestedDate`) — **no** Comments column on extension
 - [ ] Mandatory audit columns present
 - [ ] Consumer `dev-reset.ps1` applies app `sql/current_model/` **after** EAC subprocess (Global schema before consumer Process FK)
+- [ ] Process View History tab: Process Request + Process History grid consuming EAC-projected columns
 
 ## Architecture
 

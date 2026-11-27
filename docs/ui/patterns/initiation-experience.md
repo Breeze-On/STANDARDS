@@ -17,11 +17,22 @@ These are **platform defaults**. Applications may override only when a plan **ex
 | Tab icon | Fluent **Form**, `BoIconVariant.Regular` (outlined), Size 16 |
 | First section | **Process Request** — [process-request-section.md](process-request-section.md) |
 | Shell footer | **On** for initiation pages (`BoAppShell.ShowFooter`) |
-| Footer commands | **`BoPageFooterActions`**: Save (`BoButtonVariant.Save`, icon Filled) then Submit (Primary) — [page-footer-actions.md](page-footer-actions.md) |
-| After Save / Submit | Persist per [process-persistence.md](process-persistence.md), then navigate to **Process View** (terminal in v1) — [process-view.md](process-view.md) |
+| Footer commands | **`BoPageFooterActions`**: Save (`BoButtonVariant.Save`, icon Filled) then Submit (Primary) — [page-footer-actions.md](page-footer-actions.md). **Save renders only when** Process Framework step `00` includes option `va1`. Submit requires step `00` + option `va`. |
+| After Save / Submit | Persist per [process-persistence.md](process-persistence.md) (includes Process History row), then navigate to **Process View** (terminal in v1) — [process-view.md](process-view.md) |
 | Top Actions area | **Not** used for default initiation (workspace editors keep Actions Save\|Discard) |
+| Comments (default) | Final tab **Additional Information** → section **Additional Information** → `BoTextArea` Comments (MaxLength 4000) — persisted on Process History, not on `{UniqueCode}.Process` — [process-history.md](process-history.md) |
+| Configuration failure | Missing Entry Step code `00` or missing option `va` on step `00` → **do not render** New Request; Application Error (configuration) — [ADR-025](../../../decisions/ADR-025-process-history.md) |
 
 Apps may add tabs and sections below Process Request. Body panels use `BoTabPanels` / `BoTabPanel` bound to the same selected tab key.
+
+### Initiation option codes (formal PF convention)
+
+| Step | Option | Meaning |
+| --- | --- | --- |
+| `00` | `va` | Submit (required) |
+| `00` | `va1` | Save (optional) |
+
+`va1` has Save meaning **only** on step `00`. Never infer Save from `va1` on any other step.
 
 ## People fields
 

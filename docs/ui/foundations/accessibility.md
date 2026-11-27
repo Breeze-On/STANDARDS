@@ -63,7 +63,7 @@ Two shipped breakpoints: **≤ 768px** (Home hub stacks cards then brand — [sh
 ## Validation and errors (Tier 1)
 
 - Required fields: asterisk immediately; error chrome only **after** a validation attempt ([forms.md](../controls/forms.md#deferred-mandatory-validation-locked)).
-- Multi-row save failures use the [Validation Summary](../patterns/validation-summary.md) with navigate-to-error.
+- Multi-row save failures always use field chrome + toast; use [Validation Summary](../patterns/validation-summary.md) with navigate-to-error when opted in / Adoption Matrix Required.
 - Toast and page-state semantics: [page-states.md](../patterns/page-states.md).
 
 ## Future Validation

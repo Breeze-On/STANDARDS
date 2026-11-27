@@ -22,7 +22,7 @@ See [layout.md — Hidden fields and layout preservation](../layout/layout.md#hi
 
 ## Validation Summary (cross-link)
 
-Multi-row live editors (BoGrid / BoShuffleCardGrid and Adoption Matrix **Required** surfaces) also use [Validation Summary](../patterns/validation-summary.md) (dedicated Errors section + BoGrid) after a failed Save/Commit. Summary **does not** replace deferred field chrome, fail badges, or Alert toasts — cascade `BoFieldErrorMessageOptions.HighlightOnly` so chrome shows *where* while the Errors grid shows *what* ([ADR-021](../../../decisions/ADR-021-validation-summary-experience.md)).
+Multi-row live editors always keep deferred field chrome + Alert toasts after a failed Save/Commit. [Validation Summary](../patterns/validation-summary.md) is **opt-in** (`BoGrid` `ShowValidationSummary`, default false; or host-composed `BoValidationSummary`) when the Adoption Matrix says Required (EAC/admin catalogs) or the product explicitly chooses Optional. When summary is used, cascade `BoFieldErrorMessageOptions.HighlightOnly` so chrome shows *where* while the Errors grid shows *what* ([ADR-021](../../../decisions/ADR-021-validation-summary-experience.md)).
 
 ## Deferred mandatory validation (locked)
 
@@ -254,7 +254,7 @@ Future requirements involving rich content, formatting, mentions, embedded media
 | Width | **Mandatory** full width of the `BoRow` slot (no 28rem / Fluent 18rem caps) — editable and read-only |
 | Chrome | Same Concept A outline as Text Field (equal 1px rest border, hover, full-border focus, field-background fill including Dark) |
 | Intended usage | Sole field in its `BoRow` (full width). May live in its own Section **or** as an additional row inside a multi-field section (e.g. Request Details Row 4 — Purpose of Service) |
-| Soft wrap | Editable and read-only wrap; truncation ellipsis does **not** apply to multiline Text Area values ([ux-conventions.md](../patterns/ux-conventions.md) exception) |
+| Soft wrap | Editable and read-only wrap; single-line ellipsis does **not** apply. Read-only may clamp to the 6-row max with shared **Read more** when content exceeds that height ([Read-only height and Read more](#read-only-height-and-read-more-locked)) |
 | Tall row | `BoRow` keeps `align-items: start` for tall Text Area siblings ([layout.md](../layout/layout.md#row-borow)) |
 
 ### Value fidelity
@@ -268,6 +268,15 @@ Shown **inside** the control chrome at the lower-right (same visual family as Te
 ### Read-only
 
 When `ReadOnly`: flat multiline display (not a non-editable Fluent textarea) with automatic safe `http`/`https` linkify (same security model as `BoFieldReadOnly` `LinkifyUrls`). No asterisk, count, or placeholder.
+
+#### Read-only height and Read more (locked)
+
+| Concern | Standard |
+| --- | --- |
+| Max height | Same as editable **initial** height (6 visible rows / `BoTextAreaRules.InitialHeightCss`) — this is the read-only **ceiling**, not a forced box |
+| Shorter values | Height **adapts to content** (no empty 6-row hole) |
+| Longer values | Clamp to the max height; shared **Read more** / **Show less** (`BoClampedPlainText`) overlays the end of the last visible line; expand grows in place |
+| Shared control | Process History Comments and other multiline clamps reuse `BoClampedPlainText` (not a product-local fork) |
 
 #### Read-only label divider (locked)
 
@@ -476,7 +485,7 @@ Single-value date (or date+time) control. Public API is `Bo*` only; calendar pop
 | DateTime mode storage | `DateTime` with hour + minute (seconds cleared); `DateTimeKind.Unspecified` |
 | Database | Prefer a datetime / datetime2 (nullable) column that matches the entity — do not use a date-only column for `BoDateField` bindings |
 | Read-only display | Host may format a **short date** string for `BoFieldReadOnly` when the UX is date-only; that is display-only. Prefer **`BoDateDisplay.Format`** / **`FormatUtc`** with `Locale.FormatCulture` (+ timezone for UTC instants) — see [i18n.md](../foundations/i18n.md) |
-| Backend Value (gallery) | Always shown as **date + time** (`g` / culture general) to prove the typed value is `DateTime?` even when `Mode` is Date |
+| Backend Value (gallery) | Always shown as **date + time** (culture short date + 24-hour `HH:mm`) to prove the typed value is `DateTime?` even when `Mode` is Date |
 
 Planning JSON: `control: "DateField"`; optional `mode: "Date"` \| `"DateTime"`. The generated property remains `DateTime?`.
 
@@ -485,7 +494,7 @@ Planning JSON: `control: "DateField"`; optional `mode: "Date"` \| `"DateTime"`. 
 | Concern | Standard |
 | --- | --- |
 | Date mode | Calendar / typing collect a **date**; bound value is `DateTime` at midnight |
-| DateTime mode | Date + hour/minute; culture-aware display (`g`). Panel time row: digit **hh** (0–12 with AM/PM, or 0–23 when culture is 24h) · digit **mm** (0–60, clamp overshoot to 60; stored minute 0–59) · **AM/PM** select when culture uses 12h (`AMDesignator` / `PMDesignator`). No native `<input type="time">`. |
+| DateTime mode | Date + hour/minute. **Hard standard: 24-hour clock** (display and picker) — hours **0–23** (e.g. 12, 13, 14); **never AM/PM**. Display via `BoDateDisplay` = culture short date + `HH:mm`. Panel time row: digit **hh** (0–23) · digit **mm** (0–60, clamp overshoot to 60; stored minute 0–59). No AM/PM select. No native `<input type="time">`. |
 | Autocomplete | Main text input and DateTime hour/minute/`select` use `autocomplete="off"` — [Browser autocomplete](#browser-autocomplete-locked) |
 | Locale | Format + calendar month/weekday names from `IBoLocaleService` / `bo-culture` (**en-CA** / **fr-CA**) — same family as other i18n |
 | Typing | Parse culture-formatted input on blur / Enter; invalid input reverts to last good value |
