@@ -14,8 +14,8 @@ End-user authentication is a **BreezeOn platform capability**. SSOT:
 | | |
 | --- | --- |
 | Mechanism | Microsoft Entra ID OIDC Authorization Code Flow + cookie session |
-| Framework owner | SYSTEM-SHARED-UI (`BreezeOn.UI`) |
-| First product host | EAC (`SYSTEM-ADMIN-EAC`) |
+| Framework owner | breezeon-system-shared-ui (`BreezeOn.UI`) |
+| First product host | EAC (`breezeon-system-admin-eac`) |
 | User store | Platform `Identity.Users` / `UsersLogins` / `Tenants` / `UserPhotos` in the **customer** database (not AspNet Identity) |
 | Directory sync | App-only Microsoft Graph `User.Read.All` on the shared App Registration; manual Sync Now ([directory-synchronization-standard.md](identity-and-authentication/directory-synchronization-standard.md), [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md)) |
 | Session policy | [session-management-standard.md](identity-and-authentication/session-management-standard.md) |

@@ -3,7 +3,7 @@
 
 Owner: UI
 
-**Pattern → Gallery path** index for [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) `BreezeOn.UI.Gallery`.
+**Pattern → Gallery path** index for [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) `BreezeOn.UI.Gallery`.
 
 **Authority:** Gallery pages are **illustrative examples only**. They demonstrate usage and accelerate copy; they do **not** establish architecture or UX standards. **STANDARDS remain SSOT.** If a Gallery path and a standard disagree, the standard is correct and the Gallery must be fixed — [example-governance.md](example-governance.md).
 

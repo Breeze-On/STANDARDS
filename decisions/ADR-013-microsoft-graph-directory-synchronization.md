@@ -9,7 +9,7 @@ Login-time upsert only creates `Identity.Users` for people who sign in. Business
 
 ## Decision
 
-- **SYSTEM-SHARED-UI** owns Microsoft Graph directory synchronization, Graph client credentials usage, Identity directory sync writers, login-time profile photo refresh, and Identity user query helpers. EAC (and future products) consume these APIs; they do not reimplement Graph or Identity upsert SQL.
+- **breezeon-system-shared-ui** owns Microsoft Graph directory synchronization, Graph client credentials usage, Identity directory sync writers, login-time profile photo refresh, and Identity user query helpers. EAC (and future products) consume these APIs; they do not reimplement Graph or Identity upsert SQL.
 - Synchronization is **additive** to login-time provisioning. Permanent key remains `(TenantId, ExternalObjectId)` ([ADR-010](ADR-010-platform-identity-schema.md)).
 - **V1 sync** is **manual Sync Now** only (first admin surface: EAC Users). No Azure Functions, WebJobs, Hangfire, or extra Azure infrastructure for sync.
 - **V1 algorithm** is a **full** Graph user enumeration (paged `/users`). Delta sync (`/users/delta`, delta cursors) is deferred.

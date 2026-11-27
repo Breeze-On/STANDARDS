@@ -3,7 +3,7 @@
 
 Owner: UI / Architecture
 
-**Implementation SSOT:** [Breeze-On/SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoAccessDenied`, `BoApplicationError`, `BoErrorMessageContext`, `BoErrorMessageOptions`, `.bo-error-message*` in `breezeon-ui.css`, Gallery `/error-message-page`.
+**Implementation SSOT:** [Breeze-On/breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) — `BoAccessDenied`, `BoApplicationError`, `BoErrorMessageContext`, `BoErrorMessageOptions`, `.bo-error-message*` in `breezeon-ui.css`, Gallery `/error-message-page`.
 
 Error Message Pages are a **first-class BreezeOn UI pattern**. SHARED-UI owns shared components and the authoritative gallery showcase. Product apps consume them; they do not invent one-off error pages.
 

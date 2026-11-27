@@ -11,8 +11,10 @@
 | **Rationale** | Separating unshipped engine behaviour from shipped authoring capability so administrators and AI agents treat PF as a business capability today without mistaking engine runtime for shipped product. |
 | **Expiry / review** | Until the engine ships (then promote into AA architecture) or the vision is withdrawn |
 | **Owner area** | Architecture |
-| **Related** | ADR-019 |
+| **Related** | ADR-019 · ADR-026 |
 
 ## Approved exception (normative)
 
 See table above. Agents must not treat the vision section as shipped **engine** capability. Agents **must** treat authoring semantics in the Current reality / Business meaning sections as binding.
+
+**Process Engine home (Future Direction only):** [BREEZEON-SYSTEM-PROCESS-ENGINE](https://github.com/Breeze-On/BREEZEON-SYSTEM-PROCESS-ENGINE) (`BreezeOn.ProcessEngine`) is the intended future home for workflow execution services that may consume PF metadata. Today PE ships **only** Process Metadata Framework (runtime) / sequence / Request Number foundations ([ADR-026](../../decisions/ADR-026-process-engine-and-metadata-framework.md)). Do **not** treat PE as a shipped workflow designer, timer, bus, or retry product — see [process-engine/README.md](../../architecture/process-engine/README.md) § Future Direction.

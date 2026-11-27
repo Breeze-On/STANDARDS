@@ -5,7 +5,7 @@ Owner: UI
 
 Icon technology and the **approved icon sizes** for `BreezeOn.UI`. Related: [tokens.md](tokens.md), [typography.md](typography.md), [navigation.md](../shell/navigation.md), [button.md](../controls/button.md), [accessibility.md](accessibility.md), [normative-tiers.md](normative-tiers.md).
 
-API: [`BoIcon`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#boicon) (`Name`, `Variant`, `Size`, `Class`).
+API: [`BoIcon`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#boicon) (`Name`, `Variant`, `Size`, `Class`).
 
 Current reality only.
 

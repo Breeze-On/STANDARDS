@@ -10,7 +10,7 @@ Breeze On applications need end-user authentication against Microsoft Entra ID. 
 ## Decision
 
 - Interactive authentication is **OIDC Authorization Code Flow** with Microsoft Entra ID, then an application **cookie** session.
-- Implementation lives in **SYSTEM-SHARED-UI** (`BreezeOn.UI` authentication helpers). Product applications **consume** the shared framework; they must not independently redesign authentication.
+- Implementation lives in **breezeon-system-shared-ui** (`BreezeOn.UI` authentication helpers). Product applications **consume** the shared framework; they must not independently redesign authentication.
 - Interactive authentication uses ASP.NET Core **OpenIdConnect + Cookies**, not Microsoft.Identity.Web. **App-only** Microsoft Graph (directory sync and login-time profile photo) uses the same App Registration client credentials **without** replacing the cookie login path ([ADR-013](ADR-013-microsoft-graph-directory-synchronization.md)).
 - Configuration: `AUTHENTICATION__AUTHORITY`, `AUTHENTICATION__CLIENTID`, `AUTHENTICATION__CLIENTSECRET` (no hard-coded authority; no `AUTHENTICATION__TENANTID`).
 - Tenant who may sign in is controlled by **Entra App Registration** configuration, not application allowlists.

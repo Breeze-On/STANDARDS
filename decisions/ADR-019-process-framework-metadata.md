@@ -65,7 +65,7 @@ No workflow engine, task assignment, or **Process Framework** instance/runtime t
 - Adding a Process Framework metadata type is a Process Framework decision (amend this ADR); it does not widen Data Entity column types.
 - Resolving `ExternalObjectId` → `UserGUID` is an environment-local lookup (`(TenantId, ExternalObjectId)` within the target tenant registry) performed by EAC UI and, in future, the workflow engine.
 - Column delete cascade deliberately favors configuration cleanup over preserving orphaned values.
-- EAC-domain SSOT: [`architecture/process-framework/`](../architecture/process-framework/README.md). JSON contract: [`docs/data-portability.md`](../docs/data-portability.md). Schema inventory: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md).
+- EAC-domain SSOT: [`architecture/process-framework/`](../architecture/process-framework/README.md). JSON contract: [`docs/data-portability.md`](../docs/data-portability.md). Schema inventory: EAC [`docs/db-model.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/db-model.md).
 
 ## Related
 

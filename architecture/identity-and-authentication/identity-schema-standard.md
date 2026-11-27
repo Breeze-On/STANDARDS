@@ -7,13 +7,13 @@ Owner: Architecture
 
 | Concern | Owner |
 | --- | --- |
-| Schema / table / People Picker procedure definitions (T-SQL current model + seed) | SYSTEM-SHARED-UI (`sql/identity/`) |
+| Schema / table / People Picker procedure definitions (T-SQL current model + seed) | breezeon-system-shared-ui (`sql/identity/`) |
 | Physical tables | **Customer database** (one catalog per customer-environment; shared by all BreezeOn product applications in that environment) |
-| Login-time upsert / login insert / tenant discovery | SYSTEM-SHARED-UI default SQL directory writer |
-| Directory sync / photo refresh / user queries | SYSTEM-SHARED-UI ([directory-synchronization-standard.md](directory-synchronization-standard.md), [ADR-013](../../decisions/ADR-013-microsoft-graph-directory-synchronization.md)) |
+| Login-time upsert / login insert / tenant discovery | breezeon-system-shared-ui default SQL directory writer |
+| Directory sync / photo refresh / user queries | breezeon-system-shared-ui ([directory-synchronization-standard.md](directory-synchronization-standard.md), [ADR-013](../../decisions/ADR-013-microsoft-graph-directory-synchronization.md)) |
 | Competing user stores | **Forbidden** — do not add AspNet Identity tables or alternate user master tables for this purpose |
 
-SYSTEM-SHARED-UI does **not** host a database.
+breezeon-system-shared-ui does **not** host a database.
 
 ### Topology
 
@@ -64,7 +64,7 @@ Do **not** build relationships from Email, UserPrincipalName, or `UsersId`. Logi
 
 ### `Identity.P_GET_UsersComponentValues`
 
-One-off platform read procedure for `BoPeoplePicker` (SYSTEM-SHARED-UI). **Not** a `*ComponentValues` naming family.
+One-off platform read procedure for `BoPeoplePicker` (breezeon-system-shared-ui). **Not** a `*ComponentValues` naming family.
 
 | Parameter | Role |
 | --- | --- |
@@ -142,4 +142,4 @@ Failure to retrieve a photo must never block login; existing rows remain.
 - [Directory synchronization standard](directory-synchronization-standard.md)
 - [Session management standard](session-management-standard.md)
 - [Platform authorization](../authorization/README.md)
-- Canonical scripts: SYSTEM-SHARED-UI `sql/identity/current_model/`
+- Canonical scripts: breezeon-system-shared-ui `sql/identity/current_model/`

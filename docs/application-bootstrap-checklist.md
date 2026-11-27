@@ -48,7 +48,7 @@ Also update [application-development-process.md](ai/application-development-proc
 - [ ] Seed data configured (`seed/eac/` for EAC config; `sql/seed/` for app business data when needed)
 - [ ] Admin access configured (local/admin membership path documented and seeded)
 - [ ] Local scripts present: `dev-reset.ps1` (orchestrates sibling EAC reset) + `dev-run.ps1` — [local-development-scripts.md](local-development-scripts.md)
-- [ ] Sibling `SYSTEM-ADMIN-EAC` + `SYSTEM-SHARED-UI` prerequisites documented in product README / README_AI
+- [ ] Sibling `breezeon-system-admin-eac` + `breezeon-system-shared-ui` (+ `breezeon-system-process-engine` when Request Number / sequences are in scope) prerequisites documented in product README / README_AI — standard names per [naming.md](naming.md); local folders may still use GitHub legacy names until rename
 
 ## Pages
 
@@ -68,7 +68,8 @@ Authority: [initiation-experience.md](ui/patterns/initiation-experience.md) · [
 - [ ] General Information uses Fluent **Form** Regular (outlined) icon, Size 16
 - [ ] Tabs live in header `BoAppHeader.TabsContent`; body uses matching `BoTabPanels`
 - [ ] **Process Request** section exists
-- [ ] Process Request is the **first** section under General Information
+- [ ] Initiation: Process Request is the **first** section under General Information
+- [ ] Process View: Process Request is the **first** section under **Process History** (not under General Information)
 - [ ] Shell footer **enabled** on New Request (`BoAppShell.ShowFooter`)
 - [ ] **`BoPageFooterActions`** implemented in `BoAppFooter` (no Actions-area Save\|Discard on default initiation)
 - [ ] Save uses platform **Save** pattern (`BoButtonVariant.Save`, Filled Save icon, AriaLabel)
@@ -80,35 +81,41 @@ Authority: [initiation-experience.md](ui/patterns/initiation-experience.md) · [
 
 ## Process Request Fields
 
-Authority: [process-request-section.md](ui/patterns/process-request-section.md) · [forms.md](ui/controls/forms.md)
+Authority: [process-request-section.md](ui/patterns/process-request-section.md) · [forms.md](ui/controls/forms.md) · [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md)
 
+- [ ] **Request Number** field implemented (`BoFieldReadOnly`, **left** of Initiator) — computed; never a persisted column
 - [ ] Initiator field implemented (`BoPeoplePicker`, single, Disabled, not Required)
 - [ ] `InitiatorUserGUID` field mapped (persist UserGUID only; Value `"D"` format)
 - [ ] Requested Date field implemented (`BoDateField`, Date mode, `DateTime?`, Disabled)
 - [ ] `RequestedDate` field mapped
+- [ ] Row uses **exactly three** field children (Request Number, Initiator, Requested Date)
 - [ ] Initiator auto-population implemented (authenticated user)
 - [ ] Requested Date auto-population implemented (current **local** calendar date)
 - [ ] People display **`DisplayName (Email)`** when resolve succeeds (GUID last resort only)
+- [ ] Process View **App Title = Request Number**
 
 ## Database
 
-Authority: [database.md](database.md) § Process table convention (two-tier) · [ADR-024](../decisions/ADR-024-platform-process-root.md) · [process-runtime](../architecture/process-runtime/README.md)
+Authority: [database.md](database.md) § Process table convention (two-tier) · [ADR-024](../decisions/ADR-024-platform-process-root.md) · [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md) · [process-runtime](../architecture/process-runtime/README.md)
 
-- [ ] Platform root: EAC owns `Global.Process` + `Global.P_POST_Process` (consumer does **not** invent these)
+- [ ] Platform root: EAC owns `Global.Process` + `Global.P_POST_Process` + `Global.P_GET_ProcessTable` (consumer does **not** invent these)
 - [ ] Process History: EAC owns `Global.ProcessHistory` + `P_POST_ProcessHistory` + display-ready `P_GET_ProcessHistoryByProcessGUID` (consumer does **not** invent projection)
 - [ ] `{UniqueCode}.Process` **extension** table created under product `sql/current_model/`
 - [ ] `ProcessId` implemented (`INT IDENTITY` PK) on the extension table
 - [ ] `ProcessGUID` on extension is `UNIQUEIDENTIFIER NOT NULL` UNIQUE — value from `Global.P_POST_Process` / `Global.Process`
+- [ ] Required Sequence columns on extension: `SequenceTemplate`, `SequenceDisplay`, `Sequence` — **never** persist `RequestNumber` / `SequenceDigits`
 - [ ] Application **must not mint** `ProcessGUID` (SQL generates on Global create)
-- [ ] Create order: `Global.P_POST_Process` → insert `{UniqueCode}.Process` → `P_POST_ProcessHistory` (`00`/`va` or `00`/`va1`) → one transaction → redirect to Process View
+- [ ] Create order: `Global.P_POST_Process` → insert `{UniqueCode}.Process` → resolve SequenceTemplate/Display on Save → `P_POST_ProcessHistory` (`00`/`va` or `00`/`va1`) → `GenerateProcessSequence` (app-chosen; typically after Submit) → one transaction → redirect to Process View
 - [ ] Flat fields mapped to extension Process table (baseline: `InitiatorUserGUID`, `RequestedDate`) — **no** Comments column on extension
 - [ ] Mandatory audit columns present
-- [ ] Consumer `dev-reset.ps1` applies app `sql/current_model/` **after** EAC subprocess (Global schema before consumer Process FK)
-- [ ] Process View History tab: Process Request + Process History grid consuming EAC-projected columns
+- [ ] Consumer `dev-reset.ps1` applies app `sql/current_model/` **after** EAC subprocess (Global schema + PE counter SQL before consumer Process FK)
+- [ ] Process View History tab: Process Request (three fields) + Process History grid consuming EAC-projected columns
 
 ## Architecture
 
 - [ ] Process Request remains **application-owned** (no SHARED-UI `BoProcessRequest` package)
+- [ ] Sibling **`ProjectReference`** to `BreezeOn.ProcessEngine` (`breezeon-system-process-engine`) when Request Number / sequences are in scope — [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md)
+- [ ] `ProcessSequence:Digits` host config (default 4); permanent Variable Codes `sequence-template` / `sequence-display` in AE config (missing → `""`)
 - [ ] Save/Submit persistence per [process-persistence.md](ui/patterns/process-persistence.md); Process View is **terminal** ([process-view.md](ui/patterns/process-view.md))
 - [ ] No application forks of shared UI controls / chrome (use `Bo*` + tokens)
 - [ ] Shared UI standards followed ([ui/overview.md](ui/overview.md) · Product Host Contract)

@@ -18,9 +18,10 @@ The Customer Onboarding Master Flow does **not** create new BreezeOn application
 
 | Kind | Example repository | Notes |
 | --- | --- | --- |
-| Application | [SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) | Blazor Web App, SQL ownership, DEV hosting, `scripts/dev-*.ps1` |
-| Shared library | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | RCL + gallery; design system + auth/authZ framework + Identity/Security SQL definitions; no business DB |
-| Org standards | [STANDARDS](https://github.com/Breeze-On/STANDARDS) | Not an application |
+| Application | [`breezeon-system-admin-eac`](https://github.com/Breeze-On/breezeon-system-admin-eac) | Blazor Web App, SQL ownership, DEV hosting, `scripts/dev-*.ps1` |
+| Shared library | [`breezeon-system-shared-ui`](https://github.com/Breeze-On/breezeon-system-shared-ui) | RCL + gallery; design system + auth/authZ framework + Identity/Security SQL definitions; no business DB |
+| Shared library | [`breezeon-system-process-engine`](https://github.com/Breeze-On/breezeon-system-process-engine) | `BreezeOn.ProcessEngine` — Process Metadata Framework (runtime), sequence allocation, Request Number formatting; sibling `ProjectReference` ([ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md)) |
+| Org standards | [`standards`](https://github.com/Breeze-On/standards) | Not an application |
 
 ## Dedicated repository ownership
 
@@ -31,7 +32,7 @@ The Customer Onboarding Master Flow does **not** create new BreezeOn application
 
 ## Platform consumption requirements
 
-**`BreezeOn.UI` (SYSTEM-SHARED-UI) is mandatory** for every BreezeOn application. Adoption is **not** optional. This includes the shell, `Bo*` components, platform authentication, platform authorization, and the page catalog / page-security model.
+**`BreezeOn.UI` (`breezeon-system-shared-ui`) is mandatory** for every BreezeOn application. Adoption is **not** optional. This includes the shell, `Bo*` components, platform authentication, platform authorization, and the page catalog / page-security model.
 
 ### Must consume
 
@@ -40,13 +41,14 @@ Verified at process **Platform bootstrap completion** before business feature de
 | Capability | Requirement | SSOT |
 | --- | --- | --- |
 | **Product Host Contract** | Full host wiring once per app: UI + auth + AuthZ + page catalog + Data Protection + Error Message options + localization/resources — [page-development.md § Product Host Contract](ui/page-development.md#product-host-contract-required) (Gallery = chrome/assets; EAC = complete product host) | [ui/page-development.md](ui/page-development.md), [ui/overview.md](ui/overview.md) |
-| **`BoAppShell` + `Bo*` UI** | Product pages use the public Shared UI API only — no Fluent UI types in product pages | [public-component-api.md](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md), [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
+| **`BoAppShell` + `Bo*` UI** | Product pages use the public Shared UI API only — no Fluent UI types in product pages | [public-component-api.md](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md) (`breezeon-system-shared-ui`; GitHub legacy: `breezeon-system-shared-ui`), [ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 | **Authentication framework** | Entra OIDC + cookie auth via SHARED-UI; shared App Registration per customer-environment | [Identity & Authentication](../architecture/identity-and-authentication/README.md), [ADR-009](../decisions/ADR-009-entra-oidc-cookie-authentication.md) |
 | **Authorization framework** | `IBoAuthorizationService`, Security Groups, convention-based mutation guards | [Authorization](../architecture/authorization/README.md), [ADR-014](../decisions/ADR-014-platform-authorization.md) |
 | **Page catalog / page security** | Register every authenticated route; fail closed on miss; Code-based `RequiredGroupCodes` | [page-security-standard.md](../architecture/authorization/page-security-standard.md) |
 | **Platform Identity + Security schemas** | Apply SHARED-UI definitions into the **one shared customer database** per customer-environment. **Identity remains shared. Security remains shared.** Applications must **not** create independent Identity catalogs or fork Security schemas. New customer-environment → [Master Flow](../runbooks/customer-onboarding-master-flow.md); new product app in an existing environment → consume the existing customer DB | [database.md](database.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md) |
 | **Shared catalog registration** | Every BreezeOn application is **expected to be registered** in the EAC-owned `System` application registry (`UniqueCode` = `repositoryName.ToUpperInvariant()`). **Registration / discovery / deploy-order mechanics are Future Validation** for subsequent apps | [database.md](database.md) § Shared System schema, [naming.md](naming.md), [application-definition.schema.json](ai/application-definition.schema.json) |
 | **Application Context Bootstrap** | Consume SHARED-UI `AddBreezeOnApplicationAccess(UniqueCode)` + AE helpers; define product AttributeCode page policy; do not fork EAC bootstrap SPs or bypass `IBoAuthorizationService` | [architecture/app-context/](../architecture/app-context/README.md), [ADR-022](../decisions/ADR-022-consumer-application-context-bootstrap.md) |
+| **Process Engine** (when the app creates processes / Request Numbers) | Sibling `ProjectReference` to `BreezeOn.ProcessEngine`; required Sequence\* columns; Request Number UI; do not reimplement sequence allocation or Request Number formatting | [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md), [process-engine](../architecture/process-engine/README.md), [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md) |
 
 ### Must not own
 
@@ -71,7 +73,7 @@ Verified at process **Platform bootstrap completion** before business feature de
 
 ## Cross-repo consumption of SHARED-UI (interim contract)
 
-**Current reality (interim):** product apps consume `BreezeOn.UI` via a **sibling repository checkout** and a **`ProjectReference`** to `SYSTEM-SHARED-UI` sources. CI typically checks out SHARED-UI at the **unpinned default branch HEAD**. There is **no** NuGet package versioning, pin policy, or compatibility contract yet.
+**Current reality (interim):** product apps consume `BreezeOn.UI` via a **sibling repository checkout** and a **`ProjectReference`** to `breezeon-system-shared-ui` sources (local/GitHub folder still `breezeon-system-shared-ui` until rename). CI typically checks out SHARED-UI at the **unpinned default branch HEAD**. There is **no** NuGet package versioning, pin policy, or compatibility contract yet.
 
 This is the accepted interim multi-repo contract ([ADR-001](../decisions/ADR-001-multi-repository-model.md)). **Future Validation (triggered by application #2):** NuGet (or pinned ref), compatibility policy, and release versioning — do not invent those decisions now.
 
@@ -79,19 +81,19 @@ This is the accepted interim multi-repo contract ([ADR-001](../decisions/ADR-001
 
 | File | Role |
 | --- | --- |
-| `README.md` | Humans — purpose, run/deploy as implemented, links to STANDARDS and org profile |
-| `README_AI.md` | Agents — thin repo-specific context; references STANDARDS; update duties |
-| `AGENTS.md` | Short pointer to STANDARDS and critical repo facts |
+| `README.md` | Humans — purpose, run/deploy as implemented, links to `standards` and org profile |
+| `README_AI.md` | Agents — thin repo-specific context; references `standards`; update duties |
+| `AGENTS.md` | Short pointer to `standards` and critical repo facts |
 
-Product READMEs stay **thin**: link to STANDARDS for org-wide rules; do not duplicate vision (org profile) or full standards.
+Product READMEs stay **thin**: link to `standards` for org-wide rules; do not duplicate vision (org profile) or full standards.
 
 ## STANDARDS references
 
 Every application repository must:
 
-1. Follow [Breeze-On/STANDARDS](https://github.com/Breeze-On/STANDARDS) (start at [`README_AI.md`](../README_AI.md)).
+1. Follow [`Breeze-On/standards`](https://github.com/Breeze-On/standards) (GitHub legacy: `STANDARDS`; start at [`README_AI.md`](../README_AI.md)).
 2. Keep product docs synchronized with implementation (**Current Reality Only**).
-3. Update STANDARDS `architecture/` (and ADRs when required) when org-visible reality changes.
+3. Update `standards` `architecture/` (and ADRs when required) when org-visible reality changes.
 
 ## Documentation requirements
 
@@ -146,7 +148,7 @@ Applications that own business tables:
 | `docs/db-model.md` | Human-readable business model |
 | `sql/seed/` | Local-only sample data (required; not default-applied to hosted Azure SQL) |
 
-Platform **`Identity.*`** / **`Security.*`** tables are **not** ASP.NET Core Identity. Definitions are owned by SYSTEM-SHARED-UI; physical tables live in the **one customer database per customer-environment**, shared by all product applications in that environment (not a separate Identity catalog per app). Intended layout:
+Platform **`Identity.*`** / **`Security.*`** tables are **not** ASP.NET Core Identity. Definitions are owned by `breezeon-system-shared-ui`; physical tables live in the **one customer database per customer-environment**, shared by all product applications in that environment (not a separate Identity catalog per app). Intended layout:
 
 ```text
 Customer
@@ -169,7 +171,7 @@ When behavior, setup, schema, or architecture changes:
 1. Update implementation.
 2. Update product `README` / `README_AI` / `AGENTS` as needed.
 3. Update `db-model` / `current_model` / `seed` together when schema changes.
-4. Update STANDARDS (`docs/`, `architecture/`, `decisions/`) when the change is org-wide or architectural.
+4. Update `standards` (`docs/`, `architecture/`, `decisions/`) when the change is org-wide or architectural.
 5. Treat documentation (including ADRs) as part of **Definition of Done**.
 
 ## Repository boundaries
@@ -177,8 +179,9 @@ When behavior, setup, schema, or architecture changes:
 | Repository | Owns |
 | --- | --- |
 | Application repo (e.g. EAC) | That app’s UI, host wiring, business schema, local sandbox, deploy for that app |
-| SYSTEM-SHARED-UI | `BreezeOn.UI` — **UI framework** + **authentication framework** + **authorization framework** + **Identity schema definitions** + **Security schema definitions**; gallery test host; no hosted business database |
-| STANDARDS | How we work, what exists org-wide, ADRs |
+| `breezeon-system-shared-ui` | `BreezeOn.UI` — **UI framework** + **authentication framework** + **authorization framework** + **Identity schema definitions** + **Security schema definitions**; gallery test host; no hosted business database |
+| `breezeon-system-process-engine` | `BreezeOn.ProcessEngine` — Process Metadata Framework (runtime), sequence allocation, Request Number formatting, counter SQL definitions; not a hosted workflow product today |
+| `standards` | How we work, what exists org-wide, ADRs |
 | `.github` profile | Vision / mission / ecosystem messaging only |
 
 Current topology: [architecture/landscape.md](../architecture/landscape.md). UI standards: [docs/ui/overview.md](ui/overview.md).

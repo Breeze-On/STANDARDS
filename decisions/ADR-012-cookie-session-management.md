@@ -5,13 +5,13 @@ Status: Accepted
 
 ## Context
 
-ADR-009 established Entra OIDC + application cookie sessions owned by SYSTEM-SHARED-UI, but did not specify cookie attributes, idle vs absolute lifetimes, logout semantics, or Data Protection hosting requirements. Product apps must not each invent cookie policy. Blazor Interactive Server and OIDC correlation/nonce cookies constrain SameSite choices.
+ADR-009 established Entra OIDC + application cookie sessions owned by breezeon-system-shared-ui, but did not specify cookie attributes, idle vs absolute lifetimes, logout semantics, or Data Protection hosting requirements. Product apps must not each invent cookie policy. Blazor Interactive Server and OIDC correlation/nonce cookies constrain SameSite choices.
 
 Login-only enforcement of `Identity.Users.IsEnabled` left disabled users with valid cookies until idle or absolute expiry. That gap is closed by mid-session revalidation (see Amendment below).
 
 ## Decision
 
-- SYSTEM-SHARED-UI owns the platform cookie/session policy (`BoCookieAuthenticationDefaults` applied by `AddBreezeOnAuthentication`). Products must not reconfigure authentication cookies.
+- breezeon-system-shared-ui owns the platform cookie/session policy (`BoCookieAuthenticationDefaults` applied by `AddBreezeOnAuthentication`). Products must not reconfigure authentication cookies.
 - Cookie: name `BreezeOn.Auth`; `HttpOnly`; `Secure=Always`; `SameSite=Lax`; `Path=/`; host-only (no Domain); sliding idle **8 hours**; absolute lifetime **24 hours** from issue; non-persistent browser cookie; ticket stored in the cookie (no server session store).
 - OIDC correlation/nonce cookies remain ASP.NET Core defaults (`SameSite=None; Secure`) — do not force them to `Lax`.
 - Logout clears the application cookie and performs OIDC/Entra sign-out. Local logout is not promised to revoke other product apps’ cookies.
@@ -42,7 +42,7 @@ Promoted from the Identity & Authentication future roadmap into current platform
 | Revocation | Soft-disable / `IsEnabled = 0` / missing row ends the application session within the 60s cache SLO |
 | Limits | Per-instance memory cache; no cross-app cookie clear; circuit caveat; fail-closed on recheck errors |
 
-Implementation: SYSTEM-SHARED-UI (`BoCookieAuthenticationDefaults`, `IBoIdentitySessionGate`). Operator onboarding: [customer-onboarding-authentication.md](../runbooks/customer-onboarding-authentication.md).
+Implementation: breezeon-system-shared-ui (`BoCookieAuthenticationDefaults`, `IBoIdentitySessionGate`). Operator onboarding: [customer-onboarding-authentication.md](../runbooks/customer-onboarding-authentication.md).
 
 ## Amendment — UserGUID cookie reconciliation (2026-11-15)
 

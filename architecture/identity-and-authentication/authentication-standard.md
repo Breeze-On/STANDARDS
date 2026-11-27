@@ -12,13 +12,13 @@ Owner: Architecture
 | Flow | Authorization Code Flow |
 | Application session | Cookie authentication (Blazor Interactive Server — [ADR-002](../../decisions/ADR-002-blazor-interactive-server.md)) |
 | Cookie / session policy | [session-management-standard.md](session-management-standard.md) ([ADR-012](../../decisions/ADR-012-cookie-session-management.md)) |
-| Interactive packages | `Microsoft.AspNetCore.Authentication.OpenIdConnect` + Cookies in SYSTEM-SHARED-UI |
+| Interactive packages | `Microsoft.AspNetCore.Authentication.OpenIdConnect` + Cookies in breezeon-system-shared-ui |
 | Not used (interactive path) | Microsoft.Identity.Web; ASP.NET Core Identity / `AspNet*` user store |
 | App-only Graph | Same App Registration client credentials for directory sync and login-time profile photo ([ADR-013](../../decisions/ADR-013-microsoft-graph-directory-synchronization.md)); does **not** replace cookie login |
 
 ## Ownership
 
-- **SYSTEM-SHARED-UI** owns the authentication framework: OIDC registration helpers, cookie/session policy (including mid-session `IBoIdentitySessionGate`), middleware/endpoint helpers, current-user/claims helpers, login/logout, profile menu sign-out integration, the default Identity directory SQL writer, tenant discovery, directory synchronizer, and login-time profile photo refresh.
+- **breezeon-system-shared-ui** owns the authentication framework: OIDC registration helpers, cookie/session policy (including mid-session `IBoIdentitySessionGate`), middleware/endpoint helpers, current-user/claims helpers, login/logout, profile menu sign-out integration, the default Identity directory SQL writer, tenant discovery, directory synchronizer, and login-time profile photo refresh.
 - **Product applications** call the shared registration helpers and supply a database connection factory to the **customer** database. They must **not** independently redesign OIDC, cookies, Identity upsert, or Graph sync logic.
 
 ## Successful login behaviour
@@ -42,7 +42,7 @@ Clear the application cookie and redirect to Entra end-session (`signout-callbac
 
 ## Persistence seam
 
-- `IBoIdentityDirectory` + default `SqlIdentityDirectory` in SYSTEM-SHARED-UI (login upsert / tenant discovery).
+- `IBoIdentityDirectory` + default `SqlIdentityDirectory` in breezeon-system-shared-ui (login upsert / tenant discovery).
 - `IBoIdentitySessionGate` + default `SqlIdentitySessionGate` for mid-session validity (Valid/Invalid only; not directory write APIs).
 - Host registers `IBoIdentityConnectionFactory` (connection to the **customer** database where `Identity.*` physically lives, shared by all products in that customer-environment).
 - No product `DbContext` or repository types inside SHARED-UI.

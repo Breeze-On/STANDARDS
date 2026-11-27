@@ -11,7 +11,7 @@ Owner: Architecture
 - Authentication uses **OpenID Connect (OIDC)** against Microsoft Entra ID.
 - BreezeOn **owns and manages App Registrations**.
 - Customer consent creates an **Enterprise Application** in the customer tenant.
-- Authentication is a **shared BreezeOn platform capability**. Product applications consume SYSTEM-SHARED-UI; they must not independently redesign authentication.
+- Authentication is a **shared BreezeOn platform capability**. Product applications consume breezeon-system-shared-ui; they must not independently redesign authentication.
 
 ## Support access
 

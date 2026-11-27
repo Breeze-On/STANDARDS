@@ -22,7 +22,7 @@ Route / Application Context page transitions are injected automatically through 
 
 `BoShellCard` provides floating card chrome (border, shadow, `card-container-background`); margin density Shell/Content/None. Token names: [tokens.md](../foundations/tokens.md).
 
-Public `Bo*` API / host-integration parameters: [SYSTEM-SHARED-UI `docs/public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md). UX/behavior SSOT remains this STANDARDS `docs/ui/` tree.
+Public `Bo*` API / host-integration parameters: [breezeon-system-shared-ui `docs/public-component-api.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md). UX/behavior SSOT remains this STANDARDS `docs/ui/` tree.
 
 ## Header actions (locked)
 
@@ -56,7 +56,7 @@ Footer is **optional per page** via `BoAppShell.ShowFooter` (default `true`). Wh
 
 ## Header tabs (optional page sections)
 
-Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTabs` / `BoTab` and body `BoTabPanels` / `BoTabPanel`. **Do not** put page-section `BoTabs` inside the shell body / main content card (including Process View) — header `TabsContent` is mandatory when the page uses section tabs. Tabs are page sections, not left-nav routes. **Choosing Tabs vs Toggle vs Panel Navigation, the selection authority model (`TabRequested` intent / `SelectedTabChanged`), and keyboard / ARIA:** [selection-and-navigation.md](../controls/selection-and-navigation.md). Parameters: [`public-component-api.md` § BoTabs](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#botabs). For large multi-section **workspace** navigation (App Config, onboarding, admin), use `BoPanelNavigation` + `BoKeepAlivePanels` instead — [panels.md](../layout/panels.md). Do not conflate header tabs with workspace panel navigation.
+Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTabs` / `BoTab` and body `BoTabPanels` / `BoTabPanel`. **Do not** put page-section `BoTabs` inside the shell body / main content card (including Process View) — header `TabsContent` is mandatory when the page uses section tabs. Tabs are page sections, not left-nav routes. **Choosing Tabs vs Toggle vs Panel Navigation, the selection authority model (`TabRequested` intent / `SelectedTabChanged`), and keyboard / ARIA:** [selection-and-navigation.md](../controls/selection-and-navigation.md). Parameters: [`public-component-api.md` § BoTabs](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#botabs). For large multi-section **workspace** navigation (App Config, onboarding, admin), use `BoPanelNavigation` + `BoKeepAlivePanels` instead — [panels.md](../layout/panels.md). Do not conflate header tabs with workspace panel navigation.
 
 **Initiation pages:** default General Information tab uses Fluent **Form** (Regular / outlined) in header `TabsContent`. Footer Save+Submit: [page-footer-actions.md](../patterns/page-footer-actions.md) · [initiation-experience.md](../patterns/initiation-experience.md).
 
@@ -81,7 +81,7 @@ Pages **may omit** tabs. When present, use `BoAppHeader.TabsContent` with `BoTab
 | `SelectedTab` | Bindable in-memory key (`@bind-SelectedTab`); defaults to first tab; persists across switches |
 | Validation fail chrome | After Submit attempt, tabs whose `TabKey` is in `FailedGroups` show `BoValidationFailBadge` in the **left icon slot** (replaces `IconContent` while failed). Clears live when that group no longer fails (`NotifyFieldChanged`) |
 
-Authoritative detail: this section + [motion.md](../foundations/motion.md) § Selection travel; host script SSOT: [page-development.md](../page-development.md#host-script-inventory-ssot). Library inventory: [public-component-api.md](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md).
+Authoritative detail: this section + [motion.md](../foundations/motion.md) § Selection travel; host script SSOT: [page-development.md](../page-development.md#host-script-inventory-ssot). Library inventory: [public-component-api.md](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md).
 
 ## Home / navigation hub (locked platform pattern)
 
@@ -175,7 +175,7 @@ Use for each product app’s **Home** (or equivalent landing hub). This is **not
 
 ### Gallery reference
 
-SYSTEM-SHARED-UI Gallery Home (`/`): four cards (Components, Theme, Error Message Page, Google external — excludes Home itself); `ApplicationLogoSrc="brand/app-logo.svg"`; `ShowFooter` false. Implementation SSOT for CSS: `breezeon-ui.css` (`.bo-nav-hub*`, `.bo-nav-card*`).
+breezeon-system-shared-ui Gallery Home (`/`): four cards (Components, Theme, Error Message Page, Google external — excludes Home itself); `ApplicationLogoSrc="brand/app-logo.svg"`; `ShowFooter` false. Implementation SSOT for CSS: `breezeon-ui.css` (`.bo-nav-hub*`, `.bo-nav-card*`).
 
 ## Error Message Pages
 

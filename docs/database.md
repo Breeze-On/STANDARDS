@@ -100,7 +100,7 @@ Platform doctrine reflects **shipped practice** (not “EF only”):
 - Prefer EF for simple single-entity writes when no multi-statement or set logic is required.
 - Prefer SPs when the operation is multi-statement, set-oriented, JSON-driven, hierarchical, or already established as the module’s write path (EAC `System.P_*` is the reference).
 - Product `docs/db-model.md` should state which surfaces use EF vs SP and why for non-obvious cases.
-- **Platform library SQL:** SYSTEM-SHARED-UI identity/authorization framework executes **parameterized** SQL against `Identity` / `Security` (and related platform tables). UI controls in `BreezeOn.UI` do **not** talk to SQL ([ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md), [ADR-008](../decisions/ADR-008-query-driven-data-retrieval.md)).
+- **Platform library SQL:** `breezeon-system-shared-ui` identity/authorization framework executes **parameterized** SQL against `Identity` / `Security` (and related platform tables). UI controls in `BreezeOn.UI` do **not** talk to SQL ([ADR-004](../decisions/ADR-004-breezeon-ui-abstraction-layer.md), [ADR-008](../decisions/ADR-008-query-driven-data-retrieval.md)).
 
 ### Stored procedure naming (when used)
 
@@ -126,7 +126,7 @@ Prefer one upsert POST plus a dedicated delete procedure when delete semantics d
 
 ### Platform Identity procedure (People Picker — one-off)
 
-`Identity.P_GET_UsersComponentValues` (SYSTEM-SHARED-UI `sql/identity/current_model/`) is a **documented one-off** exception for the platform `BoPeoplePicker` control:
+`Identity.P_GET_UsersComponentValues` (`breezeon-system-shared-ui` `sql/identity/current_model/`) is a **documented one-off** exception for the platform `BoPeoplePicker` control:
 
 - Active users only (`IsEnabled = 1`); result projection does **not** include `IsEnabled`.
 - Hard **TOP 100** (`@MaxItems` clamped 1..100).
@@ -137,7 +137,7 @@ Do **not** treat this name as the start of a `P_GET_*ComponentValues` family acr
 
 ### Consumer Data Entity lookup
 
-`System.P_GET_EACDataEntityLookupValues` (SYSTEM-ADMIN-EAC `sql/current_model/`) is a **justified lookup procedure** for product apps consuming Data Entity rows. It is **not** a `*ComponentValues` family member and not a template for per-app lookup SPs. Decision: [ADR-023](../decisions/ADR-023-consumer-data-entity-lookup.md); contract: [using-data-entities.md](../architecture/data-entities/using-data-entities.md).
+`System.P_GET_EACDataEntityLookupValues` (`breezeon-system-admin-eac` `sql/current_model/`) is a **justified lookup procedure** for product apps consuming Data Entity rows. It is **not** a `*ComponentValues` family member and not a template for per-app lookup SPs. Decision: [ADR-023](../decisions/ADR-023-consumer-data-entity-lookup.md); contract: [using-data-entities.md](../architecture/data-entities/using-data-entities.md).
 
 - `@Mode` = `Search` (**TOP 100**, `@MaxItems` clamped 1..100; `@SearchText` on Code or display Description) or `Resolve` (`@ResolveCodesJson` — JSON string array, first 100 exact Codes).
 - Keyed by `@ApplicationEnabledGUID` + `@DataEntityCode` (Code, not GUID) + `@LanguageCode` + `@UserGUID`.
@@ -211,7 +211,7 @@ Canonical JSON for `@FiltersJson`, aligned with `BoQueryFilter` / `BoQueryFilter
 
 - The SQL schema **`System`** holds platform administration / shared catalog tables owned by **EAC** (Enterprise Administration Center).
 - Other applications **consume** those registry values (for example via `ApplicationGUID`); they must **not** fork duplicate application-catalog tables.
-- Concrete table inventory lives in the EAC product [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) and `sql/current_model/` — not in this file.
+- Concrete table inventory lives in the EAC product [`docs/db-model.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/db-model.md) (`breezeon-system-admin-eac`; ) and `sql/current_model/` — not in this file.
 - **Consumer Application Context Bootstrap:** product apps call EAC-owned `System.P_GET_EACApplicationAccessContext` through SHARED-UI `IBoApplicationAccessBootstrap` — they do not author parallel System SPs or fork registry tables ([architecture/app-context/](../architecture/app-context/README.md), [ADR-022](../decisions/ADR-022-consumer-application-context-bootstrap.md)).
 
 ## Primary keys, GUID columns, and relationships
@@ -232,7 +232,7 @@ Standing platform rules (also summarized in [naming.md](naming.md)):
 ## Platform Identity schema ownership
 
 - The SQL schema **`Identity`** (`Identity.Users`, `Identity.UsersLogins`, `Identity.Tenants`, `Identity.UserPhotos`) is a **BreezeOn platform** directory model — not EAC-specific and not ASP.NET Core Identity / `AspNet*`.
-- **Definitions** (T-SQL current model + local seed) are owned by **SYSTEM-SHARED-UI** (`sql/identity/`). SHARED-UI does not host a database.
+- **Definitions** (T-SQL current model + local seed) are owned by **`breezeon-system-shared-ui`** (`sql/identity/`). SHARED-UI does not host a database.
 - **Physical tables** live in the **customer database** (one catalog per customer-environment, shared by all product applications in that environment). Adopting apps apply the SHARED-UI scripts in local init / deploy order and must not fork competing user masters or create a second Identity catalog for the same customer.
 - **Bootstrap / reset only:** Identity (and Security) `current_model` scripts are for **new database creation** or **full database reset** (e.g. local `dev-reset` that drops the database). They are **not** safe to DROP+CREATE re-apply on a **populated** customer database that has application FKs into `Identity` / `Security`. Hosted evolution uses **migration scripts** + [schema-version tracking](#platform-schema-evolution-hosted). Within a full reset, `Identity.Users` must still drop `Security.GroupsMembers` before `Users` (DROP dependents first).
 - Authoritative Entra resolution key: `(TenantId, ExternalObjectId)`. Canonical BreezeOn user identifier: **`UserGUID`**. SSOT: [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md), [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
@@ -240,7 +240,7 @@ Standing platform rules (also summarized in [naming.md](naming.md)):
 ## Platform Security schema ownership
 
 - The SQL schema **`Security`** (`Security.Groups`, `Security.GroupsMembers`) is the **BreezeOn platform** authorization store — not EAC-only business data.
-- **Definitions** are owned by **SYSTEM-SHARED-UI** (`sql/security/`). Physical tables live in the customer database beside `Identity`.
+- **Definitions** are owned by **`breezeon-system-shared-ui`** (`sql/security/`). Physical tables live in the customer database beside `Identity`.
 - Relationships use `GroupGUID` and `UserGUID` only. SSOT: [architecture/authorization/](../architecture/authorization/README.md), [ADR-014](../decisions/ADR-014-platform-authorization.md), [ADR-015](../decisions/ADR-015-object-owned-administrator-groups.md).
 - **`Security.Groups.Code`** is **`NVARCHAR(700)`** (documented column exception to the org Code default of 30) so system-generated Codes such as `APP_{UniqueCode}` fit without capping business UniqueCode fields; uniqueness is on Code only.
 
@@ -250,13 +250,13 @@ Runtime process identity is a **two-tier** model ([ADR-024](../decisions/ADR-024
 
 | Tier | Qualified name | Owner | Role |
 | --- | --- | --- | --- |
-| Platform root | `Global.Process` | SYSTEM-ADMIN-EAC | Universal `ProcessGUID` + `ApplicationEnabledGUID` + audit only |
-| Platform history | `Global.ProcessHistory` | SYSTEM-ADMIN-EAC | Append-only decision / workflow-action ledger keyed by `ProcessGUID` ([ADR-025](../decisions/ADR-025-process-history.md)) |
+| Platform root | `Global.Process` | `breezeon-system-admin-eac` | Universal `ProcessGUID` + `ApplicationEnabledGUID` + audit only |
+| Platform history | `Global.ProcessHistory` | `breezeon-system-admin-eac` | Append-only decision / workflow-action ledger keyed by `ProcessGUID` ([ADR-025](../decisions/ADR-025-process-history.md)) |
 | Application extension | `{UniqueCode}.Process` | Product application | Application-specific flat business fields |
 
 ### Global schema ownership
 
-- Schema **`Global`** is owned by **SYSTEM-ADMIN-EAC** (alongside `System` catalog ownership).
+- Schema **`Global`** is owned by **`breezeon-system-admin-eac`** (alongside `System` catalog ownership).
 - Authoritative create SP: **`Global.P_POST_Process`**. Products must not `INSERT` into `Global.Process` directly.
 - `ProcessGUID` is SQL-generated (`DEFAULT NEWSEQUENTIALID()`). **Application repositories must not mint `ProcessGUID` values.**
 - Consumers use `ProcessGUID` only; `ProcessId` is internal.
@@ -277,22 +277,42 @@ Runtime process identity is a **two-tier** model ([ADR-024](../decisions/ADR-024
 
 ### Required columns (`{UniqueCode}.Process`)
 
+**CREATE column ordinal (locked):** `ProcessId`, `ProcessGUID`, then **immediately** `SequenceTemplate`, `SequenceDisplay`, `Sequence`, then application flat fields, then the audit quartet. Do not place Sequence\* after business columns on new tables.
+
 | Column | Type | Rules |
 | --- | --- | --- |
 | `ProcessId` | `INT IDENTITY` | Primary key (`TableName` + `Id`). |
 | `ProcessGUID` | `UNIQUEIDENTIFIER NOT NULL` | UNIQUE. Consumed from platform root; never minted by the app. |
+| `SequenceTemplate` | `NVARCHAR(600) NULL` | Resolved allocation-stream key (Process Metadata Framework runtime). Required column on every extension. **Immediately after** `ProcessGUID`. |
+| `SequenceDisplay` | `NVARCHAR(600) NULL` | Resolved Request Number display prefix. Required column on every extension. |
+| `Sequence` | `INT NULL` | Allocated integer; null until `GenerateProcessSequence`. Required column on every extension. |
 | *(flat fields)* | Per field | One column per flat field the application persists (e.g. `InitiatorUserGUID`, `RequestedDate`). |
 | Audit quartet | See [Mandatory audit columns](#mandatory-audit-columns) | Always present on `Process`. |
+
+**Never persist** `RequestNumber` or `SequenceDigits` on the extension or on `Global.Process`. Request Number is computed by Process Engine (`ProcessSequence:Digits`, default 4). Sequence columns must **not** be added to `Global.Process` ([ADR-024](../decisions/ADR-024-platform-process-root.md) · [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md)).
+
+### Process table resolution and sequence counter
+
+| Artifact | Owner | Role |
+| --- | --- | --- |
+| `Global.P_GET_ProcessTable` | `breezeon-system-admin-eac` | Resolves `ProcessGUID` → application Process extension schema/table |
+| `IProcessTableResolver` | Process Engine | Foundational consumer of `P_GET_ProcessTable` |
+| `Global.ProcessSequenceCounter` | PE SQL defs; applied via EAC reset | Counter rows keyed by resolved `SequenceTemplate` |
+| `Global.P_POST_ProcessSequenceAllocate` | PE SQL defs; applied via EAC reset | `UPDLOCK`/`HOLDLOCK` allocate next integer for a template stream |
+
+SSOT: [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md) · [process-engine](../architecture/process-engine/README.md) · [process-metadata](../architecture/process-metadata/README.md).
 
 ### Mandatory create order
 
 1. `Global.P_POST_Process` → SQL generates `ProcessGUID`
-2. Insert `{UniqueCode}.Process` with that `ProcessGUID`
-3. `Global.P_POST_ProcessHistory` for initiation option (`00`/`va` or `00`/`va1`) including optional Comments
-4. Commit one shared-database transaction
-5. Return `ProcessGUID` → redirect to Process View
+2. Insert `{UniqueCode}.Process` with that `ProcessGUID` (Sequence\* null initially)
+3. Resolve/persist `SequenceTemplate` / `SequenceDisplay` (Save while `Sequence IS NULL`)
+4. `Global.P_POST_ProcessHistory` for initiation option (`00`/`va` or `00`/`va1`) including optional Comments
+5. `GenerateProcessSequence` at app-chosen timing (typically after Initiation Submit)
+6. Commit one shared-database transaction
+7. Return `ProcessGUID` → redirect to Process View
 
-See [process-persistence.md](ui/patterns/process-persistence.md) · [process-history.md](ui/patterns/process-history.md).
+See [process-persistence.md](ui/patterns/process-persistence.md) · [process-history.md](ui/patterns/process-history.md) · [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md).
 
 ### Flat field identity and reference persistence
 
@@ -302,9 +322,9 @@ See [process-persistence.md](ui/patterns/process-persistence.md) · [process-his
 | Data Entity reference | Persist the row **Code** in a **`*Code`** column (e.g. `SupplierCode`) — never Description, never `DataEntityRowGUID`. Lookup: [Consumer Data Entity lookup](#consumer-data-entity-lookup). |
 | People reference | Persist **`UserGUID`** in a **`*UserGUID`** column (e.g. `InitiatorUserGUID`) — never UPN / display name. |
 
-Baseline Process Request fields (`InitiatorUserGUID`, `RequestedDate`) and UI placement: [process-request-section.md](ui/patterns/process-request-section.md). New-app checklist rows: [application-bootstrap-checklist.md](application-bootstrap-checklist.md). Applications may add columns; they must keep `ProcessId` / `ProcessGUID` / audit columns on the extension table.
+Baseline Process Request fields (`InitiatorUserGUID`, `RequestedDate`) and UI placement (Request Number left of Initiator): [process-request-section.md](ui/patterns/process-request-section.md). New-app checklist rows: [application-bootstrap-checklist.md](application-bootstrap-checklist.md). Applications may add columns; they must keep `ProcessId` / `ProcessGUID` / Sequence\* / audit columns on the extension table.
 
-**Distinct from EAC Process Framework:** PF tables under `System` hold process **definition** metadata only. Runtime platform root is `Global.Process`; decision ledger is `Global.ProcessHistory`; app business fields live in `{UniqueCode}.Process`.
+**Distinct from EAC Process Framework:** PF tables under `System` hold process **definition** metadata only. Runtime platform root is `Global.Process`; decision ledger is `Global.ProcessHistory`; app business fields and Sequence\* columns live in `{UniqueCode}.Process`. Runtime Process Metadata / Request Number = Process Engine ([ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md)) — orthogonal to ADR-019 PF metadata.
 
 ## Application registry identity columns
 
@@ -313,7 +333,7 @@ Conventions for registering applications in the EAC-owned catalog (column semant
 | Column | Role |
 | --- | --- |
 | **ApplicationGUID** | Immutable relationship key between entities and across apps. Column name contains `GUID` → **NOT NULL**. Generate once on insert; **never** regenerate or overwrite on update. Prefer a **UNIQUE** constraint/index. |
-| **UniqueCode** | Application **technical** identifier. Value follows the **GitHub repository name** (e.g. `SYSTEM-ADMIN-EAC`, `SYSTEM-HR-HRM`). Prefer a **UNIQUE** constraint/index. Length follows non-Code string defaults unless the product documents an exception. |
+| **UniqueCode** | Application **technical** identifier. Value is `repositoryName.ToUpperInvariant()` for the **lowercase kebab-case** GitHub repository name (e.g. repo `breezeon-system-admin-eac` → `BREEZEON-SYSTEM-ADMIN-EAC`; repo `breezeon-corp-fin-inv` → `BREEZEON-CORP-FIN-INV`). Prefer a **UNIQUE** constraint/index. Length follows non-Code string defaults unless the product documents an exception. |
 | **Code** | Short **business** identifier (e.g. `EAC`, `HRM`, `AP`). Length follows the **Code** default (**30**) unless documented otherwise. |
 
 ### Application Context identity
@@ -451,14 +471,14 @@ Every application that owns business tables must keep a **local-ready** sample s
 Every application that consumes EAC keeps its own local EAC configuration in a top-level **`seed/eac/`** folder (portable JSON / xlsx per [data-portability.md](data-portability.md) § Per-application `seed/eac`). It is **not** SQL, is distinct from `sql/seed/`, and has no per-app `README.md`.
 
 - EAC owns the importer: EAC `scripts/dev-reset.ps1` discovers sibling `seed/eac/` folders and imports them; the app's own `dev-reset.ps1` invokes EAC and does not import this content itself ([local-development-scripts.md](local-development-scripts.md)).
-- **Forbidden:** app-owned EAC SQL configuration or current-state seeds anywhere in a product repo (including `sql/seed/`), and EAC-owned copies of another app's configuration under `SYSTEM-ADMIN-EAC/sql/seed/`.
+- **Forbidden:** app-owned EAC SQL configuration or current-state seeds anywhere in a product repo (including `sql/seed/`), and EAC-owned copies of another app's configuration under `breezeon-system-admin-eac/sql/seed/`.
 - Local only; never applied to hosted DEV / UAT / PRD.
 
 ### `sql/migration_scripts/`
 
 - Holds **hosted / populated** incremental migration SQL (the authoritative evolution path for existing databases).
 - Not the source of truth for the full model (`current_model/` remains the model SSOT).
-- Platform Identity/Security/platform ledger migrations are owned by **SYSTEM-SHARED-UI** under `sql/*/migration_scripts/`.
+- Platform Identity/Security/platform ledger migrations are owned by **`breezeon-system-shared-ui`** under `sql/*/migration_scripts/`.
 - Record applied versions in [`dbo.BreezeOnSchemaVersions`](#platform-schema-evolution-hosted).
 
 ### `docs/db-model.md` (required for apps with owned schema)
@@ -470,7 +490,7 @@ Each application that owns business database objects must maintain a **current**
 - Do not document planned tables as if they exist.
 - Point agents and humans to this file for the readable model; scripts remain the executable SSOT.
 
-Database objects for EAC live in [Breeze-On/SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) under `sql/` and [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md).
+Database objects for EAC live in [`Breeze-On/breezeon-system-admin-eac`](https://github.com/Breeze-On/breezeon-system-admin-eac) under `sql/` and [`docs/db-model.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/db-model.md).
 
 **Seed vs current model (reminder):** `sql/current_model/` is **current-state schema only**. Sample and development data belong only under `sql/seed/` (app business / non-EAC) or `seed/eac/` (portable EAC configuration) (except bootstrap copies that mirror STANDARDS templates). Do not mix seed inserts into current-model scripts.
 
@@ -482,7 +502,7 @@ Lightweight V1 rules for shared platform schemas (`Identity`, `Security`, and pl
 | --- | --- |
 | **Bootstrap / reset** | Apply SHARED-UI `sql/*/current_model/` (and `sql/platform/current_model/`) only to a **new** catalog or after a **full database drop/recreate** (local `dev-reset`). |
 | **Hosted / populated** | Evolve with SHARED-UI-owned **`migration_scripts/`** only. **Never** DROP+CREATE re-apply platform `current_model` on a customer database that already holds application data/FKs. |
-| **Ownership** | SYSTEM-SHARED-UI owns platform definitions and migrations. Adopting apps apply them in documented order; they must not fork competing Identity/Security models. |
+| **Ownership** | `breezeon-system-shared-ui` owns platform definitions and migrations. Adopting apps apply them in documented order; they must not fork competing Identity/Security models. |
 | **Schema-version table** | Authoritative applied-state mechanism is **`dbo.BreezeOnSchemaVersions`** (`SchemaName`, `Version`, `ScriptName`, `AppliedUtc`). Definition: SHARED-UI `sql/platform/`. Hosted install: `sql/platform/migration_scripts/20261121_add_BreezeOnSchemaVersions.sql`. |
 | **Operator evidence logs** | Optional for tickets; **not** the authoritative applied-state record. |
 | **Product schemas** | Same bootstrap vs migration split applies to EAC `System` (and future app schemas): `current_model` for reset; `migration_scripts/` for populated hosted. |

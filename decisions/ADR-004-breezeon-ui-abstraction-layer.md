@@ -5,7 +5,7 @@ Status: Accepted
 
 ## Context
 
-Multiple Breeze On Blazor applications need consistent branding, layout, and controls. Building each app directly on Fluent UI Blazor would couple product pages to a third-party component surface and make a future UI-stack change costly. The organization maintains `Breeze-On/SYSTEM-SHARED-UI` with a public `BreezeOn.UI` API (`Bo*` components) implemented on Fluent UI Blazor internally (Option B+).
+Multiple Breeze On Blazor applications need consistent branding, layout, and controls. Building each app directly on Fluent UI Blazor would couple product pages to a third-party component surface and make a future UI-stack change costly. The organization maintains `Breeze-On/breezeon-system-shared-ui` with a public `BreezeOn.UI` API (`Bo*` components) implemented on Fluent UI Blazor internally (Option B+).
 
 ## Decision
 
@@ -17,6 +17,6 @@ Multiple Breeze On Blazor applications need consistent branding, layout, and con
 ## Consequences
 
 - Product apps depend on `BreezeOn.UI`; Fluent can be upgraded or replaced behind `Bo*` without rewriting feature pages.
-- Gallery in `SYSTEM-SHARED-UI` exercises components locally without a database.
+- Gallery in `breezeon-system-shared-ui` exercises components locally without a database.
 - STANDARDS `docs/ui/` must stay current when `Bo*` components ship (modular docs; update the UI index when structure grows).
 - Agents must not expose Fluent types in public APIs or reverse-depend Shared UI on application repos.

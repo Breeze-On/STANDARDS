@@ -105,7 +105,7 @@ Product-specific App Service names and resource groups are listed in product REA
 | Secret name | Where | Value |
 | --- | --- | --- |
 | **`AZURE_WEBAPP_PUBLISH_PROFILE`** | GitHub Environment (`DEV` today; `UAT` / `PRD` when used) | Full Azure App Service **publish profile** XML |
-| **`SHARED_UI_CHECKOUT_TOKEN`** | GitHub Environment (same as above), **when** the workflow checks out private `SYSTEM-SHARED-UI` | Fine-grained PAT (or GitHub App installation token) with **Contents: Read** on `Breeze-On/SYSTEM-SHARED-UI`. Pass as `token:` on that `actions/checkout` step. Default `GITHUB_TOKEN` cannot read other private repos (API returns **Not Found**). |
+| **`SHARED_UI_CHECKOUT_TOKEN`** | GitHub Environment (same as above), **when** the workflow checks out private `breezeon-system-shared-ui` | Fine-grained PAT (or GitHub App installation token) with **Contents: Read** on `Breeze-On/breezeon-system-shared-ui`. Pass as `token:` on that `actions/checkout` step. Default `GITHUB_TOKEN` cannot read other private repos (API returns **Not Found**). |
 
 ### Obtaining the publish profile (manual, once per App Service / Environment)
 
@@ -135,11 +135,11 @@ Equivalent app setting name: `ConnectionStrings__SQLAzureConnection`. Apps witho
 
 ### Sibling SHARED-UI checkout (when used)
 
-When a product workflow checks out SYSTEM-SHARED-UI for `ProjectReference` restore/publish: the checkout tracks the **default branch** (accepted risk today). Do not invent package distribution. Pinning / versioned artifacts are Future Validation when app #2, production environments, or an independent SHARED-UI release cadence appear — see [security-governance.md § Sibling shared-library consumption](security-governance.md#sibling-shared-library-consumption-projectreference).
+When a product workflow checks out breezeon-system-shared-ui for `ProjectReference` restore/publish: the checkout tracks the **default branch** (accepted risk today). Do not invent package distribution. Pinning / versioned artifacts are Future Validation when app #2, production environments, or an independent SHARED-UI release cadence appear — see [security-governance.md § Sibling shared-library consumption](security-governance.md#sibling-shared-library-consumption-projectreference).
 
 ### Dependency update waves
 
-Bump SYSTEM-SHARED-UI first, then consumer applications, in the **same upgrade wave** — [security-governance.md § Dependency update-wave convention](security-governance.md#dependency-update-wave-convention).
+Bump breezeon-system-shared-ui first, then consumer applications, in the **same upgrade wave** — [security-governance.md § Dependency update-wave convention](security-governance.md#dependency-update-wave-convention).
 
 ---
 
@@ -209,7 +209,7 @@ Product repositories **may** document:
 | Resource group | `RG-BREEZEON-DEV` |
 | Public URL | App Service default hostname |
 | Workflow path | `.github/workflows/deploy-dev.yml` |
-| App-specific build notes | Sibling checkout of `SYSTEM-SHARED-UI`, which `.csproj` is published |
+| App-specific build notes | Sibling checkout of `breezeon-system-shared-ui`, which `.csproj` is published |
 
 Product repositories **must**:
 

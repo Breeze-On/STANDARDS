@@ -1,9 +1,9 @@
 <!-- Classification: AA; Scope: platform; Domain: Platform; Capability: ProcessRuntime -->
 # Process runtime (platform)
 
-Owner: Architecture · SYSTEM-ADMIN-EAC (`Global`) · product apps (`{UniqueCode}.Process`)
+Owner: Architecture · `breezeon-system-admin-eac` (`Global`; ) · product apps (`{UniqueCode}.Process`)
 
-SSOT for the **two-tier** runtime Process model. Decision records: [ADR-024](../../decisions/ADR-024-platform-process-root.md) · [ADR-025](../../decisions/ADR-025-process-history.md).
+SSOT for the **two-tier** runtime Process model. Decision records: [ADR-024](../../decisions/ADR-024-platform-process-root.md) · [ADR-025](../../decisions/ADR-025-process-history.md) · [ADR-026](../../decisions/ADR-026-process-engine-and-metadata-framework.md) · [ADR-027](../../decisions/ADR-027-request-number-and-sequence-allocation.md).
 
 ## Model
 
@@ -11,9 +11,16 @@ SSOT for the **two-tier** runtime Process model. Decision records: [ADR-024](../
 | --- | --- | --- |
 | Platform root | `Global.Process` | Universal process identity (`ProcessGUID`) + Application Context binding |
 | Platform history | `Global.ProcessHistory` | Append-only decision / workflow-action ledger keyed by `ProcessGUID` |
-| Application extension | `{UniqueCode}.Process` | Application-specific flat business fields |
+| Application extension | `{UniqueCode}.Process` | Application-specific flat business fields + required **Sequence\*** columns (`SequenceTemplate`, `SequenceDisplay`, `Sequence`) |
 
-`ProcessGUID` is the platform identity. Application processes **consume** it; they do **not** generate it.
+`ProcessGUID` is the platform identity. Application processes **consume** it; they do **not** generate it. **Request Number** is a computed business display id (never persisted) — [ADR-027](../../decisions/ADR-027-request-number-and-sequence-allocation.md).
+
+### Process table resolution and Process Engine
+
+- Authoritative SP: **`Global.P_GET_ProcessTable`** (EAC) — resolves which `{UniqueCode}.Process` extension a `ProcessGUID` belongs to.
+- Foundational consumer: Process Engine `IProcessTableResolver` ([ADR-026](../../decisions/ADR-026-process-engine-and-metadata-framework.md) · [process-engine/README.md](../process-engine/README.md)).
+- Runtime Process Metadata (Variables → tokens → Sequence\* → Request Number): [process-metadata/README.md](../process-metadata/README.md).
+- Sequence counter objects (`Global.ProcessSequenceCounter`, `Global.P_POST_ProcessSequenceAllocate`) ship in PE SQL and are applied via EAC local reset discovery.
 
 ### Process History
 
@@ -52,3 +59,5 @@ UI → Application Service → Persistence Orchestration → Database. The UI mu
 ## Distinct from Process Framework
 
 PF under `System` = definition metadata only ([ADR-019](../../decisions/ADR-019-process-framework-metadata.md)). Runtime root = `Global.Process`; decision ledger = `Global.ProcessHistory` ([ADR-025](../../decisions/ADR-025-process-history.md)). Initiation codes (`00` / `va` / `va1`) and required `response-status` are PF authoring conventions consumed by the runtime ledger.
+
+**Also distinct from Process Metadata Framework (runtime):** Variable-driven sequence templates and Request Number live in Process Engine ([ADR-026](../../decisions/ADR-026-process-engine-and-metadata-framework.md)) — not in PF EAV tables.

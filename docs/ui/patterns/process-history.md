@@ -1,7 +1,7 @@
 <!-- Classification: AA; Scope: platform; Domain: UI; Capability: ProcessHistory -->
 # Process History
 
-Owner: SYSTEM-ADMIN-EAC (ledger + display-ready GET) · SYSTEM-SHARED-UI (rendering pattern) · product apps (host composition)
+Owner: breezeon-system-admin-eac (ledger + display-ready GET) · breezeon-system-shared-ui (rendering pattern) · product apps (host composition)
 
 Related: [ADR-025](../../../decisions/ADR-025-process-history.md) · [process-view.md](process-view.md) · [process-persistence.md](process-persistence.md) · [initiation-experience.md](initiation-experience.md) · [process-runtime](../../../architecture/process-runtime/README.md) · [grids.md](../controls/grids.md)
 
@@ -28,14 +28,16 @@ Authoritative create: `Global.P_POST_ProcessHistory` (via SHARED-UI `IBoProcessH
 - Default placement when the app does not override: tab **Additional Information** → section **Additional Information** → Row 1 **Comments** (`BoProcessHistoryCommentsDefaults`).
 - Apps may move, hide, or reposition; must not store Comments on `{UniqueCode}.Process`.
 
-## Process View tab content
+## Process View tab content (locked)
 
 ```text
 Process History tab
-  └─ Process Request (Initiator + Requested Date) — existing contract
+  └─ Process Request (Request Number + Initiator + Requested Date) — first section
   └─ Section-level BoGrid Title "Process History"
         Role | Name | Response Status | Date | Comments
 ```
+
+**Do not** place Process Request under General Information on Process View. Initiation keeps Process Request on General Information; Process View keeps it on Process History — [process-request-section.md](process-request-section.md) · [process-view.md](process-view.md).
 
 ## Retrieval
 

@@ -10,7 +10,7 @@ Current-state description of the Enterprise Administration Center application.
 | | |
 | --- | --- |
 | Name | EAC (Enterprise Administration Center) |
-| Repository | [Breeze-On/SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) |
+| Repository | [`Breeze-On/breezeon-system-admin-eac`](https://github.com/Breeze-On/breezeon-system-admin-eac) |
 | Project | `src/BreezeOn.Eac` |
 | Namespace | `BreezeOn.Eac` |
 
@@ -34,15 +34,15 @@ It is the configuration and access hub for the Breeze On ecosystem.
 | --- | --- |
 | UI framework | Blazor Web App, Interactive Server (global interactivity) |
 | Runtime | ASP.NET Core / C# / .NET 10 (App Service stack: `DOTNETCORE|10.0`) |
-| Shared UI | ProjectReference to `SYSTEM-SHARED-UI` / `BreezeOn.UI` (`Bo*` only; [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md)) |
-| Auth | Entra OIDC + cookies via SYSTEM-SHARED-UI; platform `Identity.*` + `Security.*` in the customer database; page security via `IBoAuthorizationService` + EAC page catalog. Object-owned admin groups and capabilities: [ADR-015](../../decisions/ADR-015-object-owned-administrator-groups.md), [eac-authorization-matrix.md](../applications/eac-authorization-matrix.md). Schema: [security-schema-standard.md](../authorization/security-schema-standard.md). See [Identity & Authentication](../identity-and-authentication/README.md) and [Authorization](../authorization/README.md). |
+| Shared UI | ProjectReference to `breezeon-system-shared-ui` / `BreezeOn.UI` (sibling folder today `breezeon-system-shared-ui`; `Bo*` only; [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md)) |
+| Auth | Entra OIDC + cookies via `breezeon-system-shared-ui`; platform `Identity.*` + `Security.*` in the customer database; page security via `IBoAuthorizationService` + EAC page catalog. Object-owned admin groups and capabilities: [ADR-015](../../decisions/ADR-015-object-owned-administrator-groups.md), [eac-authorization-matrix.md](../applications/eac-authorization-matrix.md). Schema: [security-schema-standard.md](../authorization/security-schema-standard.md). See [Identity & Authentication](../identity-and-authentication/README.md) and [Authorization](../authorization/README.md). |
 | Surfaces | `BoAppShell` + left nav; Home (`BoNavHub`); Applications (NestedView + enablement child grid; JSON I/O); Business Entities (Hierarchy + Entity Types; JSON I/O); **Users Security** (`/users`: Users + Groups; Users Action **View Group Memberships** → `GetGroupsForUserAsync`); **App Configuration** (`/app-configuration`: grant-driven `VisibleContexts`; zero contexts → standard `BoAccessDenied`; otherwise Application + Business Entity selection (Application Selection collapsible; default Expanded on page load only — preserved across Configuration tab changes per [sections.md](../../docs/ui/layout/sections.md#default-expand-vs-in-page-navigation-locked)), section-scoped Configuration tabs; **Data Entities** tab = collapsible Quick Actions (command cards aligned with nav ecosystem: New + Edit Data Entities + **Excel Tool**; Edit/Excel Tool enabled when count>=1; smart default Expanded when entity count is 0 else Collapsed; expand state preserved across dialogs) + Navigation (`BoPanelNavigation`, Description-preferred labels) + create dialog + Edit Data Entities dialog (GUID RO, Code/Description edit, handle DnD, staged delete; `P_POST_EACDataEntitiesSave` — the only UI reorder path; Change Order Quick Action removed) + Excel Tool (Values `.xlsx` import/export; [ADR-018](../../decisions/ADR-018-data-entity-values-excel-portability.md)) + Actions (`EacSaveDiscardActions` + presentation-only `BoToggle`) + Values (Server QueryMode + Changeset) / Settings (column working copy; Delete Column confirm); Dirty State via `EacDirtyStateGuard`; create dialog uses `BoDialog` with `InitialFocusFieldKey=Code`; **Process Framework** tab (Application-scoped; `BoPanelNavigation` Roles / Steps / Options, each with an Entity \| Settings `BoToggle`; entity mode = `BoShuffleCardGrid` Save/Discard with fixed fields + dynamic metadata columns; Settings mode = one shared metadata-column catalog workspace; no Manage Members, no separate import/export; PEOPLEPICKER metadata binds `UserGUID` in the UI and persists `ExternalObjectId`); Configuration tabs: **Data Entities**, **Process Framework**, **Variables**, **Security Groups**, **Translations**. Import/Export JSON promotes Application Configuration State (synchronize-by-Code; section participation) — SSOT: [application-configuration-deployment.md](../app-configuration/application-configuration-deployment.md) · [data-portability.md](../../docs/data-portability.md) § Application Configuration JSON. Who can do what: [eac-authorization-matrix.md](eac-authorization-matrix.md). |
 | Application Context | `System.EACApplicationsEnabled` — `ApplicationEnabledGUID` owns entity-specific configuration; exclusivity on `(ApplicationGUID, BusinessEntityGUID)`; centralized hard-delete workflow ([ADR-006](../../decisions/ADR-006-application-context-ownership.md)). App Configuration requires ≥1 visible context from a grant-driven `VisibleContexts` projection (Application / BE+descendants / APPENA union) — not Applications/BE page RLS; empty projection uses Access Denied (context visibility, not route denial). |
 | Configuration Session Cache | Circuit-scoped `EacConfigurationSession` baselines for App Configuration modules after Application + Business Entity selection; lazy segments; Values Never Cache; warm nav without freeze ([ADR-020](../../decisions/ADR-020-configuration-session-cache.md) · [configuration-session-cache.md](../app-configuration/configuration-session-cache.md)). |
 | Localization | EAC `EacResources.resx` / `EacResources.fr.resx` via `IEacLocalizer` (not Gallery `BoUi`) |
 | Data access | EF Core + SQL Server provider (`ApplicationDbContext` + empty `InitialBaseline` for `__EFMigrationsHistory`; business schema via SQL scripts; audit stamps via `IAuditActorProvider` → authenticated actor (UPN/oid)) |
 | SQL scripts | Platform Identity + Security from SHARED-UI `sql/identity/` + `sql/security/` + EAC `sql/current_model/` (`System` catalog + **`Global`** Process runtime) |
-| DB model doc | [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) |
+| DB model doc | [`docs/db-model.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/db-model.md) (`breezeon-system-admin-eac`; ) |
 | Portability | Applications + Business Entity Types + Business Entities JSON (merge/upsert) + Application Configuration JSON (synchronize; includes Process Framework sections) — [data-portability.md](../../docs/data-portability.md) (EAC-owned; not a shared service) |
 | Local database | SQL Server Docker (`BreezeOnLocal`); see [local-database.md](../../docs/local-database.md) |
 
@@ -67,7 +67,7 @@ These are relatively small-cardinality configuration catalogs. **No paging is re
 
 ## Applications: selection, import, export
 
-Applications import/export is **owned by EAC** (`SYSTEM-ADMIN-EAC`). It is **not** a shared service. File format: [data-portability.md](../../docs/data-portability.md). Audit columns: [database.md](../../docs/database.md#mandatory-audit-columns) / [ADR-005](../../decisions/ADR-005-mandatory-transactional-audit-columns.md) (actor = logged-in user).
+Applications import/export is **owned by EAC** (`breezeon-system-admin-eac`). It is **not** a shared service. File format: [data-portability.md](../../docs/data-portability.md). Audit columns: [database.md](../../docs/database.md#mandatory-audit-columns) / [ADR-005](../../decisions/ADR-005-mandatory-transactional-audit-columns.md) (actor = logged-in user).
 
 | Concern | Behavior |
 | --- | --- |
@@ -75,7 +75,7 @@ Applications import/export is **owned by EAC** (`SYSTEM-ADMIN-EAC`). It is **not
 | Import | Footer **Import from JSON** (GSA) → validate → upsert by `UniqueCode` with central admin-group provisioner on create → create missing Application Contexts from `BusinessEntitiesEnabled` → reload + toast |
 | Export | Footer **Export JSON** (far right) → selected rows only → browser download (`ApplicationGUID` / audit omitted; `BusinessEntitiesEnabled` = Business Entity Codes) |
 | Match rule | Found = update; not found = create. No rename detection / aliases / history |
-| Rename example | DB `SYSTEM-ADMIN-EAC` + file `LEGACY-SYSTEM-ADMIN-EAC` → **creates** new application |
+| Rename example | DB UniqueCode `breezeon-system-admin-eac` (legacy) + file `LEGACY-breezeon-system-admin-eac` → **creates** new application |
 | Size limit | `ApplicationsImport:MaxFileSizeMb` (default 2); uploads never persisted |
 
 ## Applications: query-driven list
@@ -99,7 +99,7 @@ Route `/business-entities` (legacy `/organisation-entities` redirects). Header t
 | Seed | `scripts/local-db-seed.ps1` builds `generated/seed.sql` from `sql/seed/` (+ JSON→T-SQL) → one `sqlcmd` (required local fake data for EAC itself; keep in sync with schema) |
 | Consumer app configuration | EAC `scripts/dev-reset.ps1` owns the destructive reset of the shared `BreezeOnLocal` database and imports each sibling consuming application's `seed/eac/` (portable JSON / xlsx). Consumer apps invoke EAC `scripts/dev-reset.ps1` as a subprocess; EAC does not hold other apps' configuration under `sql/seed/` — [data-portability.md](../../docs/data-portability.md) § Per-application `seed/eac` |
 
-Routine local runs do **not** use Azure SQL. Org pattern: [local-database.md](../../docs/local-database.md). Human runbook and agent steps: EAC [`README.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README.md) / [`README_AI.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README_AI.md).
+Routine local runs do **not** use Azure SQL. Org pattern: [local-database.md](../../docs/local-database.md). Human runbook and agent steps: EAC [`README.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/README.md) / [`README_AI.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/README_AI.md) (`breezeon-system-admin-eac`; ).
 
 ## DEV environment (current)
 
@@ -116,7 +116,7 @@ GitHub Environment name: **`DEV`**. Physical Azure resource names below reflect 
 
 ## Boundaries
 
-- This application lives only in `SYSTEM-ADMIN-EAC`.
-- Org-wide standards and cross-cutting architecture live in `Breeze-On/STANDARDS`, not duplicated here at length.
+- This application lives only in `breezeon-system-admin-eac`.
+- Org-wide standards and cross-cutting architecture live in `Breeze-On/standards`, not duplicated here at length.
 - Ecosystem map (repos, hosting, SQL, UI position): [landscape.md](landscape.md).
 - Application expectations: [application-model.md](../../docs/application-model.md). Environments: [environments.md](../../docs/environments.md).

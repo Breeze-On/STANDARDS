@@ -9,12 +9,12 @@ Breeze On builds multiple purpose-built products and shared concerns (administra
 
 ## Decision
 
-Use a **multi-repository** model: one repository per application or shared concern. Do not merge unrelated products into a single application repository. Cross-cutting conventions live in `Breeze-On/STANDARDS`; product and library repos stay thin and link to STANDARDS.
+Use a **multi-repository** model: one repository per application or shared concern. Do not merge unrelated products into a single application repository. Cross-cutting conventions live in `Breeze-On/standards`; product and library repos stay thin and link to `standards`. Repository names are **lowercase kebab-case** ([naming.md](../docs/naming.md) § Repositories).
 
 ## Consequences
 
-- Clear ownership and boundaries per repository (e.g. EAC vs Shared UI vs STANDARDS).
-- **Interim cross-repo consumption of SHARED-UI (current reality):** product apps use a **sibling repository checkout** and a **`ProjectReference`** to `SYSTEM-SHARED-UI` sources; CI typically checks out the **unpinned default branch HEAD**. This is **not** a NuGet/versioned package graph yet. Package versioning, pinning, and compatibility policy are **Future Validation** at application #2 kickoff — see [application-model.md](../docs/application-model.md) § Cross-repo consumption.
-- Documentation and ADRs for org-wide decisions belong in STANDARDS; product `README_AI` remains repo-specific.
+- Clear ownership and boundaries per repository (e.g. EAC vs Shared UI vs `standards`).
+- **Interim cross-repo consumption of SHARED-UI (current reality):** product apps use a **sibling repository checkout** and a **`ProjectReference`** to `breezeon-system-shared-ui` sources (local/GitHub folder still `breezeon-system-shared-ui` until rename); CI typically checks out the **unpinned default branch HEAD**. This is **not** a NuGet/versioned package graph yet. Package versioning, pinning, and compatibility policy are **Future Validation** at application #2 kickoff — see [application-model.md](../docs/application-model.md) § Cross-repo consumption.
+- Documentation and ADRs for org-wide decisions belong in `standards`; product `README_AI` remains repo-specific.
 - Agents must respect repository boundaries and not add unrelated domains into an existing product repo.
 - Every BreezeOn application **must consume** `BreezeOn.UI` (shell, `Bo*`, auth, authZ, page catalog) — mandatory, not optional ([application-model.md](../docs/application-model.md) § Platform consumption requirements).

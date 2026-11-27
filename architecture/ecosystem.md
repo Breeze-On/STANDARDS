@@ -25,13 +25,17 @@ Multi-repo: one repository per application or shared concern. Unrelated products
 
 | Repository | Role |
 | --- | --- |
-| [Breeze-On/STANDARDS](https://github.com/Breeze-On/STANDARDS) | Org standards (`docs/`) and current architecture (`architecture/`) |
+| [`Breeze-On/standards`](https://github.com/Breeze-On/standards) | Org standards (`docs/`) and current architecture (`architecture/`) |
 | [Breeze-On/.github](https://github.com/Breeze-On/.github) | Organization profile README (`profile/README.md`) |
-| [Breeze-On/SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) | EAC — administration application (DEV hosted on Azure App Service + Azure SQL) |
-| [Breeze-On/SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) | Shared UI library (`BreezeOn.UI`): UI + auth + authorization frameworks; Identity/Security SQL definitions; local component gallery — **mandatory** for BreezeOn applications |
+| [`Breeze-On/breezeon-system-admin-eac`](https://github.com/Breeze-On/breezeon-system-admin-eac) | EAC — administration application (DEV hosted on Azure App Service + Azure SQL) |
+| [`Breeze-On/breezeon-system-shared-ui`](https://github.com/Breeze-On/breezeon-system-shared-ui) | Shared UI library (`BreezeOn.UI`): UI + auth + authorization frameworks; Identity/Security SQL definitions; local component gallery — **mandatory** for BreezeOn applications |
+| [`Breeze-On/breezeon-system-process-engine`](https://github.com/Breeze-On/breezeon-system-process-engine) | Process Engine shared library (`BreezeOn.ProcessEngine`) |
+| [`Breeze-On/breezeon-corp-fin-inv`](https://github.com/Breeze-On/breezeon-corp-fin-inv) | INV — Invoice Approval Request product host |
+
+Repository naming (lowercase kebab-case): [naming.md](../docs/naming.md) § Repositories.
 
 ## Governance
 
-STANDARDS is the single source of truth for conventions, for documenting systems that exist, and for Architecture Decision Records (`decisions/`). Product repos link to STANDARDS; they do not redefine org-wide rules.
+`standards` is the single source of truth for conventions, for documenting systems that exist, and for Architecture Decision Records (`decisions/`). Product repos link to `standards`; they do not redefine org-wide rules.
 
 Related: [landscape.md](landscape.md), [application-model.md](../docs/application-model.md), [environments.md](../docs/environments.md), [adr.md](../docs/adr.md), [ADR-001 multi-repository](../decisions/ADR-001-multi-repository-model.md).

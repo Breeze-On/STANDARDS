@@ -15,31 +15,66 @@ Current conventions across the organization.
 
 ## Repositories
 
-- Org-owned repos under `Breeze-On/…`.
-- Established repos:
-  - `STANDARDS` — organization standards (`docs/`) and current architecture (`architecture/`)
-  - `.github` — org profile README
-  - `SYSTEM-ADMIN-EAC` — EAC application (Enterprise Administration Center)
-  - `SYSTEM-SHARED-UI` — shared Blazor UI library (`BreezeOn.UI`)
+Org-owned repositories live under `Breeze-On/…`.
+
+### Repository name format (enforced)
+
+| Rule | Contract |
+| --- | --- |
+| Case | **lowercase only** |
+| Separators | **kebab-case only** (hyphen-separated segments) |
+| Forbidden | SCREAMING_CASE, PascalCase, underscores, spaces, mixed case |
+
+Examples (valid): `breezeon-corp-fin-inv`, `breezeon-system-admin-eac`, `breezeon-system-shared-ui`, `breezeon-system-process-engine`, `standards`.
+
+Examples (invalid): `SYSTEM-ADMIN-EAC`, `BREEZEON-SYSTEM-PROCESS-ENGINE`, `SystemSharedUi`, `breezeon_corp_fin_inv`.
+
+### Repository prefix (not enforced by naming)
+
+A leading `breezeon-` segment is **ownership / product branding**, not part of the casing standard.
+
+- Many Breeze On product and platform repositories **happen to** use a `breezeon-` prefix because they are Breeze On–owned.
+- The naming standard does **not** require every future repository to start with `breezeon-`.
+- Prefixes (or their absence) are chosen from ownership and branding; **format** (lowercase kebab-case) is what the naming standard enforces.
+
+Examples of valid names **without** a `breezeon-` prefix: `standards`, and GitHub’s required org-profile repo name `.github` (literal GitHub convention; not kebab-caseable).
+
+### Established repositories (standard names)
+
+| Standard repository name | Kind | Notes |
+| --- | --- | --- |
+| `standards` | Org standards | Architecture + `docs/` SSOT |
+| `.github` | Org profile | GitHub-required name |
+| `breezeon-system-admin-eac` | Application | EAC (`BreezeOn.Eac`) |
+| `breezeon-system-shared-ui` | Shared library | `BreezeOn.UI` |
+| `breezeon-system-process-engine` | Shared library | `BreezeOn.ProcessEngine` |
+| `breezeon-corp-fin-inv` | Application | INV (`BreezeOn.CorpFinInv`) — already matches the format |
+
+Do not invent repositories using SCREAMING_CASE, PascalCase, underscores, or mixed case.
 
 ## Applications (code)
 
-| Application / library | Repo | Project / namespace |
+| Application / library | Repository (standard name) | Project / namespace |
 | --- | --- | --- |
-| EAC | `SYSTEM-ADMIN-EAC` | `BreezeOn.Eac` |
+| EAC | `breezeon-system-admin-eac` | `BreezeOn.Eac` |
 | INV | `breezeon-corp-fin-inv` | `BreezeOn.CorpFinInv` |
-| Shared UI | `SYSTEM-SHARED-UI` | `BreezeOn.UI` |
+| Shared UI | `breezeon-system-shared-ui` | `BreezeOn.UI` |
+| Process Engine | `breezeon-system-process-engine` | `BreezeOn.ProcessEngine` |
+
+C# namespaces remain `BreezeOn.*` (PascalCase) — distinct from **GitHub repository** naming.
 
 ## Application technical identifiers
 
 | Concept | Rule | Examples |
 | --- | --- | --- |
-| Repository name | The application’s **technical identifier** in GitHub (case as created) | `SYSTEM-ADMIN-EAC`, `breezeon-corp-fin-inv` |
-| `UniqueCode` | `repositoryName.ToUpperInvariant()` for EAC registry storage — must not diverge from the repository name ([application-definition.schema.json](ai/application-definition.schema.json)) | `SYSTEM-ADMIN-EAC`, `BREEZEON-CORP-FIN-INV` |
+| Repository name | GitHub technical id — **lowercase kebab-case** (this file § Repositories) | `breezeon-system-admin-eac`, `breezeon-corp-fin-inv` |
+| `UniqueCode` | `repositoryName.ToUpperInvariant()` for EAC registry storage — must not diverge from the repository name ([application-definition.schema.json](ai/application-definition.schema.json)) | `BREEZEON-breezeon-system-admin-eac`, `BREEZEON-CORP-FIN-INV` |
 | `Code` | Short business identifier for the application | `EAC`, `HRM`, `AP` |
 | `ApplicationGUID` | Immutable relationship key (see [database.md](database.md)) | generated GUID string |
 
 Do not invent alternate technical ids that diverge from the repository name without an explicit org decision and STANDARDS update.
+
+**Rename coupling:** changing a repository name changes `UniqueCode` (and often `{UniqueCode}` SQL schema names for product apps). Keep repository name and UniqueCode aligned (`UniqueCode` = `repositoryName.ToUpperInvariant()`).
 
 ## Database primary keys
 
@@ -76,11 +111,12 @@ Integer `*Id` primary keys are **physical** clustered keys (storage / indexing).
 
 ## Process persistence columns
 
-On `{UniqueCode}.Process` extension ([database.md](database.md) § Process table convention · [ADR-024](../decisions/ADR-024-platform-process-root.md)):
+On `{UniqueCode}.Process` extension ([database.md](database.md) § Process table convention · [ADR-024](../decisions/ADR-024-platform-process-root.md) · [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md)):
 
 | Column / suffix | Holds | Example |
 | --- | --- | --- |
 | `ProcessGUID` | Platform process identity from **`Global.Process`** (SQL-generated via `Global.P_POST_Process`; apps must not mint) | — |
+| `SequenceTemplate` / `SequenceDisplay` / `Sequence` | Required sequence metadata **immediately after** `ProcessGUID` on `{UniqueCode}.Process` CREATE (never persist `RequestNumber` / `SequenceDigits`) | — |
 | `*Code` | Data Entity row **Code** (never Description / GUID) — [using-data-entities.md](../architecture/data-entities/using-data-entities.md) | `SupplierCode` |
 | `*UserGUID` | People Picker `UserGUID` | `InitiatorUserGUID` |
 

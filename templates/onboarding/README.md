@@ -11,7 +11,7 @@ Typical run order after cutover steps: schema (Step 1) → tenant discovery / fi
 
 **Master Flow Step 7 / Workflow G apply script.** Edit `@TenantAdminPairs` (`{entra-tid}|{admin-upn}` semicolon-separated; **≥1 admin per tenant**), apply to the customer database, then proceed to Sync Now (Step 8) when Graph = Yes. Detail: [customer-onboarding-authorization.md](../../runbooks/customer-onboarding-authorization.md).
 
-Same script body is maintained for EAC local bootstrap at `SYSTEM-ADMIN-EAC/sql/seed/BootstrapGlobalSystemAdministrators.sql`.
+Same script body is maintained for EAC local bootstrap at `breezeon-system-admin-eac/sql/seed/BootstrapGlobalSystemAdministrators.sql`.
 
 ## validate-onboarding-readiness.sql
 

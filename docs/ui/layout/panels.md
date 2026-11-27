@@ -5,7 +5,7 @@ Owner: UI
 
 Reusable workspace layout and navigator-only section navigation for large multi-section configuration experiences. Related: [shell.md](../shell/shell.md) (header tabs), [layout.md](layout.md), [forms.md](../controls/forms.md) (validation), [page-development.md](../page-development.md).
 
-Implementation: [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BreezeOn.UI`). Complete parameter lists: [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) ([BoPanelNavigation](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bopanelnavigation), [BoPanel](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bopanel), [BoKeepAlivePanels](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bokeepalivepanels)); tables below are informative. Choosing between Tabs / Toggle / Panel Navigation, selection authority, and keyboard contract: [selection-and-navigation.md](../controls/selection-and-navigation.md). "Actions" is defined in [actions-area.md](../patterns/actions-area.md).
+Implementation: [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) (`BreezeOn.UI`). Complete parameter lists: [`public-component-api.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md) ([BoPanelNavigation](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bopanelnavigation), [BoPanel](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bopanel), [BoKeepAlivePanels](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bokeepalivepanels)); tables below are informative. Choosing between Tabs / Toggle / Panel Navigation, selection authority, and keyboard contract: [selection-and-navigation.md](../controls/selection-and-navigation.md). "Actions" is defined in [actions-area.md](../patterns/actions-area.md).
 
 ## Strategic purpose (design target)
 
@@ -151,4 +151,4 @@ Inactive panels stay mounted (`hidden` / `--inactive`). **Hard rule:** do **not*
 
 ## Gallery
 
-SYSTEM-SHARED-UI Components Library → header tab **Other** → left `BoPanelNavigation` (Grid, Page Freeze, Dialog, Toggle, Import Summary, Validation Summary, Button) + Fill `BoKeepAlivePanels`. Index: [gallery-index.md](../gallery-index.md).
+breezeon-system-shared-ui Components Library → header tab **Other** → left `BoPanelNavigation` (Grid, Page Freeze, Dialog, Toggle, Import Summary, Validation Summary, Button) + Fill `BoKeepAlivePanels`. Index: [gallery-index.md](../gallery-index.md).

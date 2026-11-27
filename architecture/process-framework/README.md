@@ -3,7 +3,7 @@
 
 Owner: Architecture (EAC domain)
 
-**Process Framework is an EAC business capability and metadata model** — not a platform workflow engine. Multi-application consumption of PF is **Future Validation**. Implementation lives in SYSTEM-ADMIN-EAC.
+**Process Framework is an EAC business capability and metadata model** — not a platform workflow engine. Multi-application consumption of PF is **Future Validation**. Implementation lives in breezeon-system-admin-eac.
 
 The Process Framework lets Application Administrators define **one process definition per Application**: who acts (**Roles**), what happens (**Steps**), and how work moves (**Options** / routes), plus optional business attributes (metadata). PF stores and governs that definition only; it does not execute process instances. A future Process Automation Workflow Engine may consume this metadata; the engine itself is **not implemented**.
 
@@ -16,7 +16,7 @@ The Process Framework lets Application Administrators define **one process defin
 
 > **DEV-001:** Only the [Business vision (future engine)](#business-vision-future-engine) section is non-normative. All **authoring semantics** (Role, Step, Option, Terminal, Informational, Routing, Outcome, Entry Step, graph rules) in this document are **normative current reality**.
 
-Decision: [ADR-019](../../decisions/ADR-019-process-framework-metadata.md). Authoring: [authoring-guide.md](authoring-guide.md). AI contract: [ai-authoring-contract.md](ai-authoring-contract.md). Examples: [worked-examples.md](worked-examples.md). Construct selection: [construct-selection.md](../app-configuration/construct-selection.md). JSON: [`docs/data-portability.md`](../../docs/data-portability.md). Product: [eac.md](../applications/eac.md). Schema: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) · thin pointer [`docs/process-framework.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/process-framework.md).
+Decision: [ADR-019](../../decisions/ADR-019-process-framework-metadata.md). Authoring: [authoring-guide.md](authoring-guide.md). AI contract: [ai-authoring-contract.md](ai-authoring-contract.md). Examples: [worked-examples.md](worked-examples.md). Construct selection: [construct-selection.md](../app-configuration/construct-selection.md). JSON: [`docs/data-portability.md`](../../docs/data-portability.md). Product: [eac.md](../applications/eac.md). Schema: EAC [`docs/db-model.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/db-model.md) · thin pointer [`docs/process-framework.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/process-framework.md).
 
 ---
 
@@ -123,6 +123,8 @@ Runtime ledger is `Global.ProcessHistory` (EAC). PF tables remain definition-onl
 
 Non-normative under [DEV-001](../../docs/deviations/DEV-001-process-framework-future-engine-vision.md). Describes how a **future** Process Automation Workflow Engine might consume the metadata above (instances, task assignment, runtime state machine). **Not implemented** — no instance tables, assignment APIs, or runtime engine.
 
+**Future home:** workflow execution may later live in [breezeon-system-process-engine](https://github.com/Breeze-On/breezeon-system-process-engine), reusing its shipped Process table resolution / context / metadata foundations ([ADR-026](../../decisions/ADR-026-process-engine-and-metadata-framework.md) · [process-engine/README.md](../process-engine/README.md)). That does **not** make workflow designer, timers, bus, or retries Current Implementation — PE today is Request Number / sequence / runtime Process Metadata only.
+
 ```mermaid
 flowchart LR
   Role["Role: who"] --> Step["Step: what"]
@@ -205,9 +207,9 @@ Logical Code graph: `Role.code` ← `Step.roleCode`; `Step.code` ← `Option.ste
 
 | Concern | Owner |
 | --- | --- |
-| Tables, SPs, UI, validation, JSON sync | SYSTEM-ADMIN-EAC |
+| Tables, SPs, UI, validation, JSON sync | breezeon-system-admin-eac |
 | EAC-domain architecture, authoring semantics, examples | STANDARDS (`architecture/process-framework/`, ADR-019) |
 
 ## Definition of Done
 
-Any change affecting Process Framework **schema**, **metadata types**, **JSON contract**, **authoring semantics**, or **rules** is incomplete until this tree, [ADR-019](../../decisions/ADR-019-process-framework-metadata.md), [`docs/data-portability.md`](../../docs/data-portability.md), app-configuration deployment, EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md), and thin product pointers are updated in the **same change set**. Keep the vision section clearly separate from normative authoring reality.
+Any change affecting Process Framework **schema**, **metadata types**, **JSON contract**, **authoring semantics**, or **rules** is incomplete until this tree, [ADR-019](../../decisions/ADR-019-process-framework-metadata.md), [`docs/data-portability.md`](../../docs/data-portability.md), app-configuration deployment, EAC [`docs/db-model.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/db-model.md), and thin product pointers are updated in the **same change set**. Keep the vision section clearly separate from normative authoring reality.

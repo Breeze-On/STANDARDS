@@ -3,7 +3,7 @@
 
 Owner: UI
 
-**Implementation SSOT:** [Breeze-On/SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoExpandableSection`, internal `BoDisclosurePanel`, `.bo-disclosure*` / `.bo-expandable-section*` in `breezeon-ui.css`.
+**Implementation SSOT:** [Breeze-On/breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) — `BoExpandableSection`, internal `BoDisclosurePanel`, `.bo-disclosure*` / `.bo-expandable-section*` in `breezeon-ui.css`.
 
 Related: [sections.md](sections.md) (form Sections with optional `IsCollapsible`), [error-messages.md](../shell/error-messages.md), [shell.md](../shell/shell.md) (body scroll).
 

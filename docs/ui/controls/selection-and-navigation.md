@@ -5,7 +5,7 @@ Owner: UI
 
 One contract for every control that expresses "**selected**": Tabs, Toggle, Panel Navigation, left navigation, Drop-Down List, and Grid row selection. Defines **which control to choose**, **who owns the selected state**, and **keyboard / ARIA expectations**. Related: [toggle.md](toggle.md), [shell.md § Header tabs](../shell/shell.md#header-tabs-optional-page-sections), [panels.md](../layout/panels.md), [navigation.md](../shell/navigation.md), [grids.md](grids.md), [forms.md](forms.md), [dirty-state.md](../patterns/dirty-state.md), [motion.md](../foundations/motion.md), [accessibility.md](../foundations/accessibility.md), [normative-tiers.md](../foundations/normative-tiers.md).
 
-API (parameters, events, types): [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) — [BoTabs](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#botabs) · [BoToggle](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#botoggle) · [BoPanelNavigation](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bopanelnavigation).
+API (parameters, events, types): [`public-component-api.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md) — [BoTabs](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#botabs) · [BoToggle](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#botoggle) · [BoPanelNavigation](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bopanelnavigation).
 
 Current reality only.
 

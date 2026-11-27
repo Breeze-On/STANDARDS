@@ -24,9 +24,9 @@ This decision migrates the platform from a **single-tier** Process model to a **
 
 | Asset | Owner |
 | --- | --- |
-| Schema `Global` | SYSTEM-ADMIN-EAC |
-| Table `Global.Process` | SYSTEM-ADMIN-EAC |
-| Create procedure `Global.P_POST_Process` | SYSTEM-ADMIN-EAC |
+| Schema `Global` | breezeon-system-admin-eac |
+| Table `Global.Process` | breezeon-system-admin-eac |
+| Create procedure `Global.P_POST_Process` | breezeon-system-admin-eac |
 | `{UniqueCode}.Process` (extension) | Product application repository |
 
 ### `Global.Process` contract (intentionally minimal)
@@ -70,7 +70,7 @@ Partial persistence must not occur (single shared-database transaction).
 
 Route: `/process-view?AE={ApplicationEnabledGUID}&PGUID={ProcessGUID}`.
 
-- Owned as a platform capability / shared pattern by SYSTEM-SHARED-UI (implementation shape proposed at implement time).
+- Owned as a platform capability / shared pattern by breezeon-system-shared-ui (implementation shape proposed at implement time).
 - All fields read-only display (not Disabled).
 - No page footer / sticky actions.
 - **Terminal in v1:** Create → Save/Submit → Process View. Out of scope: Edit, Resume, Reopen, Withdraw, Delete, return to editable state.

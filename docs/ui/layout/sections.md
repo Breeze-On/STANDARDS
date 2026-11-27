@@ -41,7 +41,7 @@ Cross-control rules for major workspace entry, Application / Business Entity (or
 ## Main Section (`BoSectionMain`)
 
 **Display name:** Main Section.  
-**Component:** `BoSectionMain` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoSectionMain` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 A **Main Section** groups related page content. It is intentionally **not** a floating card:
 
@@ -80,7 +80,7 @@ Product apps must use `BoSectionMain` for Main Sections — do not reimplement t
 ## Sub Section (`BoSectionSub`)
 
 **Display name:** Sub Section.  
-**Component:** `BoSectionSub` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoSectionSub` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 A **Sub Section** is for nested/subordinate groupings inside a Main Section. It shares the optional header **structure** (flush rule, optional icon) and **6px** body padding with Main, but uses **different** title typography and **outside margins**.
 

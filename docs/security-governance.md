@@ -68,8 +68,8 @@ When bumping **`Microsoft.Data.SqlClient` to 7+** on a **data-owning hosted appl
 
 Coordinate version movement without extra governance:
 
-1. **Library first** (SYSTEM-SHARED-UI / shared packages)
-2. **Then consumer applications** (SYSTEM-ADMIN-EAC and future hosts)
+1. **Library first** (breezeon-system-shared-ui / shared packages)
+2. **Then consumer applications** (breezeon-system-admin-eac and future hosts)
 3. **Same upgrade wave** — bump the library, verify, then bump consumers in the same wave so Phase 2 / High+ posture does not diverge
 
 Optional later maturity (not required today): Central Package Management, `packages.lock.json`.
@@ -93,8 +93,8 @@ Repos expected to carry Dependabot and a thin pointer today:
 
 | Repository | Role |
 | --- | --- |
-| `SYSTEM-ADMIN-EAC` | Data-owning application |
-| `SYSTEM-SHARED-UI` | Shared UI library (+ Gallery host) |
+| `breezeon-system-admin-eac` | Data-owning application |
+| `breezeon-system-shared-ui` | Shared UI library (+ Gallery host) |
 
 STANDARDS is documentation-only (no NuGet restore / Actions deploy). Org profile (`.github`) has no package restore.
 
@@ -132,8 +132,8 @@ Record the decision in **this policy** (Phase 2 adoption table below) **or** in 
 
 | Repository | Phase | Notes |
 | --- | --- | --- |
-| `SYSTEM-ADMIN-EAC` | **Phase 1** | Not approved for Phase 2 |
-| `SYSTEM-SHARED-UI` | **Phase 1** | Not approved for Phase 2 |
+| `breezeon-system-admin-eac` | **Phase 1** | Not approved for Phase 2 |
+| `breezeon-system-shared-ui` | **Phase 1** | Not approved for Phase 2 |
 
 Nobody should discover Phase 2 by breaking builds. Until a row says Phase 2, treat that repo as Phase 1.
 
@@ -209,7 +209,7 @@ Example:
 
 ## Sibling shared-library consumption (ProjectReference)
 
-Today, data-owning apps (EAC) consume SYSTEM-SHARED-UI via sibling `ProjectReference`. Deploy workflows may check out SHARED-UI for restore/publish.
+Today, data-owning apps (EAC) consume breezeon-system-shared-ui via sibling `ProjectReference`. Deploy workflows may check out SHARED-UI for restore/publish.
 
 **Current approach:** SHARED-UI checkout tracks the **default branch** (no ref/tag pin).
 

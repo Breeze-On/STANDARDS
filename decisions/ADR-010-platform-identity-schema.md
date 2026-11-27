@@ -29,7 +29,7 @@ Earlier wording treated `UsersId` as the shared cross-application identity refer
   - `UserPhotos.UserGUID` → `Users.UserGUID` (1:1)
 - `Identity.Tenants` shape: `TenantsId` (physical PK), `TenantGUID` (BreezeOn platform tenant id), `TenantId` (Entra `tid`, UNIQUE external key).
 - GUID column naming: singular entity + `GUID` (e.g. `UserGUID`, `UserLoginGUID`, `UserPhotoGUID`, `TenantGUID`) — never plural stems such as `UsersGuid`.
-- **SYSTEM-SHARED-UI** owns T-SQL definitions (`sql/identity/`), the default SQL directory writer, directory synchronizer, photo service, and user query helpers. SHARED-UI does **not** own a database.
+- **breezeon-system-shared-ui** owns T-SQL definitions (`sql/identity/`), the default SQL directory writer, directory synchronizer, photo service, and user query helpers. SHARED-UI does **not** own a database.
 - Physical tables live in the **customer database** (shared by EAC, VMR, and other products for that customer-environment). Products must not create competing identity masters or a second Identity catalog for the same customer.
 - Login path: upsert user, enforce `IsEnabled` (disabled users do not receive a cookie), set `LastLoginUtc` and insert login row when enabled via `IBoIdentityDirectory` (default SQL implementation); discover `Identity.Tenants` without setting `IsSyncEnabled`; hosts only register a connection factory to the customer database.
 - Concurrent first logins are serialized with `UPDLOCK, HOLDLOCK` plus the unique `(TenantId, ExternalObjectId)` constraint.

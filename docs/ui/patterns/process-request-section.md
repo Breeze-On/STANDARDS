@@ -9,14 +9,26 @@ Current reality: contract + naming + layout + field definitions. **Implementatio
 
 ## Mandatory placement (Tier 2 — STANDARD)
 
+### Initiation (New Request / editable process)
+
 | Layer | Required value |
 | --- | --- |
 | First tab | **General Information** |
 | First section within that tab | **Process Request** |
 
-Future applications may add additional tabs and additional sections **below** Process Request inside General Information. They must not move Process Request out of this position.
+Future applications may add additional tabs and additional sections **below** Process Request inside General Information. They must not move Process Request out of this position on initiation.
 
 Typical host: the product **New Request** page (and later open-process Detail/Edit). Composition follows the **default initiation experience**: header `BoTabs` (General Information, Form outlined icon) → `BoTabPanels` → sections → rows → fields; shell **footer** Save+Submit via `BoPageFooterActions` — [initiation-experience.md](initiation-experience.md) · [page-footer-actions.md](page-footer-actions.md). Do **not** place an Actions-area Save|Discard on default initiation.
+
+### Process View (locked — do not deviate)
+
+| Layer | Required value |
+| --- | --- |
+| Tab | **Process History** |
+| First section within that tab | **Process Request** (Request Number, Initiator, Requested Date) |
+| Below Process Request | Process History grid — [process-history.md](process-history.md) |
+
+**Do not** place Process Request under the **General Information** tab on Process View. General Information mirrors initiation Request Details (and other business sections) only. SSOT: [process-view.md](process-view.md) · [process-history.md](process-history.md).
 
 ## Required layout
 
@@ -24,12 +36,28 @@ Typical host: the product **New Request** page (and later open-process Detail/Ed
 
 | Position | Field |
 | --- | --- |
-| Left | Initiator |
+| Left | Request Number |
+| Middle | Initiator |
 | Right | Requested Date |
 
-Use `BoRow` with **exactly two** field children (equal `Weight` / default **1** unless a documented exception). Do not invent free-floating fields. Do **not** add `BoEmptyField` siblings to compress or left-align the pair — that shrinks each field’s share ([layout.md](../layout/layout.md) § Weight). Same two-field rule applies on Process View (read-only) — [process-view.md](process-view.md).
+Use `BoRow` with **exactly three** field children (equal `Weight` / default **1** unless a documented exception). Request Number is **left of** Initiator. Do not invent free-floating fields. Do **not** add `BoEmptyField` siblings to compress or left-align fields — that shrinks each field’s share ([layout.md](../layout/layout.md) § Weight). Same three-field rule applies on Process View (read-only) — [process-view.md](process-view.md).
 
 ## Field definitions
+
+### Request Number
+
+| Aspect | Contract |
+| --- | --- |
+| Label | Request Number |
+| Control (initiation) | `BoTextField` with **`Disabled="true"`** (not `ReadOnly`, not `BoFieldReadOnly`) |
+| Control (Process View) | `BoFieldReadOnly` (read-only display parity with other Process View scalars) |
+| Source | Computed via Process Engine formatter from `SequenceDisplay` + `Sequence` (or `DRAFT` when sequence is null) — **never** a persisted column |
+| Digits | Host `ProcessSequence:Digits` (default 4) — [ADR-027](../../../decisions/ADR-027-request-number-and-sequence-allocation.md) |
+| Pending (initiation) | Until **every** bracket token in Variables `sequence-template` **and** `sequence-display` has a non-whitespace process-context value (`ResolvedProcessMetadata.AllTokensSatisfied`), leave **Value empty** and show Placeholder **`Pending below selections...`** (app resource; fr-CA localized). Do **not** show a partial/token-stripped Request Number. |
+| Disabled / Required | Initiation: `Disabled=true`, `Required=false`. Process View: read-only display. |
+| Placement | **Left** of Initiator |
+
+Do not bind an editable text field to a `RequestNumber` column. SSOT: [process-metadata](../../../architecture/process-metadata/README.md) · [process-engine](../../../architecture/process-engine/README.md).
 
 ### Initiator
 
@@ -71,7 +99,7 @@ On **new process** creation:
 
 Full create order, freeze, and redirect: **[process-persistence.md](process-persistence.md)** · [database.md](../../database.md) § Process table convention · [ADR-024](../../../decisions/ADR-024-platform-process-root.md).
 
-Baseline: **no manual user editing** of these two fields. Applications may later enable editing or add fields in their own implementation without changing this contract’s required names or placement.
+Baseline: **no manual user editing** of Request Number, Initiator, or Requested Date. Applications may later enable editing of Initiator / Requested Date or add fields in their own implementation without changing this contract’s required names or placement.
 
 ## Application ownership (locked)
 
@@ -85,7 +113,7 @@ EAC Process Framework remains **definition metadata** only. Runtime platform roo
 
 ## Gallery / copy-source
 
-- `BoPeoplePicker` / `BoDateField`: SYSTEM-SHARED-UI Gallery `Components.razor` (people-picker, date-field tabs).
+- `BoPeoplePicker` / `BoDateField`: breezeon-system-shared-ui Gallery `Components.razor` (people-picker, date-field tabs).
 - Header tabs + initiation footer: [page-archetypes.md](page-archetypes.md), [shell.md](../shell/shell.md), [initiation-experience.md](initiation-experience.md), [page-footer-actions.md](page-footer-actions.md).
 
 ## New-app gate

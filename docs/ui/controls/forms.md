@@ -5,7 +5,7 @@ Owner: UI
 
 Form control standards. Related: [layout.md](../layout/layout.md) (Row + page composition JSON), [sections.md](../layout/sections.md), [typography.md](../foundations/typography.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [shell.md](../shell/shell.md) (toasts / Submit), [ux-conventions.md](../patterns/ux-conventions.md) (placeholders, disabled, truncation).
 
-**Parameters:** complete parameter lists for every form control live in SHARED-UI [`public-component-api.md` § Form fields](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#form-fields); parameter mentions below explain behavior and may be incomplete ([parameter-reference.md](parameter-reference.md)). Buttons: [button.md](button.md). Choosing Drop-Down vs Tabs / Toggle / Panel Navigation: [selection-and-navigation.md](selection-and-navigation.md).
+**Parameters:** complete parameter lists for every form control live in SHARED-UI [`public-component-api.md` § Form fields](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#form-fields); parameter mentions below explain behavior and may be incomplete ([parameter-reference.md](parameter-reference.md)). Buttons: [button.md](button.md). Choosing Drop-Down vs Tabs / Toggle / Panel Navigation: [selection-and-navigation.md](selection-and-navigation.md).
 
 **Hard standard:** every Text Field, Text Area, Drop-Down List, Checkbox, Date Field, Number Field, Read-Only Field, Empty Field, and future form controls **must** be a direct child of a [`BoRow`](../layout/layout.md#row-borow), and that Row **must** sit inside a Section. See [layout.md — Page composition](../layout/layout.md#page-composition-locked--hard-standard).
 
@@ -99,7 +99,7 @@ Admin / enterprise workspaces (`Bo*` editable fields) **default autocomplete off
 | Unmatched attributes | Host `autocomplete=` via `AdditionalAttributes` lands on the **root field `<div>`**, not the real input — **ineffective** for Fluent-backed Text/Text Area/Number; use the `AutoComplete` parameter |
 | Grid cell editors | Reuse shipped `Bo*` fields in `Edit` templates — inherit this default. Raw `<input>` in an Edit template is a standards violation ([grids.md](grids.md)) |
 | Product apps (e.g. EAC) | No per-screen / form-shell fix — inherit via Shared UI |
-| Ownership | SYSTEM-SHARED-UI (`BreezeOn.UI`); documented here (no separate ADR) |
+| Ownership | breezeon-system-shared-ui (`BreezeOn.UI`); documented here (no separate ADR) |
 
 **Browser expectations (Chrome / Edge — Chromium):**
 
@@ -128,7 +128,7 @@ Success bar: routine saved-value / history suggestions stay off for admin text/n
 ## Read-Only Field (`BoFieldReadOnly`)
 
 **Display name:** Read-Only Field.  
-**Component:** `BoFieldReadOnly` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoFieldReadOnly` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 Flat **display-only** companion for read views. Always shows **already-formatted text** (string, number, decimal, date, etc. share the same chrome). The host formats values **before** passing `Value` — the control does not own culture/type formatters. For numbers/dates, prefer the typed control’s `ReadOnly` mode ([Read-only formatting parity](#read-only-formatting-parity-locked)).
 
@@ -164,7 +164,7 @@ These Read-Only Field rules are **org standards** for every `BoFieldReadOnly` us
 ## Text Field (`BoTextField`)
 
 **Display name:** Text Field.  
-**Component:** `BoTextField` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoTextField` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 Apps bind values with `@bind-Value` to a **typed DTO / working-model property**. The control does not own persistence or JSON transport.
 
@@ -179,7 +179,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | `ShowClearButton` | When true, shows an inline Clear × while the field has a value (same family as Drop-Down / Date clear). **Hidden when `Disabled` or `ReadOnly`**. Clear commits **immediately** (cancels pending debounce). **Default false**. Grid Family filter fields set this true |
 | `Value` / `ValueChanged` | Two-way bind to the working model |
 | `DebounceMilliseconds` | When &gt; 0, defers `ValueChanged` until the user stops typing for that many ms, presses Enter, or leaves the field (whichever first). Default **0** (immediate). Query-driven Filters sections typically use **750**; Grid Family column filters use **300** — see [Filter execution](#filter-execution-query-driven) / [grids.md § Filtering](grids.md#filtering-lightweight--locked) |
-| `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_Placeholder_Default`** ("Enter text..."). **Do not** echo the field label or column header — [ux-conventions.md](../patterns/ux-conventions.md) § Placeholders. **Always omitted when `Disabled`** |
+| `Placeholder` | Optional override. When null/whitespace, uses resource **`Field_Placeholder_Default`** ("Enter text..."). **Do not** echo the field label or column header — [ux-conventions.md](../patterns/ux-conventions.md) § Placeholders. **Omitted when `Disabled`** unless Value is empty **and** an **explicit** `Placeholder` was supplied (pending computed fields such as Request Number — [process-request-section.md](../patterns/process-request-section.md)). Always omitted when `ReadOnly` |
 | `ValidationGroup` | Optional group for scoped Submit validation |
 | `Disabled` | Standard disabled chrome |
 | `ReadOnly` | Value shown but not editable; no asterisk and no required validation |
@@ -200,7 +200,7 @@ Apps bind values with `@bind-Value` to a **typed DTO / working-model property**.
 | Selection | Branded via native `::selection` / `::-moz-selection` (`--bo-color-selection-bg` / `--bo-color-selection-fg`) only — **no** custom selection engines |
 | Character count | Optional (`ShowCharacterCount`, default false); format `current/max` (no brackets); **inside** the input (Fluent `EndTemplate`), trailing/right; italic **10px**; muted. Denominator = `MaxLength` (**default 600**). **Hidden when `Disabled`** |
 | Clear × | Optional (`ShowClearButton`, default false); **inside** the input (Fluent `EndTemplate`); same visual family as Drop-Down / Date clear; label `Field_Text_Clear`. Appears only while there is a value. **Hidden when `Disabled` or `ReadOnly`** |
-| Disabled | Hide Placeholder; hide character count; hide clear ×; hide mandatory asterisk; skip required validation; greyer fill (`--bo-color-background`) so the field reads as non-editable; muted text |
+| Disabled | Hide Placeholder (except empty Value + explicit Placeholder for pending computed fields); hide character count; hide clear ×; hide mandatory asterisk; skip required validation; greyer fill (`--bo-color-background`) so the field reads as non-editable; muted text |
 
 ### Editing visuals and native interaction (locked)
 
@@ -221,7 +221,7 @@ These Text Field rules are **org standards** for every `BoTextField` usage.
 ## Text Area (`BoTextArea`)
 
 **Display name:** Text Area.  
-**Component:** `BoTextArea` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoTextArea` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 Multiline plain-text entry for long-form content. **Not** a mode of Text Field.
 
@@ -309,7 +309,7 @@ These Text Area rules are **org standards** for every `BoTextArea` usage.
 ## Drop-Down List (`BoDropDownList`)
 
 **Display name:** Drop-Down List.  
-**Component:** `BoDropDownList` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoDropDownList` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 Same field chrome as Text Field (label + **4px** label-to-control gap, mandatory asterisk, grey rest border, **`--bo-radius-md` rounded** closed box, hover border, **full-border** focus via `--bo-color-field-border-focus`, `--bo-color-field-background` fill — including Dark). Public API is `Bo*`; searchable list is owned by BreezeOn (Fluent is not the public surface).
 
@@ -356,7 +356,7 @@ These Drop-Down List rules are **org standards** for every `BoDropDownList` usag
 ## People Picker (`BoPeoplePicker`)
 
 **Display name:** People Picker.  
-**Component:** `BoPeoplePicker` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoPeoplePicker` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 Platform-standard **user** selector for BreezeOn applications (group membership, ownership, approvers, assignees). Visually and behaviorally a specialized Drop-Down List (same sizing, label gap, mandatory asterisk, validation chrome, disabled/read-only, chips, popup, debounce). Composes `BoDropDownList`; public API remains `Bo*` only.
 
@@ -421,7 +421,7 @@ When Text Fields and Drop-Down Lists act as **filters** for a queryable dataset 
 ## Checkbox (`BoCheckbox`)
 
 **Display name:** Checkbox.  
-**Component:** `BoCheckbox` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoCheckbox` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 Boolean control: `Label` + `FieldKey` + `@bind-Value` (`bool`). Place as a direct child of `BoRow` when used in form layouts.
 
@@ -460,7 +460,7 @@ These Checkbox rules are **org standards** for every `BoCheckbox` usage.
 ## Date Field (`BoDateField`)
 
 **Display name:** Date Field.  
-**Component:** `BoDateField` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoDateField` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 Single-value date (or date+time) control. Public API is `Bo*` only; calendar popover is owned by BreezeOn.
 
@@ -519,7 +519,7 @@ These Date Field rules are **org standards** for every `BoDateField` usage.
 ## Number Field (`BoNumberField`)
 
 **Display name:** Number Field.  
-**Component:** `BoNumberField` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoNumberField` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 Numeric entry with Text Field chrome. Public API is `Bo*` only; input uses Fluent text under the hood. Locale separators and currency/% affix placement come from `IBoLocaleService`.
 
@@ -570,4 +570,4 @@ These Number Field rules are **org standards** for every `BoNumberField` usage.
 
 ## Button (`BoButton`) — moved
 
-Buttons have a single source of truth: **[button.md](button.md)** — hierarchy (Primary / Secondary / Danger / Stealth / Icon-only), ordering, destructive guidance, Save / Discard, `BoIconButton`, and the **corner radius authority** (`--bo-button-radius`; see also [tokens.md § Corner radius](../foundations/tokens.md#corner-radius-tokens-current)). Parameters: [`public-component-api.md` § BoButton](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bobutton). This file no longer restates button rules.
+Buttons have a single source of truth: **[button.md](button.md)** — hierarchy (Primary / Secondary / Danger / Stealth / Icon-only), ordering, destructive guidance, Save / Discard, `BoIconButton`, and the **corner radius authority** (`--bo-button-radius`; see also [tokens.md § Corner radius](../foundations/tokens.md#corner-radius-tokens-current)). Parameters: [`public-component-api.md` § BoButton](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bobutton). This file no longer restates button rules.

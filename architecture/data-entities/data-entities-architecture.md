@@ -40,7 +40,7 @@ Logical keys are `NVARCHAR(600)` GUIDs (EAC catalog convention). Physical PKs ar
 | `EACDataEntitiesRowsTranslations` | `DataEntityRowTranslationGUID`; `(DataEntityRowGUID, LanguageCode)` |
 | `EACDataEntitiesRowsMetadata` | `(DataEntityRowGUID, DataEntityColumnGUID)` |
 
-Full column inventory: EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md).
+Full column inventory: EAC [`docs/db-model.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/db-model.md).
 
 ## Indexing strategy
 

@@ -54,8 +54,8 @@ Portable EAC configuration used to make an EAC-consuming application runnable on
 | Concern | Rule |
 | --- | --- |
 | Ownership split | **EAC** owns the platform baseline (platform registry/hierarchy rows) and the importer. **The app repo** owns its `seed/eac/` payloads: Applications, Business Entity delta, Application Configuration, Data Entity Values, Translations. |
-| Owner | The consuming application repo (e.g. `breezeon-corp-fin-inv/seed/eac/`). **Not** `SYSTEM-ADMIN-EAC/sql/seed/`. |
-| Importer | **EAC** (`SYSTEM-ADMIN-EAC` `scripts/dev-reset.ps1`) — consumer apps invoke it as a subprocess ([local-development-scripts.md](local-development-scripts.md) § Consumer apps and EAC reset) and never import EAC configuration themselves. |
+| Owner | The consuming application repo (e.g. `breezeon-corp-fin-inv/seed/eac/`). **Not** `breezeon-system-admin-eac/sql/seed/`. |
+| Importer | **EAC** (`breezeon-system-admin-eac` `scripts/dev-reset.ps1`) — consumer apps invoke it as a subprocess ([local-development-scripts.md](local-development-scripts.md) § Consumer apps and EAC reset) and never import EAC configuration themselves. |
 | Discovery | EAC discovers **sibling** repositories under the same parent folder and imports each one's `seed/eac/` when present. A sibling without `seed/eac/` is skipped. |
 | Contents | Portable payloads only (JSON envelopes / `.xlsx`), using the existing kinds: `breezeon.eac.applications` (the app's registry entry and enablement), `breezeon.eac.application-configuration` (Data Entity definitions, Process Framework, Variables, Security Group definitions, languages), `breezeon.eac.data-entity-values` (local Values JSON) or Data Entity Values Excel, `breezeon.eac.security-group-members`, and Translations Excel as needed. Business Entity Types / Business Entities JSON only when the app needs hierarchy rows that the EAC baseline does not provide. |
 | Order | Import follows the [Promote sequence](#promote-sequence-operators--ai): registry → hierarchy → enablement → Application Configuration → Values → translations → **directory bootstrap (Graph UPN upsert)** → **Security Group Members**. Local Docker applies members **after** Identity users exist so UPNs resolve; hosted promote still uses the operator Promote sequence (members before translations) when the directory is already synced. |
@@ -67,7 +67,7 @@ Product apps must **not** carry `System.EAC*` SQL configuration or current-state
 
 ## Applications JSON (`breezeon.eac.applications`)
 
-Human-readable, versionable envelope supporting **multiple applications** in one file. Used by EAC Applications import and export. Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
+Human-readable, versionable envelope supporting **multiple applications** in one file. Used by EAC Applications import and export. Implementation lives in **breezeon-system-admin-eac** (not a shared platform service).
 
 ### Envelope
 
@@ -98,7 +98,7 @@ Human-readable, versionable envelope supporting **multiple applications** in one
   "kind": "breezeon.eac.applications",
   "applications": [
     {
-      "uniqueCode": "SYSTEM-ADMIN-EAC",
+      "uniqueCode": "breezeon-system-admin-eac",
       "code": "EAC",
       "description": "Enterprise Administration Center",
       "metadata": null,
@@ -130,8 +130,8 @@ There is **no** rename detection, alias lookup, or historical UniqueCode mapping
 
 | Current DB `UniqueCode` | Imported file `UniqueCode` | Result |
 | --- | --- | --- |
-| `SYSTEM-ADMIN-EAC` | `SYSTEM-ADMIN-EAC` | Update existing row |
-| `SYSTEM-ADMIN-EAC` | `LEGACY-SYSTEM-ADMIN-EAC` | **Create** a new application |
+| `breezeon-system-admin-eac` | `breezeon-system-admin-eac` | Update existing row |
+| `breezeon-system-admin-eac` | `LEGACY-breezeon-system-admin-eac` | **Create** a new application |
 
 Renaming a `UniqueCode` in the UI is an administrative action. Re-importing a file that still uses the old code creates a new application by design.
 
@@ -257,7 +257,7 @@ Envelope for EAC Business Hierarchy import/export. Business keys only (`code`, `
 
 Environment **deployment** envelope for Application Configuration State. Import **synchronizes** participating sections of the target Application to match the file (create / update / **remove** by Code). This is **not** merge/upsert and **not** backup/restore. Synchronize is **section-participation based**: omitted optional keys are skipped; a present section synchronizes completely (“no partial imports” = no subset-of-Codes inside a present section). Semantic SSOT: [architecture/app-configuration/application-configuration-deployment.md](../architecture/app-configuration/application-configuration-deployment.md) · [ADR-017](../decisions/ADR-017-application-configuration-deployment.md).
 
-Implementation lives in **SYSTEM-ADMIN-EAC** (not a shared platform service).
+Implementation lives in **breezeon-system-admin-eac** (not a shared platform service).
 
 ### Envelope
 
@@ -490,7 +490,7 @@ Root keys `processMetadataColumns`, `roles`, `steps`, `options` (present/omit se
 - Authorization: Global System Administrator or Application administrator group (`APP_*`) for the selected Application.
 - Max size: EAC `ApplicationConfigurationImport:MaxFileSizeMb` (default **5**); in-memory only.
 - Filename on export: `{applicationUniqueCode}.application-configuration.json`.
-- Local Docker may seed the same envelope after Applications/BE SQL: EAC's reset (`SYSTEM-ADMIN-EAC` `scripts/dev-reset.ps1` + `tools/BreezeOn.Eac.LocalAppConfigurationSeed`) discovers and imports each consuming application's file from that application's own `seed/eac/` folder ([§ Per-application `seed/eac`](#per-application-seedeac-local-docker)); never hosted environments.
+- Local Docker may seed the same envelope after Applications/BE SQL: EAC's reset (`breezeon-system-admin-eac` `scripts/dev-reset.ps1` + `tools/BreezeOn.Eac.LocalAppConfigurationSeed`) discovers and imports each consuming application's file from that application's own `seed/eac/` folder ([§ Per-application `seed/eac`](#per-application-seedeac-local-docker)); never hosted environments.
 
 ### Related
 
@@ -501,7 +501,7 @@ Root keys `processMetadataColumns`, `roles`, `steps`, `options` (present/omit se
 
 ## Data Entity Values Excel (`*.data-entity-values.xlsx`)
 
-Excel workbook for moving Data Entity **Values** (rows, row Description, custom-column values) of one **Application Context** and for bulk maintenance. Surfaced by the EAC Data Entities Quick Action **Excel Tool**. Decision: [ADR-018](../decisions/ADR-018-data-entity-values-excel-portability.md). UX and rules: [data-entities-standard.md](../architecture/data-entities/data-entities-standard.md#excel-tool-shipped). Implementation lives in **SYSTEM-ADMIN-EAC** (`Components/DataEntities/Excel`, library **ClosedXML**).
+Excel workbook for moving Data Entity **Values** (rows, row Description, custom-column values) of one **Application Context** and for bulk maintenance. Surfaced by the EAC Data Entities Quick Action **Excel Tool**. Decision: [ADR-018](../decisions/ADR-018-data-entity-values-excel-portability.md). UX and rules: [data-entities-standard.md](../architecture/data-entities/data-entities-standard.md#excel-tool-shipped). Implementation lives in **breezeon-system-admin-eac** (`Components/DataEntities/Excel`, library **ClosedXML**).
 
 Distinct from other Data Entity payloads:
 
@@ -556,7 +556,7 @@ Row Description is the translation for **one language** — the current UI langu
 
 ## Security Group Members (`breezeon.eac.security-group-members` + Excel)
 
-Bulk **membership-only** portability for Application Configuration → Security Groups. Surfaced by EAC Actions **Bulk Actions** → **Manage Group Members** dialog (**Format** = JSON | Excel; **Import Type** = Add Missing | Overwrite Members). Implementation lives in **SYSTEM-ADMIN-EAC** (`Components/SecurityGroups/MembersPortability`). JSON and Excel share one import contract → validation → analysis → summary → apply path after parse.
+Bulk **membership-only** portability for Application Configuration → Security Groups. Surfaced by EAC Actions **Bulk Actions** → **Manage Group Members** dialog (**Format** = JSON | Excel; **Import Type** = Add Missing | Overwrite Members). Implementation lives in **breezeon-system-admin-eac** (`Components/SecurityGroups/MembersPortability`). JSON and Excel share one import contract → validation → analysis → summary → apply path after parse.
 
 **Does not** create, delete, rename, or edit Security Group metadata (AttributeCode, Name, Description, Metadata, SortOrder, GroupCode). Application Configuration JSON (`breezeon.eac.application-configuration`) still **excludes** members — keep the kinds separate.
 
@@ -645,7 +645,7 @@ Consuming apps may ship `SecurityGroupMembersSeeds.json` + `*.security-group-mem
 
 ## Translations Excel (EAC-owned catalog)
 
-Bulk maintenance for **EAC-owned** translations only. Surfaced by Application Configuration → **Translations** → **Bulk Actions**. Implementation: **SYSTEM-ADMIN-EAC** (`Components/Translations/Excel`, ClosedXML).
+Bulk maintenance for **EAC-owned** translations only. Surfaced by Application Configuration → **Translations** → **Bulk Actions**. Implementation: **breezeon-system-admin-eac** (`Components/Translations/Excel`, ClosedXML).
 
 | Kind | App Config JSON | Translations Excel |
 | --- | --- | --- |

@@ -50,7 +50,7 @@ This is the order referenced by [validation-summary.md](validation-summary.md) (
 ## Rules
 
 1. **Scope** — Save / Discard in the Actions area act on the whole active working copy (all sections / grids in that workspace), not one grid.
-2. **Single owner** — when the Actions area owns Save / Discard, grids on that page set `ShowSave="false"` so there is exactly one Save ([`BoGrid.ShowSave`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bogrid)).
+2. **Single owner** — when the Actions area owns Save / Discard, grids on that page set `ShowSave="false"` so there is exactly one Save ([`BoGrid.ShowSave`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bogrid)).
 3. **Dirty-aware** — Save and Discard are disabled while the working copy is clean (`IsDirty` false) — [dirty-state.md](dirty-state.md).
 4. **Validation first** — Save runs the page's validation (`BoValidationContext.Validate`); on failure show field chrome + Alert toast (and [Validation Summary](validation-summary.md) when opted in / Required) and **stay** — never trap the user.
 5. **Order** — Save then Discard; Primary leftmost ([button.md § Ordering](../controls/button.md#ordering-tier-2--standard)).

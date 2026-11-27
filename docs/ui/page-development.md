@@ -11,9 +11,9 @@ This document does **not** replace detailed standards. It is the authoritative *
 
 **New application bootstrap** (mandatory app-level gate, distinct from this page checklist): [application-bootstrap-checklist.md](../application-bootstrap-checklist.md).
 
-**Entry / inventory:** [overview.md](overview.md). **Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BreezeOn.UI`). **Decision:** [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md).
+**Entry / inventory:** [overview.md](overview.md). **Library:** [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) (`BreezeOn.UI`). **Decision:** [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md).
 
-**Before you build:** pick the page shape in [page-archetypes.md](patterns/page-archetypes.md) (Home / List / Detail-Edit / Workspace / Error / Access Denied). **Parameters, events, and types** come from SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) — do **not** read Razor for API ([parameter-reference.md](controls/parameter-reference.md)). **Working examples (non-authoritative):** [gallery-index.md](gallery-index.md) — confirm against STANDARDS before copying. **How strongly a rule binds:** [normative-tiers.md](foundations/normative-tiers.md) (Tier 1 LOCKED / 2 STANDARD / 3 GUIDANCE).
+**Before you build:** pick the page shape in [page-archetypes.md](patterns/page-archetypes.md) (Home / List / Detail-Edit / Workspace / Error / Access Denied). **Parameters, events, and types** come from SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md) — do **not** read Razor for API ([parameter-reference.md](controls/parameter-reference.md)). **Working examples (non-authoritative):** [gallery-index.md](gallery-index.md) — confirm against STANDARDS before copying. **How strongly a rule binds:** [normative-tiers.md](foundations/normative-tiers.md) (Tier 1 LOCKED / 2 STANDARD / 3 GUIDANCE).
 
 ## Goals
 
@@ -31,8 +31,8 @@ This document does **not** replace detailed standards. It is the authoritative *
 
 | Reference | Role |
 | --- | --- |
-| **Gallery** (`SYSTEM-SHARED-UI` `App.razor` + `MainLayout`) | **UI chrome / asset reference only** — providers, shell, CSS/JS inventory. Does **not** demonstrate product authentication or authorization. |
-| **EAC** (`SYSTEM-ADMIN-EAC` `Program.cs`, `App.razor`, `MainLayout`, `Routes`, page catalog) | **Complete product host reference** — UI + auth + AuthZ + page catalog + Data Protection + Error Message options + app-owned resources. |
+| **Gallery** (`breezeon-system-shared-ui` `App.razor` + `MainLayout`) | **UI chrome / asset reference only** — providers, shell, CSS/JS inventory. Does **not** demonstrate product authentication or authorization. |
+| **EAC** (`breezeon-system-admin-eac` `Program.cs`, `App.razor`, `MainLayout`, `Routes`, page catalog) | **Complete product host reference** — UI + auth + AuthZ + page catalog + Data Protection + Error Message options + app-owned resources. |
 
 ### UI host requirements
 
@@ -67,7 +67,7 @@ Include **all eight** core `bo-*.js` scripts even if a page does not use every c
 
 1. This section (`page-development.md` — SSOT)
 2. [`overview.md`](overview.md) Host requirements summary
-3. SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) host assets list
+3. SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md) host assets list
 4. Gallery `Components/App.razor`
 5. EAC `Components/App.razor`
 

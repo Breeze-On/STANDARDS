@@ -46,7 +46,7 @@ Left navigation and URL path standards. Related: [shell.md](shell.md), [navigati
 
 Accent tokens: [tokens.md](../foundations/tokens.md). Shell regions: [shell.md](shell.md).
 
-**This document is the UX SSOT for left navigation** (structure, fixed behavior, per-app customization, branding, collapsed a11y). The SHARED-UI README no longer carries a left-nav section, and [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) holds only the API ([BoNavPane](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bonavpane) / [BoNavLink](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bonavlink) parameters). Left navigation is **not** a tab / panel-navigation control — see [selection-and-navigation.md](../controls/selection-and-navigation.md).
+**This document is the UX SSOT for left navigation** (structure, fixed behavior, per-app customization, branding, collapsed a11y). The SHARED-UI README no longer carries a left-nav section, and [`public-component-api.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md) holds only the API ([BoNavPane](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bonavpane) / [BoNavLink](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bonavlink) parameters). Left navigation is **not** a tab / panel-navigation control — see [selection-and-navigation.md](../controls/selection-and-navigation.md).
 
 ## Route / URL (hard standard)
 

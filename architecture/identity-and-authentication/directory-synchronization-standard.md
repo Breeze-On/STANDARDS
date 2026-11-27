@@ -9,8 +9,8 @@ Normative rules for Microsoft Graph → `Identity.Users` synchronization. Decisi
 
 | Concern | Owner |
 | --- | --- |
-| Graph client, synchronizer, photo refresh, user queries | SYSTEM-SHARED-UI |
-| Identity SQL (`Users`, `Tenants`, `UserPhotos`, …) | SYSTEM-SHARED-UI (`sql/identity/`) |
+| Graph client, synchronizer, photo refresh, user queries | breezeon-system-shared-ui |
+| Identity SQL (`Users`, `Tenants`, `UserPhotos`, …) | breezeon-system-shared-ui (`sql/identity/`) |
 | First admin surface (Users page, Sync Now) | EAC — consumes SHARED-UI APIs only |
 
 ## Current state (V1)

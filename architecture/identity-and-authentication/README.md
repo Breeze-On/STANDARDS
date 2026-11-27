@@ -35,10 +35,10 @@ SQL Managed Identity for Azure SQL is **orthogonal** and remains in [security.md
 
 | Concern | Owner |
 | --- | --- |
-| Authentication framework (OIDC + cookies + Identity directory + Graph sync/photo) | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BreezeOn.UI`) |
-| Identity schema T-SQL definitions / seed placeholders | SYSTEM-SHARED-UI (`sql/identity/`) |
+| Authentication framework (OIDC + cookies + Identity directory + Graph sync/photo) | [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) (`BreezeOn.UI`) |
+| Identity schema T-SQL definitions / seed placeholders | breezeon-system-shared-ui (`sql/identity/`) |
 | Physical `Identity.*` tables | Customer database (shared by all products in that customer-environment) |
-| First product host | EAC (`SYSTEM-ADMIN-EAC`) — consumes shared framework; does not own the platform standard |
+| First product host | EAC (`breezeon-system-admin-eac`) — consumes shared framework; does not own the platform standard |
 
 ## Definition of Done (mandatory)
 

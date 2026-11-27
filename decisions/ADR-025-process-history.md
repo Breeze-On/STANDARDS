@@ -17,10 +17,10 @@ Process Framework ([ADR-019](ADR-019-process-framework-metadata.md)) remains def
 
 | Asset | Owner |
 | --- | --- |
-| `Global.ProcessHistory` | SYSTEM-ADMIN-EAC |
-| `Global.P_POST_ProcessHistory` | SYSTEM-ADMIN-EAC (authoritative create; apps must not INSERT) |
-| `Global.P_GET_ProcessHistoryByProcessGUID` | SYSTEM-ADMIN-EAC (**display-ready projection**) |
-| Thin create/list wrappers + History grid rendering | SYSTEM-SHARED-UI |
+| `Global.ProcessHistory` | breezeon-system-admin-eac |
+| `Global.P_POST_ProcessHistory` | breezeon-system-admin-eac (authoritative create; apps must not INSERT) |
+| `Global.P_GET_ProcessHistoryByProcessGUID` | breezeon-system-admin-eac (**display-ready projection**) |
+| Thin create/list wrappers + History grid rendering | breezeon-system-shared-ui |
 | Action triggers + page composition | Product applications |
 
 Rows are append-only business decision events keyed by `ProcessGUID`. **Not** field-level audit. Comments for an action persist on the history row only — not on `{UniqueCode}.Process`.

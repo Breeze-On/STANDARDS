@@ -36,13 +36,13 @@ jobs:
       - name: Checkout SYSTEM-ADMIN-EAC
         uses: actions/checkout@v4
         with:
-          repository: Breeze-On/SYSTEM-ADMIN-EAC
+          repository: Breeze-On/breezeon-system-admin-eac
           path: SYSTEM-ADMIN-EAC
 
       - name: Checkout SYSTEM-SHARED-UI
         uses: actions/checkout@v4
         with:
-          repository: Breeze-On/SYSTEM-SHARED-UI
+          repository: Breeze-On/breezeon-system-shared-ui
           path: SYSTEM-SHARED-UI
 
       - name: Checkout .github profile

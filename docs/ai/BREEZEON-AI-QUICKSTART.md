@@ -77,17 +77,19 @@ Also: do not invent standards for placeholder areas (testing, versioning, domain
 
 High level only. Detail: [`architecture/landscape.md`](../../architecture/landscape.md).
 
-| Kind | Repo (examples) | Owns |
+| Kind | Repo (standard name) | Owns |
 | --- | --- | --- |
-| Governance SSOT | `STANDARDS` | Docs, architecture descriptions, ADRs |
-| Shared UI | `SYSTEM-SHARED-UI` | `BreezeOn.UI` (UI + auth + authZ frameworks; Identity/Security SQL defs) + Gallery — **mandatory** for apps |
-| Application | `SYSTEM-ADMIN-EAC` | EAC product, SYSADM SQL, DEV deploy metadata (procedures → STANDARDS) |
+| Governance SSOT | `standards` (legacy GitHub: `STANDARDS`) | Docs, architecture descriptions, ADRs |
+| Shared UI | `breezeon-system-shared-ui` (legacy: `breezeon-system-shared-ui`) | `BreezeOn.UI` (UI + auth + authZ frameworks; Identity/Security SQL defs) + Gallery — **mandatory** for apps |
+| Application | `breezeon-system-admin-eac` (legacy: `breezeon-system-admin-eac`) | EAC product, SYSADM SQL, DEV deploy metadata (procedures → STANDARDS) |
+
+Repository names are **lowercase kebab-case**; a `breezeon-` prefix is branding, not required ([naming.md](../naming.md)).
 
 **Dependency direction (must preserve):**
 
 ```text
 Product apps  -->  BreezeOn.UI  -->  Fluent (internal)
-STANDARDS     <--  link / follow  --  product & Shared UI
+standards     <--  link / follow  --  product & Shared UI
 ```
 
 SHARED-UI does not own EAC business domains or business databases; it owns platform Identity/Security definitions and auth/authZ runtime (EAC-named reserved group Codes may live in SHARED-UI per ADR-014/015). Apps **must** consume `BreezeOn.UI` and do not own the design-system implementation ([application-model.md](../application-model.md)).
@@ -98,7 +100,7 @@ SHARED-UI does not own EAC business domains or business databases; it owns platf
 
 | | |
 | --- | --- |
-| Repo | `Breeze-On/SYSTEM-SHARED-UI` |
+| Repo | `breezeon-system-shared-ui` (GitHub legacy: `Breeze-On/breezeon-system-shared-ui`) |
 | Package / project | `BreezeOn.UI` |
 | Decision | [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md) |
 | UI standards entry | [`docs/ui/overview.md`](../ui/overview.md) |
@@ -116,7 +118,7 @@ SHARED-UI does not own EAC business domains or business databases; it owns platf
 
 ## Application Adoption Pattern
 
-**Canonical reference:** `SYSTEM-ADMIN-EAC` (EAC). See also [`BREEZEON-AI-APPLICATION-ADOPTION.md`](BREEZEON-AI-APPLICATION-ADOPTION.md) and [`architecture/applications/eac.md`](../../architecture/applications/eac.md).
+**Canonical reference:** `breezeon-system-admin-eac` (EAC). See also [`BREEZEON-AI-APPLICATION-ADOPTION.md`](BREEZEON-AI-APPLICATION-ADOPTION.md) and [`architecture/applications/eac.md`](../../architecture/applications/eac.md).
 
 | Topic | What to understand |
 | --- | --- |
@@ -128,7 +130,7 @@ SHARED-UI does not own EAC business domains or business databases; it owns platf
 | Navigation | Left `BoNavPane` / `BoNavLink` + `BoIcon`; URLs match page name (lowercase, hyphenated) |
 | Branding | Library logos `_content/BreezeOn.UI/brand/*` (`app-logo.svg`, `customer-logo.svg` → generated `nav-logo.svg` / `favicon.svg`); per-app Home hero under `wwwroot/brand/` |
 
-End-user auth / platform Identity: **[architecture/identity-and-authentication/](../../architecture/identity-and-authentication/README.md)** (ADR-009–011). EAC consumes SYSTEM-SHARED-UI auth; business schema remains `sql/current_model/` (`System`); platform `Identity.*` scripts come from SHARED-UI `sql/identity/`.
+End-user auth / platform Identity: **[architecture/identity-and-authentication/](../../architecture/identity-and-authentication/README.md)** (ADR-009–011). EAC consumes Shared UI auth; business schema remains `sql/current_model/` (`System`); platform `Identity.*` scripts come from SHARED-UI `sql/identity/`.
 
 ---
 
@@ -231,7 +233,7 @@ Full matrix: [ai-agent-governance.md](ai-agent-governance.md).
 | Example Governance | [`example-governance.md`](../ui/example-governance.md) |
 | BoRow Weight / hidden layout | [`layout.md`](../ui/layout/layout.md) |
 | `@FiltersJson` schema | [`database.md`](../database.md#filtersjson-schema) |
-| Shared UI agents | [SYSTEM-SHARED-UI `README_AI.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README_AI.md) |
-| EAC agents | [SYSTEM-ADMIN-EAC `README_AI.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README_AI.md) |
+| Shared UI agents | [breezeon-system-shared-ui `README_AI.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/README_AI.md) |
+| EAC agents | [breezeon-system-admin-eac `README_AI.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/README_AI.md) |
 
 **Next:** Open [`BREEZEON-AI-STANDARDS-SUMMARY.md`](BREEZEON-AI-STANDARDS-SUMMARY.md) if the task touches standards; open [`BREEZEON-AI-APPLICATION-ADOPTION.md`](BREEZEON-AI-APPLICATION-ADOPTION.md) for UI adoption work; then the product repo’s `README_AI.md`.

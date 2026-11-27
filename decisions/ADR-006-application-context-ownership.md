@@ -64,7 +64,7 @@ Application-scoped configuration promoted between environments must also follow 
 
 ## Related
 
-- EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md)
+- EAC [`docs/db-model.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/db-model.md)
 - [architecture/applications/eac.md](../architecture/applications/eac.md)
 - [docs/database.md](../docs/database.md)
 - [docs/glossary.md](../docs/glossary.md)

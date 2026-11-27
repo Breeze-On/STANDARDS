@@ -34,7 +34,7 @@ Add the corresponding pair for every other local product host (Gallery, future V
 
 ## Verification workflow
 
-1. Apply local SQL (`dev-reset.ps1`) including platform Identity **schema** from SYSTEM-SHARED-UI and optional tenant seed (`IDENTITY__SEEDTENANTIDS` → `Identity.Tenants` only; **no** `Identity.Users` seed).
+1. Apply local SQL (`dev-reset.ps1`) including platform Identity **schema** from breezeon-system-shared-ui and optional tenant seed (`IDENTITY__SEEDTENANTIDS` → `Identity.Tenants` only; **no** `Identity.Users` seed).
 2. Set the three `AUTHENTICATION__*` values (User Secrets).
 3. Confirm BreezeOn-LOCAL redirect URIs match the app HTTPS URL.
 4. Run the product app (`dev-run.ps1` for day-to-day, or after reset when validating first-time startup); browse a protected route → Entra challenge → callback.

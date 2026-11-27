@@ -87,7 +87,7 @@ Excel export and import analysis remain an approved **full-load exception** to [
 - **Import analysis** parses the workbook first, then loads destination rows **only for included** Data Entities (matched sheets), via optional `@DataEntityGuidsJson`.
 - The procedure returns **two result sets** (rows + sparse metadata) instead of per-row correlated `MetadataJson`.
 - Schema load uses `System.P_GET_EACDataEntitiesColumnsByApplication` (one batched columns query) rather than per-entity column round trips.
-- Analyze stages are timed as **durable Debug diagnostics** (logger category `BreezeOn.Eac.DataEntities.Excel.Analyze`; fields `OperationId`, `AuthorizationMs`, `SchemaLoadingMs`, `WorkbookParsingMs`, `DestinationLoadingMs`, `AnalysisMs`, `SummaryRenderingMs`, `TotalMs`). Opt-in — not emitted at default Information. Analysis remains in application memory (Analyze → Confirm → Apply); SQL-first analysis is not the architecture. Details: EAC [`README_AI.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README_AI.md) § Excel Import Analyze — performance diagnostics.
+- Analyze stages are timed as **durable Debug diagnostics** (logger category `BreezeOn.Eac.DataEntities.Excel.Analyze`; fields `OperationId`, `AuthorizationMs`, `SchemaLoadingMs`, `WorkbookParsingMs`, `DestinationLoadingMs`, `AnalysisMs`, `SummaryRenderingMs`, `TotalMs`). Opt-in — not emitted at default Information. Analysis remains in application memory (Analyze → Confirm → Apply); SQL-first analysis is not the architecture. Details: EAC [`README_AI.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/README_AI.md) § Excel Import Analyze — performance diagnostics.
 
 ## Consequences
 

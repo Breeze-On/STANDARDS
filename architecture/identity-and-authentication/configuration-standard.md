@@ -13,7 +13,7 @@ Use **uppercase** names for consistency across Azure App Service, local developm
 | `AUTHENTICATION__CLIENTID` | Yes | App Registration application (client) ID |
 | `AUTHENTICATION__CLIENTSECRET` | Yes | App Registration client secret |
 
-- Authority is **required configuration**. Do **not** hard-code authority URLs in SYSTEM-SHARED-UI or product applications.
+- Authority is **required configuration**. Do **not** hard-code authority URLs in breezeon-system-shared-ui or product applications.
 - Use the **`/v2.0`** Authority form. Multi-tenant Authority (`organizations` / `common`) publishes issuer `.../{tenantid}/v2.0`; the shared framework validates the concrete tenant GUID issuer from the ID token (IDX10205 otherwise).
 - There is **no** `AUTHENTICATION__TENANTID`. Sync target selection uses `Identity.Tenants.IsSyncEnabled`, not an authentication env var ([directory-synchronization-standard.md](directory-synchronization-standard.md)).
 - All product hosts in the **same customer-environment** **must** use the **same** `AUTHENTICATION__AUTHORITY`, `AUTHENTICATION__CLIENTID`, and `AUTHENTICATION__CLIENTSECRET` (one App Registration per customer-environment — [cloud-architecture.md](cloud-architecture.md), [ADR-011](../../decisions/ADR-011-app-registration-per-customer-environment.md)).

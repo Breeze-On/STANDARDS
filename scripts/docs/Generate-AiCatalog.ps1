@@ -1,12 +1,12 @@
-﻿<#
+<#
 .SYNOPSIS
   Generate STANDARDS/docs/ai/ai-catalog.json from org markdown banners + path rules.
 .PARAMETER MigrateBanners
   Add/update Domain and Capability tokens on classification banners using path heuristics.
 .PARAMETER ProjectsRoot
-  Parent folder containing STANDARDS, SYSTEM-ADMIN-EAC, SYSTEM-SHARED-UI, Breeze-On-github.
+  Parent folder containing standards, breezeon-system-admin-eac, breezeon-system-shared-ui, Breeze-On-github.
 .PARAMETER StandardsRoot
-  Override STANDARDS root (default: parent of scripts/docs).
+  Override standards root (default: parent of scripts/docs).
 #>
 [CmdletBinding()]
 param(
@@ -25,9 +25,9 @@ if (-not $ProjectsRoot) {
 }
 
 $repos = @(
-  @{ Name = 'STANDARDS'; Root = $StandardsRoot; Gh = 'STANDARDS' }
-  @{ Name = 'SYSTEM-ADMIN-EAC'; Root = (Join-Path $ProjectsRoot 'SYSTEM-ADMIN-EAC'); Gh = 'SYSTEM-ADMIN-EAC' }
-  @{ Name = 'SYSTEM-SHARED-UI'; Root = (Join-Path $ProjectsRoot 'SYSTEM-SHARED-UI'); Gh = 'SYSTEM-SHARED-UI' }
+  @{ Name = 'standards'; Root = $StandardsRoot; Gh = 'standards' }
+  @{ Name = 'breezeon-system-admin-eac'; Root = (Join-Path $ProjectsRoot 'breezeon-system-admin-eac'); Gh = 'breezeon-system-admin-eac' }
+  @{ Name = 'breezeon-system-shared-ui'; Root = (Join-Path $ProjectsRoot 'breezeon-system-shared-ui'); Gh = 'breezeon-system-shared-ui' }
   @{ Name = '.github'; Root = (Join-Path $ProjectsRoot 'Breeze-On-github'); Gh = '.github' }
 )
 
@@ -109,6 +109,9 @@ function Resolve-DomainCapability([string]$repo, [string]$rel) {
 
   if ($p -match 'data-entities') { return @{ Domain = 'Platform'; Capability = 'DataEntities' } }
   if ($p -match 'process-framework') { return @{ Domain = 'Platform'; Capability = 'ProcessFramework' } }
+  if ($p -match 'process-engine') { return @{ Domain = 'Platform'; Capability = 'ProcessEngine' } }
+  if ($p -match 'process-metadata') { return @{ Domain = 'Platform'; Capability = 'ProcessMetadata' } }
+  if ($p -match 'process-runtime') { return @{ Domain = 'Platform'; Capability = 'ProcessRuntime' } }
   if ($p -match 'variables') { return @{ Domain = 'Platform'; Capability = 'Variables' } }
   if ($p -match 'app-configuration|construct-selection|configuration-session') {
     return @{ Domain = 'Platform'; Capability = 'AppConfiguration' }
@@ -168,13 +171,13 @@ function Resolve-DomainCapability([string]$repo, [string]$rel) {
   if ($p -match 'runbooks/') { return @{ Domain = 'Operations'; Capability = 'CustomerOnboarding' } }
 
   if ($p -match 'readme_ai|agents\.md|^readme\.md$') {
-    if ($repo -eq 'SYSTEM-ADMIN-EAC') { return @{ Domain = 'Platform'; Capability = 'Applications' } }
-    if ($repo -eq 'SYSTEM-SHARED-UI') { return @{ Domain = 'UI'; Capability = 'PublicComponentApi' } }
+    if ($repo -eq 'breezeon-system-admin-eac') { return @{ Domain = 'Platform'; Capability = 'Applications' } }
+    if ($repo -eq 'breezeon-system-shared-ui') { return @{ Domain = 'UI'; Capability = 'PublicComponentApi' } }
     return @{ Domain = 'Engineering'; Capability = 'DocStandards' }
   }
 
-  if ($repo -eq 'SYSTEM-ADMIN-EAC') { return @{ Domain = 'Platform'; Capability = 'Applications' } }
-  if ($repo -eq 'SYSTEM-SHARED-UI') { return @{ Domain = 'UI'; Capability = 'PublicComponentApi' } }
+  if ($repo -eq 'breezeon-system-admin-eac') { return @{ Domain = 'Platform'; Capability = 'Applications' } }
+  if ($repo -eq 'breezeon-system-shared-ui') { return @{ Domain = 'UI'; Capability = 'PublicComponentApi' } }
 
   return @{ Domain = 'Engineering'; Capability = 'DocStandards' }
 }

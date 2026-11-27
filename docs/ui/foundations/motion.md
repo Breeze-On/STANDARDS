@@ -3,7 +3,7 @@
 
 Owner: UI
 
-Platform motion language for BreezeOn shared UI. Current reality only. Implementation: [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`breezeon-ui.css`, control JS). Related: [tokens.md](tokens.md), [toggle.md](../controls/toggle.md), [shell.md](../shell/shell.md) (header tabs), [navigation-motion.md](../shell/navigation-motion.md) (route / AE transitions), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), [overview.md](../overview.md).
+Platform motion language for BreezeOn shared UI. Current reality only. Implementation: [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) (`breezeon-ui.css`, control JS). Related: [tokens.md](tokens.md), [toggle.md](../controls/toggle.md), [shell.md](../shell/shell.md) (header tabs), [navigation-motion.md](../shell/navigation-motion.md) (route / AE transitions), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), [overview.md](../overview.md).
 
 ## Philosophy (locked)
 

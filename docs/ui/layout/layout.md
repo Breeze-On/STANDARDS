@@ -3,7 +3,7 @@
 
 Owner: UI
 
-Row layout and the Page → Section → Row → Field composition contract. Related: [sections.md](sections.md), [forms.md](../controls/forms.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [page-archetypes.md](../patterns/page-archetypes.md) (page shapes: Home / List / Detail-Edit / Workspace / Error). Parameters for `BoRow` and field controls: [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#layout-and-sections).
+Row layout and the Page → Section → Row → Field composition contract. Related: [sections.md](sections.md), [forms.md](../controls/forms.md), [tokens.md](../foundations/tokens.md), [overview.md](../overview.md), [page-archetypes.md](../patterns/page-archetypes.md) (page shapes: Home / List / Detail-Edit / Workspace / Error). Parameters for `BoRow` and field controls: [`public-component-api.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#layout-and-sections).
 
 ## Page composition (locked — hard standard)
 
@@ -32,7 +32,7 @@ Page → Body (BoAppShell body) → Section (BoSectionMain / BoSectionSub) → R
 ## Row (`BoRow`)
 
 **Display name:** Row.  
-**Component:** `BoRow` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI).
+**Component:** `BoRow` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui).
 
 A **Row** is a layout container for one or more fields in a section. Horizontal sizing uses **proportional Weight** on each layout-participating direct child. Each field fills its container (`width: 100%` of the slot).
 

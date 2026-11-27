@@ -18,13 +18,16 @@
     "repositoryName": {
       "type": "string",
       "minLength": 1,
-      "description": "GitHub repository name; technical identifier (case as created)."
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "GitHub repository name — lowercase kebab-case only (naming.md § Repositories). Examples: breezeon-corp-fin-inv, breezeon-system-admin-eac, standards. Do not use SCREAMING_CASE or PascalCase.",
+      "examples": ["breezeon-corp-fin-inv", "breezeon-system-admin-eac", "standards"]
     },
     "uniqueCode": {
       "type": "string",
       "minLength": 1,
-      "description": "EAC registry UniqueCode. Must equal repositoryName uppercased (ToUpperInvariant). Do not invent a divergent id.",
-      "pattern": "^[A-Z0-9][A-Z0-9._-]*$"
+      "description": "EAC registry UniqueCode. Must equal repositoryName uppercased (ToUpperInvariant), e.g. breezeon-system-admin-eac → BREEZEON-SYSTEM-ADMIN-EAC. Do not invent a divergent id. Legacy UniqueCodes such as SYSTEM-ADMIN-EAC remain current registry reality until migration.",
+      "pattern": "^[A-Z0-9][A-Z0-9._-]*$",
+      "examples": ["BREEZEON-CORP-FIN-INV", "BREEZEON-SYSTEM-ADMIN-EAC"]
     },
     "code": {
       "type": "string",

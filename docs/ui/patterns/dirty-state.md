@@ -10,7 +10,7 @@ Centralized abandon-guard for working copies. Related: [toggle.md](../controls/t
 | Aspect | Status |
 | --- | --- |
 | **Concept and flow** (one guard, one `IsDirty`, Save / Discard / Cancel, abandon points call the same gate) | **Platform** standard — the Philosophy and Flow sections below |
-| **Implementation** | **EAC reference only**: `EacDirtyStateGuard`, the Dirty State dialog, and `EacSaveDiscardActions` live in SYSTEM-ADMIN-EAC. **There is no Dirty State service or `IBo*Dirty*` type in SHARED-UI.** A new application builds its own equivalent from this concept |
+| **Implementation** | **EAC reference only**: `EacDirtyStateGuard`, the Dirty State dialog, and `EacSaveDiscardActions` live in breezeon-system-admin-eac. **There is no Dirty State service or `IBo*Dirty*` type in SHARED-UI.** A new application builds its own equivalent from this concept |
 | What is platform today | The **flow / dialog contract** (Save | Discard | Cancel behavior, failure = stay) and the intent hooks on controls (`ToggleRequested`, `TabRequested`) |
 | Promotion to a SHARED-UI service | **Future Validation (FV-001)** — only after application #2 validates the need and the shape |
 | Validation (`Future Validation`) at app #2 | Confirm: guard lifetime, multi-dirty workspaces, Panel Navigation intent hook (FV-008), whether the Actions area becomes a shared component |

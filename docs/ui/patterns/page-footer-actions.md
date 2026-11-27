@@ -23,7 +23,7 @@ Do not reimplement the Save+Submit row per application — use `BoPageFooterActi
 - **Submit:** `BoButton` **Primary** with localized text “Submit”.
 - Save and Submit share the same computed height and vertical center (framework CSS on `.bo-page-footer-actions`).
 
-API: SHARED-UI [`public-component-api.md` § BoPageFooterActions](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md).
+API: SHARED-UI [`public-component-api.md` § BoPageFooterActions](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md).
 
 ### Why Save variant here
 

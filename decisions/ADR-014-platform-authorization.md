@@ -11,7 +11,7 @@ EAC is the administration surface for security access. Authorization must be a p
 
 ## Decision
 
-- Platform schema **`Security`** in the customer database, owned by **SYSTEM-SHARED-UI** (`sql/security/`):
+- Platform schema **`Security`** in the customer database, owned by **breezeon-system-shared-ui** (`sql/security/`):
   - **`Security.Groups`** — `GroupsId`, `GroupGUID`, `Code`, `Name`, `Description`, `Metadata`, **`IsManuallyCreated`** (`BIT NOT NULL`, default `1`; lifecycle ownership SSOT: `1` manual, `0` automatic), ADR-005 audit columns. **No `IsEnabled`.** Column details: [security-schema-standard.md](../architecture/authorization/security-schema-standard.md).
   - **`Security.GroupsMembers`** — `GroupsMembersId`, `GroupMemberGUID`, `GroupGUID`, `UserGUID`, ADR-005 audit columns. Relationships by GUID only.
 - Seed group **`GLOBAL-SYSTEM-ADMINISTRATORS`**. First membership is operator **Workflow G** (SQL bootstrap by `UserGUID`); no user/membership seed by default.

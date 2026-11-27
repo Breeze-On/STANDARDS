@@ -5,7 +5,7 @@ Owner: UI
 
 Single source of truth for **button hierarchy, ordering, destructive actions, icon-only actions, and corner radius**. Related: [forms.md](forms.md), [tokens.md](../foundations/tokens.md), [icons.md](../foundations/icons.md), [accessibility.md](../foundations/accessibility.md), [actions-area.md](../patterns/actions-area.md), [page-footer-actions.md](../patterns/page-footer-actions.md), [dirty-state.md](../patterns/dirty-state.md), [overlays.md](../shell/overlays.md), [normative-tiers.md](../foundations/normative-tiers.md).
 
-API (parameters, events, enums): [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) — [BoButton](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bobutton) · [BoIconButton](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#boiconbutton).
+API (parameters, events, enums): [`public-component-api.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md) — [BoButton](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bobutton) · [BoIconButton](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#boiconbutton).
 
 Current reality only.
 

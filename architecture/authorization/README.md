@@ -24,8 +24,8 @@ Decisions: [ADR-014](../../decisions/ADR-014-platform-authorization.md) (platfor
 
 | Concern | Owner |
 | --- | --- |
-| `Security` schema T-SQL + seed | SYSTEM-SHARED-UI (`sql/security/`) |
-| `IBoAuthorizationService`, page catalog types, Access Denied | SYSTEM-SHARED-UI (`BreezeOn.UI`) |
+| `Security` schema T-SQL + seed | breezeon-system-shared-ui (`sql/security/`) |
+| `IBoAuthorizationService`, page catalog types, Access Denied | breezeon-system-shared-ui (`BreezeOn.UI`) |
 | Product page catalogs / Groups admin UI | Product apps (EAC first) |
 | Physical tables | Customer database |
 

@@ -77,7 +77,7 @@ Three states: **True**, **False**, **Unset**. Unset and False are **not** equiva
 - Process routing (use Process Framework)  
 - Reference lists (use Data Entity)
 
-Runtime consumption by other apps = **Future Validation** — do not invent a consumer SSOT.
+General multi-application Variables consumer APIs = **Future Validation** — do not invent a broad consumer SSOT. **Shipped exception:** Process Engine reads permanent Codes `sequence-template` / `sequence-display` (see [Permanent Variable Codes](#permanent-variable-codes-runtime-contracts)).
 
 ---
 
@@ -110,3 +110,18 @@ Aligns with Process Framework and Data Entities.
 Operating envelope: tens to low hundreds of definitions; large catalogs / concurrency = Future Validation.
 
 Seed JSON = **technical fixture** — prefer [worked-examples.md](worked-examples.md).
+
+---
+
+## Permanent Variable Codes (runtime contracts)
+
+Some Variable **Codes** are permanent contracts consumed by platform runtime (not localization keys or display labels). Do **not** rename or alias them.
+
+| Code | Consumer | Role |
+| --- | --- | --- |
+| `sequence-template` | Process Engine (Process Metadata Framework runtime) | Allocation stream key after token resolution |
+| `sequence-display` | Process Engine | Request Number display prefix after token resolution |
+
+**Missing / unset** at the Application Context → consumers treat the resolved raw string as **`""`** (no error, no platform fallback). Sequence **generation remains allowed** when either or both are missing. SSOT: [ADR-027](../../decisions/ADR-027-request-number-and-sequence-allocation.md) · [process-metadata/README.md](../process-metadata/README.md).
+
+Runtime PE consumption of these Codes is **Current Implementation**. Broader multi-application Variables APIs beyond PE remain subject to the construct / Future Validation notes above.

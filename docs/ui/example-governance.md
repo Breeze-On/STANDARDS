@@ -40,7 +40,7 @@ A Breeze On UI or query-driven standard is **not fully implemented** until all t
 | --- | --- | --- |
 | **1. Normative standard** | STANDARDS (`docs/ui/…`, ADRs as needed) | Rules, requirements, exceptions, governance (**SSOT**) |
 | **2. AI guidance** | Quickstart, AI Standards Summary, and/or repo `README_AI.md` | How Planning / build agents apply the standard |
-| **3. Working example** | [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) Gallery (`BreezeOn.UI.Gallery`) | Real, copyable, **STANDARDS-compliant** behavior |
+| **3. Working example** | [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) Gallery (`BreezeOn.UI.Gallery`) | Real, copyable, **STANDARDS-compliant** behavior |
 
 Missing any layer means the standard is **incomplete**. A Gallery demo that contradicts STANDARDS is a **defect**, not an alternate standard. Prefer completing or correcting the missing/wrong layer over inventing a second document.
 

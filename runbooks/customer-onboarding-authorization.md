@@ -30,7 +30,7 @@ Grant `GLOBAL-SYSTEM-ADMINISTRATORS` to **at least one admin UPN per tenant** so
 ## Actions
 
 1. Build `@TenantAdminPairs`: one `{entra-tid}|{admin-upn}` entry per grant; every distinct tid must appear with **at least one** admin UPN.
-2. Apply [bootstrap-global-system-administrators.sql](../templates/onboarding/bootstrap-global-system-administrators.sql) (EAC apply copy: `SYSTEM-ADMIN-EAC/sql/seed/BootstrapGlobalSystemAdministrators.sql`). Replace placeholders before hosted apply.
+2. Apply [bootstrap-global-system-administrators.sql](../templates/onboarding/bootstrap-global-system-administrators.sql) (EAC apply copy: `breezeon-system-admin-eac/sql/seed/BootstrapGlobalSystemAdministrators.sql`). Replace placeholders before hosted apply.
 3. If an admin UPN would match **more than one** `Identity.Users` row (rare), **stop** — do not guess. Insert membership by explicit `UserGUID` for the intended row (exceptional path only).
 4. Verify each admin can open EAC Users Security (`/users`). Prefer **sign out / sign in** after bootstrap, or wait up to ~**60 seconds** for SHARED-UI authorization cache TTL (`SqlBoAuthorizationService.CacheTtl`). SQL bootstrap does not call in-app `InvalidateUser`.
 5. When Graph = Yes, proceed to Master Flow Step 8 / Workflow F: run **Sync Now** in EAC `/users` (listed tids already have `IsSyncEnabled = 1` from Step 7).

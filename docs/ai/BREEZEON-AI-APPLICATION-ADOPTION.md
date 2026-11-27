@@ -3,7 +3,7 @@
 
 Owner: Documentation
 
-Documents **SYSTEM-ADMIN-EAC** as the first product app that successfully adopts `BreezeOn.UI`. Use this when onboarding another application or extending EAC’s shell. Detail lives in the EAC and Shared UI repos; this file explains the pattern.
+Documents **breezeon-system-admin-eac** as the first product app that successfully adopts `BreezeOn.UI`. Use this when onboarding another application or extending EAC’s shell. Detail lives in the EAC and Shared UI repos; this file explains the pattern. Repository names: [naming.md](../naming.md).
 
 Prerequisite: [`BREEZEON-AI-QUICKSTART.md`](BREEZEON-AI-QUICKSTART.md).
 
@@ -67,7 +67,7 @@ Success criterion for adoption: a separate application runs on Interactive Serve
 
 ## Required integration steps
 
-1. **Reference** `BreezeOn.UI` (**mandatory** — interim: sibling `ProjectReference` to `SYSTEM-SHARED-UI/src/BreezeOn.UI`; NuGet/pinning = Future Validation for App #N).
+1. **Reference** `BreezeOn.UI` (**mandatory** — interim: sibling `ProjectReference` to `breezeon-system-shared-ui/src/BreezeOn.UI` (GitHub legacy folder `breezeon-system-shared-ui`); NuGet/pinning = Future Validation for App #N).
 2. **Product Host Contract (AA SSOT):** follow [`page-development.md` § Product Host Contract](../ui/page-development.md#product-host-contract-required) end-to-end — UI + `AddBreezeOnAuthentication` / `MapBreezeOnAuthentication` + `AddBreezeOnAuthorization(pageCatalog)` + `BoAuthorizeRouteView` + Data Protection `SetApplicationName` + `BoErrorMessageOptions.ApplicationDisplayName` + Access Denied footer off + localization + app-owned resources. Design from STANDARDS first; Gallery = chrome/assets / illustrative composition only (STANDARDS win on conflict); **EAC = complete product host reference**.
 3. **Head assets:** Fluent bundle CSS, `breezeon-ui.css`, and the **seven** core scripts from the host-script inventory SSOT (`bo-sliding-selection.js`, **not** `bo-toggle.js`; no `?v=` cache-bust).
 4. **Nav / Home / titles:** `BoNavPane` + Home hub + per-route localized header titles — see page-development checklist.
@@ -123,7 +123,7 @@ Remove when adopting cleanly: default Blazor sidebar/`NavMenu`, Bootstrap-first 
 2. Step 1: fill application-definition.schema.json instance (schema first); then this kickoff card + docs/application-model.md + docs/ui/page-development.md
 3. Steps 2–3: plan + repository transition per application-development-process.md
 4. Repo baselines: AGENTS.md + README_AI.md (thin reading-chain pointers); Dependabot from templates/dependabot (may extend); review docs/security-governance.md — do not duplicate governance text
-5. Clone / sibling SYSTEM-SHARED-UI for ProjectReference (NuGet/pinning = Future Validation)
+5. Clone / sibling `breezeon-system-shared-ui` for ProjectReference (legacy folder `breezeon-system-shared-ui` until rename; NuGet/pinning = Future Validation)
 6. Wire host (Program, App.razor, MainLayout) with **BoAppShell + platform auth/authZ + page catalog**
 7. Add app-owned resources (en/fr) — never copy BoUi keys as the product glossary
 8. Define IA from the Step 1 instance: Home hub cards + left nav routes (URL = page name)
@@ -149,6 +149,6 @@ Do **not** invent a second design system. Extend `BreezeOn.UI` (with Gallery + S
 | --- | --- |
 | EAC architecture | [`architecture/applications/eac.md`](../../architecture/applications/eac.md) |
 | Landscape / consumers | [`architecture/landscape.md`](../../architecture/landscape.md) |
-| EAC agent surface | [SYSTEM-ADMIN-EAC README_AI](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/README_AI.md) |
-| Shared UI agents | [SYSTEM-SHARED-UI README_AI](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/README_AI.md) |
-| Gallery host (illustrative examples only; not SSOT) | `SYSTEM-SHARED-UI` → `src/BreezeOn.UI.Gallery` |
+| EAC agent surface | [breezeon-system-admin-eac README_AI](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/README_AI.md) |
+| Shared UI agents | [breezeon-system-shared-ui README_AI](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/README_AI.md) |
+| Gallery host (illustrative examples only; not SSOT) | `breezeon-system-shared-ui` → `src/BreezeOn.UI.Gallery` |

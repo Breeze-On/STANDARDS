@@ -13,7 +13,7 @@ Dirty State already matured from “do we need a guard?” to “what is the Dir
 
 ### EAC-owned Configuration Session
 
-Introduce a circuit-scoped **`EacConfigurationSession`** in SYSTEM-ADMIN-EAC (not SHARED-UI, not Redis / `IMemoryCache`). Session key = `(ApplicationGUID, ApplicationEnabledGUID)`. Host opens / rebuilds / closes the session; modules lazy-fill **baseline** segments and keep **working copies** locally.
+Introduce a circuit-scoped **`EacConfigurationSession`** in breezeon-system-admin-eac (not SHARED-UI, not Redis / `IMemoryCache`). Session key = `(ApplicationGUID, ApplicationEnabledGUID)`. Host opens / rebuilds / closes the session; modules lazy-fill **baseline** segments and keep **working copies** locally.
 
 ### Lazy segments; never eager full hydrate
 

@@ -7,7 +7,7 @@ Section-level data grid for `BreezeOn.UI`. Related: [forms.md](forms.md), [shuff
 
 **Composition (hard standard):** `BoGrid` is a **section-level** surface (like Home hub). It is **not** a `BoRow` child and does **not** use Section → Row → Field for its own body. Optional `Title` wraps `BoSectionMain` / `BoSectionSub`. Cell editors reuse shipped `Bo*` fields — including [browser autocomplete off by default](forms.md#browser-autocomplete-locked) (do **not** put raw `<input>` in `Edit` templates).
 
-**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoGrid<TItem>`, `BoGridColumn<TItem>`, `BoGridCache<TItem>`, `BoGridRow<TItem>`, `BoGridCellContext<TItem>`, `BoGridFamilyFilter`, enums `BoGridMode` / `BoGridDefaultExpansionState` / `BoGridColumnAlign` / `BoGridColumnWidth` / `BoGridSectionKind`. Internal helper `BoGridNesting` (not a public component). Host script: `_content/BreezeOn.UI/js/bo-grid.js` (overflow title on truncated display cells; Add New → first-editable focus).
+**Library:** [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) — `BoGrid<TItem>`, `BoGridColumn<TItem>`, `BoGridCache<TItem>`, `BoGridRow<TItem>`, `BoGridCellContext<TItem>`, `BoGridFamilyFilter`, enums `BoGridMode` / `BoGridDefaultExpansionState` / `BoGridColumnAlign` / `BoGridColumnWidth` / `BoGridSectionKind`. Internal helper `BoGridNesting` (not a public component). Host script: `_content/BreezeOn.UI/js/bo-grid.js` (overflow title on truncated display cells; Add New → first-editable focus).
 
 ## Grid Family Standards (locked)
 
@@ -124,7 +124,7 @@ The library **never** talks to SQL or application repositories.
 
 ## Parameters (`BoGrid<TItem>`)
 
-> **Informative.** The complete, authoritative parameter list (every `[Parameter]`: name, type, default — including `QueryMode`, `TotalCount`, `SortFieldKey` / `SortDirection`, `FiltersVisible`, `ShowValidationSummary`, `ValidationIssues`, `SelectedNodeKeys`) is SHARED-UI [`public-component-api.md` § BoGrid](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bogrid) and [§ BoGridColumn](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#bogridcolumn). The table below explains usage and may omit parameters ([parameter-reference.md](parameter-reference.md)).
+> **Informative.** The complete, authoritative parameter list (every `[Parameter]`: name, type, default — including `QueryMode`, `TotalCount`, `SortFieldKey` / `SortDirection`, `FiltersVisible`, `ShowValidationSummary`, `ValidationIssues`, `SelectedNodeKeys`) is SHARED-UI [`public-component-api.md` § BoGrid](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bogrid) and [§ BoGridColumn](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#bogridcolumn). The table below explains usage and may omit parameters ([parameter-reference.md](parameter-reference.md)).
 
 | Parameter | Role |
 | --- | --- |

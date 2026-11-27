@@ -3,7 +3,7 @@
 
 Owner: UI
 
-Collapsible, row-oriented validation summary for live editable grids and configuration surfaces. Implementation: `BoValidationSummary` / `BoValidationIssue` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI). Decision: [ADR-021](../../../decisions/ADR-021-validation-summary-experience.md).
+Collapsible, row-oriented validation summary for live editable grids and configuration surfaces. Implementation: `BoValidationSummary` / `BoValidationIssue` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui). Decision: [ADR-021](../../../decisions/ADR-021-validation-summary-experience.md).
 
 Related: [forms.md](../controls/forms.md) (deferred field chrome), [grids.md](../controls/grids.md), [shuffle-card-grid.md](../controls/shuffle-card-grid.md), [dirty-state.md](dirty-state.md), [import-summary.md](import-summary.md), [expandable-section.md](../layout/expandable-section.md).
 

@@ -16,6 +16,9 @@ Current reality only — do not place planned or speculative designs here. How w
 | [EAC](applications/eac.md) | Enterprise Administration Center (current) |
 | [Data Entities](data-entities/README.md) | Configurable master / reference data framework owned by EAC ([ADR-016](../decisions/ADR-016-data-entity-ownership.md)) |
 | [Process Framework](process-framework/README.md) | Roles / Steps / Options configuration metadata (vision for the future Workflow Engine + current reality) owned by EAC ([ADR-019](../decisions/ADR-019-process-framework-metadata.md)) |
+| [Process runtime](process-runtime/README.md) | Two-tier `Global.Process` + `{UniqueCode}.Process` + Process History ([ADR-024](../decisions/ADR-024-platform-process-root.md) · [ADR-025](../decisions/ADR-025-process-history.md)) |
+| [Process Engine](process-engine/README.md) | Shared library `BreezeOn.ProcessEngine` — Current Implementation vs Future Direction ([ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md)) |
+| [Process Metadata Framework (runtime)](process-metadata/README.md) | Variable templates → tokens → Sequence\* → Request Number; disambiguate ADR-019 ([ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md)) |
 | [Application Configuration](app-configuration/README.md) | Application Configuration deployment between environments ([ADR-017](../decisions/ADR-017-application-configuration-deployment.md)) |
 | [Identity & Authentication](identity-and-authentication/README.md) | **Start here** for end-user OIDC, Identity schema, App Registrations, config, local auth (platform standard) |
 | [Authorization](authorization/README.md) | Security Groups, page security, `IBoAuthorizationService` (platform standard; [ADR-014](../decisions/ADR-014-platform-authorization.md)) |

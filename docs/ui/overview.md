@@ -5,7 +5,7 @@ Owner: UI
 
 Entry point for Breeze On shared UI conventions. Standards are organized by **responsibility** under `docs/ui/` so the tree can grow without a single ever-expanding document.
 
-Current reality only. Implementation lives in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BreezeOn.UI`). Decision record: [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md).
+Current reality only. Implementation lives in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) (`BreezeOn.UI`). Decision record: [ADR-004](../../decisions/ADR-004-breezeon-ui-abstraction-layer.md).
 
 ## Authority split (UX vs API)
 
@@ -14,7 +14,7 @@ Two documents, two jobs. Each fact has **one** home.
 | Authority | Owns | Does **not** own |
 | --- | --- | --- |
 | **STANDARDS `docs/ui/`** (this tree) | UX, behavior, visual design, decision matrices ("which control?"), accessibility, page composition, tokens | The complete parameter / event / type list |
-| **SHARED-UI [`docs/public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md)** | **API surface only**: component inventory, every `[Parameter]` (name, type, default), events, enums, services, public methods, host assets | Any UX, behavior, visual, or accessibility rule |
+| **SHARED-UI [`docs/public-component-api.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md)** | **API surface only**: component inventory, every `[Parameter]` (name, type, default), events, enums, services, public methods, host assets | Any UX, behavior, visual, or accessibility rule |
 
 **Gallery** (`BreezeOn.UI.Gallery`) demonstrates SHARED-UI usage. It is **not** a third authority for UX rules. STANDARDS remain SSOT; Gallery must match them — [example-governance.md](example-governance.md).
 
@@ -97,7 +97,7 @@ Former single file [`docs/ui-components.md`](../ui-components.md) redirects here
 
 | | |
 | --- | --- |
-| Repository | [Breeze-On/SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) |
+| Repository | [Breeze-On/breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) |
 | Package / project | `BreezeOn.UI` (`src/BreezeOn.UI`) |
 | Approach | Option B+: BreezeOn public API on top of Fluent UI Blazor (Fluent is internal) |
 | Registration | `services.AddBreezeOnUI()` or `AddBreezeOnUI(configureTheme)` — `configureTheme` is honored via `IOptions<BoThemeOptions>` ([tokens.md § Theme options](foundations/tokens.md#theme-options-addbreezeonuiconfiguretheme)) |
@@ -110,7 +110,7 @@ Dependency position (landscape): [architecture/landscape.md](../../architecture/
 
 ## Shipped components
 
-Inventory with UX pointers only. **Parameters, events, and types** for every component below: SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md) ([Authority split](#authority-split-ux-vs-api)).
+Inventory with UX pointers only. **Parameters, events, and types** for every component below: SHARED-UI [`public-component-api.md`](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md) ([Authority split](#authority-split-ux-vs-api)).
 
 | Component | Purpose | Detail |
 | --- | --- | --- |
@@ -174,7 +174,7 @@ Inventory with UX pointers only. **Parameters, events, and types** for every com
 
 ## Local gallery
 
-`src/BreezeOn.UI.Gallery` in SYSTEM-SHARED-UI runs a local Interactive Server host (`dotnet run` in that project). Full **pattern → Gallery path** index (including patterns without a demo): **[gallery-index.md](gallery-index.md)**.
+`src/BreezeOn.UI.Gallery` in breezeon-system-shared-ui runs a local Interactive Server host (`dotnet run` in that project). Full **pattern → Gallery path** index (including patterns without a demo): **[gallery-index.md](gallery-index.md)**.
 
 | Gallery page | Route | Contents | Standards |
 | --- | --- | --- | --- |

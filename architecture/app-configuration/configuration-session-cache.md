@@ -3,7 +3,7 @@
 
 Owner: Architecture / EAC
 
-Circuit-scoped workspace cache for EAC Application Configuration. Decision: [ADR-020](../../decisions/ADR-020-configuration-session-cache.md). Product implementation: SYSTEM-ADMIN-EAC `EacConfigurationSession`.
+Circuit-scoped workspace cache for EAC Application Configuration. Decision: [ADR-020](../../decisions/ADR-020-configuration-session-cache.md). Product implementation: breezeon-system-admin-eac `EacConfigurationSession`.
 
 ## What exists
 

@@ -3,7 +3,7 @@
 
 Owner: Architecture
 
-Platform cookie authentication and application session policy for BreezeOn product hosts. Implementation lives in SYSTEM-SHARED-UI (`BoCookieAuthenticationDefaults` / `AddBreezeOnAuthentication`). Products must **not** independently reconfigure authentication cookies.
+Platform cookie authentication and application session policy for BreezeOn product hosts. Implementation lives in breezeon-system-shared-ui (`BoCookieAuthenticationDefaults` / `AddBreezeOnAuthentication`). Products must **not** independently reconfigure authentication cookies.
 
 Related: [authentication-standard.md](authentication-standard.md), [ADR-012](../../decisions/ADR-012-cookie-session-management.md), [ADR-009](../../decisions/ADR-009-entra-oidc-cookie-authentication.md).
 
@@ -24,7 +24,7 @@ Related: [authentication-standard.md](authentication-standard.md), [ADR-012](../
 | Ticket store | Cookie (ASP.NET Core default) | No server-side session store |
 | Login / logout paths | `/Account/Login`, `/Account/Logout` | Mapped by `MapBreezeOnAuthentication` |
 
-Configuration knobs for these security attributes are **not** exposed on `BoAuthenticationOptions`. Change them only in SYSTEM-SHARED-UI.
+Configuration knobs for these security attributes are **not** exposed on `BoAuthenticationOptions`. Change them only in breezeon-system-shared-ui.
 
 ## Session lifecycle
 

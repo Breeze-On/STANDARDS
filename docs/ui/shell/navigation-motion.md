@@ -3,7 +3,7 @@
 
 Owner: UI
 
-Platform route / Application Context navigation motion for applications using `BreezeOn.UI`. Current reality. Implementation: [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) (`BoAppShell` / `BoAppBody`, `BoNavCardStyleHyperlink`, `breezeon-ui.css`). Related: [motion.md](../foundations/motion.md), [shell.md](shell.md), [navigation.md](navigation.md), [context-selection.md](../patterns/context-selection.md), [overview.md](../overview.md).
+Platform route / Application Context navigation motion for applications using `BreezeOn.UI`. Current reality. Implementation: [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) (`BoAppShell` / `BoAppBody`, `BoNavCardStyleHyperlink`, `breezeon-ui.css`). Related: [motion.md](../foundations/motion.md), [shell.md](shell.md), [navigation.md](navigation.md), [context-selection.md](../patterns/context-selection.md), [overview.md](../overview.md).
 
 ## Design principle (locked)
 

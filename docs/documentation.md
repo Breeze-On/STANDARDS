@@ -28,7 +28,7 @@ Shared vocabulary for humans and agents: [`glossary.md`](glossary.md). Prefer li
 
 ## Classification model (mandatory)
 
-Every applicable markdown document in the BreezeOn documentation ecosystem (STANDARDS, SYSTEM-SHARED-UI, SYSTEM-ADMIN-EAC, `.github` profile) must carry a **lightweight classification banner** near the top of the file (immediately after any YAML frontmatter if present; otherwise as the first line).
+Every applicable markdown document in the BreezeOn documentation ecosystem (STANDARDS, breezeon-system-shared-ui, breezeon-system-admin-eac, `.github` profile) must carry a **lightweight classification banner** near the top of the file (immediately after any YAML frontmatter if present; otherwise as the first line).
 
 ### Banner format (standardized)
 
@@ -163,8 +163,8 @@ Prefer an existing Capability. Add a new Capability only when no current token f
 <!-- AI-CATALOG-TAXONOMY-BEGIN -->
 Domains: Security, Platform, UI, Engineering, Operations, Org
 Security: Authentication, Authorization, DependencyGovernance, SqlAccessSecrets
-Platform: Hosting, Environments, Applications, AppConfiguration, Database, DataPortability, DataEntities, ProcessFramework, Variables
-UI: ShellNavigation, ShellBranding, Foundations, Layout, Controls, Patterns, PageDevelopment, PublicComponentApi, Gallery
+Platform: Hosting, Environments, Applications, AppConfiguration, Database, DataPortability, DataEntities, ProcessFramework, ProcessRuntime, ProcessHistory, ProcessEngine, ProcessMetadata, ProcessSequence, Variables
+UI: ShellNavigation, ShellBranding, Foundations, Layout, Controls, Patterns, PageDevelopment, PublicComponentApi, Gallery, ProcessHistory, ProcessPersistence, ProcessView, NavigationMotion
 Engineering: ApplicationModel, Naming, Stack, DocStandards, Deviations, ReviewGovernance, AdrProcess, Glossary, AgentGovernance, PlanningDevelopmentAgents, AiOnboarding
 Operations: CustomerOnboarding, ConfigPromote
 Org: OrgProfile
@@ -272,7 +272,7 @@ Belongs in **STANDARDS**. Product files must **reference** STANDARDS rather than
 
 ### Product README_AI.md must
 
-1. Point agents to [`docs/ai/README.md`](https://github.com/Breeze-On/STANDARDS/blob/main/docs/ai/README.md) first (Quickstart is step 1 of that order).
+1. Point agents to [`docs/ai/README.md`](https://github.com/Breeze-On/standards/blob/main/docs/ai/README.md) first (Quickstart is step 1 of that order).
 2. Hold **repository-specific** context only.
 3. Require agents to follow STANDARDS and to **update documentation** (including ADRs when architecture changes) when a task changes reality.
 4. Enforce **current state only**.
@@ -296,7 +296,7 @@ When a human asks an agent to **extract all `.md` documentation for external rev
 
 | Item | Requirement |
 | --- | --- |
-| Sources | `STANDARDS`, `SYSTEM-ADMIN-EAC`, `SYSTEM-SHARED-UI`, `.github` (local `Projects` clones preferred; shallow `gh` clone to temp if needed) |
+| Sources | `STANDARDS`, `breezeon-system-admin-eac`, `breezeon-system-shared-ui`, `.github` (local `Projects` clones preferred; shallow `gh` clone to temp if needed) |
 | Output | One `.md` under the user’s `Downloads` folder (timestamped name) |
 | Format | Each source file wrapped with `DOC BEGIN` / `DOC END` plus Repository, File name, Path, and Full GitHub-style path |
 | Not allowed | Zip-only delivery; creating or pushing GitHub repositories |
@@ -414,7 +414,7 @@ Any change affecting **authorization architecture**, **Security schema**, **page
 
 ### Data Entities DoD (platform)
 
-Any change affecting Data Entity **schema**, **stored procedures**, **API contracts**, **business rules**, **CRUD flows**, or **platform standards** is incomplete until [`architecture/data-entities/`](../architecture/data-entities/README.md), related ADR(s) (ADR-016 or successors), and EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md) (plus thin product `README` / `README_AI` pointers) are updated in the **same change set**.
+Any change affecting Data Entity **schema**, **stored procedures**, **API contracts**, **business rules**, **CRUD flows**, or **platform standards** is incomplete until [`architecture/data-entities/`](../architecture/data-entities/README.md), related ADR(s) (ADR-016 or successors), and EAC [`docs/db-model.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/db-model.md) (plus thin product `README` / `README_AI` pointers) are updated in the **same change set**.
 
 UI / query-driven standards also follow **[Example Governance](ui/example-governance.md)**: normative standard + AI guidance + **STANDARDS-compliant** Gallery working example (unless an approved exception applies — record in [`docs/deviations/`](deviations/README.md)). Gallery never outranks STANDARDS; drift is a defect.
 

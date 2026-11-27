@@ -65,7 +65,7 @@ Short business identifier for an application (e.g. `EAC`, `HRM`, `AP`). Distinct
 
 ## EAC
 
-Enterprise Administration Center — centralized hub for system configuration, business drop-down (DDL) / reference data, security access, and role assignments. Repository: `SYSTEM-ADMIN-EAC` (`BreezeOn.Eac`). Owns the SQL schema **`System`** (application registry and related platform tables).
+Enterprise Administration Center — centralized hub for system configuration, business drop-down (DDL) / reference data, security access, and role assignments. Repository: `breezeon-system-admin-eac` (`BreezeOn.Eac`). Owns the SQL schema **`System`** (application registry and related platform tables). UniqueCode `BREEZEON-breezeon-system-admin-eac` ([naming.md](naming.md)).
 
 Related:
 - [architecture/applications/eac.md](../architecture/applications/eac.md)
@@ -86,7 +86,7 @@ Related:
 
 ## BreezeOn.UI
 
-Public shared UI library (`Bo*` components) in `SYSTEM-SHARED-UI`, including the **authentication framework** and platform Identity SQL definitions. Fluent UI Blazor is an internal implementation detail; product apps must not take a direct Fluent dependency. Auth SSOT: [Identity & Authentication](../architecture/identity-and-authentication/README.md).
+Public shared UI library (`Bo*` components) in `breezeon-system-shared-ui`, including the **authentication framework** and platform Identity SQL definitions. Fluent UI Blazor is an internal implementation detail; product apps must not take a direct Fluent dependency. Auth SSOT: [Identity & Authentication](../architecture/identity-and-authentication/README.md).
 
 ## BreezeOn-LOCAL
 
@@ -94,7 +94,7 @@ Shared Microsoft Entra App Registration for **local development** of all BreezeO
 
 ## Identity (SQL schema)
 
-Platform schema for `Identity.Users`, `Identity.UsersLogins`, `Identity.Tenants`, and `Identity.UserPhotos`. Definitions owned by SYSTEM-SHARED-UI; physical tables in the **customer database** (shared by all products in that customer-environment). Authoritative Entra resolution key `(TenantId, ExternalObjectId)`. Canonical BreezeOn user identifier: **`UserGUID`** (`UsersId` is physical PK only). `Identity.Tenants` is a sync/metadata registry — not a login allowlist. See [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md), and [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
+Platform schema for `Identity.Users`, `Identity.UsersLogins`, `Identity.Tenants`, and `Identity.UserPhotos`. Definitions owned by `breezeon-system-shared-ui`; physical tables in the **customer database** (shared by all products in that customer-environment). Authoritative Entra resolution key `(TenantId, ExternalObjectId)`. Canonical BreezeOn user identifier: **`UserGUID`** (`UsersId` is physical PK only). `Identity.Tenants` is a sync/metadata registry — not a login allowlist. See [identity-schema-standard.md](../architecture/identity-and-authentication/identity-schema-standard.md), [ADR-010](../decisions/ADR-010-platform-identity-schema.md), and [ADR-013](../decisions/ADR-013-microsoft-graph-directory-synchronization.md).
 
 ## UserGUID
 
@@ -102,7 +102,7 @@ Canonical BreezeOn platform user identifier (`Identity.Users.UserGUID`). Hierarc
 
 ## Security (SQL schema)
 
-Platform authorization schema (`Security.Groups`, `Security.GroupsMembers`) owned by SYSTEM-SHARED-UI; physical tables in the customer database. Relationships use `GroupGUID` / `UserGUID`. See [architecture/authorization/](../architecture/authorization/README.md) and [ADR-014](../decisions/ADR-014-platform-authorization.md).
+Platform authorization schema (`Security.Groups`, `Security.GroupsMembers`) owned by `breezeon-system-shared-ui`; physical tables in the customer database. Relationships use `GroupGUID` / `UserGUID`. See [architecture/authorization/](../architecture/authorization/README.md) and [ADR-014](../decisions/ADR-014-platform-authorization.md).
 
 ## Page security
 
@@ -119,7 +119,7 @@ A node within the organizational hierarchy representing an operational context (
 Related:
 - [architecture/applications/eac.md](../architecture/applications/eac.md)
 - [domain-modeling.md](domain-modeling.md)
-- EAC [`docs/db-model.md`](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC/blob/main/docs/db-model.md)
+- EAC [`docs/db-model.md`](https://github.com/Breeze-On/breezeon-system-admin-eac/blob/main/docs/db-model.md) (`breezeon-system-admin-eac`; )
 
 ## Enabled Application
 
@@ -136,7 +136,7 @@ Related:
 
 ## Variable
 
-One named, typed Application setting whose value may differ per Application Context (or be Unset). May hold business or environment configuration — **not** secrets. Distinct from [Data Entity](#data-entity) (many items) and [Process Framework](#process-framework) (routing). SSOT: [architecture/variables/](../architecture/variables/README.md) · [construct-selection.md](../architecture/app-configuration/construct-selection.md).
+One named, typed Application setting whose value may differ per Application Context (or be Unset). May hold business or environment configuration — **not** secrets. Distinct from [Data Entity](#data-entity) (many items) and [Process Framework](#process-framework) (routing). Permanent Codes `sequence-template` / `sequence-display` are runtime contracts for [Process Metadata Framework (runtime)](#process-metadata-framework-runtime) (missing → `""`). SSOT: [architecture/variables/](../architecture/variables/README.md) · [construct-selection.md](../architecture/app-configuration/construct-selection.md).
 
 ## Current Reality Only
 
@@ -284,15 +284,35 @@ Platform **runtime** append-only ledger of business decisions and workflow actio
 
 ## ProcessGUID (platform)
 
-Universal platform process identifier from `Global.Process` (SQL-generated; apps must not mint). Used in URLs (`PGUID`), FKs, and consumers. Distinct from internal `ProcessId`. See [ADR-024](../decisions/ADR-024-platform-process-root.md) · [ae-query-string.md](../architecture/app-context/ae-query-string.md).
+Universal platform process identifier from `Global.Process` (SQL-generated; apps must not mint). Used in URLs (`PGUID`), FKs, and consumers. Distinct from internal `ProcessId` and from computed [Request Number](#request-number). See [ADR-024](../decisions/ADR-024-platform-process-root.md) · [ae-query-string.md](../architecture/app-context/ae-query-string.md).
+
+## Request Number
+
+Computed **business display identity** for a process instance: `SequenceDisplay` + zero-padded `Sequence` (or `SequenceDisplay` + `DRAFT` when sequence is null). Formatted only by Process Engine (`ProcessSequence:Digits`, default 4). **Never persisted** as a column. Not required unique across applications. UI: left of Initiator; initiation uses Disabled `BoTextField` with pending Placeholder until sequence tokens are satisfied; Process View App Title = Request Number; Process Request section lives under **Process History** on Process View. SSOT: [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md) · [process-request-section.md](ui/patterns/process-request-section.md) · [process-view.md](ui/patterns/process-view.md).
+
+## Process Engine
+
+Shared library repository **`breezeon-system-process-engine`** / namespace **`BreezeOn.ProcessEngine`**. Ships token resolution, process context provider, Process table resolution consumer (`IProcessTableResolver` / `Global.P_GET_ProcessTable`), sequence allocation, and Request Number formatting. Consumed via sibling `ProjectReference`. **Not** a workflow engine in Current Implementation (designer / timers / bus / retries = Future / [DEV-001](deviations/DEV-001-process-framework-future-engine-vision.md)). SSOT: [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md) · [architecture/process-engine/README.md](../architecture/process-engine/README.md).
+
+## Process Metadata Framework (runtime)
+
+Runtime path: AE Variable templates → [Token Resolution](#token-resolution) → persisted `SequenceTemplate` / `SequenceDisplay` / `Sequence` on `{UniqueCode}.Process` → [Request Number](#request-number). Owned by Process Engine. **Orthogonal** to [Process Framework](#process-framework) definition metadata ([ADR-019](../decisions/ADR-019-process-framework-metadata.md)). SSOT: [architecture/process-metadata/README.md](../architecture/process-metadata/README.md) · [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md).
+
+## SequenceTemplate
+
+Persisted resolved allocation-stream key on every `{UniqueCode}.Process` extension (`NVARCHAR(600) NULL`). Derived from permanent Variable Code `sequence-template` after token resolution. Counter uniqueness is per this string only. Companion columns: `SequenceDisplay`, `Sequence`. Never store RequestNumber / SequenceDigits. See [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md).
+
+## Token Resolution
+
+Process Engine expansion of bracket tokens (`[Name]`) against process context (built-in + product contributors). Used when resolving `sequence-template` / `sequence-display` Variable TEXT into persisted SequenceTemplate / SequenceDisplay. SSOT: PE [token-resolution.md](https://github.com/Breeze-On/breezeon-system-process-engine/blob/main/docs/token-resolution.md) (`breezeon-system-process-engine`; GitHub legacy: `breezeon-system-process-engine`) · [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md).
 
 ## Process View
 
-Terminal read-only process page after Save/Submit (`/process-view?AE=…&PGUID=…`). All fields display (not Disabled); no footer actions; hydrate failures use Application Error. SSOT: [process-view.md](ui/patterns/process-view.md) · [process-persistence.md](ui/patterns/process-persistence.md).
+Terminal read-only process page after Save/Submit (`/process-view?AE=…&PGUID=…`). All fields display (not Disabled); no footer actions; hydrate failures use Application Error. App Title = [Request Number](#request-number). SSOT: [process-view.md](ui/patterns/process-view.md) · [process-persistence.md](ui/patterns/process-persistence.md).
 
 ## Process Framework
 
-EAC business capability for defining **one process definition per Application**: who acts ([Role](#role-process-framework)), what happens ([Step](#step-process-framework)), and how work moves ([Option](#option-process-framework) / [Route](#route-process-framework)). Not a platform workflow engine; runtime engine is Future Validation. Orthogonal to runtime [Global.Process](#globalprocess). SSOT: [architecture/process-framework/README.md](../architecture/process-framework/README.md).
+EAC business capability for defining **one process definition per Application**: who acts ([Role](#role-process-framework)), what happens ([Step](#step-process-framework)), and how work moves ([Option](#option-process-framework) / [Route](#route-process-framework)). Not a platform workflow engine; workflow runtime remains Future Validation / [DEV-001](deviations/DEV-001-process-framework-future-engine-vision.md). Orthogonal to runtime [Global.Process](#globalprocess) and to [Process Metadata Framework (runtime)](#process-metadata-framework-runtime) (Request Number / sequences). **Do not conflate** PF definition metadata with runtime Process Metadata. SSOT: [architecture/process-framework/README.md](../architecture/process-framework/README.md).
 
 ## Process (Process Framework)
 
@@ -376,11 +396,15 @@ EAC-owned SQL schema for platform administration / shared catalog tables (for ex
 
 ## UniqueCode
 
-Application technical identifier in the EAC registry; `repositoryName.ToUpperInvariant()` (e.g. repo `breezeon-corp-fin-inv` → `BREEZEON-CORP-FIN-INV`). Distinct from short `Code`. See [naming.md](naming.md), [application-definition.schema.json](ai/application-definition.schema.json), [database.md](database.md).
+Application technical identifier in the EAC registry; `repositoryName.ToUpperInvariant()` (e.g. repo `breezeon-corp-fin-inv` → `BREEZEON-CORP-FIN-INV`; EAC repo `breezeon-system-admin-eac` → `BREEZEON-breezeon-system-admin-eac`). Distinct from short `Code`. See [naming.md](naming.md), [application-definition.schema.json](ai/application-definition.schema.json), [database.md](database.md).
+
+## Repository naming
+
+Org-owned GitHub repository names are **lowercase kebab-case** only (e.g. `breezeon-system-admin-eac`, `standards`). A leading `breezeon-` prefix is branding/ownership, not required by the naming standard. SSOT: [naming.md](naming.md) § Repositories.
 
 ## Shared Library
 
-Repository kind that ships reusable code without being a full application (today: `SYSTEM-SHARED-UI` / `BreezeOn.UI` — RCL + local gallery; no business database).
+Repository kind that ships reusable code without being a full application (today: `breezeon-system-shared-ui` / `BreezeOn.UI` — RCL + local gallery; no business database).
 
 Related:
 - [application-model.md](application-model.md)
@@ -388,11 +412,12 @@ Related:
 
 ## STANDARDS
 
-Organization single source of truth repository (`Breeze-On/STANDARDS`): how we work (`docs/`), what exists (`architecture/`), why decisions were made (`decisions/`).
+Organization single source of truth repository — standard name `standards` (GitHub legacy: `STANDARDS` / `Breeze-On/standards`): how we work (`docs/`), what exists (`architecture/`), why decisions were made (`decisions/`).
 
 Related:
 - [README.md](../README.md)
 - [README_AI.md](../README_AI.md)
+- [naming.md](naming.md) § Repositories
 
 ## Sub Section
 

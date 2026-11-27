@@ -86,11 +86,11 @@ If prerequisites are missing, fail fast with a clear error that points the devel
 
 ## Consumer apps and EAC reset
 
-Applications that consume EAC (registry, Application Configuration, Security Groups, Data Entities) share the local SQL container and `BreezeOnLocal` database with **SYSTEM-ADMIN-EAC** ([local-database.md](local-database.md) § Shared local SQL instance and EAC dependency). For these apps:
+Applications that consume EAC (registry, Application Configuration, Security Groups, Data Entities) share the local SQL container and `BreezeOnLocal` database with **`breezeon-system-admin-eac`** ([local-database.md](local-database.md) § Shared local SQL instance and EAC dependency). For these apps:
 
-1. `dev-reset.ps1` locates the **sibling** `SYSTEM-ADMIN-EAC` checkout (same parent folder as the app repo) and fails fast with a clear error when it is missing.
-2. `dev-reset.ps1` invokes EAC `scripts\dev-reset.ps1` as a **subprocess**. EAC owns the destructive work: database drop/recreate, EAC and platform schema (allowlisted `current_model` consolidation with local fail-fast + required-object smoke), bootstrap, and import of EAC configuration discovered in sibling `seed/eac/` folders ([data-portability.md](data-portability.md) § Per-application `seed/eac`; [database.md](database.md) § EAC Framework Synchronization).
-3. After EAC finishes, the consumer applies its own business schema/seed (`sql/current_model/`, `sql/seed/`) when it owns any, then launches itself. After pulling EAC framework DDL changes, use **`dev-reset`** — `dev-run` does not redeploy System objects.
+1. `dev-reset.ps1` locates the **sibling** EAC checkout (same parent folder as the app repo; folder name `breezeon-system-admin-eac`) and fails fast with a clear error when it is missing.
+2. `dev-reset.ps1` invokes EAC `scripts\dev-reset.ps1` as a **subprocess**. EAC owns the destructive work: database drop/recreate, EAC and platform schema (allowlisted `current_model` consolidation with local fail-fast + required-object smoke), discovery/apply of sibling **Process Engine** `sql/current_model` (`Global.ProcessSequenceCounter`, `Global.P_POST_ProcessSequenceAllocate`), bootstrap, and import of EAC configuration discovered in sibling `seed/eac/` folders ([data-portability.md](data-portability.md) § Per-application `seed/eac`; [database.md](database.md) § EAC Framework Synchronization · [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md)).
+3. After EAC finishes, the consumer applies its own business schema/seed (`sql/current_model/`, `sql/seed/`) when it owns any, then launches itself. After pulling EAC framework DDL or PE counter SQL changes, use **`dev-reset`** — `dev-run` does not redeploy System / PE Global objects.
 4. The consumer script **must not** reimplement EAC database drop, EAC/platform schema apply, bootstrap, or EAC configuration import, and must not keep a private copy of EAC SQL configuration or current-state seeds.
 5. `dev-run.ps1` must **not** invoke EAC reset, recreate databases, or re-import configuration. It launches only the consumer application.
 
@@ -171,8 +171,8 @@ Product `README_AI.md` must tell agents which script to use for routine vs fresh
 
 Implemented for:
 
-- [breezeon-corp-fin-inv](https://github.com/Breeze-On/breezeon-corp-fin-inv) — `scripts/dev-reset.ps1` + `scripts/dev-run.ps1` (EAC-consuming product; first host with both)  
-- [SYSTEM-ADMIN-EAC](https://github.com/Breeze-On/SYSTEM-ADMIN-EAC) — `scripts/dev-reset.ps1` + `scripts/dev-run.ps1` (+ SQL helpers; platform reset owner)  
-- [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `scripts/dev-reset.ps1` (Gallery; no SQL); **`dev-run.ps1` pending adoption**  
+- [`breezeon-corp-fin-inv`](https://github.com/Breeze-On/breezeon-corp-fin-inv) — `scripts/dev-reset.ps1` + `scripts/dev-run.ps1` (EAC-consuming product; first host with both)  
+- [`breezeon-system-admin-eac`](https://github.com/Breeze-On/breezeon-system-admin-eac) — `scripts/dev-reset.ps1` + `scripts/dev-run.ps1` (+ SQL helpers; platform reset owner)  
+- [`breezeon-system-shared-ui`](https://github.com/Breeze-On/breezeon-system-shared-ui) — `scripts/dev-reset.ps1` (Gallery; no SQL); **`dev-run.ps1` pending adoption**  
 
 Future BreezeOn applications must ship **both** scripts when they add a runnable local host ([application-development-process.md](ai/application-development-process.md) New App Development checklist).

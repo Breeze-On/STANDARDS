@@ -3,7 +3,7 @@
 
 Owner: UI / Architecture
 
-Standard review dialog for import and synchronize workflows. Implementation: `BoImportSummaryDialog` in [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI). Related: [overlays.md](../shell/overlays.md), [grids.md](../controls/grids.md), [data-portability.md](../../data-portability.md).
+Standard review dialog for import and synchronize workflows. Implementation: `BoImportSummaryDialog` in [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui). Related: [overlays.md](../shell/overlays.md), [grids.md](../controls/grids.md), [data-portability.md](../../data-portability.md).
 
 ## Principle (locked)
 

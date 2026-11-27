@@ -5,9 +5,9 @@ Owner: UI
 
 Presentation-only segmented toggle for mutually exclusive options. Related: [forms.md](forms.md), [motion.md](../foundations/motion.md) (selection travel + easing family shared with reorder), [overview.md](../overview.md), [dirty-state.md](../patterns/dirty-state.md).
 
-**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoToggle`, `BoToggleItem` (`BreezeOn.UI.Inputs`). Gallery: Components → Other → Toggle.
+**Library:** [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) — `BoToggle`, `BoToggleItem` (`BreezeOn.UI.Inputs`). Gallery: Components → Other → Toggle.
 
-**Choosing a control and the selection contract:** [selection-and-navigation.md](selection-and-navigation.md) — Tabs vs Toggle vs Panel Navigation vs Drop-Down decision matrix, Selection Authority Model (`ToggleRequested` is the platform intent pattern), keyboard / ARIA. **Complete parameter list:** [`public-component-api.md` § BoToggle](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#botoggle); the API table below is informative ([parameter-reference.md](parameter-reference.md)).
+**Choosing a control and the selection contract:** [selection-and-navigation.md](selection-and-navigation.md) — Tabs vs Toggle vs Panel Navigation vs Drop-Down decision matrix, Selection Authority Model (`ToggleRequested` is the platform intent pattern), keyboard / ARIA. **Complete parameter list:** [`public-component-api.md` § BoToggle](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#botoggle); the API table below is informative ([parameter-reference.md](parameter-reference.md)).
 
 ## Philosophy (locked)
 

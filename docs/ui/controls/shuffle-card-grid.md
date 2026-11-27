@@ -5,7 +5,7 @@ Owner: UI
 
 Section-level editable card-row surface with a shared column header row and optional drag-and-drop reorder. Related: [grids.md](grids.md) (**Grid Family Standards** SSOT), [forms.md](forms.md), [sections.md](../layout/sections.md), [dirty-state.md](../patterns/dirty-state.md), [motion.md](../foundations/motion.md) (reorder motion SSOT), [overview.md](../overview.md).
 
-**Library:** [SYSTEM-SHARED-UI](https://github.com/Breeze-On/SYSTEM-SHARED-UI) — `BoShuffleCardGrid<TItem>`, `BoShuffleCardGridColumn<TItem>`, `BoShuffleCardGridCellContext<TItem>`. Host scripts: `_content/BreezeOn.UI/js/lib/sortable.min.js`, `_content/BreezeOn.UI/js/bo-sortable.js`, and `_content/BreezeOn.UI/js/bo-grid.js` (Add New focus).
+**Library:** [breezeon-system-shared-ui](https://github.com/Breeze-On/breezeon-system-shared-ui) — `BoShuffleCardGrid<TItem>`, `BoShuffleCardGridColumn<TItem>`, `BoShuffleCardGridCellContext<TItem>`. Host scripts: `_content/BreezeOn.UI/js/lib/sortable.min.js`, `_content/BreezeOn.UI/js/bo-sortable.js`, and `_content/BreezeOn.UI/js/bo-grid.js` (Add New focus).
 
 **Family membership (hard):** Shuffle Card is a **Grid-family** control. Inherit [Grid Family Standards](grids.md#grid-family-standards-locked) (reuse-first, Add New top + focus, deferred validation, accessibility). This file documents Shuffle Card–specific chrome and host wiring only — do not invent competing Add New / focus / placement rules.
 
@@ -56,7 +56,7 @@ Public helpers: `InsertNewAtTopAsync`, `RefreshSortableAsync` (non–Add New add
 
 ## Parameters (`BoShuffleCardGrid<TItem>`)
 
-> **Informative.** Complete, authoritative parameter lists: SHARED-UI [`public-component-api.md` § BoShuffleCardGrid](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#boshufflecardgrid) and [§ BoShuffleCardGridColumn](https://github.com/Breeze-On/SYSTEM-SHARED-UI/blob/main/docs/public-component-api.md#boshufflecardgridcolumn) ([parameter-reference.md](parameter-reference.md)).
+> **Informative.** Complete, authoritative parameter lists: SHARED-UI [`public-component-api.md` § BoShuffleCardGrid](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#boshufflecardgrid) and [§ BoShuffleCardGridColumn](https://github.com/Breeze-On/breezeon-system-shared-ui/blob/main/docs/public-component-api.md#boshufflecardgridcolumn) ([parameter-reference.md](parameter-reference.md)).
 
 | Parameter | Role |
 | --- | --- |
