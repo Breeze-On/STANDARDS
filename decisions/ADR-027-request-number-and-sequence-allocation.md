@@ -99,7 +99,7 @@ Request Numbers are **not** required to be unique across applications. Uniquenes
 | --- | --- |
 | Process Request section | **Three** fields: **Request Number** (left), **Initiator**, **Requested Date** |
 | Request Number control | `BoFieldReadOnly` (computed display; not an editable scalar column) |
-| Process View | Same Request Number display; **App Title = Request Number** |
+| Process View | Same Request Number display in Process Request; **App Title = `[Request Number] - [Application Name]`**; browser document title = Request Number only — [process-view.md](../docs/ui/patterns/process-view.md) |
 
 SSOT patterns: [process-request-section.md](../docs/ui/patterns/process-request-section.md) · [process-view.md](../docs/ui/patterns/process-view.md).
 
@@ -108,7 +108,7 @@ SSOT patterns: [process-request-section.md](../docs/ui/patterns/process-request-
 - Every product Process extension schema includes `SequenceTemplate` / `SequenceDisplay` / `Sequence`.
 - Product apps ProjectReference Process Engine and bind `ProcessSequence:Digits`.
 - Initiation Save refreshes templates until sequence generation; Submit (or app-chosen moment) calls `GenerateProcessSequenceAsync`.
-- UI shows Request Number left of Initiator; Process View title uses Request Number.
+- UI shows Request Number left of Initiator; Process View App Title uses `[Request Number] - [Application Name]`; browser document title uses Request Number only.
 - Cross-app duplicate display strings (e.g. two apps both showing `INV-0001`) are allowed when streams / padding coincide.
 
 ## Related

@@ -92,7 +92,7 @@ Authority: [process-request-section.md](ui/patterns/process-request-section.md) 
 - [ ] Initiator auto-population implemented (authenticated user)
 - [ ] Requested Date auto-population implemented (current **local** calendar date)
 - [ ] People display **`DisplayName (Email)`** when resolve succeeds (GUID last resort only)
-- [ ] Process View **App Title = Request Number**
+- [ ] Process View **App Title = `[Request Number] - [Application Name]`**; stacked SubTitle + Context Cards via SHARED-UI; browser document title = Request Number only — [process-view.md](ui/patterns/process-view.md)
 
 ## Database
 

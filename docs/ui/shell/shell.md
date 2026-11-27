@@ -12,7 +12,7 @@ App chrome standards for applications using `BreezeOn.UI`. Related: [navigation.
 | Region | Component | Role |
 | --- | --- | --- |
 | Left nav | `BoNavPane` / `BoNavLink` | Platform navigation — see [navigation.md](navigation.md) |
-| Header | `BoAppHeader` | Top header card; **per-page** `AppTitle` / `Subtitle` (host-localized); trailing actions; optional `TabsContent` |
+| Header | `BoAppHeader` | Top header card; **per-page** `AppTitle` / `Subtitle` (host-localized); trailing actions; optional `TabsContent`; Process View may use `TitleLayout=Stacked` + `ContextCardsContent` — [process-view.md](../patterns/process-view.md) |
 | Body | `BoAppBody` | Body region inside a floating card; card **fills** the available shell viewport slot; when content exceeds the slot, scroll **inside** the body (`overflow: auto` on `BoAppBody`). **Platform rule:** containers must provide scrollbars when content exceeds their bounds — do not use `overflow: hidden` on `BoAppBody` except intentional exceptions (e.g. Home / nav hub; **visible** workspace `BoPanelHost` — see [panels.md](../layout/panels.md)). Home / nav hub / visible panel host: card fills the slot with **no** body scrollbar (panels scroll independently). Hosts inside **hidden** keep-alive tab panels must not disable body scroll for other tabs. **Owns shell navigation motion** (pathname / `AE` enter) — [navigation-motion.md](navigation-motion.md); product apps must not fork route transitions |
 | Footer | `BoAppFooter` | Optional per page (`ShowFooter`); when shown, fixed bottom footer card |
 
@@ -44,9 +44,11 @@ Theme mode / dual palettes: [tokens.md](../foundations/tokens.md). Locale prefs:
 
 | Concern | Standard |
 | --- | --- |
-| `AppTitle` | Required for normal pages; localized. On **Home**, use the **Application Display Name** — [application-branding.md](application-branding.md) |
-| `Subtitle` | Optional on most pages; when null/whitespace, **omit** the `  -  ` separator (implemented in `BoAppHeader`). On **Home**, subtitle is **omitted by default** (do not supply a Home subtitle) — [application-branding.md](application-branding.md) |
-| Dash | Shown only between a non-empty title and a non-empty subtitle |
+| `AppTitle` | Required for normal pages; localized. On **Home**, use the **Application Display Name** — [application-branding.md](application-branding.md). On **Process View**, use `[Request Number] - [Application Name]` — [process-view.md](../patterns/process-view.md) |
+| `Subtitle` | Optional on most pages. On **Home**, subtitle is **omitted by default** (do not supply a Home subtitle) — [application-branding.md](application-branding.md). On **Process View**, subtitle is a **contextual** line stacked under AppTitle (no dash) — [process-view.md](../patterns/process-view.md) |
+| `TitleLayout` | `Inline` (default): single-line title + subtitle. `Stacked`: AppTitle above Subtitle with **no** separator — required on Process View |
+| Dash | **Inline layout only:** shown between a non-empty title and a non-empty subtitle. **Stacked layout:** never show the `  -  ` separator |
+| `ContextCardsContent` | Optional full-width region between the title/actions row and tabs. Process View hosts `BoContextCards` here; collapse chevron sits on the **tabs row** (`ShowContextCardsCollapse`). Context Card accents are app-selected (mechanism SHARED-UI; hues not Process-View-mandated) — [process-view.md](../patterns/process-view.md) |
 
 ## App shell footer (optional per page)
 

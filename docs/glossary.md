@@ -288,7 +288,7 @@ Universal platform process identifier from `Global.Process` (SQL-generated; apps
 
 ## Request Number
 
-Computed **business display identity** for a process instance: `SequenceDisplay` + zero-padded `Sequence` (or `SequenceDisplay` + `DRAFT` when sequence is null). Formatted only by Process Engine (`ProcessSequence:Digits`, default 4). **Never persisted** as a column. Not required unique across applications. UI: left of Initiator; initiation uses Disabled `BoTextField` with pending Placeholder until sequence tokens are satisfied; Process View App Title = Request Number; Process Request section lives under **Process History** on Process View. SSOT: [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md) · [process-request-section.md](ui/patterns/process-request-section.md) · [process-view.md](ui/patterns/process-view.md).
+Computed **business display identity** for a process instance: `SequenceDisplay` + zero-padded `Sequence` (or `SequenceDisplay` + `DRAFT` when sequence is null). Formatted only by Process Engine (`ProcessSequence:Digits`, default 4). **Never persisted** as a column. Not required unique across applications. UI: left of Initiator; initiation uses Disabled `BoTextField` with pending Placeholder until sequence tokens are satisfied; Process View **App Title** = `[Request Number] - [Application Name]` (browser document title = Request Number only); Process Request section lives under **Process History** on Process View. SSOT: [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md) · [process-request-section.md](ui/patterns/process-request-section.md) · [process-view.md](ui/patterns/process-view.md).
 
 ## Process Engine
 
@@ -308,7 +308,7 @@ Process Engine expansion of bracket tokens (`[Name]`) against process context (b
 
 ## Process View
 
-Terminal read-only process page after Save/Submit (`/process-view?AE=…&PGUID=…`). All fields display (not Disabled); no footer actions; hydrate failures use Application Error. App Title = [Request Number](#request-number). SSOT: [process-view.md](ui/patterns/process-view.md) · [process-persistence.md](ui/patterns/process-persistence.md).
+Terminal read-only process page after Save/Submit (`/process-view?AE=…&PGUID=…`). All fields display (not Disabled); no footer actions; hydrate failures use Application Error. App Title = `[Request Number] - [Application Name]`; stacked contextual SubTitle + Context Cards; browser document title = [Request Number](#request-number). SSOT: [process-view.md](ui/patterns/process-view.md) · [process-persistence.md](ui/patterns/process-persistence.md).
 
 ## Process Framework
 

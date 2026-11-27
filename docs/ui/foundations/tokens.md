@@ -64,6 +64,14 @@ Configured via `BoThemeOptions` / `BoThemeProvider` / `IBoThemeModeService`. Fon
 | `color-discard-button-background-pressed` | `--bo-color-discard-button-background-pressed` | `#F8BEBE` | `#6E2424` | Discard action fill when pressed |
 | `color-warning` | `--bo-color-warning` | `#C19C00` | `#C19C00` | Alert toast accent / badge gradient |
 | `color-info` | `--bo-color-info` | `#0078D4` | `#0078D4` | Information accent (Information toasts) |
+| `color-process-context-blue` | `--bo-color-process-context-blue` | `#0078D4` | `#4AA3DF` | Context Card **starter** accent (Blue) — SHARED-UI-shipped; not a required Process-View hue |
+| `color-process-context-blue-soft` | `--bo-color-process-context-blue-soft` | `#E5F3FB` | `#16324A` | Context Card soft fill for Blue starter |
+| `color-process-context-turquoise` | `--bo-color-process-context-turquoise` | `#038387` | `#3DB8BC` | Context Card **starter** accent (Turquoise) |
+| `color-process-context-turquoise-soft` | `--bo-color-process-context-turquoise-soft` | `#D9F5F5` | `#143838` | Context Card soft fill for Turquoise starter |
+| `color-process-context-purple` | `--bo-color-process-context-purple` | `#5C2D91` | `#A67CDE` | Context Card **starter** accent (Purple) |
+| `color-process-context-purple-soft` | `--bo-color-process-context-purple-soft` | `#F0E8F8` | `#2E1A45` | Context Card soft fill for Purple starter |
+| `color-process-context-green` | `--bo-color-process-context-green` | `#0E700E` | `#4ADE80` | Context Card **starter** accent (Green) |
+| `color-process-context-green-soft` | `--bo-color-process-context-green-soft` | `#E0F5E0` | `#14351A` | Context Card soft fill for Green starter |
 | `color-overlay-scrim` | `--bo-color-overlay-scrim` | `rgba(0,0,0,0.35)` | `rgba(0,0,0,0.35)` | Modal / profile-menu scrim |
 | `page-freeze-scrim` | `--bo-page-freeze-scrim` | `rgba(0,0,0,0.28)` | `rgba(0,0,0,0.28)` | Page freeze backdrop tint (`BoThemeOptions.ColorPageFreezeScrim`) |
 | `color-nav-text` | `--bo-color-nav-text` | `#FFFFFF` | `#FFFFFF` | Unselected nav text/icon |
@@ -76,6 +84,18 @@ Legacy aliases still emitted: `--bo-color-surface` → card-container-background
 **Save / Discard action tokens:** soft blue (Save) and soft red (Discard) families for Dirty State Persist/Revert chrome. CSS names stay `--bo-color-*` (no `*-light` / `*-dark` suffixes; not `--semantic-*`). Rest foreground-on-background contrast is WCAG AA (≥4.5:1) in both themes; hover/pressed keep the same foreground on a deeper fill in the same family. The Save / Discard **pattern is platform** ([button.md § Save / Discard](../controls/button.md#save--discard-platform-pattern), [actions-area.md](../patterns/actions-area.md)); these tokens are the platform tokens for that pair. **Consumers today:** the **EAC reference** (Data Entities Actions, mapped onto `.bo-button` in EAC CSS) is the only consumer — do not reuse them for generic Primary / Secondary buttons.
 
 **Nav-stable tokens:** `color-nav-selected` and `color-nav-logo-divider` do **not** follow Dark `color-tertiary` / `color-card-container-border`. They keep Light values so selected page fill and the brand logo divider match Light chrome in Dark mode.
+
+### Context Card accent mechanism
+
+Process View standardizes **accent placement and usage** on `BoCardContext` (left accent + soft icon tile), **not** specific colors — [process-view.md](../patterns/process-view.md).
+
+| Concern | Rule |
+| --- | --- |
+| Mechanism | SHARED-UI owns how accents render; apps select `BoCardContextAccent` (including **Neutral** — no color differentiation). |
+| Starter families | `--bo-color-process-context-{blue\|turquoise\|purple\|green}(-soft)` are SHARED-UI-shipped starters. **INV** uses Blue / Turquoise / Purple / Green as a **product** choice — not a Process-View color mandate. |
+| Branding / themes | Blue-, red-, orange-, or customer-branded apps align Context Card accents with approved branding through **SHARED-UI** accent families / theme tokens (extend SHARED-UI when new approved families are needed). Apps must **not** fork card CSS. |
+| Optional | Accent is optional; repeats and all-Neutral layouts are allowed. |
+| Reuse ban (starters) | Do **not** reuse `--bo-color-process-context-*` for unrelated badges, alerts, banners, pills, toasts, or buttons. |
 
 ## Non-color shell tokens (current)
 

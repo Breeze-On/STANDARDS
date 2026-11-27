@@ -56,6 +56,20 @@ Icons inherit `currentColor` from their control (nav: white / black-selected; bu
 
 Resolver: Fluent Size16 Form may be missing — `BoIconResolver` aliases Form Size 16 → Size 20. `Flowchart` Regular is mapped at 16/20/24/32. Save Filled must be mapped at 16/20/24. Do **not** use `History` for Process History.
 
+## Process-View Context Card icons (Tier 2 — STANDARD)
+
+Context Cards use Fluent **Regular** glyphs via `BoIcon` at Size **24** (SHARED-UI `BoCardContext`). Product apps supply the `IconName` only — [process-view.md](../patterns/process-view.md). Suggested names below are examples (INV-oriented); accents/hues are app-selected and are **not** Process-View-required colors.
+
+| Typical fact | Suggested `Name` | Fallback |
+| --- | --- | --- |
+| Status | `Globe` | — |
+| Date / receive date | `CalendarClock` | `CalendarLtr` |
+| Budget / wallet amount | `Wallet` | — |
+| Invoice / total amount | `Money` | — |
+| Context Cards collapse | `ChevronUp` / `ChevronDown` | — |
+
+Resolver must map Size **24** (and **20** when used) for these names with nearest Fluent fallback when a size is missing.
+
 ## Default new-application page icons (Tier 2 — STANDARD)
 
 Unless a plan explicitly overrides IA icons, new product catalogs use these `BoIcon` **Regular** names (see [application-branding.md](../shell/application-branding.md) · [application-development-process.md](../../ai/application-development-process.md)):
