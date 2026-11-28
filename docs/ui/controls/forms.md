@@ -254,7 +254,7 @@ Future requirements involving rich content, formatting, mentions, embedded media
 | Width | **Mandatory** full width of the `BoRow` slot (no 28rem / Fluent 18rem caps) — editable and read-only |
 | Chrome | Same Concept A outline as Text Field (equal 1px rest border, hover, full-border focus, field-background fill including Dark) |
 | Intended usage | Sole field in its `BoRow` (full width). May live in its own Section **or** as an additional row inside a multi-field section (e.g. Request Details Row 4 — Purpose of Service) |
-| Soft wrap | Editable and read-only wrap; single-line ellipsis does **not** apply. Read-only may clamp to the 6-row max with shared **Read more** when content exceeds that height ([Read-only height and Read more](#read-only-height-and-read-more-locked)) |
+| Soft wrap | Editable and read-only wrap; single-line ellipsis does **not** apply. Read-only may clamp to the 6-row max with shared **Read more** (new left-aligned line below) when content exceeds that height ([Read-only height and Read more](#read-only-height-and-read-more-locked)) |
 | Tall row | `BoRow` keeps `align-items: start` for tall Text Area siblings ([layout.md](../layout/layout.md#row-borow)) |
 
 ### Value fidelity
@@ -275,8 +275,9 @@ When `ReadOnly`: flat multiline display (not a non-editable Fluent textarea) wit
 | --- | --- |
 | Max height | Same as editable **initial** height (6 visible rows / `BoTextAreaRules.InitialHeightCss`) — this is the read-only **ceiling**, not a forced box |
 | Shorter values | Height **adapts to content** (no empty 6-row hole) |
-| Longer values | Clamp to the max height; shared **Read more** / **Show less** (`BoClampedPlainText`) overlays the end of the last visible line; expand grows in place |
-| Shared control | Process History Comments and other multiline clamps reuse `BoClampedPlainText` (not a product-local fork) |
+| Longer values | Clamp to the max height; shared **Read more** / **Show less** (`BoClampedPlainText`) on a **new line below** the clamped body, **left-aligned** (not end-of-line overlay); expand grows in place |
+| Truncation tooltip | **No** native `title` / hover tooltip when truncated — the toggle is the only expand affordance |
+| Shared control | Same `BoClampedPlainText` as Process History Comments (not a product-local fork). Text Area uses `TogglePlacement=BlockBelow` and `ShowOverflowTitle=false`; History keeps end-of-line overlay + title defaults |
 
 #### Read-only label divider (locked)
 

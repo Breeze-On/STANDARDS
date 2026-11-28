@@ -44,7 +44,7 @@ Process History tab
 - `Global.P_GET_ProcessHistoryByProcessGUID` returns **display-ready** rows (EAC projects Role, Name, Response Status).
 - SHARED-UI maps the result and renders `BoGrid` (ReadOnly, Flex columns; **Comments** `FlexWeight=2`, other columns default 1).
 - Date: EAC returns UTC `CompletedDate`; UI formats with `BoDateDisplay.FormatUtc`.
-- Comments: **2-line clamp** via shared `BoClampedPlainText` (same Read more / Show less as Text Area read-only). **Read more** overlays the end of line 2 (no extra row). **Show less** follows the full value after expand. Expanding grows the row height (not BoGrid overlay expand). Short comments omit the toggle.
+- Comments: **2-line clamp** via shared `BoClampedPlainText` (same control family as Text Area read-only; **placement differs** — History keeps end-of-line overlay). **Read more** overlays the end of line 2 (no extra row). **Show less** follows the full value after expand. Expanding grows the row height (not BoGrid overlay expand). Short comments omit the toggle.
 - Empty: standard grid empty copy.
 
 ## Initiation conventions
