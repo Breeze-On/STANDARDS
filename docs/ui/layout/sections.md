@@ -50,7 +50,7 @@ A **Main Section** groups related page content. It is intentionally **not** a fl
 | Outer chrome | No border, no shadow; transparent background | Card-container border / shadow / fill |
 | Content body padding | **6px** equal on all four sides | Theme spacing on the card |
 | Content body width | Full width of the section (edge-to-edge) | Within card padding |
-| Outside bottom margin | **16px** (`BoSectionMain`) | N/A |
+| Outside bottom margin | **16px** between stacked Main Sections; **0** when the Main Section is `:last-child` (shell body padding provides the bottom inset) | N/A |
 | Optional header | Yes (see below) | Simple title/footer (card chrome) |
 
 Header is **optional**. When omitted, only the body content is rendered.
@@ -71,7 +71,7 @@ Header is **optional**. When omitted, only the body content is rendered.
 
 The body (`ChildContent`) is the section **content container**: full section width, **6px** inside padding on **all four sides** (equal top/right/bottom/left), flush under the header rule when a header is present.
 
-**Outside bottom margin:** **16px** below the section (space after the content body / blue-box edge when stacked). Do not rely on `BoStack` gap for Main/Sub spacing — use `Gap="0"` (or equivalent) when stacking sections so this margin is not doubled.
+**Outside bottom margin:** **16px** below the section when another sibling follows (space after the content body / blue-box edge when stacked). When the Main Section is the parent’s `:last-child`, Shared UI sets **0** so it does not stack with `.bo-app-body` padding (keeps bottom inset equal to the top pad and avoids a phantom scrollbar). Do not rely on `BoStack` gap for Main/Sub spacing — use `Gap="0"` (or equivalent) when stacking sections so inter-section margin is not doubled.
 
 Product apps must use `BoSectionMain` for Main Sections — do not reimplement this chrome in page CSS.
 
