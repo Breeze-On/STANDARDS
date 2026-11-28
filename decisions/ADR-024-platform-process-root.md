@@ -3,7 +3,7 @@
 
 ## Status
 
-Accepted
+Amended — ownership of `Global.Process` / `Global.P_POST_Process` transferred to Process Engine per [ADR-028](ADR-028-process-runtime-ownership-process-engine.md). Two-tier model and create-order semantics remain.
 
 ## Context
 
@@ -24,10 +24,12 @@ This decision migrates the platform from a **single-tier** Process model to a **
 
 | Asset | Owner |
 | --- | --- |
-| Schema `Global` | breezeon-system-admin-eac |
-| Table `Global.Process` | breezeon-system-admin-eac |
-| Create procedure `Global.P_POST_Process` | breezeon-system-admin-eac |
+| Schema `Global` (container script) | breezeon-system-admin-eac |
+| Table `Global.Process` | breezeon-system-process-engine |
+| Create procedure `Global.P_POST_Process` | breezeon-system-process-engine |
 | `{UniqueCode}.Process` (extension) | Product application repository |
+
+EAC owns the `Global` schema container and other EAC Global objects (notably `Global.P_GET_ProcessTable`). Process Engine owns the Process Runtime table and create SP ([ADR-028](ADR-028-process-runtime-ownership-process-engine.md)).
 
 ### `Global.Process` contract (intentionally minimal)
 
@@ -49,11 +51,11 @@ No workflow, lifecycle, or status columns. No future-state assumptions in the ta
 
 ### Authoritative create path
 
-Products **must not** `INSERT` into `Global.Process` directly. Orchestration calls **`Global.P_POST_Process`** only.
+Products **must not** `INSERT` into `Global.Process` directly and **must not** call `Global.P_POST_Process` directly. Applications call Process Engine **`CreateProcessAsync`**, which invokes `Global.P_POST_Process` ([ADR-028](ADR-028-process-runtime-ownership-process-engine.md)).
 
 ### Mandatory persistence order
 
-1. Create `Global.Process` via `Global.P_POST_Process`.
+1. Create `Global.Process` via Process Engine `CreateProcessAsync` → `Global.P_POST_Process`.
 2. Database generates `ProcessGUID`.
 3. Create application-specific `{UniqueCode}.Process` row using that `ProcessGUID`.
 4. Commit transaction.
@@ -91,6 +93,7 @@ Same persistence path. Submit enforces mandatory validation; Save does not. No w
 - AE delete SP must fail closed when `Global.Process` dependents exist.
 - EAC Framework Synchronization allowlist includes `Global` schema objects.
 - Consumer DE persistence wording remains Codes on `{UniqueCode}.Process`; platform identity is `ProcessGUID` from `Global.Process`.
+- **Amended by [ADR-028](ADR-028-process-runtime-ownership-process-engine.md):** Process Engine owns `Global.Process` / `P_POST_Process`; apps use `CreateProcessAsync`; EAC deploys PE SQL on local reset but does not own those definitions.
 
 ## Related
 
@@ -101,3 +104,4 @@ Same persistence path. Submit enforces mandatory validation; Save does not. No w
 - [ADR-005](ADR-005-mandatory-transactional-audit-columns.md)
 - [ADR-019](ADR-019-process-framework-metadata.md)
 - [ADR-023](ADR-023-consumer-data-entity-lookup.md)
+- [ADR-028](ADR-028-process-runtime-ownership-process-engine.md)

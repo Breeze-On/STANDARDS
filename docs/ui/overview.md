@@ -84,7 +84,7 @@ Legacy words map onto tiers: "locked" / "hard standard" / **MUST** → Tier 1; "
 | [patterns/process-request-section.md](patterns/process-request-section.md) | Mandatory **Process Request** section (General Information tab; Initiator + Requested Date); application-owned implementation |
 | [patterns/initiation-experience.md](patterns/initiation-experience.md) | Default New Request initiation chrome (Form icon, footer Save+Submit, Process Request) |
 | [patterns/page-footer-actions.md](patterns/page-footer-actions.md) | Shell footer **`BoPageFooterActions`** (Save Filled icon + Submit Primary) |
-| [patterns/process-persistence.md](patterns/process-persistence.md) | Save/Submit → `Global.Process` + extension + Process History; freeze ≥1500ms; redirect to Process View |
+| [patterns/process-persistence.md](patterns/process-persistence.md) | Save/Submit → PE `CreateProcessAsync` + extension + Process History; freeze ≥1500ms; redirect to Process View |
 | [patterns/process-view.md](patterns/process-view.md) | Terminal read-only Process View (`AE` + `PGUID`); Application Error on hydrate failure |
 | [patterns/process-history.md](patterns/process-history.md) | Process History grid + Comments; EAC display-ready GET; initiation `00`/`va`/`va1` |
 | [controls/grids.md](controls/grids.md) | Grid Family Standards + `BoGrid` — Read-Only / Row Edit / Inline Edit / Nested View; Server `QueryMode`; Add New top + focus |

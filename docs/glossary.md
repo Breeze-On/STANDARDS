@@ -276,11 +276,11 @@ Related:
 
 ## Global.Process
 
-Platform **runtime** process root table in schema `Global` (EAC-owned). Holds `ProcessGUID`, `ApplicationEnabledGUID`, and audit only — no workflow/lifecycle columns. Created only via `Global.P_POST_Process`. Application business fields live in `{UniqueCode}.Process`. SSOT: [ADR-024](../decisions/ADR-024-platform-process-root.md) · [process-runtime](../architecture/process-runtime/README.md) · [database.md](database.md) § Process table convention.
+Platform **runtime** process root table in schema `Global` (**Process Engine–owned**; EAC owns the schema container and deploys PE SQL). Holds `ProcessGUID`, `ApplicationEnabledGUID`, and audit only — no workflow/lifecycle columns. Created only via Process Engine `CreateProcessAsync` → `Global.P_POST_Process`. Application business fields live in `{UniqueCode}.Process`. SSOT: [ADR-024](../decisions/ADR-024-platform-process-root.md) · [ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md) · [process-runtime](../architecture/process-runtime/README.md) · [database.md](database.md) § Process table convention.
 
 ## Global.ProcessHistory
 
-Platform **runtime** append-only ledger of business decisions and workflow actions for a `ProcessGUID` (EAC-owned). Not a field-level audit trail. Created via `Global.P_POST_ProcessHistory`; display-ready read via `Global.P_GET_ProcessHistoryByProcessGUID` (EAC projects Role, Name, Response Status). Comments for an action live on the history row. SSOT: [ADR-025](../decisions/ADR-025-process-history.md) · [process-history.md](ui/patterns/process-history.md).
+Platform **runtime** append-only ledger of business decisions and workflow actions for a `ProcessGUID` (**Process Engine–owned**). Not a field-level audit trail. Created via Process Engine `RecordProcessHistoryAsync` → `Global.P_POST_ProcessHistory`; display-ready read via PE-owned `Global.P_GET_ProcessHistoryByProcessGUID` (projects Role, Name, Response Status; consumes PF + Identity). SHARED-UI renders thin History grid + display models only. Comments for an action live on the history row. SSOT: [ADR-025](../decisions/ADR-025-process-history.md) · [ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md) · [process-history.md](ui/patterns/process-history.md).
 
 ## ProcessGUID (platform)
 
@@ -292,7 +292,7 @@ Computed **business display identity** for a process instance: `SequenceDisplay`
 
 ## Process Engine
 
-Shared library repository **`breezeon-system-process-engine`** / namespace **`BreezeOn.ProcessEngine`**. Ships token resolution, process context provider, Process table resolution consumer (`IProcessTableResolver` / `Global.P_GET_ProcessTable`), sequence allocation, and Request Number formatting. Consumed via sibling `ProjectReference`. **Not** a workflow engine in Current Implementation (designer / timers / bus / retries = Future / [DEV-001](deviations/DEV-001-process-framework-future-engine-vision.md)). SSOT: [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md) · [architecture/process-engine/README.md](../architecture/process-engine/README.md).
+Shared library repository **`breezeon-system-process-engine`** / namespace **`BreezeOn.ProcessEngine`**. Owns the **Process Runtime** capability: `Global.Process` / `ProcessHistory` / sequence SQL, `CreateProcessAsync`, `RecordProcessHistoryAsync`, `GenerateProcessSequenceAsync`, token resolution, process context provider, Process table resolution consumer (`IProcessTableResolver` / EAC `Global.P_GET_ProcessTable`), and Request Number formatting. Consumed via sibling `ProjectReference`. **Not** a workflow engine in Current Implementation (designer / timers / bus / retries = Future / [DEV-001](deviations/DEV-001-process-framework-future-engine-vision.md)). SSOT: [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md) · [ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md) · [architecture/process-engine/README.md](../architecture/process-engine/README.md).
 
 ## Process Metadata Framework (runtime)
 
@@ -388,7 +388,7 @@ A UI / query standard is fully implemented only when normative STANDARDS + AI gu
 
 ## Global (SQL schema)
 
-EAC-owned SQL schema for platform runtime assets (today: `Global.Process` + `Global.P_POST_Process`). Distinct from [System (SQL schema)](#system-sql-schema) (catalog / PF metadata). See [ADR-024](../decisions/ADR-024-platform-process-root.md), [database.md](database.md).
+EAC-owned SQL **schema container** for platform Global objects. EAC owns the container script and `Global.P_GET_ProcessTable`. Process Runtime tables/SPs inside `Global` (`Process`, `ProcessHistory`, sequence counter) are **owned by Process Engine** and deployed by EAC local reset ([ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md)). Distinct from [System (SQL schema)](#system-sql-schema) (catalog / PF metadata). See [ADR-024](../decisions/ADR-024-platform-process-root.md), [database.md](database.md).
 
 ## System (SQL schema)
 
@@ -404,7 +404,7 @@ Org-owned GitHub repository names are **lowercase kebab-case** only (e.g. `breez
 
 ## Shared Library
 
-Repository kind that ships reusable code without being a full application (today: `breezeon-system-shared-ui` / `BreezeOn.UI` — RCL + local gallery; no business database).
+Repository kind that ships reusable code without being a full application (today: `breezeon-system-shared-ui` / `BreezeOn.UI` — RCL + local gallery; no business database; and `breezeon-system-process-engine` / `BreezeOn.ProcessEngine` — Process Runtime + metadata services).
 
 Related:
 - [application-model.md](application-model.md)

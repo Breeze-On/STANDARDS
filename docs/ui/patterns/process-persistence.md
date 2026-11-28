@@ -1,9 +1,9 @@
 <!-- Classification: AA; Scope: platform; Domain: UI; Capability: ProcessPersistence -->
 # Process persistence (Save / Submit)
 
-Owner: Architecture · product application services · [ADR-024](../../../decisions/ADR-024-platform-process-root.md)
+Owner: Architecture · product application services · Process Engine runtime services · [ADR-024](../../../decisions/ADR-024-platform-process-root.md) · [ADR-028](../../../decisions/ADR-028-process-runtime-ownership-process-engine.md)
 
-Related: [process-view.md](process-view.md) · [process-history.md](process-history.md) · [process-runtime](../../../architecture/process-runtime/README.md) · [ADR-025](../../../decisions/ADR-025-process-history.md) · [ADR-027](../../../decisions/ADR-027-request-number-and-sequence-allocation.md) · [page-footer-actions.md](page-footer-actions.md) · [overlays.md](../shell/overlays.md) · [initiation-experience.md](initiation-experience.md)
+Related: [process-view.md](process-view.md) · [process-history.md](process-history.md) · [process-runtime](../../../architecture/process-runtime/README.md) · [ADR-025](../../../decisions/ADR-025-process-history.md) · [ADR-027](../../../decisions/ADR-027-request-number-and-sequence-allocation.md) · [ADR-028](../../../decisions/ADR-028-process-runtime-ownership-process-engine.md) · [page-footer-actions.md](page-footer-actions.md) · [overlays.md](../shell/overlays.md) · [initiation-experience.md](initiation-experience.md)
 
 ## Single persistence path
 
@@ -26,17 +26,17 @@ The UI must not persist Process tables directly.
 
 ## Mandatory create order
 
-1. Create `Global.Process` via `Global.P_POST_Process`.
+1. Create `Global.Process` via Process Engine **`CreateProcessAsync`** → `Global.P_POST_Process`.
 2. Database generates `ProcessGUID`.
 3. Create `{UniqueCode}.Process` with that `ProcessGUID` (including Sequence\* columns as null initially).
 4. Resolve and persist `SequenceTemplate` / `SequenceDisplay` from AE Variables (`sequence-template` / `sequence-display`) via Process Engine while `Sequence IS NULL` (Save overwrites until sequence is set — [ADR-027](../../../decisions/ADR-027-request-number-and-sequence-allocation.md)).
-5. Create `Global.ProcessHistory` via `Global.P_POST_ProcessHistory` for step `00` + `va` (Submit) or `va1` (Save), including optional Comments.
+5. Create `Global.ProcessHistory` via Process Engine **`RecordProcessHistoryAsync`** → `Global.P_POST_ProcessHistory` for step `00` + `va` (Submit) or `va1` (Save), including optional Comments.
 6. **`GenerateProcessSequence`** (Process Engine) — **application-chosen timing**. Typical: after Initiation **Submit** (not on Save). Fail if already generated with exact message in ADR-027; on failure roll back so **no number is reserved**.
-7. Commit transaction.
+7. Commit transaction (all PE runtime writes participate in the ambient app transaction).
 8. Return `ProcessGUID`.
 9. Redirect to Process View (terminal).
 
-Application repositories **must not** mint `ProcessGUID` values. History create uses the shared CompleteAsync / `IBoProcessHistoryQueries` path — apps must not INSERT into `Global.ProcessHistory`. Sequence allocation uses PE + `Global.P_POST_ProcessSequenceAllocate` (`UPDLOCK`); never persist `RequestNumber` / `SequenceDigits`.
+Application repositories **must not** mint `ProcessGUID` values, **must not** `INSERT` into `Global.Process` / `Global.ProcessHistory`, and **must not** call runtime persistence SPs directly. Sequence allocation uses PE + `Global.P_POST_ProcessSequenceAllocate` (`UPDLOCK`); never persist `RequestNumber` / `SequenceDigits`.
 
 ## Page Freeze
 

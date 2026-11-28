@@ -115,7 +115,7 @@ On `{UniqueCode}.Process` extension ([database.md](database.md) § Process table
 
 | Column / suffix | Holds | Example |
 | --- | --- | --- |
-| `ProcessGUID` | Platform process identity from **`Global.Process`** (SQL-generated via `Global.P_POST_Process`; apps must not mint) | — |
+| `ProcessGUID` | Platform process identity from **`Global.Process`** (SQL-generated via Process Engine `CreateProcessAsync` → `Global.P_POST_Process`; apps must not mint) | — |
 | `SequenceTemplate` / `SequenceDisplay` / `Sequence` | Required sequence metadata **immediately after** `ProcessGUID` on `{UniqueCode}.Process` CREATE (never persist `RequestNumber` / `SequenceDigits`) | — |
 | `*Code` | Data Entity row **Code** (never Description / GUID) — [using-data-entities.md](../architecture/data-entities/using-data-entities.md) | `SupplierCode` |
 | `*UserGUID` | People Picker `UserGUID` | `InitiatorUserGUID` |

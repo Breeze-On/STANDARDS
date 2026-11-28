@@ -3,7 +3,7 @@
 
 ## Status
 
-Accepted
+Amended — Process Engine owns the full Process Runtime (Process, History, sequence), not sequence-only; see [ADR-028](ADR-028-process-runtime-ownership-process-engine.md).
 
 ## Context
 
@@ -59,6 +59,9 @@ All Process Engine SQL that touches an application extension table **must** use 
 | Sequence allocation + extension assign | Shipped |
 | Request Number formatting (`ProcessSequence:Digits`) | Shipped |
 | Counter DDL/SP (`Global.ProcessSequenceCounter`, `Global.P_POST_ProcessSequenceAllocate`) | Shipped (definitions in PE; applied via EAC local reset discovery) |
+| Process create (`CreateProcessAsync` → `Global.P_POST_Process`) | Shipped ([ADR-028](ADR-028-process-runtime-ownership-process-engine.md)) |
+| Process History record/query (`RecordProcessHistoryAsync` + projection SP) | Shipped ([ADR-028](ADR-028-process-runtime-ownership-process-engine.md)) |
+| Process Runtime SQL pack (`Global.Process`, `Global.ProcessHistory`, runtime SPs) | Shipped (authoritative in PE; EAC deploys on local reset) |
 
 Detail and algorithms: [ADR-027](ADR-027-request-number-and-sequence-allocation.md).
 
@@ -93,25 +96,29 @@ Hard-coded permanent “generate on Submit” as a platform trigger is also a no
 
 | Concern | Owner |
 | --- | --- |
-| PE library + counter SQL definitions + PE docs | `breezeon-system-process-engine` |
-| `Global.Process`, `Global.P_GET_ProcessTable`, Variable SQL | `breezeon-system-admin-eac` |
+| Full Process Runtime (library + `Global.Process` / `ProcessHistory` / sequence SQL + runtime services/docs) | `breezeon-system-process-engine` |
+| `Global.P_GET_ProcessTable`, Variable SQL; schema `Global` container; local reset **deployment** of PE SQL | `breezeon-system-admin-eac` |
 | Product extension Sequence* columns, context contributors, Request Number UI | Product application |
 | Org AA / ADRs / UX patterns | `standards` |
-| Shared UI controls (`Bo*`) | `breezeon-system-shared-ui` |
+| Shared UI presentation (`Bo*`, History grid display models) — not runtime persistence clients | `breezeon-system-shared-ui` |
+
+EAC **deploys** PE runtime SQL via local reset discovery; EAC does **not** own those authoritative definitions ([ADR-028](ADR-028-process-runtime-ownership-process-engine.md)).
 
 ## Consequences
 
 - `standards` documents Process Engine as a first-class shared library in naming, landscape, application model, and process-runtime docs.
-- Product bootstrap requires Sequence* columns, PE `ProjectReference` (when Request Number is in scope), and Request Number UI placement.
-- Local EAC reset discovers and applies sibling PE `sql/current_model` objects (`ProcessSequenceCounter` / allocate SP).
+- Product bootstrap requires Sequence* columns, PE `ProjectReference` (Process Runtime + Request Number), and Request Number UI placement.
+- Local EAC reset discovers and applies the sibling PE full Process Runtime SQL pack (Process, History, sequence).
 - PF authoring and Process Metadata Framework (runtime) remain separately documented; glossary disambiguates both terms.
 - Workflow designer / timers / bus / retries stay Future / DEV-001 — agents must not treat them as shipped PE capability.
+- **Amended by [ADR-028](ADR-028-process-runtime-ownership-process-engine.md):** PE owns full Process Runtime, not sequence-only.
 
 ## Related
 
 - [ADR-024](ADR-024-platform-process-root.md)
 - [ADR-027](ADR-027-request-number-and-sequence-allocation.md)
 - [ADR-019](ADR-019-process-framework-metadata.md)
+- [ADR-028](ADR-028-process-runtime-ownership-process-engine.md)
 - [architecture/process-engine/README.md](../architecture/process-engine/README.md)
 - [architecture/process-metadata/README.md](../architecture/process-metadata/README.md)
 - [architecture/process-runtime/README.md](../architecture/process-runtime/README.md)

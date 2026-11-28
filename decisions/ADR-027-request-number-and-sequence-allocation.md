@@ -110,11 +110,13 @@ SSOT patterns: [process-request-section.md](../docs/ui/patterns/process-request-
 - Initiation Save refreshes templates until sequence generation; Submit (or app-chosen moment) calls `GenerateProcessSequenceAsync`.
 - UI shows Request Number left of Initiator; Process View App Title uses `[Request Number] - [Application Name]`; browser document title uses Request Number only.
 - Cross-app duplicate display strings (e.g. two apps both showing `INV-0001`) are allowed when streams / padding coincide.
+- Counter SQL (`Global.ProcessSequenceCounter` / `P_POST_ProcessSequenceAllocate`) is owned authoritatively by Process Engine; EAC **deploys** it during local reset only ([ADR-028](ADR-028-process-runtime-ownership-process-engine.md)).
 
 ## Related
 
 - [ADR-026](ADR-026-process-engine-and-metadata-framework.md)
 - [ADR-024](ADR-024-platform-process-root.md)
+- [ADR-028](ADR-028-process-runtime-ownership-process-engine.md) — PE owns Process Runtime (including counter SQL authoritatively; EAC deploys on local reset)
 - [architecture/process-metadata/README.md](../architecture/process-metadata/README.md)
 - [architecture/process-engine/README.md](../architecture/process-engine/README.md)
 - [architecture/variables/variables-standard.md](../architecture/variables/variables-standard.md)

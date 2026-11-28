@@ -96,25 +96,25 @@ Authority: [process-request-section.md](ui/patterns/process-request-section.md) 
 
 ## Database
 
-Authority: [database.md](database.md) § Process table convention (two-tier) · [ADR-024](../decisions/ADR-024-platform-process-root.md) · [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md) · [process-runtime](../architecture/process-runtime/README.md)
+Authority: [database.md](database.md) § Process table convention (two-tier) · [ADR-024](../decisions/ADR-024-platform-process-root.md) · [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md) · [ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md) · [process-runtime](../architecture/process-runtime/README.md)
 
-- [ ] Platform root: EAC owns `Global.Process` + `Global.P_POST_Process` + `Global.P_GET_ProcessTable` (consumer does **not** invent these)
-- [ ] Process History: EAC owns `Global.ProcessHistory` + `P_POST_ProcessHistory` + display-ready `P_GET_ProcessHistoryByProcessGUID` (consumer does **not** invent projection)
+- [ ] Platform root: Process Engine owns `Global.Process` + `Global.P_POST_Process`; EAC owns `Global.P_GET_ProcessTable` + schema container (consumer does **not** invent these)
+- [ ] Process History: Process Engine owns `Global.ProcessHistory` + `P_POST_ProcessHistory` + display-ready `P_GET_ProcessHistoryByProcessGUID` (consumer does **not** invent projection)
 - [ ] `{UniqueCode}.Process` **extension** table created under product `sql/current_model/`
 - [ ] `ProcessId` implemented (`INT IDENTITY` PK) on the extension table
-- [ ] `ProcessGUID` on extension is `UNIQUEIDENTIFIER NOT NULL` UNIQUE — value from `Global.P_POST_Process` / `Global.Process`
+- [ ] `ProcessGUID` on extension is `UNIQUEIDENTIFIER NOT NULL` UNIQUE — value from Process Engine `CreateProcessAsync` / `Global.Process`
 - [ ] Required Sequence columns on extension: `SequenceTemplate`, `SequenceDisplay`, `Sequence` — **never** persist `RequestNumber` / `SequenceDigits`
-- [ ] Application **must not mint** `ProcessGUID` (SQL generates on Global create)
-- [ ] Create order: `Global.P_POST_Process` → insert `{UniqueCode}.Process` → resolve SequenceTemplate/Display on Save → `P_POST_ProcessHistory` (`00`/`va` or `00`/`va1`) → `GenerateProcessSequence` (app-chosen; typically after Submit) → one transaction → redirect to Process View
+- [ ] Application **must not mint** `ProcessGUID` (SQL generates on Global create via PE)
+- [ ] Create order: `CreateProcessAsync` → insert `{UniqueCode}.Process` → resolve SequenceTemplate/Display on Save → `RecordProcessHistoryAsync` (`00`/`va` or `00`/`va1`) → `GenerateProcessSequence` (app-chosen; typically after Submit) → one transaction → redirect to Process View
 - [ ] Flat fields mapped to extension Process table (baseline: `InitiatorUserGUID`, `RequestedDate`) — **no** Comments column on extension
 - [ ] Mandatory audit columns present
-- [ ] Consumer `dev-reset.ps1` applies app `sql/current_model/` **after** EAC subprocess (Global schema + PE counter SQL before consumer Process FK)
-- [ ] Process View History tab: Process Request (three fields) + Process History grid consuming EAC-projected columns
+- [ ] Consumer `dev-reset.ps1` applies app `sql/current_model/` **after** EAC subprocess (Global schema + PE full runtime pack before consumer Process FK)
+- [ ] Process View History tab: Process Request (three fields) + Process History grid consuming PE-projected columns (SHARED-UI display models only)
 
 ## Architecture
 
 - [ ] Process Request remains **application-owned** (no SHARED-UI `BoProcessRequest` package)
-- [ ] Sibling **`ProjectReference`** to `BreezeOn.ProcessEngine` (`breezeon-system-process-engine`) when Request Number / sequences are in scope — [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md)
+- [ ] Sibling **`ProjectReference`** to `BreezeOn.ProcessEngine` (`breezeon-system-process-engine`) for Process Runtime create/history/sequence — [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md) · [ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md)
 - [ ] `ProcessSequence:Digits` host config (default 4); permanent Variable Codes `sequence-template` / `sequence-display` in AE config (missing → `""`)
 - [ ] Save/Submit persistence per [process-persistence.md](ui/patterns/process-persistence.md); Process View is **terminal** ([process-view.md](ui/patterns/process-view.md))
 - [ ] No application forks of shared UI controls / chrome (use `Bo*` + tokens)

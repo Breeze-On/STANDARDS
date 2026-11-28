@@ -3,7 +3,7 @@
 
 ## Status
 
-Accepted
+Amended — ownership of Process History table / SPs / projection transferred to Process Engine per [ADR-028](ADR-028-process-runtime-ownership-process-engine.md). Ledger semantics and PF initiation conventions remain.
 
 ## Context
 
@@ -17,17 +17,17 @@ Process Framework ([ADR-019](ADR-019-process-framework-metadata.md)) remains def
 
 | Asset | Owner |
 | --- | --- |
-| `Global.ProcessHistory` | breezeon-system-admin-eac |
-| `Global.P_POST_ProcessHistory` | breezeon-system-admin-eac (authoritative create; apps must not INSERT) |
-| `Global.P_GET_ProcessHistoryByProcessGUID` | breezeon-system-admin-eac (**display-ready projection**) |
-| Thin create/list wrappers + History grid rendering | breezeon-system-shared-ui |
+| `Global.ProcessHistory` | breezeon-system-process-engine |
+| `Global.P_POST_ProcessHistory` | breezeon-system-process-engine (authoritative create; apps must not INSERT or call SP directly) |
+| `Global.P_GET_ProcessHistoryByProcessGUID` | breezeon-system-process-engine (**display-ready projection**; consumes PF + Identity) |
+| Thin History grid + display models (`BoProcessHistoryDisplayRow`) | breezeon-system-shared-ui |
 | Action triggers + page composition | Product applications |
 
 Rows are append-only business decision events keyed by `ProcessGUID`. **Not** field-level audit. Comments for an action persist on the history row only — not on `{UniqueCode}.Process`.
 
 ### Projection ownership
 
-**EAC owns Process History data retrieval and projection.** `P_GET_ProcessHistoryByProcessGUID` returns display-ready columns (`Role`, `Name`, `ResponseStatus`, `CompletedDate`, `Comments`) by joining the ledger to Process Framework metadata and `Identity.Users`. SHARED-UI is a UI rendering layer (format UTC dates locally); it must not re-implement Role / Name / Response Status projection.
+**Process Engine owns Process History persistence, query APIs, and the display-ready projection SP.** `P_GET_ProcessHistoryByProcessGUID` returns display-ready columns (`Role`, `Name`, `ResponseStatus`, `CompletedDate`, `Comments`) by joining the ledger to Process Framework metadata (EAC-owned) and `Identity.Users`. SHARED-UI owns thin History grid rendering and display models only (`BoProcessHistoryDisplayRow`); it must **not** own create/list SQL clients or re-implement Role / Name / Response Status projection ([ADR-028](ADR-028-process-runtime-ownership-process-engine.md)).
 
 ### Process Framework conventions (normative for Process History)
 
@@ -47,19 +47,21 @@ Rows are append-only business decision events keyed by `ProcessGUID`. **Not** fi
 
 ### Persistence
 
-Initiation Save/Submit (and future workflow option completion) write history in the same shared-database transaction as process create/update orchestration via `P_POST_ProcessHistory`. INSERT-only; ADR-005 audit quartet stamped on create; no UPDATE SP in v1.
+Initiation Save/Submit (and future workflow option completion) write history in the same shared-database transaction as process create/update orchestration via Process Engine `RecordProcessHistoryAsync` → `P_POST_ProcessHistory`. INSERT-only; ADR-005 audit quartet stamped on create; no UPDATE SP in v1.
 
 ## Consequences
 
 - STANDARDS process-runtime, process-view, process-persistence, initiation, and PF authoring docs document these conventions as current reality.
-- EAC ships table + SPs + PF validation for required `response-status`.
-- SHARED-UI ships thin query wrappers, initiation rules (`va1` Save only on `00`), CompleteAsync helper, Comments default fragment, History grid pattern.
-- Product apps remap seeds (e.g. step-`00` `va1` = Save) and wire Save/Submit + Process View host.
+- Process Engine ships table + SPs (including projection); EAC retains PF validation for required `response-status` and deploys PE SQL on local reset.
+- SHARED-UI ships thin History grid + display models, initiation rules (`va1` Save only on `00`), Comments default fragment — **not** runtime persistence clients.
+- Product apps remap seeds (e.g. step-`00` `va1` = Save) and wire Save/Submit + Process View host via Process Engine services.
+- **Amended by [ADR-028](ADR-028-process-runtime-ownership-process-engine.md):** PE owns Process History; SHARED-UI is presentation-only for history display.
 
 ## Related
 
 - [ADR-024](ADR-024-platform-process-root.md)
 - [ADR-019](ADR-019-process-framework-metadata.md)
 - [ADR-005](ADR-005-mandatory-transactional-audit-columns.md)
+- [ADR-028](ADR-028-process-runtime-ownership-process-engine.md)
 - [architecture/process-runtime/README.md](../architecture/process-runtime/README.md)
 - [docs/ui/patterns/process-history.md](../docs/ui/patterns/process-history.md)

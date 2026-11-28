@@ -108,7 +108,7 @@ Decision: [ADR-025](../../decisions/ADR-025-process-history.md). UI: [process-hi
 | **`va1` scope** | Save meaning applies **only** on step `00`. Never infer Save from `va1` on any other step |
 | **`response-status`** | Mandatory conventional Option metadata Code on **every** option that can generate a Process History record. Missing / empty = invalid PF configuration |
 
-Runtime ledger is `Global.ProcessHistory` (EAC). PF tables remain definition-only.
+Runtime ledger is `Global.ProcessHistory` (Process Engine — [ADR-028](../../decisions/ADR-028-process-runtime-ownership-process-engine.md)). PF tables remain definition-only.
 
 ### Operating envelope
 

@@ -246,22 +246,23 @@ Standing platform rules (also summarized in [naming.md](naming.md)):
 
 ## Process table convention (two-tier)
 
-Runtime process identity is a **two-tier** model ([ADR-024](../decisions/ADR-024-platform-process-root.md) · [process-runtime](../architecture/process-runtime/README.md)):
+Runtime process identity is a **two-tier** model ([ADR-024](../decisions/ADR-024-platform-process-root.md) · [ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md) · [process-runtime](../architecture/process-runtime/README.md)):
 
 | Tier | Qualified name | Owner | Role |
 | --- | --- | --- | --- |
-| Platform root | `Global.Process` | `breezeon-system-admin-eac` | Universal `ProcessGUID` + `ApplicationEnabledGUID` + audit only |
-| Platform history | `Global.ProcessHistory` | `breezeon-system-admin-eac` | Append-only decision / workflow-action ledger keyed by `ProcessGUID` ([ADR-025](../decisions/ADR-025-process-history.md)) |
+| Platform root | `Global.Process` | `breezeon-system-process-engine` | Universal `ProcessGUID` + `ApplicationEnabledGUID` + audit only |
+| Platform history | `Global.ProcessHistory` | `breezeon-system-process-engine` | Append-only decision / workflow-action ledger keyed by `ProcessGUID` ([ADR-025](../decisions/ADR-025-process-history.md)) |
 | Application extension | `{UniqueCode}.Process` | Product application | Application-specific flat business fields |
 
 ### Global schema ownership
 
-- Schema **`Global`** is owned by **`breezeon-system-admin-eac`** (alongside `System` catalog ownership).
-- Authoritative create SP: **`Global.P_POST_Process`**. Products must not `INSERT` into `Global.Process` directly.
+- Schema **`Global`** **container** is owned by **`breezeon-system-admin-eac`** (alongside `System` catalog ownership). Process Runtime **tables/SPs** inside `Global` are owned by Process Engine ([ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md)).
+- **Single authoritative SQL rule:** no repository may own a SQL object whose authoritative source file exists in another repository. EAC may **deploy** PE SQL; PE remains the sole authoritative owner of those definitions.
+- Authoritative create path: Process Engine **`CreateProcessAsync`** → **`Global.P_POST_Process`**. Products must not `INSERT` into `Global.Process` or call the SP directly.
 - `ProcessGUID` is SQL-generated (`DEFAULT NEWSEQUENTIALID()`). **Application repositories must not mint `ProcessGUID` values.**
 - Consumers use `ProcessGUID` only; `ProcessId` is internal.
 - No workflow, lifecycle, or status columns on `Global.Process`.
-- **Process History:** `Global.ProcessHistory` + `Global.P_POST_ProcessHistory` (create) + `Global.P_GET_ProcessHistoryByProcessGUID` (**display-ready projection** — EAC owns Role / Name / Response Status resolution). Products must not `INSERT` into `Global.ProcessHistory` directly.
+- **Process History:** Process Engine owns `Global.ProcessHistory` + `Global.P_POST_ProcessHistory` (create via `RecordProcessHistoryAsync`) + `Global.P_GET_ProcessHistoryByProcessGUID` (**display-ready projection** — PE consumes PF + Identity for Role / Name / Response Status). Products must not `INSERT` into `Global.ProcessHistory` or call runtime SPs directly.
 - **AE delete fail-closed:** Application Enabled deletion **must fail** when dependent `Global.Process` rows exist. Never silent cascade of runtime process records ([ADR-006](../decisions/ADR-006-application-context-ownership.md)).
 
 ### Application `{UniqueCode}.Process`
@@ -273,7 +274,7 @@ Runtime process identity is a **two-tier** model ([ADR-024](../decisions/ADR-024
 | **Qualified name** | `{UniqueCode}.Process` |
 | **Role** | Application-specific **extension** for process-level flat fields. Related child tables may exist; they do not replace the Process extension table. |
 | **Ownership** | Application repository `sql/current_model/` + `docs/db-model.md` — not EAC Process Framework metadata tables. |
-| **ProcessGUID** | `UNIQUEIDENTIFIER NOT NULL` UNIQUE — value from `Global.P_POST_Process` / `Global.Process`; never app-minted; never regenerated on update. |
+| **ProcessGUID** | `UNIQUEIDENTIFIER NOT NULL` UNIQUE — value from Process Engine `CreateProcessAsync` / `Global.Process`; never app-minted; never regenerated on update. |
 
 ### Required columns (`{UniqueCode}.Process`)
 
@@ -297,22 +298,23 @@ Runtime process identity is a **two-tier** model ([ADR-024](../decisions/ADR-024
 | --- | --- | --- |
 | `Global.P_GET_ProcessTable` | `breezeon-system-admin-eac` | Resolves `ProcessGUID` → application Process extension schema/table |
 | `IProcessTableResolver` | Process Engine | Foundational consumer of `P_GET_ProcessTable` |
+| `Global.Process` / `P_POST_Process` / History pack | Process Engine (authoritative); EAC deploys | Process Runtime root + ledger ([ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md)) |
 | `Global.ProcessSequenceCounter` | PE SQL defs; applied via EAC reset | Counter rows keyed by resolved `SequenceTemplate` |
 | `Global.P_POST_ProcessSequenceAllocate` | PE SQL defs; applied via EAC reset | `UPDLOCK`/`HOLDLOCK` allocate next integer for a template stream |
 
-SSOT: [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md) · [process-engine](../architecture/process-engine/README.md) · [process-metadata](../architecture/process-metadata/README.md).
+SSOT: [ADR-026](../decisions/ADR-026-process-engine-and-metadata-framework.md) · [ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md) · [process-engine](../architecture/process-engine/README.md) · [process-metadata](../architecture/process-metadata/README.md).
 
 ### Mandatory create order
 
-1. `Global.P_POST_Process` → SQL generates `ProcessGUID`
+1. Process Engine `CreateProcessAsync` → `Global.P_POST_Process` → SQL generates `ProcessGUID`
 2. Insert `{UniqueCode}.Process` with that `ProcessGUID` (Sequence\* null initially)
 3. Resolve/persist `SequenceTemplate` / `SequenceDisplay` (Save while `Sequence IS NULL`)
-4. `Global.P_POST_ProcessHistory` for initiation option (`00`/`va` or `00`/`va1`) including optional Comments
+4. Process Engine `RecordProcessHistoryAsync` → `Global.P_POST_ProcessHistory` for initiation option (`00`/`va` or `00`/`va1`) including optional Comments
 5. `GenerateProcessSequence` at app-chosen timing (typically after Initiation Submit)
 6. Commit one shared-database transaction
 7. Return `ProcessGUID` → redirect to Process View
 
-See [process-persistence.md](ui/patterns/process-persistence.md) · [process-history.md](ui/patterns/process-history.md) · [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md).
+See [process-persistence.md](ui/patterns/process-persistence.md) · [process-history.md](ui/patterns/process-history.md) · [ADR-027](../decisions/ADR-027-request-number-and-sequence-allocation.md) · [ADR-028](../decisions/ADR-028-process-runtime-ownership-process-engine.md).
 
 ### Flat field identity and reference persistence
 

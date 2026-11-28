@@ -11,7 +11,7 @@ ADRs document **why** significant architectural decisions were made. Process and
 | --- | --- |
 | **ADR** | Identifier and link to the decision record |
 | **Title** | Short human-readable name |
-| **Status** | Lifecycle: Proposed, Accepted, or Superseded |
+| **Status** | Lifecycle: Proposed, Accepted, Amended, or Superseded |
 | **Category** | Primary concern (e.g. Governance, Platform, UI, Data, Hosting, Architecture) |
 | **Impact Area** | Where the decision binds practice today |
 
@@ -44,7 +44,8 @@ Categories are discoverability labels for the index; they do not replace reading
 | [ADR-021](ADR-021-validation-summary-experience.md) | Validation Summary experience (live editors) | Accepted | UI | Shared UI Validation Summary, Grid Family / Shuffle hosts, Planning / Development agents, multi-row Save validation |
 | [ADR-022](ADR-022-consumer-application-context-bootstrap.md) | Consumer Application Context Bootstrap | Accepted | Architecture | Product apps, breezeon-system-shared-ui AppContext, EAC `P_GET_EACApplicationAccessContext`, AE query / visibility / Error vs Access Denied |
 | [ADR-023](ADR-023-consumer-data-entity-lookup.md) | Consumer Data Entity Lookup | Accepted | Data | Product Process apps, breezeon-system-shared-ui `IBoDataEntityLookupQueries`, EAC `P_GET_EACDataEntityLookupValues`, DE Code persistence |
-| [ADR-024](ADR-024-platform-process-root.md) | Platform Process Root (two-tier Process model) | Accepted | Data / Architecture | `Global.Process`, `Global.P_POST_Process`, `{UniqueCode}.Process` extension, Process View, AE delete fail-closed |
-| [ADR-025](ADR-025-process-history.md) | Process History runtime ledger | Accepted | Data / Architecture | `Global.ProcessHistory`, initiation `00`/`va`/`va1`, `response-status`, Process View History |
-| [ADR-026](ADR-026-process-engine-and-metadata-framework.md) | Process Engine and Process Metadata Framework (runtime) | Accepted | Architecture | `breezeon-system-process-engine`, `BreezeOn.ProcessEngine`, `P_GET_ProcessTable`, token/context/sequence foundations |
+| [ADR-024](ADR-024-platform-process-root.md) | Platform Process Root (two-tier Process model) | Amended | Data / Architecture | `Global.Process`, `Global.P_POST_Process`, `{UniqueCode}.Process` extension, Process View, AE delete fail-closed (ownership → PE per ADR-028) |
+| [ADR-025](ADR-025-process-history.md) | Process History runtime ledger | Amended | Data / Architecture | `Global.ProcessHistory`, initiation `00`/`va`/`va1`, `response-status`, Process View History (ownership → PE per ADR-028) |
+| [ADR-026](ADR-026-process-engine-and-metadata-framework.md) | Process Engine and Process Metadata Framework (runtime) | Amended | Architecture | `breezeon-system-process-engine`, full Process Runtime + `P_GET_ProcessTable` consumer, token/context/sequence foundations |
 | [ADR-027](ADR-027-request-number-and-sequence-allocation.md) | Request Number and sequence allocation | Accepted | Data / Architecture | Sequence* columns, `sequence-template`/`sequence-display`, `GenerateProcessSequence`, Request Number UI |
+| [ADR-028](ADR-028-process-runtime-ownership-process-engine.md) | Process Runtime ownership (Process Engine) | Accepted | Architecture | PE owns `Global.Process` / `ProcessHistory` / sequence SQL + runtime services; EAC deploys; SHARED-UI presentation-only |

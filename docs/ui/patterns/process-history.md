@@ -1,9 +1,9 @@
 <!-- Classification: AA; Scope: platform; Domain: UI; Capability: ProcessHistory -->
 # Process History
 
-Owner: breezeon-system-admin-eac (ledger + display-ready GET) · breezeon-system-shared-ui (rendering pattern) · product apps (host composition)
+Owner: breezeon-system-process-engine (ledger + display-ready projection) · breezeon-system-shared-ui (thin History grid + `BoProcessHistoryDisplayRow`) · product apps (host composition)
 
-Related: [ADR-025](../../../decisions/ADR-025-process-history.md) · [process-view.md](process-view.md) · [process-persistence.md](process-persistence.md) · [initiation-experience.md](initiation-experience.md) · [process-runtime](../../../architecture/process-runtime/README.md) · [grids.md](../controls/grids.md)
+Related: [ADR-025](../../../decisions/ADR-025-process-history.md) · [ADR-028](../../../decisions/ADR-028-process-runtime-ownership-process-engine.md) · [process-view.md](process-view.md) · [process-persistence.md](process-persistence.md) · [initiation-experience.md](initiation-experience.md) · [process-runtime](../../../architecture/process-runtime/README.md) · [grids.md](../controls/grids.md)
 
 ## Purpose
 
@@ -19,7 +19,7 @@ A history row is created only when a Process Framework option is completed:
 | Initiation Save | `00` | `va1` |
 | Workflow task action | task step | chosen option |
 
-Authoritative create: `Global.P_POST_ProcessHistory` (via SHARED-UI `IBoProcessHistoryQueries` / `IBoProcessActionCompletion`). Apps must not INSERT.
+Authoritative create: Process Engine `RecordProcessHistoryAsync` → `Global.P_POST_ProcessHistory`. Apps must not INSERT or call the SP directly. SHARED-UI owns presentation only (no create/list SQL clients).
 
 ## Comments
 
@@ -41,9 +41,9 @@ Process History tab
 
 ## Retrieval
 
-- `Global.P_GET_ProcessHistoryByProcessGUID` returns **display-ready** rows (EAC projects Role, Name, Response Status).
-- SHARED-UI maps the result and renders `BoGrid` (ReadOnly, Flex columns; **Comments** `FlexWeight=2`, other columns default 1).
-- Date: EAC returns UTC `CompletedDate`; UI formats with `BoDateDisplay.FormatUtc`.
+- `Global.P_GET_ProcessHistoryByProcessGUID` returns **display-ready** rows (Process Engine projects Role, Name, Response Status; consumes PF + Identity).
+- SHARED-UI maps to `BoProcessHistoryDisplayRow` and renders `BoGrid` (ReadOnly, Flex columns; **Comments** `FlexWeight=2`, other columns default 1).
+- Date: PE returns UTC `CompletedDate`; UI formats with `BoDateDisplay.FormatUtc`.
 - Comments: **2-line clamp** via shared `BoClampedPlainText` (same control family as Text Area read-only; **placement differs** — History keeps end-of-line overlay). **Read more** overlays the end of line 2 (no extra row). **Show less** follows the full value after expand. Expanding grows the row height (not BoGrid overlay expand). Short comments omit the toggle.
 - Empty: standard grid empty copy.
 

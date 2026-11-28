@@ -5,7 +5,7 @@ Owner: Architecture · implemented in [`breezeon-system-process-engine`](https:/
 
 **This document is the org SSOT for the runtime Process Metadata Framework.** It is **orthogonal** to Process Framework (PF) definition metadata ([ADR-019](../../decisions/ADR-019-process-framework-metadata.md) · [process-framework/README.md](../process-framework/README.md)).
 
-Decisions: [ADR-026](../../decisions/ADR-026-process-engine-and-metadata-framework.md) · [ADR-027](../../decisions/ADR-027-request-number-and-sequence-allocation.md). Engine index: [process-engine/README.md](../process-engine/README.md).
+Decisions: [ADR-026](../../decisions/ADR-026-process-engine-and-metadata-framework.md) · [ADR-027](../../decisions/ADR-027-request-number-and-sequence-allocation.md) · [ADR-028](../../decisions/ADR-028-process-runtime-ownership-process-engine.md) (Process Runtime ownership). Engine index: [process-engine/README.md](../process-engine/README.md).
 
 ## Disambiguation (mandatory)
 

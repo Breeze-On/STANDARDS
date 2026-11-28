@@ -29,7 +29,7 @@ Owns org-wide standards, platform architecture, ADRs, runbooks, deviations, and 
 | New Application Checklist (bootstrap gate) | [`docs/application-bootstrap-checklist.md`](docs/application-bootstrap-checklist.md) · [`docs/ai/application-development-process.md`](docs/ai/application-development-process.md) |
 | UI behavior / page construction | [`docs/ui/overview.md`](docs/ui/overview.md) · [`page-development.md`](docs/ui/page-development.md) |
 | Process View / Save·Submit persistence | [`docs/ui/patterns/process-view.md`](docs/ui/patterns/process-view.md) · [`process-persistence.md`](docs/ui/patterns/process-persistence.md) · [`process-history.md`](docs/ui/patterns/process-history.md) |
-| Process runtime (`Global.Process` / `ProcessHistory`, two-tier) | [`architecture/process-runtime/README.md`](architecture/process-runtime/README.md) · [ADR-024](decisions/ADR-024-platform-process-root.md) · [ADR-025](decisions/ADR-025-process-history.md) · [`docs/database.md`](docs/database.md) § Process table convention |
+| Process runtime (`Global.Process` / `ProcessHistory`, two-tier; PE-owned) | [`architecture/process-runtime/README.md`](architecture/process-runtime/README.md) · [ADR-024](decisions/ADR-024-platform-process-root.md) · [ADR-025](decisions/ADR-025-process-history.md) · [ADR-028](decisions/ADR-028-process-runtime-ownership-process-engine.md) · [`docs/database.md`](docs/database.md) § Process table convention |
 | Database / seed | [`docs/database.md`](docs/database.md) · [`local-database.md`](docs/local-database.md) |
 | Identity / auth | [`architecture/identity-and-authentication/`](architecture/identity-and-authentication/README.md) |
 | Authorization | [`architecture/authorization/`](architecture/authorization/README.md) |

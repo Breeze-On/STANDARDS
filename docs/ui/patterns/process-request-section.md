@@ -94,10 +94,10 @@ On **new process** creation:
 
 1. Populate `InitiatorUserGUID` from authenticated user context.
 2. Populate `RequestedDate` from the current local date.
-3. Obtain `ProcessGUID` from **`Global.P_POST_Process`** / `Global.Process` — applications **must not mint** GUIDs.
+3. Obtain `ProcessGUID` from Process Engine **`CreateProcessAsync`** → `Global.Process` — applications **must not mint** GUIDs.
 4. Persist flat fields to the application’s `{UniqueCode}.Process` **extension** using that `ProcessGUID`.
 
-Full create order, freeze, and redirect: **[process-persistence.md](process-persistence.md)** · [database.md](../../database.md) § Process table convention · [ADR-024](../../../decisions/ADR-024-platform-process-root.md).
+Full create order, freeze, and redirect: **[process-persistence.md](process-persistence.md)** · [database.md](../../database.md) § Process table convention · [ADR-024](../../../decisions/ADR-024-platform-process-root.md) · [ADR-028](../../../decisions/ADR-028-process-runtime-ownership-process-engine.md).
 
 Baseline: **no manual user editing** of Request Number, Initiator, or Requested Date. Applications may later enable editing of Initiator / Requested Date or add fields in their own implementation without changing this contract’s required names or placement.
 
@@ -106,10 +106,10 @@ Baseline: **no manual user editing** of Request Number, Initiator, or Requested 
 | Own in the product app | Do not |
 | --- | --- |
 | Page / section Razor composition | A SHARED-UI `BoProcessRequest` (or equivalent) package |
-| Typed edit model + save orchestration (calls Global create then extension insert) | Cross-app binary coupling for this section; minting `ProcessGUID` |
+| Typed edit model + save orchestration (calls PE `CreateProcessAsync` then extension insert) | Cross-app binary coupling for this section; minting `ProcessGUID`; calling runtime SPs directly |
 | Product `sql/current_model` `{UniqueCode}.Process` extension | Placing process instance rows in EAC Process Framework metadata tables; owning `Global.Process` |
 
-EAC Process Framework remains **definition metadata** only. Runtime platform root is `Global.Process` (EAC); application business fields are `{UniqueCode}.Process`.
+EAC Process Framework remains **definition metadata** only. Runtime platform root is `Global.Process` (Process Engine); application business fields are `{UniqueCode}.Process`.
 
 ## Gallery / copy-source
 
